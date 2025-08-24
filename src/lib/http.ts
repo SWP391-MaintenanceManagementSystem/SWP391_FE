@@ -24,5 +24,5 @@ export const httpClient = () => {
         return res.data;
     };
 
-    return { get, post, put, patch, del };
+    return { get, post, patch, del };
 };
