@@ -1,3 +1,4 @@
+import CircularIndeterminate from "@/components/CircularIndeterminate";
 import LandingPage from "@/pages/Landing";
 import NotFound from "@/pages/NotFound";
 import {
@@ -9,14 +10,13 @@ import {
 
 const RouterComponent = () => {
     const router = createBrowserRouter([
-        { index: true, element: <Navigate to="/landing" /> },
-        { path: "landing", element: <LandingPage /> },
+        { path: "/", element: <LandingPage />, hydrateFallbackElement: <CircularIndeterminate />, },
         { path: "*", element: <NotFound /> }
     ])
 
     return (
         <RouterProvider
-            // fallbackElement={<CircularIndeterminate />}
+
             router={router}
         />
     );
