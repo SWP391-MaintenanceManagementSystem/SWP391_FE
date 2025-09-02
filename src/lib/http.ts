@@ -3,7 +3,7 @@ import type { AxiosRequestConfig } from "axios";
 import { axios } from "./axios"
 
 
-export const httpClient = () => {
+export const http = () => {
     const get = async <T>(url: string, options?: AxiosRequestConfig) => {
         const res = await axios.get<T>(url, options);
         return res.data;

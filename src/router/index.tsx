@@ -1,6 +1,10 @@
+import { PersistLogin } from "@/components/auth/PersistLogin";
+import RequireAuth from "@/components/auth/RequireAuth";
 import CircularIndeterminate from "@/components/CircularIndeterminate";
-import LandingPage from "@/pages/Landing";
-import NotFound from "@/pages/NotFound";
+import LoginPage from "@/pages/auth/login"
+import LandingPage from "@/pages/landing";
+import NotFound from "@/pages/notfound";
+import { Role } from "@/types/enums/role";
 import {
     createBrowserRouter,
     Navigate,
@@ -11,12 +15,22 @@ import {
 const RouterComponent = () => {
     const router = createBrowserRouter([
         { path: "/", element: <LandingPage />, hydrateFallbackElement: <CircularIndeterminate />, },
-        { path: "*", element: <NotFound /> }
+        { path: "/login", element: <LoginPage />, hydrateFallbackElement: <CircularIndeterminate />, },
+        { path: "*", element: <NotFound /> },
+        // Protected Route
+        {
+            element: <PersistLogin />, children: [
+                {
+                    element: <RequireAuth allowedRoles={[Role.USER, Role.ADMIN]} />, children: [
+
+                    ],
+                }
+            ]
+        }
     ])
 
     return (
         <RouterProvider
-
             router={router}
         />
     );
