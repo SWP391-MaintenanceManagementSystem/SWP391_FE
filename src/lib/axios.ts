@@ -1,17 +1,19 @@
+import { defaultAuth, setAuthStorage, getAuthStorage } from "@/contexts/AuthContext";
+import { refresh } from "@/services/apis/auth.api";
 import _axios from "axios";
+import { toast } from "sonner";
 
 export const axios = _axios.create({
-  // API url
   baseURL: import.meta.env.VITE_API_URL ?? "http://localhost:3000",
   headers: {
     "Content-Type": "application/json",
   },
+  withCredentials: true
 });
 
-// Get token from header
 axios.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem("access_token");
+    const token = getAuthStorage().accessToken
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -21,11 +23,21 @@ axios.interceptors.request.use(
 );
 
 axios.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    if (error.response?.status === 401) {
-      // Handle refresh token / logout
-      console.log("Unauthorized, redirect to login...");
+  res => res,
+  async error => {
+    const originalRequest: any = error.config;
+    if (error.response?.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true;
+      try {
+        const { accessToken } = await refresh();
+        setAuthStorage({ ...getAuthStorage(), accessToken, isAuthenticated: true });
+        originalRequest.headers.Authorization = `Bearer ${accessToken}`;
+        return axios(originalRequest);
+      } catch {
+        setAuthStorage(defaultAuth);
+        toast.error("Session expired, please login again.");
+        window.location.replace("/login");
+      }
     }
     return Promise.reject(error);
   }
