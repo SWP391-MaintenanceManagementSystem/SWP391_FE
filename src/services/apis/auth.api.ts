@@ -1,11 +1,13 @@
-
 import { http } from "@/lib/http"
 import type { LoginResponse } from "@/pages/auth/lib/schema"
+import type { Account } from "@/types/models/account";
+import type { BaseResponse } from "@/types/models/response";
 
 const httpClient = http()
 
 export const login = async (email: string, password: string) => {
-    return await httpClient.post<LoginResponse>("auth/signin", { email, password });
+    const user = await httpClient.post<BaseResponse<LoginResponse>>("auth/signin", { email, password });
+    return user;
 }
 
 export const logout = async () => {
@@ -13,9 +15,15 @@ export const logout = async () => {
 }
 
 export const refresh = async () => {
-    return await httpClient.get<{ accessToken: string }>("auth/refresh-token", { withCredentials: true })
+    return await httpClient.get<BaseResponse<{ accessToken: string }>>("auth/refresh-token", { withCredentials: true })
 }
 
-export const getMe = async () => {
-    return await httpClient.get("/auth/me");
-}
+export const getMe = async (token?: string) => {
+    const config = token ? {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    } : {};
+
+    return await httpClient.get<BaseResponse<Account>>("auth/me", config)
+};

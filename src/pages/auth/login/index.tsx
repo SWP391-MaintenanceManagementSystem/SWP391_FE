@@ -1,16 +1,24 @@
 import { useAuth } from "@/contexts/AuthContext"
 import { LoginForm } from "../components/LoginForm"
 import type { LoginFormData } from "../lib/schema"
-import { Navigate, replace, useNavigate } from "react-router-dom"
+import { Navigate, useNavigate } from "react-router-dom"
 import { useEffect } from "react"
 
 const LoginPage = () => {
     const { handleLogin, auth } = useAuth()
     const navigate = useNavigate()
 
+    // Redirect if already authenticated
+    useEffect(() => {
+        if (auth.isAuthenticated) {
+            navigate("/", { replace: true });
+        }
+    }, [auth.isAuthenticated, navigate]);
+
     if (auth.isAuthenticated) {
         return <Navigate to={"/"} replace />
     }
+
     const handleSubmit = async (formData: LoginFormData) => {
         await handleLogin(formData)
         navigate("/", { replace: true })

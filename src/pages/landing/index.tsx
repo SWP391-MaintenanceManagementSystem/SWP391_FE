@@ -1,6 +1,16 @@
+import { Button } from "@/components/ui/button"
+import { useAuth } from "@/contexts/AuthContext"
 import { Link, useNavigate } from "react-router-dom"
 
 export default function LandingPage() {
+    const { auth, handleLogout } = useAuth()
+    const navigate = useNavigate()
+    const onLogout = async () => {
+        await handleLogout();
+        navigate("/login", { replace: true });
+    }
+
+
     return (
         <div className="min-h-screen flex items-center justify-center bg-gray-50">
             <div className="max-w-md w-full space-y-8 p-6 bg-white rounded-lg shadow-md text-center">
@@ -22,6 +32,9 @@ export default function LandingPage() {
                         Register
                     </Link>
                 </div>
+                {auth.isAuthenticated && (
+                    <Button onClick={onLogout}>Logout</Button>
+                )}
             </div>
         </div>
     )

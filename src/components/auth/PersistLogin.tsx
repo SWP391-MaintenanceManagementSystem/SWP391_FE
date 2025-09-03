@@ -18,12 +18,12 @@ export const PersistLogin = () => {
 
                 if (!auth.accessToken) {
                     const res = await refresh();
-                    if (res?.accessToken) {
-                        
+                    const { accessToken } = res.data
+                    if (accessToken) {
                         setAuth(prev => ({
                             ...prev,
                             isAuthenticated: true,
-                            accessToken: res.accessToken,
+                            accessToken: accessToken,
                         }));
                     } else {
                         setAuth(defaultAuth);
@@ -37,7 +37,7 @@ export const PersistLogin = () => {
             }
         };
         verifyToken();
-    }, []); 
+    }, []);
 
     if (loading) return <p>Loading...</p>;
 

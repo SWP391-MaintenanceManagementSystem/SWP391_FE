@@ -1,4 +1,5 @@
 import type { Account } from "@/types/models/account";
+import type { BaseResponse, PaginationResponse } from "@/types/models/response";
 import { z } from "zod"
 
 
@@ -15,8 +16,6 @@ export const defaultLoginValues: LoginFormData = {
 }
 
 export type LoginResponse = {
-  message: string;
-  user: Account
+  account: Account
   accessToken: string;
-  status: "success" | "error"; 
 };

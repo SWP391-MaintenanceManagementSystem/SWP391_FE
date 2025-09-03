@@ -21,14 +21,14 @@ type AuthContextType = {
     auth: AuthType
     setAuth: React.Dispatch<React.SetStateAction<AuthType>>;
     handleLogin: (formData: LoginFormData) => Promise<void>;
-    handleLogout: () => Promise<void>
+    handleLogout: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType>({
     auth: defaultAuth,
     setAuth: () => { },
     handleLogin: async () => { },
-    handleLogout: async () => { }
+    handleLogout: async () => { },
 })
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -39,17 +39,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         if (JSON.stringify(auth) !== JSON.stringify(persistedAuth)) {
             setPersistedAuth(auth);
         }
-    }, [auth, setPersistedAuth, setAuthStorage]);
+    }, [auth, setPersistedAuth]);
 
     const handleLogin = async (formData: LoginFormData) => {
         try {
             const { email, password } = formData;
-            const data = await login(email, password);
-            const { user, accessToken } = data;
+            const response = await login(email, password);
+            const { accessToken, account } = response.data;
 
             const newAuth = {
                 isAuthenticated: true,
-                user,
+                user: account,
                 accessToken,
             };
 
@@ -79,6 +79,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             console.error("Logout error:", error);
         }
     }
+
 
     const values: AuthContextType = { auth, setAuth, handleLogin, handleLogout };
     return (
