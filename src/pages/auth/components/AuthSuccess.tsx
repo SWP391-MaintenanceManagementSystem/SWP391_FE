@@ -19,9 +19,10 @@ export default function AuthSuccess() {
             }
 
             try {
-                const response = await getMe(token);
+                const res = await getMe(token);
+                const { account } = res.data;
                 setAuth({
-                    user: response.data,
+                    user: account,
                     accessToken: token,
                     isAuthenticated: true,
                 });

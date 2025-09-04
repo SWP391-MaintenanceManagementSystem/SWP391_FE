@@ -25,5 +25,5 @@ export const getMe = async (token?: string) => {
         }
     } : {};
 
-    return await httpClient.get<BaseResponse<Account>>("auth/me", config)
+    return await httpClient.get<BaseResponse<{ account: Account }>>("auth/me", config)
 };
