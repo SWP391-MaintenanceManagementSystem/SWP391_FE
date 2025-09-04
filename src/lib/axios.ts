@@ -29,7 +29,8 @@ axios.interceptors.response.use(
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
       try {
-        const { accessToken } = await refresh();
+        const res = await refresh();
+        const { accessToken } = res.data
         setAuthStorage({ ...getAuthStorage(), accessToken, isAuthenticated: true });
         originalRequest.headers.Authorization = `Bearer ${accessToken}`;
         return axios(originalRequest);
