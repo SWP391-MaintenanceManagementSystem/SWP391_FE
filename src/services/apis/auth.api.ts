@@ -1,11 +1,19 @@
 import { http } from "@/lib/http"
-import type { LoginResponse } from "@/pages/auth/lib/schema"
+import type { LoginFormData, LoginResponse, RegisterFormData, RegisterResponse } from "@/pages/auth/lib/schema"
 import type { Account } from "@/types/models/account";
 import type { BaseResponse } from "@/types/models/response";
 
 const httpClient = http()
 
-export const login = async (email: string, password: string) => {
+
+export const register = async (formData: RegisterFormData) => {
+    const { email, password, firstName, lastName, confirmPassword } = formData;
+    const user = await httpClient.post<BaseResponse<RegisterResponse>>("auth/signup", { email, password, firstName, lastName, confirmPassword });
+    return user;
+}
+
+export const login = async (formData: LoginFormData) => {
+    const { email, password } = formData;
     const user = await httpClient.post<BaseResponse<LoginResponse>>("auth/signin", { email, password });
     return user;
 }

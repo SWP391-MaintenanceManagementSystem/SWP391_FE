@@ -43,8 +43,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     const handleLogin = async (formData: LoginFormData) => {
         try {
-            const { email, password } = formData;
-            const response = await login(email, password);
+            const response = await login(formData);
             const { accessToken, account } = response.data;
 
             const newAuth = {

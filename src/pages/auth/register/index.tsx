@@ -1,14 +1,14 @@
+import { register } from "@/services/apis/auth.api";
+import RegisterForm from "../components/RegisterForm";
+import type { RegisterFormData } from "../lib/schema";
+
 export default function RegisterPage() {
+
+    const handleSubmit = async (data: RegisterFormData) => {
+        await register(data);
+    }
+
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-50">
-            <div className="max-w-md w-full space-y-8 p-6 bg-white rounded-lg shadow-md">
-                <div>
-                    <h2 className="text-center text-3xl font-extrabold text-gray-900">
-                        Create your account
-                    </h2>
-                </div>
-                <p className="text-center text-gray-600">Registration form coming soon...</p>
-            </div>
-        </div>
+        <RegisterForm onSubmit={handleSubmit} />
     )
 }
