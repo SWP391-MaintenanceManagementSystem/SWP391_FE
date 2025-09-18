@@ -13,6 +13,7 @@ import { type LoginFormData } from "../lib/schema"
 import { useState } from "react"
 import { Eye, EyeOff } from "lucide-react"
 import { CgGoogle } from "react-icons/cg";
+import { Link } from "react-router-dom"
 type LoginFormProps = {
     form: ReturnType<typeof useForm<LoginFormData>>;
     onSubmit: (data: LoginFormData) => void;
@@ -25,9 +26,9 @@ export const LoginForm = ({ form, onSubmit }: LoginFormProps) => {
     }
 
     return (
-        <div className="space-y-6 lg:w-2/3">
+        <div className="space-y-6  lg:w-2/3">
             <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 relative">
                     <FormField
                         control={form.control}
                         name="email"
@@ -35,7 +36,7 @@ export const LoginForm = ({ form, onSubmit }: LoginFormProps) => {
                             <FormItem>
                                 <FormLabel>Email</FormLabel>
                                 <FormControl>
-                                    <Input placeholder="Enter your email" {...field} className="h-12 py-2" />
+                                    <Input placeholder="Enter your email" {...field} className="h-10 py-2" />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -53,7 +54,8 @@ export const LoginForm = ({ form, onSubmit }: LoginFormProps) => {
                                             placeholder="Enter your password"
                                             {...field}
                                             type={showPassword ? "text" : "password"}
-                                            className="h-12 py-2"
+                                            className="h-10 py-2"
+                                            aria-invalid={!!form.formState.errors.password}
                                         />
                                         <span
                                             onClick={togglePasswordVisibility}
@@ -71,30 +73,37 @@ export const LoginForm = ({ form, onSubmit }: LoginFormProps) => {
                             </FormItem>
                         )}
                     />
-                    <Button type="submit" className="w-full">Sign In</Button>
-
-                </form>
-            </Form>
-            <Button
-                type="button"
-                variant="outline"
-                className="w-full h-11
+                    <div className="flex justify-end">
+                        <Link to="/forgot-password" className="!text-sm !text-gray-400 !underline">
+                            Forgot Password
+                        </Link>
+                    </div>
+                    <div className="flex flex-col gap-y-3">
+                        <Button type="submit" className="w-full h-11 mt-2">Sign In</Button>
+                        <Button
+                            type="button"
+                            variant="outline"
+                            className="w-full h-11
                         flex items-center justify-center
                         rounded-xl border !border-gray-300
                         !bg-white text-sm font-medium !text-gray-700
                         shadow-sm !hover:bg-gray-50
                          transition"
-                onClick={() =>
-                    (window.location.href = `${import.meta.env.VITE_API_URL}/auth/google/login`)
-                }
-            >
-                <span className="flex items-center justify-center leading-none text-l gap-x-2">
-                    <CgGoogle />
-                    Continue with Google
-                </span>
+                            onClick={() =>
+                                (window.location.href = `${import.meta.env.VITE_API_URL}/auth/google/login`)
+                            }
+                        >
+                            <span className="flex items-center justify-center leading-none text-l gap-x-2">
+                                <CgGoogle />
+                                Continue with Google
+                            </span>
 
 
-            </Button>
+                        </Button>
+                    </div>
+
+                </form>
+            </Form>
 
         </div>
     )

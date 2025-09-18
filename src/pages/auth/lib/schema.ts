@@ -56,6 +56,9 @@ export const RegisterSchema = z.object({
       /^[a-zA-Z\s'-]+$/,
       "Last name can only contain letters, spaces, hyphens and apostrophes"
     ),
+  phone: z.string().optional(),
+  address: z.string().optional(),
+
 })
   .refine((data) => data.password === data.confirmPassword, {
     path: ["confirmPassword"],
@@ -71,6 +74,8 @@ export const defaultRegisterValues: RegisterFormData = {
   confirmPassword: "",
   firstName: "",
   lastName: "",
+  phone: "",
+  address: "",
 }
 
 export type RegisterResponse = {

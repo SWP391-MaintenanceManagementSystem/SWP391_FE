@@ -42,7 +42,7 @@ const LoginPage = () => {
             <div className="absolute top-0 left-0 p-10">
                 <img src={logo} alt="Logo" />
             </div>
-            <div className="min-h-fit flex items-center justify-center mx-24 overflow-hidden mt-40 shadow-lg lg:shadow-none">
+            <div className="min-h-fit flex items-center justify-center lg:mx-24 mx-4 overflow-hidden mt-40 shadow-lg lg:shadow-none">
                 <div className="w-screen space-y-8 p-6 flex flex-col flex-1 justify-center">
                     <div className="text-center lg:text-left">
                         <h3 className="text-3xl font-bold">
