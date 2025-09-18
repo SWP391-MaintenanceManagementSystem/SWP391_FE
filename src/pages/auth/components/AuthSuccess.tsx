@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
-import { getMe } from "@/services/apis/auth.api";
+import { getMe } from "@/services/auth/apis/auth.api";
 import { toast } from "sonner";
 
 export default function AuthSuccess() {
