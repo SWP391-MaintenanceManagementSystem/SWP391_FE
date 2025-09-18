@@ -2,6 +2,7 @@ import { PersistLogin } from "@/components/auth/PersistLogin";
 import RequireAuth from "@/components/auth/RequireAuth";
 import CircularIndeterminate from "@/components/CircularIndeterminate";
 import AuthSuccess from "@/pages/auth/components/AuthSuccess";
+import VerifySuccess from "@/pages/auth/components/VerifySuccess";
 import LoginPage from "@/pages/auth/login"
 import RegisterPage from "@/pages/auth/register";
 import LandingPage from "@/pages/landing";
@@ -19,6 +20,7 @@ const RouterComponent = () => {
         { path: "/login", element: <LoginPage />, hydrateFallbackElement: <CircularIndeterminate />, },
         { path: "/register", element: <RegisterPage />, hydrateFallbackElement: <CircularIndeterminate />, },
         { path: "/auth/success", element: <AuthSuccess /> },
+        { path: "/auth/verify", element: <VerifySuccess /> },
         { path: "*", element: <NotFound /> },
         // Protected Route
         {
