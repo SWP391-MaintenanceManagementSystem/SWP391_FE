@@ -1,4 +1,4 @@
-import { register } from "@/services/apis/auth.api";
+import { register } from "@/services/auth/apis/auth.api";
 import RegisterForm from "../components/RegisterForm";
 import type { RegisterFormData } from "../lib/schema";
 

@@ -1,4 +1,4 @@
-import type { Account } from "@/types/models/account";
+import type { AccountWithProfile } from "@/types/models/account";
 import type { BaseResponse, PaginationResponse } from "@/types/models/response";
 import { z } from "zod"
 
@@ -16,7 +16,7 @@ export const defaultLoginValues: LoginFormData = {
 }
 
 export type LoginResponse = {
-  account: Account
+  account: AccountWithProfile
   accessToken: string;
 };
 
@@ -74,6 +74,6 @@ export const defaultRegisterValues: RegisterFormData = {
 }
 
 export type RegisterResponse = {
-  account: Account
+  account: AccountWithProfile
 }
 

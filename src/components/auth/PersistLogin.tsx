@@ -1,5 +1,5 @@
 import { defaultAuth, useAuth } from "@/contexts/AuthContext"
-import { refresh } from "@/services/apis/auth.api";
+import { refresh } from "@/services/auth/apis/auth.api";
 import { useEffect, useState } from "react";
 import { Outlet } from "react-router-dom";
 

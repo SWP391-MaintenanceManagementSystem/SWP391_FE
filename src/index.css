@@ -5,6 +5,14 @@
 
 @theme {
   --font-syne: "Syne", sans-serif;
+  --font-roboto: "Roboto Flex", sans-serif;
+  --font-inter: "Inter", sans-serif;
+
+  /* Purple */
+  --color-purple-primary: #6B4692;
+  --color-purple-landing: #B5A2C8;
+  --color-sub-text: #999999;
+
 }
 
 :root {
@@ -14,7 +22,7 @@
 
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  background-color: #ffffff;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
