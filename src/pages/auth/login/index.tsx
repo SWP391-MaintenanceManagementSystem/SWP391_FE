@@ -6,19 +6,13 @@ import logo from "/logo.svg"
 import loginImg from "@/assets/login-img.png"
 import { useWindowSize } from "@uidotdev/usehooks";
 import useLogin from "@/services/auth/hooks/useLogin"
+import VerificationAlert from "../components/VerificationAlert"
 
 const LoginPage = () => {
-    const { auth } = useAuth()
+    const { auth, isNotVerified } = useAuth()
     const { form, onSubmit } = useLogin()
     const { height, width = 0 } = useWindowSize()
     const [isMobile, setIsMobile] = useState(false)
-    const navigate = useNavigate()
-
-    useEffect(() => {
-        if (auth.isAuthenticated) {
-            navigate("/", { replace: true });
-        }
-    }, [auth.isAuthenticated, navigate]);
 
     useEffect(() => {
         if (!width || !height) return;
@@ -57,6 +51,11 @@ const LoginPage = () => {
                     <img src={loginImg} alt="Car Image" />
                 </div>)}
             </div>
+            {isNotVerified && (
+                <div className="fixed lg:bottom-6  right-6 z-50">
+                    <VerificationAlert />
+                </div>
+            )}
         </div>
     )
 }

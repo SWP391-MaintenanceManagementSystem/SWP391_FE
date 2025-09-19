@@ -1,6 +1,7 @@
 import { defaultAuth, setAuthStorage, getAuthStorage } from "@/contexts/AuthContext";
 import { refresh } from "@/services/auth/apis/auth.api";
 import _axios from "axios";
+import type { ErrorResponse } from "react-router-dom";
 import { toast } from "sonner";
 
 const BASE_URL = import.meta.env.VITE_API_URL ?? "http://localhost:3000";
@@ -49,7 +50,7 @@ axiosPrivate.interceptors.response.use(
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
       try {
-        const res = await refresh(); 
+        const res = await refresh();
         const { accessToken } = res.data;
         setAuthStorage({ ...getAuthStorage(), accessToken, isAuthenticated: true });
         originalRequest.headers.Authorization = `Bearer ${accessToken}`;

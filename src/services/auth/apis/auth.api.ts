@@ -32,3 +32,7 @@ export const getMe = async (token?: string) => {
 
     return await httpPrivate.get<BaseResponse<{ account: AccountWithProfile }>>("auth/me", config)
 };
+
+export const resendVerifyEmail = async (email: string) => {
+    return await httpPublic.post<BaseResponse<null>>("auth/resend-activation-email", { email });
+}

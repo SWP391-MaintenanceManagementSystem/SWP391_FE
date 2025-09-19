@@ -1,7 +1,7 @@
 import type { LoginFormData } from "@/pages/auth/lib/schema";
 import { login, logout } from "@/services/auth/apis/auth.api";
 import type { AccountWithProfile } from "@/types/models/account";
-import { createContext, useContext } from "react";
+import { createContext, useContext, useState } from "react";
 import { useLocalStorage } from "@uidotdev/usehooks";
 import { toast } from "sonner";
 
@@ -22,6 +22,10 @@ type AuthContextType = {
     setAuth: React.Dispatch<React.SetStateAction<AuthType>>;
     handleLogin: (formData: LoginFormData) => Promise<void>;
     handleLogout: () => Promise<void>;
+    pendingEmail: string;
+    setPendingEmail: React.Dispatch<React.SetStateAction<string>>;
+    isNotVerified: boolean | null;
+    setIsNotVerified: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const AuthContext = createContext<AuthContextType>({
@@ -29,11 +33,16 @@ const AuthContext = createContext<AuthContextType>({
     setAuth: () => { },
     handleLogin: async () => { },
     handleLogout: async () => { },
+    pendingEmail: "",
+    setPendingEmail: () => { },
+    isNotVerified: null,
+    setIsNotVerified: () => { },
 })
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [auth, setAuth] = useLocalStorage<AuthType>("auth", defaultAuth);
-
+    const [pendingEmail, setPendingEmail] = useState<string>("");
+    const [isNotVerified, setIsNotVerified] = useState<boolean>(false);
     const handleLogin = async (formData: LoginFormData) => {
         const response = await login(formData);
         const { accessToken, account } = response.data;
@@ -59,7 +68,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         }
     };
 
-    const values: AuthContextType = { auth, setAuth, handleLogin, handleLogout };
+    const values: AuthContextType = { auth, setAuth, handleLogin, handleLogout, pendingEmail, setPendingEmail, isNotVerified, setIsNotVerified };
 
     return (
         <AuthContext value={values}>
