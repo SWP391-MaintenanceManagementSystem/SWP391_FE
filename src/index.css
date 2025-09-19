@@ -13,6 +13,12 @@
   --color-purple-landing: #B5A2C8;
   --color-sub-text: #999999;
 
+  /* Slate */
+  --color-slate-100: #F5F5F5;
+
+
+  /* Gray */
+  --color-gray-primary: #71717A;
 }
 
 :root {
