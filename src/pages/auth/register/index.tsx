@@ -4,13 +4,18 @@ import useRegister from "@/services/auth/hooks/useRegister";
 import { useWindowSize } from "@uidotdev/usehooks";
 import logo from "/logo.svg"
 import loginImg from "@/assets/login-img.png"
-import { Link, useNavigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function RegisterPage() {
     const { form, onSubmit } = useRegister();
     const { height, width = 0 } = useWindowSize()
     const [isMobile, setIsMobile] = useState(false)
-    const navigate = useNavigate()
+    const { auth } = useAuth()
+
+    if (auth.isAuthenticated) {
+        return <Navigate to={"/"} replace />
+    }
 
     useEffect(() => {
         if (!width || !height) return;

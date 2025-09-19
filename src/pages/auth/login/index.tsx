@@ -13,13 +13,6 @@ const LoginPage = () => {
     const { form, onSubmit } = useLogin()
     const { height, width = 0 } = useWindowSize()
     const [isMobile, setIsMobile] = useState(false)
-    const navigate = useNavigate()
-
-    useEffect(() => {
-        if (auth.isAuthenticated) {
-            navigate("/", { replace: true });
-        }
-    }, [auth.isAuthenticated, navigate]);
 
     useEffect(() => {
         if (!width || !height) return;
