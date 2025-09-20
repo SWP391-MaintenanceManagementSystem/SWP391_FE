@@ -79,7 +79,7 @@ export const LoginForm = ({ form, onSubmit }: LoginFormProps) => {
                         </Link>
                     </div>
                     <div className="flex flex-col gap-y-3">
-                        <Button type="submit" className="w-full h-11 mt-2">Sign In</Button>
+                        <Button type="submit" className="w-full h-11 mt-2" disabled={form.formState.isSubmitting}>Sign In</Button>
                         <Button
                             type="button"
                             variant="outline"

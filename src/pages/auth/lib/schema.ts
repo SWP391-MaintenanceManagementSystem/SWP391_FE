@@ -82,3 +82,49 @@ export type RegisterResponse = {
   account: AccountWithProfile
 }
 
+export const ForgotPasswordSchema = z.object({
+  email: z.email("Please provide a valid email address"),
+})
+
+export type ForgotPasswordFormData = z.infer<typeof ForgotPasswordSchema>
+export const defaultForgotPasswordValues: ForgotPasswordFormData = {
+  email: "",
+}
+
+
+export const ResetCodeSchema = z.object({
+  code: z.string().nonempty("Reset code is required"),
+})
+
+export type ResetCodeFormData = z.infer<typeof ResetCodeSchema>
+
+export const defaultResetCodeValues: ResetCodeFormData = {
+  code: "",
+}
+
+
+export const ResetPasswordSchema = z.object({
+  newPassword: z
+    .string()
+    .nonempty("New password is required")
+    .min(8, "New password must be between 8 and 50 characters long")
+    .max(50, "New password must be between 8 and 50 characters long")
+    .regex(
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/,
+      "New password must contain at least one uppercase letter, one lowercase letter, one number and one special character"
+    ),
+
+  confirmNewPassword: z
+    .string()
+    .nonempty("Password confirmation is required"),
+}).refine((data) => data.newPassword === data.confirmNewPassword, {
+  path: ["confirmNewPassword"],
+  message: "Passwords do not match",
+});
+
+export type ResetPasswordFormData = z.infer<typeof ResetPasswordSchema>
+
+export const defaultResetPasswordValues: ResetPasswordFormData = {
+  newPassword: "",
+  confirmNewPassword: "",
+}
