@@ -159,7 +159,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSubmit, form }) => {
                         />
                     </div>
                     <div className='flex flex-col gap-y-3'>
-                        <Button type="submit" className="w-full h-11">
+                        <Button type="submit" className="w-full h-11" disabled={form.formState.isSubmitting}>
                             Register
                         </Button>
                         <Button

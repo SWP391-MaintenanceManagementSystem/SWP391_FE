@@ -4,6 +4,7 @@ import CircularIndeterminate from "@/components/CircularIndeterminate";
 import MainLayout from "@/layout";
 import AuthSuccess from "@/pages/auth/components/AuthSuccess";
 import VerifySuccess from "@/pages/auth/components/VerifySuccess";
+import ForgotPasswordPage from "@/pages/auth/forgot-password";
 import LoginPage from "@/pages/auth/login"
 import RegisterPage from "@/pages/auth/register";
 import Dashboard from "@/pages/dashboard";
@@ -21,6 +22,7 @@ const RouterComponent = () => {
         { path: "/", element: <LandingPage />, hydrateFallbackElement: <CircularIndeterminate />, },
         { path: "/login", element: <LoginPage />, hydrateFallbackElement: <CircularIndeterminate />, },
         { path: "/register", element: <RegisterPage />, hydrateFallbackElement: <CircularIndeterminate />, },
+        { path: "/forgot-password", element: <ForgotPasswordPage />, },
         { path: "/auth/success", element: <AuthSuccess /> },
         { path: "/auth/verify", element: <VerifySuccess /> },
         { path: "*", element: <NotFound /> },

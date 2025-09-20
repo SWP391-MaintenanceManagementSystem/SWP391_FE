@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { getMe } from "@/services/auth/apis/auth.api";
 import { toast } from "sonner";
+import Loading from "@/components/Loading";
 
 export default function AuthSuccess() {
     const navigate = useNavigate();
@@ -40,5 +41,5 @@ export default function AuthSuccess() {
         run();
     }, [navigate, setAuth]);
 
-    return <div>Signing you in...</div>;
+    return <div><Loading /></div>;
 }

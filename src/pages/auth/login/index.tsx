@@ -7,6 +7,7 @@ import loginImg from "@/assets/login-img.png"
 import { useWindowSize } from "@uidotdev/usehooks";
 import useLogin from "@/services/auth/hooks/useLogin"
 import VerificationAlert from "../components/VerificationAlert"
+import Loading from "@/components/Loading"
 
 const LoginPage = () => {
     const { auth, isNotVerified } = useAuth()
@@ -30,6 +31,9 @@ const LoginPage = () => {
         return <Navigate to={"/"} replace />
     }
 
+    if (form.formState.isSubmitting) {
+        return <div><Loading /></div>;
+    }
 
     return (
         <div className="w-full min-h-screen flex flex-col relative">

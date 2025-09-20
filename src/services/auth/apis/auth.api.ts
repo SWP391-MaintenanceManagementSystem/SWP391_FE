@@ -36,3 +36,17 @@ export const getMe = async (token?: string) => {
 export const resendVerifyEmail = async (email: string) => {
     return await httpPublic.post<BaseResponse<null>>("auth/resend-activation-email", { email });
 }
+
+
+export const requestResetPassword = async (email: string) => {
+    return await httpPublic.post<BaseResponse<null>>("auth/reset-password/request", { email });
+}
+
+
+export const verifyResetPassword = async (code: string, email: string) => {
+    return await httpPublic.post<BaseResponse<null>>("auth/reset-password/verify", { code, email });
+}
+
+export const resetPassword = async (code: string, newPassword: string, confirmNewPassword: string) => {
+    return await httpPublic.post<BaseResponse<null>>("auth/reset-password/confirm", { code, newPassword, confirmNewPassword });
+}
