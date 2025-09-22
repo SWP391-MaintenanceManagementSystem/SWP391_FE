@@ -1,13 +1,15 @@
 import Hero from "./components/Hero";
-
 import Header from "./components/Header";
-export default function LandingPage() {
- 
+import AboutSection from "./components/AboutSection";
 
+export default function LandingPage() {
   return (
-    <div className="mx-11 my-8">
-      <Header />
-      <Hero/>
-    </div>
-  );
-}
+    <>
+      <div className="mx-11 my-8">
+        <Header />
+        <Hero />
+      </div>
+      <AboutSection />
+    </>
+  ); 
+}    
