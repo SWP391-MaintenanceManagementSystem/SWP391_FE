@@ -25,6 +25,8 @@ import {
   Sparkles,
   IdCardLanyard,
   PackageOpen,
+  ChevronUp,
+  ChevronDown,
 } from "lucide-react";
 import logo from "/logo.svg";
 import logoWithoutText from "/logo-without-text-light.svg";
@@ -199,10 +201,32 @@ export function AppSidebar() {
       </SidebarContent>
 
       <SidebarFooter className="p-3 bg-slate-100">
-        <div className=" rounded-3xl flex bg-purple-primary h-10 p-0.5 justify-center items-center gap-1 text-slate-300 cursor-pointer hover:opacity-80">
-          <CircleUserRound />
-          {!collapsed && <span className=" text-sm">Username</span>}
-        </div>
+        <NavLink
+          to="/profile"
+          end
+          className={({ isActive }) =>
+            clsx(
+              "flex items-center justify-between !text-gray-primary h-10 py-0.5 px-4 rounded-lg",
+              collapsed && "justify-center",
+              isActive && "bg-purple-primary rounded-md !text-white !outline-0",
+            )
+          }
+        >
+          {({ isActive }) => (
+            <>
+              <div className="flex items-center gap-2">
+                <CircleUserRound />
+                {!collapsed && <span className=" text-sm">Username</span>}
+              </div>
+              {!collapsed &&
+                (isActive ? (
+                  <ChevronUp className="h-5 w-5" />
+                ) : (
+                  <ChevronDown className="h-5 w-5" />
+                ))}
+            </>
+          )}
+        </NavLink>
       </SidebarFooter>
     </Sidebar>
   );
