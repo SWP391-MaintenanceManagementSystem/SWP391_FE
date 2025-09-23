@@ -181,7 +181,7 @@ export function AppSidebar() {
                     end
                     className={({ isActive }) =>
                       clsx(
-                        "flex items-center gap-2 !text-gray-primary",
+                        "flex items-center gap-2 !text-gray-primary font-inter",
                         collapsed && "justify-center",
                         isActive &&
                           "bg-purple-primary rounded-md !text-slate-200 !outline-0",
@@ -206,7 +206,7 @@ export function AppSidebar() {
           end
           className={({ isActive }) =>
             clsx(
-              "flex items-center justify-between !text-gray-primary h-10 py-0.5 px-4 rounded-lg",
+              "flex items-center justify-between !text-gray-primary h-10 py-0.5 px-4 rounded-lg font-inter",
               collapsed && "justify-center",
               isActive && "bg-purple-primary rounded-md !text-white !outline-0",
             )
