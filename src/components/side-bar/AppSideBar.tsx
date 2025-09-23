@@ -16,7 +16,7 @@ import { NavLink } from "react-router-dom"
 import { useState } from "react"
 import { AccountRole } from "@/types/enums/role"
 import type { SidebarItem } from "@/types/models/sidebar-item"
-
+import clsx from "clsx"
 const customerItems: SidebarItem[] = [
     {
         title: "Dashboard",
@@ -30,32 +30,32 @@ const customerItems: SidebarItem[] = [
     },
     {
         title: "Service Booking",
-        url: "#",
+        url: "/booking",
         icon: NotebookPen
     },
     {
         title: "Maintenance History",
-        url: "#",
+        url: "/history",
         icon: BookOpen
     },
     {
         title: "Payments",
-        url: "#",
+        url: "/payments",
         icon: CreditCard
     },
     {
         title: "Settings",
-        url: "#",
+        url: "/settings",
         icon: Settings
     },
     {
         title: "Help & Support",
-        url: "#",
+        url: "/support",
         icon: CircleQuestionMark
-    }, 
+    },
     {
         title: "Feedback",
-        url: "#",
+        url: "/feedback",
         icon: Sparkles
     }
 ]
@@ -106,13 +106,24 @@ export function AppSidebar() {
                         <SidebarMenu>
                             {items.map((item) => (
                                 <SidebarMenuItem key={item.title}>
-                                    <SidebarMenuButton asChild>
-                                        <NavLink to={item.url} className={`flex items-center gap-2 ${collapsed ? "justify-center" : ""} !text-gray-primary`}>
+                                    <NavLink
+                                        to={item.url}
+                                        end
+                                        className={({ isActive }) =>
+                                            clsx(
+                                                "flex items-center gap-2 !text-gray-primary",
+                                                collapsed && "justify-center",
+                                                isActive && "bg-purple-primary rounded-md !text-slate-200"
+                                            )
+                                        }
+                                    >
+                                        <SidebarMenuButton className="!bg-transparent  ">
                                             <item.icon className="h-5 w-5" />
                                             {!collapsed && <span>{item.title}</span>}
-                                        </NavLink>
-                                    </SidebarMenuButton>
+                                        </SidebarMenuButton>
+                                    </NavLink>
                                 </SidebarMenuItem>
+
                             ))}
                         </SidebarMenu>
                     </SidebarGroupContent>

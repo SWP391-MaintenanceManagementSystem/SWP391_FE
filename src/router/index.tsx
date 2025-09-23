@@ -10,6 +10,7 @@ import RegisterPage from "@/pages/auth/register";
 import Dashboard from "@/pages/dashboard";
 import LandingPage from "@/pages/landing";
 import NotFound from "@/pages/notfound";
+import Vehicle from "@/pages/vehicle";
 import { AccountRole } from "@/types/enums/role";
 import {
     createBrowserRouter,
@@ -34,7 +35,9 @@ const RouterComponent = () => {
                         {
                             element: <MainLayout />, children: [
                                 {
-                                    path: "/dashboard", element: <Dashboard />, hydrateFallbackElement: <CircularIndeterminate />
+                                    path: "/dashboard", element: <Dashboard />, hydrateFallbackElement: <CircularIndeterminate /> },
+                                {
+                                    path: "/vehicles", element: <Vehicle />, hydrateFallbackElement: <CircularIndeterminate />
                                 }
                             ]
                         }
