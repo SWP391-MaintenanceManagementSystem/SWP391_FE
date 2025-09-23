@@ -1,0 +1,5 @@
+import * as React from "react";
+
+export default function AdminProfile() {
+  return <h1>Admin Profile</h1>;
+}
