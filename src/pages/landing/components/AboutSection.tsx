@@ -20,14 +20,14 @@ export default function AboutSection() {
         </div>
 
         <div className="grid md:grid-cols-2 gap-8 mt-14 px-11">
-          <img src={aboutLeft} className="rounded-lg" />
+          <img src={aboutLeft}  />
           <div className="flex flex-col justify-between h-full">
             <p className=" text-sub-text ">
               Our skilled technicians are equipped with the latest tools and
               expertise to diagnose and fix any automotive issue. We take pride
               in our work, delivering results that exceed your expectations.
             </p>
-            <img src={aboutRight} className="rounded-lg" />
+            <img src={aboutRight} />
           </div>
         </div>
       </div>

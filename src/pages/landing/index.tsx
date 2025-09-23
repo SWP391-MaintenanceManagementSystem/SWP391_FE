@@ -1,6 +1,7 @@
 import Hero from "./components/Hero";
 import Header from "./components/Header";
 import AboutSection from "./components/AboutSection";
+import ServiceSection from "./components/ServiceSection";
 
 export default function LandingPage() {
   return (
@@ -10,6 +11,7 @@ export default function LandingPage() {
         <Hero />
       </div>
       <AboutSection />
+      <ServiceSection />
     </>
   ); 
 }    
