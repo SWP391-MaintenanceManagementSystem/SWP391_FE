@@ -1,5 +1,10 @@
-import * as React from "react";
+import DynamicBreadcrumbs from "@/components/DynamicBreadcrumb";
 
 export default function AdminProfile() {
-  return <h1>Admin Profile</h1>;
+  return (
+    <>
+      <DynamicBreadcrumbs />
+      <h1 className=" text-center">Admin Profile</h1>
+    </>
+  );
 }
