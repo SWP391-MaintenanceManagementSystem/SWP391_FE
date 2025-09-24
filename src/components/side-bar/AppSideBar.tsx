@@ -146,7 +146,7 @@ export function AppSidebar() {
   const items = getMenuItems(role) || [];
   return (
     <Sidebar
-      className={`transition-all duration-300 h-[calc(100vh-32px)] ml-4 mt-4 mb-4 mr-6 rounded-xl overflow-hidden relative
+      className={`transition-all duration-300 h-[calc(100vh-32px)] my-4 ml-4 mr-0 rounded-xl overflow-hidden relative
           ${collapsed ? "w-16" : "w-64"}
         `}
     >
