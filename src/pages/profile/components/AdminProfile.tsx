@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label";
 import DynamicBreadcrumbs from "@/components/DynamicBreadcrumb";
 import AccountStatusTag from "@/components/AccountStatusTag";
 import Tag from "@/components/Tag";
+import MainContentLayout from "@/components/MainContentLayout";
 
 type AdminInfoProps = {
   user?: AccountWithProfile | null;
@@ -230,13 +231,13 @@ export default function AdminProfile() {
   return (
     <div className=" w-full h-[calc(100vh-32px)]">
       <DynamicBreadcrumbs />
-      <div className="mt-4 py-[48px] px-[12px] h-full  flex gap-12 flex-1">
+      <MainContentLayout>
         <div className="flex flex-col gap-8 ">
           <AdminAvatarBox user={auth.user} />
           <AdminInfoBox user={auth.user} />
         </div>
         <DetailSettingBox user={auth.user} />
-      </div>
+      </MainContentLayout>
     </div>
   );
 }
