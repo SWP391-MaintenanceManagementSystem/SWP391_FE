@@ -6,15 +6,15 @@ import { DollarSign, Clock, ShieldCheck, Wrench } from "lucide-react";
 
 export default function ServiceSection() {
   return (
-    <section className="w-full bg-white py-16">
-      <div className="flex flex-col items-center">
-        <div className="flex items-center gap-2">
+    <section className="w-full bg-white py-32">
+      <div className="flex flex-col items-center gap-5">
+        <div className="flex items-center ">
           <Sparkles className="w-5 h-5 text-purple-primary" />
-          <h2 className="text-sm text-purple-primary tracking-widest">
+          <span className="text-2xl text-purple-primary tracking-widest">
             WHAT WE OFFER
-          </h2>
+          </span>
         </div>
-        <h1 className="text-3xl font-bold">EXPLORE OUR SERVICES</h1>
+        <span className="text-3xl font-extrabold">EXPLORE OUR SERVICES</span>
       </div>
 
       <div className="grid md:grid-cols-2 gap-12 mt-14 px-11">
@@ -50,12 +50,12 @@ export default function ServiceSection() {
       </div>
 
       <div className="mt-20 flex flex-col items-center">
-        <h1 className="text-3xl font-bold">Why choose Us?</h1>
+        <span className="text-3xl font-extrabold">Why choose Us?</span>
         <div className="flex items-center gap-2">
-          <Sparkles className="w-5 h-5 text-purple-primary" />
-          <h2 className="text-sm text-purple-primary tracking-widest">
+         
+          <span className="text-sm text-purple-primary tracking-widest">
             We are here for whatever you need
-          </h2>
+          </span>
         </div>
       </div>
 

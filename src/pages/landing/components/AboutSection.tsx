@@ -4,23 +4,23 @@ import { Sparkles } from "lucide-react";
 
 export default function AboutSection() {
   return (
-    <section className="w-full bg-black text-white py-16">
+    <section className="w-full bg-black py-32 ">
       <div className="container mx-auto">
         <div className="px-11">
           <div className="flex items-center gap-2">
             <Sparkles className="w-5 h-5 text-purple-light" />
-            <h2 className="text-sm text-purple-light tracking-widest">
+            <span className="text-2xl text-purple-light tracking-widest">
               WHO ARE YOU
-            </h2>
+            </span>
           </div>
 
-          <h1 className="text-3xl font-bold ">
-            Premium Tire Repair and Auto Maintenance
-          </h1>
+          <span className="text-3xl font-extrabold text-state-200 ">
+            PREMIUM TIRE REPAIR AND AUTO MAINTENANCE
+          </span>
         </div>
 
         <div className="grid md:grid-cols-2 gap-8 mt-14 px-11">
-          <img src={aboutLeft}  />
+          <img src={aboutLeft} />
           <div className="flex flex-col justify-between h-full">
             <p className=" text-sub-text ">
               Our skilled technicians are equipped with the latest tools and
