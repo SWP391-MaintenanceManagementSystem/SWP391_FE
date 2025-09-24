@@ -4,11 +4,11 @@ import AboutSection from "./components/AboutSection";
 import ServiceSection from "./components/ServiceSection";
 import BusinessProcess from "./components/BusinessProcess";
 import Testimonials from "./components/Testimonials";
-
+import Footer from "./components/Footer";
 export default function LandingPage() {
   return (
     <>
-      <div className="mx-11 my-8">
+      <div className="mx-11 py-8">
         <Header />
         <Hero />
       </div>
@@ -16,6 +16,7 @@ export default function LandingPage() {
       <ServiceSection />
       <BusinessProcess />
       <Testimonials />
+      <Footer />
     </>
   ); 
 }    

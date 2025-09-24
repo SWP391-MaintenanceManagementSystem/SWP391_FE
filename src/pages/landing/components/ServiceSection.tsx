@@ -3,7 +3,6 @@ import repair from "@/assets/repair.png";
 import maintanance from "@/assets/maintanance.png";
 import { Button } from "@/components/ui/button";
 import { DollarSign, Clock, ShieldCheck, Wrench } from "lucide-react";
-
 export default function ServiceSection() {
   return (
     <section className="w-full bg-white py-32">
@@ -16,7 +15,6 @@ export default function ServiceSection() {
         </div>
         <span className="text-3xl font-extrabold">EXPLORE OUR SERVICES</span>
       </div>
-
       <div className="grid md:grid-cols-2 gap-12 mt-14 px-11">
         <div className="relative group overflow-hidden ">
           <img
@@ -27,12 +25,10 @@ export default function ServiceSection() {
           <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition duration-500 flex flex-col items-center justify-center px-12 text-white">
             <h3 className="text-2xl font-bold mb-4">Repair Services</h3>
             <Button className="!bg-purple-primary !px-3 !py-3.5 !w-[115px] h-14">
-              Explore
-              <ArrowUpRight />
+              Explore <ArrowUpRight />
             </Button>
           </div>
         </div>
-
         <div className="relative group overflow-hidden">
           <img
             src={maintanance}
@@ -42,23 +38,19 @@ export default function ServiceSection() {
           <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition duration-500 flex flex-col items-center justify-center text-white">
             <h3 className="text-2xl font-bold mb-4">Maintenance Services</h3>
             <Button className="!bg-purple-primary !px-6 !py-[18px] !w-[115px] h-14">
-              Explore
-              <ArrowUpRight />
+              Explore <ArrowUpRight />
             </Button>
           </div>
         </div>
       </div>
-
       <div className="mt-20 flex flex-col items-center">
         <span className="text-3xl font-extrabold">Why choose Us?</span>
         <div className="flex items-center gap-2">
-         
           <span className="text-sm text-purple-primary tracking-widest">
             We are here for whatever you need
           </span>
         </div>
       </div>
-
       <div className="grid md:grid-cols-2 gap-10 text-left py-11 px-11 ">
         {/* Item 1 */}
         <div className="flex items-center gap-5">
@@ -76,7 +68,6 @@ export default function ServiceSection() {
             </p>
           </div>
         </div>
-
         {/* Item 2 */}
         <div className="flex items-center gap-5">
           <div className="w-14 h-14 flex items-center justify-center rounded-full px-3.5 py-3.5 bg-purple-primary">
@@ -94,7 +85,6 @@ export default function ServiceSection() {
             </p>
           </div>
         </div>
-
         {/* Item 3 */}
         <div className="flex items-center gap-5">
           <div className="w-14 h-14 flex items-center justify-center rounded-full px-3.5 py-3.5 bg-purple-primary">
@@ -111,7 +101,6 @@ export default function ServiceSection() {
             </p>
           </div>
         </div>
-
         {/* Item 4 */}
         <div className="flex items-center gap-5">
           <div className="w-14 h-14 flex items-center justify-center rounded-full px-3.5 py-3.5 bg-purple-primary">

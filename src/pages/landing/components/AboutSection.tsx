@@ -14,7 +14,7 @@ export default function AboutSection() {
             </span>
           </div>
 
-          <span className="text-3xl font-extrabold text-state-200 ">
+          <span className="text-3xl font-extrabold text-slate-50 ">
             PREMIUM TIRE REPAIR AND AUTO MAINTENANCE
           </span>
         </div>
