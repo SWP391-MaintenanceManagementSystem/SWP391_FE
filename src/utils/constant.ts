@@ -1,0 +1,1 @@
+export const RESEND_CODE_COOLDOWN = 60 * 3;

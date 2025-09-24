@@ -1,3 +1,5 @@
+import type { AccountStatus } from "../enums/accountStatus";
+
 export interface BaseResponse<T> {
     success: boolean;
     data: T;
@@ -12,4 +14,15 @@ export interface PaginationResponse<T> {
     pageSize: number;
     total: number;
     totalPages: number;
+}
+
+export interface ErrorResponse {
+    success: boolean;
+    statusCode: number;
+    message: string;
+    timestamp: string;
+    errors: null;
+    data: null;
+    accountStatus?: AccountStatus | null;
+    path: string;
 }

@@ -1,13 +1,13 @@
 import type { LoginFormData } from "@/pages/auth/lib/schema";
-import { login, logout } from "@/services/apis/auth.api";
-import type { Account } from "@/types/models/account";
-import { createContext, useContext, useEffect, useState } from "react";
+import { login, logout } from "@/services/auth/apis/auth.api";
+import type { AccountWithProfile } from "@/types/models/account";
+import { createContext, useContext, useState } from "react";
 import { useLocalStorage } from "@uidotdev/usehooks";
 import { toast } from "sonner";
 
 export type AuthType = {
     isAuthenticated: boolean;
-    user: Account | null;
+    user: AccountWithProfile | null;
     accessToken: string | null;
 }
 
@@ -22,6 +22,10 @@ type AuthContextType = {
     setAuth: React.Dispatch<React.SetStateAction<AuthType>>;
     handleLogin: (formData: LoginFormData) => Promise<void>;
     handleLogout: () => Promise<void>;
+    pendingEmail: string;
+    setPendingEmail: React.Dispatch<React.SetStateAction<string>>;
+    isNotVerified: boolean | null;
+    setIsNotVerified: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const AuthContext = createContext<AuthContextType>({
@@ -29,43 +33,27 @@ const AuthContext = createContext<AuthContextType>({
     setAuth: () => { },
     handleLogin: async () => { },
     handleLogout: async () => { },
+    pendingEmail: "",
+    setPendingEmail: () => { },
+    isNotVerified: null,
+    setIsNotVerified: () => { },
 })
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-    const [persistedAuth, setPersistedAuth] = useLocalStorage<AuthType>("auth", defaultAuth);
-    const [auth, setAuth] = useState<AuthType>(persistedAuth);
-
-    useEffect(() => {
-        if (JSON.stringify(auth) !== JSON.stringify(persistedAuth)) {
-            setPersistedAuth(auth);
-        }
-    }, [auth, setPersistedAuth]);
-
+    const [auth, setAuth] = useLocalStorage<AuthType>("auth", defaultAuth);
+    const [pendingEmail, setPendingEmail] = useState<string>("");
+    const [isNotVerified, setIsNotVerified] = useState<boolean>(false);
     const handleLogin = async (formData: LoginFormData) => {
-        try {
-            const { email, password } = formData;
-            const response = await login(email, password);
-            const { accessToken, account } = response.data;
-
-            const newAuth = {
-                isAuthenticated: true,
-                user: account,
-                accessToken,
-            };
-
-            setAuth(newAuth);
-
-            toast.success("Login Successful", {
-                description: "Welcome back!",
-            });
-        } catch (error: any) {
-            setAuth(defaultAuth);
-            console.error("Login error:", error);
-            toast.error("Login Failed", {
-                description: error?.response?.data?.message,
-            });
-        }
+        const response = await login(formData);
+        const { accessToken, account } = response.data;
+        setAuth({
+            isAuthenticated: true,
+            user: account,
+            accessToken,
+        });
+        toast.success("Login Successful", { description: "Welcome back!" });
     };
+
 
     const handleLogout = async () => {
         try {
@@ -78,17 +66,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             setAuth(defaultAuth);
             console.error("Logout error:", error);
         }
-    }
+    };
 
+    const values: AuthContextType = { auth, setAuth, handleLogin, handleLogout, pendingEmail, setPendingEmail, isNotVerified, setIsNotVerified };
 
-    const values: AuthContextType = { auth, setAuth, handleLogin, handleLogout };
     return (
         <AuthContext value={values}>
             {children}
         </AuthContext>
     );
+};
 
-}
 export const useAuth = () => {
     const context = useContext(AuthContext);
     if (!context) {

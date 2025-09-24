@@ -6,17 +6,19 @@
 @theme {
   --font-syne: "Syne", sans-serif;
   --font-roboto: "Roboto Flex", sans-serif;
-  
+  --font-inter: "Inter", sans-serif;
+
   /* Purple */
   --color-purple-primary: #6B4692;
-  --color-purple-light: #E7D0FF;
   --color-purple-landing: #B5A2C8;
   --color-sub-text: #999999;
-  --color-primary-gray: #71717A;
-  --color-state-200: #F8FAFC
-  --color-sub-feedback: #797979;
+
+  /* Slate */
+  --color-slate-100: #F5F5F5;
 
 
+  /* Gray */
+  --color-gray-primary: #71717A;
 }
 
 :root {
@@ -26,7 +28,7 @@
 
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
-  background-color: #e9e9e9;
+  background-color: #ffffff;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;

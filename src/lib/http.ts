@@ -1,28 +1,26 @@
-
 import type { AxiosRequestConfig } from "axios";
-import { axios } from "./axios"
+import { axiosPrivate, axiosPublic } from "./axios";
 
-
-export const http = () => {
-    const get = async <T>(url: string, options?: AxiosRequestConfig) => {
-        const res = await axios.get<T>(url, options);
-        return res.data;
+const wrap = (client: typeof axiosPrivate | typeof axiosPublic) => {
+    return {
+        get: async <T>(url: string, options?: AxiosRequestConfig) => {
+            const res = await client.get<T>(url, options);
+            return res.data;
+        },
+        post: async <T>(url: string, body?: any, options?: AxiosRequestConfig) => {
+            const res = await client.post<T>(url, body, options);
+            return res.data;
+        },
+        patch: async <T>(url: string, body?: any, options?: AxiosRequestConfig) => {
+            const res = await client.patch<T>(url, body, options);
+            return res.data;
+        },
+        del: async <T>(url: string, options?: AxiosRequestConfig) => {
+            const res = await client.delete<T>(url, options);
+            return res.data;
+        },
     };
-
-    const post = async <T>(url: string, body?: any, options?: AxiosRequestConfig) => {
-        const res = await axios.post<T>(url, body, options);
-        return res.data;
-    };
-
-    const patch = async <T>(url: string, body?: any, options?: AxiosRequestConfig) => {
-        const res = await axios.patch<T>(url, body, options);
-        return res.data;
-    };
-
-    const del = async <T>(url: string, options?: AxiosRequestConfig) => {
-        const res = await axios.delete<T>(url, options);
-        return res.data;
-    };
-
-    return { get, post, patch, del };
 };
+
+export const httpPublic = wrap(axiosPublic);
+export const httpPrivate = wrap(axiosPrivate);
