@@ -9,7 +9,7 @@ import Tag from "@/components/Tag";
 import PasswordForm from "@/pages/profile/components/PasswordForm";
 import { useWindowSize } from "@uidotdev/usehooks";
 import { useEffect, useState } from "react";
-
+import MainContentLayout from "@/components/MainContentLayout";
 type AdminInfoProps = {
   user?: AccountWithProfile | null;
 };
@@ -168,7 +168,7 @@ export default function AdminProfile() {
   return (
     <div className=" w-full h-[calc(100vh-32px)]">
       <DynamicBreadcrumbs />
-      <div className="mt-4 py-[48px] px-[12px] h-full flex lg:flex-row flex-col gap-12 flex-1">
+      <MainContentLayout>
         {isMobile ? (
           <GeneraInfoBox user={auth.user} />
         ) : (
@@ -178,7 +178,8 @@ export default function AdminProfile() {
           </div>
         )}
         <DetailSettingBox />
-      </div>
+      </MainContentLayout>
+
     </div>
   );
 }
