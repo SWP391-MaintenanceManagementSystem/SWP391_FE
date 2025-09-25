@@ -10,6 +10,8 @@ import PasswordForm from "@/pages/profile/components/PasswordForm";
 import { useWindowSize } from "@uidotdev/usehooks";
 import { useEffect, useState } from "react";
 import MainContentLayout from "@/components/MainContentLayout";
+import { useNavigate } from "react-router-dom";
+
 type AdminInfoProps = {
   user?: AccountWithProfile | null;
 };
@@ -76,18 +78,25 @@ const InfoContent = ({ user }: AdminInfoProps) => (
 );
 
 const AdminInfoBox = ({ user }: AdminInfoProps) => {
+  const { handleLogout } = useAuth();
+  const navigate = useNavigate();
+  const onLogout = async () => {
+    await handleLogout();
+    navigate("/login", { replace: true });
+  };
   return (
     <div className="flex flex-col h-full justify-between gap-6 bg-slate-100 px-[42px] py-[25px] rounded-[20px] shadow-md">
       <div className="gap-5 flex flex-col">
         <InfoContent user={user} />
       </div>
 
-      <NavLink to="/" className="mx-auto">
-        <Button className="!font-inter !bg-purple-primary text-white hover:scale-105 transition-transform duration-300">
-          <LogOut className="mr-2 h-4 w-4" />
-          Logout
-        </Button>
-      </NavLink>
+      <Button
+        onClick={onLogout}
+        className="!font-inter !bg-purple-primary text-white hover:scale-105 transition-transform duration-300 mx-auto"
+      >
+        <LogOut className="mr-2 h-4 w-4" />
+        Logout
+      </Button>
     </div>
   );
 };
