@@ -5,53 +5,75 @@ import MainLayout from "@/layout";
 import AuthSuccess from "@/pages/auth/components/AuthSuccess";
 import VerifySuccess from "@/pages/auth/components/VerifySuccess";
 import ForgotPasswordPage from "@/pages/auth/forgot-password";
-import LoginPage from "@/pages/auth/login"
+import LoginPage from "@/pages/auth/login";
 import RegisterPage from "@/pages/auth/register";
 import Dashboard from "@/pages/dashboard";
 import LandingPage from "@/pages/landing";
 import NotFound from "@/pages/notfound";
 import Vehicle from "@/pages/vehicle";
+import Profile from "@/pages/profile";
 import { AccountRole } from "@/types/enums/role";
-import {
-    createBrowserRouter,
-    RouterProvider,
-} from "react-router-dom";
-
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 const RouterComponent = () => {
-    const router = createBrowserRouter([
-        { path: "/", element: <LandingPage />, hydrateFallbackElement: <CircularIndeterminate />, },
-        { path: "/login", element: <LoginPage />, hydrateFallbackElement: <CircularIndeterminate />, },
-        { path: "/register", element: <RegisterPage />, hydrateFallbackElement: <CircularIndeterminate />, },
-        { path: "/forgot-password", element: <ForgotPasswordPage />, },
-        { path: "/auth/success", element: <AuthSuccess /> },
-        { path: "/auth/verify", element: <VerifySuccess /> },
-        { path: "*", element: <NotFound /> },
-        // Protected Route
+  const router = createBrowserRouter([
+    {
+      path: "/",
+      element: <LandingPage />,
+      hydrateFallbackElement: <CircularIndeterminate />,
+    },
+    {
+      path: "/login",
+      element: <LoginPage />,
+      hydrateFallbackElement: <CircularIndeterminate />,
+    },
+    {
+      path: "/register",
+      element: <RegisterPage />,
+      hydrateFallbackElement: <CircularIndeterminate />,
+    },
+    { path: "/forgot-password", element: <ForgotPasswordPage /> },
+    { path: "/auth/success", element: <AuthSuccess /> },
+    { path: "/auth/verify", element: <VerifySuccess /> },
+    { path: "*", element: <NotFound /> },
+    // Protected Route
+    {
+      element: <PersistLogin />,
+      children: [
         {
-            element: <PersistLogin />, children: [
+          element: (
+            <RequireAuth
+              allowedRoles={[AccountRole.CUSTOMER, AccountRole.ADMIN]}
+            />
+          ),
+          children: [
+            {
+              element: <MainLayout />,
+              children: [
                 {
-                    element: <RequireAuth allowedRoles={[AccountRole.CUSTOMER, AccountRole.ADMIN]} />, children: [
-                        {
-                            element: <MainLayout />, children: [
-                                {
-                                    path: "/dashboard", element: <Dashboard />, hydrateFallbackElement: <CircularIndeterminate /> },
-                                {
-                                    path: "/vehicles", element: <Vehicle />, hydrateFallbackElement: <CircularIndeterminate />
-                                }
-                            ]
-                        }
-                    ],
-                }
-            ]
-        }
-    ])
+                  path: "/dashboard",
+                  element: <Dashboard />,
+                  hydrateFallbackElement: <CircularIndeterminate />,
+                },
+                {
+                  path: "/vehicles",
+                  element: <Vehicle />,
+                  hydrateFallbackElement: <CircularIndeterminate />,
+                },
+                {
+                  path: "/profile",
+                  element: <Profile />,
+                  hydrateFallbackElement: <CircularIndeterminate />,
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    },
+  ]);
 
-    return (
-        <RouterProvider
-            router={router}
-        />
-    );
-}
+  return <RouterProvider router={router} />;
+};
 
 export default RouterComponent;
