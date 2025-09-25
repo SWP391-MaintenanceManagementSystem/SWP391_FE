@@ -123,7 +123,7 @@ export default function PasswordForm() {
                       type={showNewPassword ? "text" : "password"}
                       placeholder="Enter your new password"
                       {...field}
-                      aria-invalid={!!form.formState.errors.password}
+                      aria-invalid={!!form.formState.errors.newPassword}
                     />
                     <span
                       onClick={() => setShowNewPassword(!showNewPassword)}
@@ -148,7 +148,7 @@ export default function PasswordForm() {
             render={({ field }) => (
               <FormItem>
                 <FormLabel className="font-inter">
-                  ConfirmNew Password
+                  Confirm New Password
                 </FormLabel>
                 <FormControl>
                   <div className="relative min-w-[200px]">
@@ -156,7 +156,7 @@ export default function PasswordForm() {
                       type={showConfirmNewPassword ? "text" : "password"}
                       placeholder="Confirm your new password"
                       {...field}
-                      aria-invalid={!!form.formState.errors.password}
+                      aria-invalid={!!form.formState.errors.confirmNewPassword}
                     />
                     <span
                       onClick={() =>
