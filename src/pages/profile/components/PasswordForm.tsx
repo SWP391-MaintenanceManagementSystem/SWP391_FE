@@ -1,4 +1,3 @@
-import * as React from "react";
 import { useForm } from "react-hook-form";
 import {
   Form,
@@ -14,22 +13,14 @@ import { Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-// import type { AccountWithProfile } from "@/types/models/account";
 import { NavLink } from "react-router-dom";
+import { toast } from "sonner";
+import { changePassword } from "@/services/auth/apis/auth.api";
 
 const FormSchema = z
   .object({
     password: z
       .string()
-      .min(8, "Password must be between 8 and 50 characters long")
-      .max(50, "Password must be between 8 and 50 characters long")
-      .regex(
-        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/,
-        "Password must contain at least one uppercase letter, one lowercase letter, one number and one special character",
-      ),
-    confirmPassword: z
-      .string()
-      .nonempty("Password confirmation is required")
       .min(8, "Password must be between 8 and 50 characters long")
       .max(50, "Password must be between 8 and 50 characters long")
       .regex(
@@ -54,7 +45,7 @@ const FormSchema = z
         "Password must contain at least one uppercase letter, one lowercase letter, one number and one special character",
       ),
   })
-  .refine((data) => data.password === data.confirmNewPassword, {
+  .refine((data) => data.newPassword === data.confirmNewPassword, {
     message: "New Password do not match",
     path: ["confirmNewPassword"],
   });
@@ -67,15 +58,27 @@ export default function PasswordForm() {
     resolver: zodResolver(FormSchema),
     defaultValues: {
       password: "",
-      confirmPassword: "",
       newPassword: "",
       confirmNewPassword: "",
     },
   });
 
-  const onSubmit = async (values: z.infer<typeof FormSchema>) => {
-    console.log(values);
+  const onSubmit = async (formData: z.infer<typeof FormSchema>) => {
+    console.log(formData);
+    try {
+      const response = await changePassword(formData);
+      if (response) {
+        toast.success("Password changed successfully");
+      } else {
+        toast.error("Failed to change password");
+      }
+      form.reset();
+    } catch (err) {
+      toast.error("Something went wrong");
+      console.error(err);
+    }
   };
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)}>
@@ -182,7 +185,7 @@ export default function PasswordForm() {
             </Button>
             <NavLink
               to="/forgot-password"
-              className=" !underline  !text-xs  !font-inter "
+              className=" !underline !text-xs !font-inter ml-2 "
             >
               Forgot Password?
             </NavLink>
