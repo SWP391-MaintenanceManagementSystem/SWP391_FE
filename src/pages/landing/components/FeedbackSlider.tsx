@@ -18,6 +18,23 @@ export default function FeedbackSlider({ testimonials }: FeedbackSliderProps) {
   slidesToShow: 3,
   slidesToScroll: 1,
   arrows: false,
+
+   responsive: [
+    {
+      breakpoint: 1024, 
+      settings: {
+        slidesToShow: 2,
+        slidesToScroll: 1,
+      },
+    },
+    {
+      breakpoint: 640, 
+      settings: {
+        slidesToShow: 1,
+        slidesToScroll: 1,
+      },
+    },
+  ],
   
 
   customPaging: () => (
@@ -38,7 +55,7 @@ export default function FeedbackSlider({ testimonials }: FeedbackSliderProps) {
       {testimonials.map((item, index) => (
         <div key={index} className="px-2">
           <div className="py-16">
-            <div className="shadow-lg rounded-lg py-6 relative bg-white flex flex-col w-96 h-72 ">
+            <div className="shadow-lg rounded-lg py-6 relative bg-white flex flex-col w-full h-auto min-h-[280px] max-w-sm mx-auto ">
               <div className="absolute -top-5 left-6 bg-black rounded-full w-10 h-10 flex items-center justify-center">
                 <Quote className="text-white w-5 h-5" />
               </div>
