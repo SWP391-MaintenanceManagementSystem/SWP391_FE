@@ -1,5 +1,5 @@
 import type { AccountWithProfile } from "@/types/models/account";
-import type { BaseResponse, PaginationResponse } from "@/types/models/response";
+// import type { BaseResponse, PaginationResponse } from "@/types/models/response";
 import { z } from "zod";
 
 export const LoginSchema = z.object({

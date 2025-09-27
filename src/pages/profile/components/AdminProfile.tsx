@@ -173,7 +173,7 @@ export default function AdminProfile() {
   return (
     <div className=" w-full h-[calc(100vh-32px)]">
       <DynamicBreadcrumbs />
-      <MainContentLayout>
+      <MainContentLayout className="lg:flex-row flex-col gap-12 ">
         {isMobile ? (
           <GeneraInfoBox user={auth.user} />
         ) : (

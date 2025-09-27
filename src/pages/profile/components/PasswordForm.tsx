@@ -179,7 +179,7 @@ export default function PasswordForm() {
             </Button>
             <NavLink
               to="/forgot-password"
-              className=" !underline !text-xs !font-inter ml-2 "
+              className=" !underline !text-sm !font-inter ml-2 text-gray-500 hover:text-gray-700 transition-colors duration-200  "
             >
               Forgot Password?
             </NavLink>

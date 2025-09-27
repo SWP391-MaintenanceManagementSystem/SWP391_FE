@@ -1,7 +1,14 @@
 import DynamicBreadcrumbs from "@/components/DynamicBreadcrumb";
 import MainContentLayout from "@/components/MainContentLayout";
+import { columns, data as dummyData, type CustomerTable } from "./columns";
+import { DataTable } from "./DataTable";
 
-export default function AdminVehiclesManagement() {
+async function getData(): Promise<CustomerTable[]> {
+  return [];
+}
+
+export default async function AdminVehiclesManagement() {
+  const data = await getData();
   return (
     <div className="w-full h-[calc(100vh-32px)]">
       <DynamicBreadcrumbs
@@ -10,9 +17,7 @@ export default function AdminVehiclesManagement() {
         }}
       />
       <MainContentLayout>
-        <h1 className="flex-1 justify-center items-center">
-          Customer & Vehicles Management
-        </h1>
+        <DataTable<CustomerTable, any> columns={columns} data={dummyData} />
       </MainContentLayout>
     </div>
   );

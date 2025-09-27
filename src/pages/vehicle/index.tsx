@@ -1,10 +1,11 @@
 import { useAuth } from "@/contexts/AuthContext";
-import { lazy, Suspense } from "react";
+import React, { lazy, Suspense } from "react";
+
 import { AccountRole } from "@/types/enums/role";
 import Loading from "@/components/Loading";
 
 const AdminVehiclesManagement = lazy(
-  () => import("./components/AdminVehiclesManagement"),
+  () => import("./components/admin/AdminVehiclesManagement"),
 );
 
 const roleComponents = {
@@ -23,10 +24,17 @@ export default function Vehicle() {
     }
   };
 
-  const Component = getComponent();
+  const Component: React.LazyExoticComponent<() => React.ReactElement> | null =
+    getComponent();
   return (
     <Suspense fallback={<Loading />}>
-      <Component />
+      {Component ? (
+        <Component />
+      ) : (
+        <div className=" flex min-h-screen items-center justify-center">
+          <h2 className="font-bold text-4xl">You don’t have permission</h2>
+        </div>
+      )}
     </Suspense>
   );
 }
