@@ -27,13 +27,7 @@ export const ChangePasswordSchema = z
       ),
     confirmNewPassword: z
       .string()
-      .nonempty("New Password confirmation is required")
-      .min(8, "Password must be between 8 and 50 characters long")
-      .max(50, "Password must be between 8 and 50 characters long")
-      .regex(
-        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/,
-        "Password must contain at least one uppercase letter, one lowercase letter, one number and one special character",
-      ),
+      .nonempty("New Password confirmation is required"),
   })
   .refine((data) => data.newPassword === data.confirmNewPassword, {
     message: "New Password do not match",
