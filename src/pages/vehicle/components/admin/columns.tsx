@@ -4,7 +4,7 @@ import { faker } from "@faker-js/faker";
 import { createColumnHelper } from "@tanstack/react-table";
 import AccountStatusTag from "@/components/AccountStatusTag";
 import { Checkbox } from "@/components/ui/checkbox";
-import RowActions from "./RowActions";
+import ColActions from "./ColActions";
 
 // Dummy Data -- CUSTOMER
 export type CustomerTable = CustomerModel & {
@@ -22,7 +22,7 @@ const createRandomCustomer = (numCustomer: number) =>
     status: faker.helpers.enumValue(AccountStatus),
   }));
 
-export const data: CustomerTable[] = createRandomCustomer(100);
+export const dummyData: CustomerTable[] = createRandomCustomer(100);
 
 const columnHelper = createColumnHelper<CustomerTable>();
 
@@ -78,6 +78,6 @@ export const columns = [
   columnHelper.display({
     id: "action",
     header: () => "Action",
-    cell: (props) => <RowActions row={props.row} />,
+    cell: (props) => <ColActions row={props.row} />,
   }),
 ];

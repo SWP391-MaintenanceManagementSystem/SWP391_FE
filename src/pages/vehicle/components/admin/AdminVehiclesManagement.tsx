@@ -1,6 +1,6 @@
 import DynamicBreadcrumbs from "@/components/DynamicBreadcrumb";
 import MainContentLayout from "@/components/MainContentLayout";
-import { columns, data as dummyData, type CustomerTable } from "./columns";
+import { columns, dummyData, type CustomerTable } from "./columns";
 import { DataTable } from "./DataTable";
 
 async function getData(): Promise<CustomerTable[]> {
@@ -17,7 +17,12 @@ export default async function AdminVehiclesManagement() {
         }}
       />
       <MainContentLayout>
-        <DataTable<CustomerTable, any> columns={columns} data={dummyData} />
+        <DataTable<CustomerTable, any>
+          columns={columns}
+          data={dummyData}
+          searchValue="email"
+          pageSize={12}
+        />
       </MainContentLayout>
     </div>
   );
