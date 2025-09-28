@@ -10,10 +10,7 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import {
-  Calendar,
   Home,
-  Inbox,
-  Search,
   Settings,
   PanelLeftClose,
   CircleUserRound,
@@ -188,7 +185,9 @@ export function AppSidebar() {
                       )
                     }
                   >
-                    <SidebarMenuButton className="!bg-transparent !outline-0  ">
+                    <SidebarMenuButton
+                      className={`!bg-transparent !outline-0 ${collapsed ? "justify-center" : ""}`}
+                    >
                       <item.icon className="h-5 w-5" />
                       {!collapsed && <span>{item.title}</span>}
                     </SidebarMenuButton>
