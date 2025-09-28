@@ -23,8 +23,6 @@ export default function ProfilePage() {
       }
       case AccountRole.CUSTOMER:
       case AccountRole.STAFF:
-        const UserProfile = roleComponents.user;
-        return <UserProfile />;
       case AccountRole.TECHNICIAN: {
         const UserProfile = roleComponents.user;
         return <UserProfile />;
