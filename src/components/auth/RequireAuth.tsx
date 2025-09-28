@@ -9,7 +9,7 @@ export default function RequireAuth({ allowedRoles }: { allowedRoles: string[] }
     }
 
     if (allowedRoles && !allowedRoles.includes(auth.user?.role!)) {
-        return <Navigate to="*"  replace />;
+        return <Navigate to="/unauthorized"  replace />;
     }
 
     return <Outlet />;

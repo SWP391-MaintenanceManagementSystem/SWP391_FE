@@ -11,9 +11,10 @@ import Dashboard from "@/pages/dashboard";
 import LandingPage from "@/pages/landing";
 import NotFound from "@/pages/notfound";
 import Vehicle from "@/pages/vehicle";
-import Profile from "@/pages/profile";
 import { AccountRole } from "@/types/enums/role";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import ProfilePage from "@/pages/profile";
+import Unauthorized from "@/pages/unauthorized";
 
 const RouterComponent = () => {
   const router = createBrowserRouter([
@@ -35,6 +36,7 @@ const RouterComponent = () => {
     { path: "/forgot-password", element: <ForgotPasswordPage /> },
     { path: "/auth/success", element: <AuthSuccess /> },
     { path: "/auth/verify", element: <VerifySuccess /> },
+    { path: "/unauthorized", element: <Unauthorized /> },
     { path: "*", element: <NotFound /> },
     // Protected Route
     {
@@ -43,7 +45,7 @@ const RouterComponent = () => {
         {
           element: (
             <RequireAuth
-              allowedRoles={[AccountRole.CUSTOMER, AccountRole.ADMIN]}
+              allowedRoles={[AccountRole.CUSTOMER, AccountRole.ADMIN, AccountRole.STAFF, AccountRole.TECHNICIAN]}
             />
           ),
           children: [
@@ -62,7 +64,7 @@ const RouterComponent = () => {
                 },
                 {
                   path: "/profile",
-                  element: <Profile />,
+                  element: <ProfilePage />,
                   hydrateFallbackElement: <CircularIndeterminate />,
                 },
               ],
