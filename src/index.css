@@ -78,7 +78,7 @@
     --sidebar-ring: oklch(0.708 0 0);
 }
 
-a {
+/*a {
     font-weight: 500;
     color: #646cff;
     text-decoration: inherit;
@@ -86,7 +86,8 @@ a {
 
 a:hover {
     color: #535bf2;
-}
+}*/
+
 
 body {
     margin: 0;
@@ -118,6 +119,60 @@ button:hover {
 button:focus,
 button:focus-visible {
     outline: 4px auto -webkit-focus-ring-color;
+}
+
+.resizer {
+    position: absolute;
+    opacity: 0;
+    right: 0;
+    top: 0;
+    height: 100%;
+    width: 4px;
+    /* vùng kéo rộng 5px */
+    cursor: col-resize;
+    /* hiển thị icon resize */
+    background: #e9ecef;
+    z-index: 10;
+    user-select: none;
+    touch-action: none;
+    border-radius: 6px;
+}
+
+.resizer.isResizing {
+    background: #6b7181;
+    /* màu highlight khi đang resize */
+    opacity: 1;
+}
+
+*:hover>.resizer {
+    opacity: 1;
+}
+
+.resizer {
+    position: absolute;
+    opacity: 0;
+    right: 0;
+    top: 0;
+    height: 100%;
+    width: 4px;
+    /* vùng kéo rộng 5px */
+    cursor: col-resize;
+    /* hiển thị icon resize */
+    background: #e9ecef;
+    z-index: 10;
+    user-select: none;
+    touch-action: none;
+    border-radius: 6px;
+}
+
+.resizer.isResizing {
+    background: #6b7181;
+    /* màu highlight khi đang resize */
+    opacity: 1;
+}
+
+*:hover>.resizer {
+    opacity: 1;
 }
 
 @media (prefers-color-scheme: light) {
@@ -215,4 +270,34 @@ button:focus-visible {
     body {
         @apply bg-background text-foreground;
     }
+}
+
+/* Chiều rộng & cao của scrollbar */
+::-webkit-scrollbar {
+    @apply w-1.5 h-2;
+}
+
+/* Track (phần nền phía sau thanh kéo) */
+::-webkit-scrollbar-track {
+    @apply bg-transparent;
+}
+
+/* Thumb (phần kéo được của scrollbar) */
+::-webkit-scrollbar-thumb {
+    @apply rounded-full bg-border border-[1px] border-transparent border-solid;
+}
+
+/* Chiều rộng & cao của scrollbar */
+::-webkit-scrollbar {
+    @apply w-1.5 h-2;
+}
+
+/* Track (phần nền phía sau thanh kéo) */
+::-webkit-scrollbar-track {
+    @apply bg-transparent;
+}
+
+/* Thumb (phần kéo được của scrollbar) */
+::-webkit-scrollbar-thumb {
+    @apply rounded-full bg-border border-[1px] border-transparent border-solid;
 }

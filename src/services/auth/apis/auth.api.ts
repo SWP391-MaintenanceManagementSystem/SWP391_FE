@@ -13,7 +13,7 @@ export const register = async (formData: RegisterFormData) => {
   const { email, password, firstName, lastName, confirmPassword } = formData;
   const user = await httpPublic.post<BaseResponse<RegisterResponse>>(
     "auth/signup",
-    { email, password, firstName, lastName, confirmPassword }
+    { email, password, firstName, lastName, confirmPassword },
   );
   return user;
 };
@@ -22,7 +22,7 @@ export const login = async (formData: LoginFormData) => {
   const { email, password } = formData;
   const user = await httpPublic.post<BaseResponse<LoginResponse>>(
     "auth/signin",
-    { email, password }
+    { email, password },
   );
   return user;
 };
@@ -31,10 +31,19 @@ export const logout = async () => {
   return await httpPrivate.post("auth/signout");
 };
 
+export const changePassword = async (formData: ChangePasswordFormData) => {
+  const { oldPassword, newPassword, confirmNewPassword } = formData;
+  const response = await httpPrivate.patch<BaseResponse<null>>(
+    "/auth/me/change-password",
+    { oldPassword, newPassword, confirmNewPassword },
+  );
+  return response;
+};
+
 export const refresh = async () => {
   return await httpPublic.get<BaseResponse<{ accessToken: string }>>(
     "auth/refresh-token",
-    { withCredentials: true }
+    { withCredentials: true },
   );
 };
 
@@ -49,47 +58,40 @@ export const getMe = async (token?: string) => {
 
   return await httpPrivate.get<BaseResponse<{ account: AccountWithProfile }>>(
     "auth/me",
-    config
+    config,
   );
 };
 
 export const resendVerifyEmail = async (email: string) => {
   return await httpPublic.post<BaseResponse<null>>(
     "auth/resend-activation-email",
-    { email }
+    { email },
   );
 };
 
 export const requestResetPassword = async (email: string) => {
   return await httpPublic.post<BaseResponse<null>>(
     "auth/reset-password/request",
-    { email }
+    { email },
   );
 };
 
 export const verifyResetPassword = async (code: string, email: string) => {
   return await httpPublic.post<BaseResponse<null>>(
     "auth/reset-password/verify",
-    { code, email }
+    { code, email },
   );
 };
 
 export const resetPassword = async (
   code: string,
   newPassword: string,
-  confirmNewPassword: string
+  confirmNewPassword: string,
 ) => {
   return await httpPublic.post<BaseResponse<null>>(
     "auth/reset-password/confirm",
-    { code, newPassword, confirmNewPassword }
+    { code, newPassword, confirmNewPassword },
   );
 };
 
 
-export const changePassword = async (data: ChangePasswordFormData) => {
-  return await httpPrivate.patch<BaseResponse<null>>("auth/me/change-password", {
-    oldPassword: data.oldPassword,
-    newPassword: data.newPassword,
-    confirmNewPassword: data.confirmNewPassword,
-  });
-}

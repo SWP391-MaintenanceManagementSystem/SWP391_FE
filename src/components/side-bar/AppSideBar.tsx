@@ -11,10 +11,7 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import {
-  Calendar,
   Home,
-  Inbox,
-  Search,
   Settings,
   PanelLeftClose,
   CircleUserRound,
@@ -144,7 +141,7 @@ const getMenuItems = (role: AccountRole) => {
 export function AppSidebar() {
   const { auth } = useAuth();
   const role = auth.user?.role!;
- 
+
   const [collapsed, setCollapsed] = useState(false);
   const items = getMenuItems(role) || [];
   const { isMobile } = useSidebar();
@@ -225,7 +222,11 @@ export function AppSidebar() {
             <>
               <div className="flex items-center gap-2">
                 <CircleUserRound />
-                {!collapsed && <span className=" text-sm">{auth.user?.profile?.firstName + " " + auth.user?.profile?.lastName}</span>}
+                {!collapsed &&
+                  <span className=" text-sm">
+                    {auth.user?.role === AccountRole.ADMIN && "Admin"}
+                    {auth.user?.role !== AccountRole.ADMIN && (auth.user?.profile?.firstName + " " + auth.user?.profile?.lastName)}
+                  </span>}
               </div>
               {!collapsed &&
                 (isActive ? (
