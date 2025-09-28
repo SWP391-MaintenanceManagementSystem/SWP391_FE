@@ -2,7 +2,6 @@ import type { ChangeProfileFormData } from "@/pages/profile/components/profile/l
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { updateInfo } from "../apis/profile.api";
 import { toast } from "sonner";
-import { getAuthStorage, setAuthStorage } from "@/contexts/AuthContext";
 import { queryKeys } from "../queries/keys";
 
 export const useUpdateProfileMutation = () => {
@@ -14,8 +13,6 @@ export const useUpdateProfileMutation = () => {
             return updatedUser.data.data.account;
         },
         onSuccess: () => {
-            const currentAuth = getAuthStorage();
-            setAuthStorage({ ...currentAuth });
             queryClient.invalidateQueries({ queryKey: queryKeys.profile });
             toast.success("Profile updated successfully");
         },

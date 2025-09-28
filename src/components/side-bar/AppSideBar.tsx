@@ -8,6 +8,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  useSidebar,
 } from "@/components/ui/sidebar";
 import {
   Calendar,
@@ -31,11 +32,12 @@ import {
 import logo from "/logo.svg";
 import logoWithoutText from "/logo-without-text-light.svg";
 import { NavLink } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AccountRole } from "@/types/enums/role";
 import type { SidebarItem } from "@/types/models/sidebar-item";
 import clsx from "clsx";
 import { useAuth } from "@/contexts/AuthContext";
+import { SheetContent } from "../ui/sheet";
 const customerItems: SidebarItem[] = [
   {
     title: "Dashboard",
@@ -142,8 +144,11 @@ const getMenuItems = (role: AccountRole) => {
 export function AppSidebar() {
   const { auth } = useAuth();
   const role = auth.user?.role!;
+ 
   const [collapsed, setCollapsed] = useState(false);
   const items = getMenuItems(role) || [];
+  const { isMobile } = useSidebar();
+
   return (
     <Sidebar
       className={`transition-all duration-300 h-[calc(100vh-32px)] my-4 ml-4 mr-0 rounded-xl overflow-hidden relative min-h-[500px]
@@ -156,7 +161,10 @@ export function AppSidebar() {
             <img src={logo} />
             <PanelLeftClose
               className="h-6 w-6 cursor-pointer"
-              onClick={() => setCollapsed(!collapsed)}
+              onClick={() => {
+                if (isMobile) return;
+                setCollapsed(!collapsed)
+              }}
             />
           </div>
         )}
@@ -191,6 +199,7 @@ export function AppSidebar() {
                     <SidebarMenuButton className="!bg-transparent outline-0 flex ">
                       <item.icon className={clsx("h-5 w-5", collapsed && "mx-auto")} />
                       {!collapsed && <span>{item.title}</span>}
+
                     </SidebarMenuButton>
                   </NavLink>
                 </SidebarMenuItem>
@@ -228,6 +237,7 @@ export function AppSidebar() {
           )}
         </NavLink>
       </SidebarFooter>
+
     </Sidebar>
   );
 }

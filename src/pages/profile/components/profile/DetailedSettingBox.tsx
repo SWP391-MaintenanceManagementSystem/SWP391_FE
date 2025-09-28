@@ -1,8 +1,8 @@
 import ProfileForm from "./ProfileForm";
 import useChangeProfile from "@/services/profile/hooks/useChangeProfile";
 import type { AccountWithProfile } from "@/types/models/account";
-import ChangePasswordForm from "../ChangePasswordForm";
 import { useChangePassword } from "@/services/auth/hooks/useChangePassword";
+import ChangePasswordForm from "../ChangePasswordForm";
 
 
 type DetailedSettingBoxProps = {
