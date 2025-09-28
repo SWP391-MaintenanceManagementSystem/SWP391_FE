@@ -88,6 +88,7 @@ a:hover {
     color: #535bf2;
 }*/
 
+
 body {
     margin: 0;
     min-width: 320px;
@@ -126,8 +127,10 @@ button:focus-visible {
     right: 0;
     top: 0;
     height: 100%;
-    width: 4px; /* vùng kéo rộng 5px */
-    cursor: col-resize; /* hiển thị icon resize */
+    width: 4px;
+    /* vùng kéo rộng 5px */
+    cursor: col-resize;
+    /* hiển thị icon resize */
     background: #e9ecef;
     z-index: 10;
     user-select: none;
@@ -136,11 +139,39 @@ button:focus-visible {
 }
 
 .resizer.isResizing {
-    background: #6b7181; /* màu highlight khi đang resize */
+    background: #6b7181;
+    /* màu highlight khi đang resize */
     opacity: 1;
 }
 
-*:hover > .resizer {
+*:hover>.resizer {
+    opacity: 1;
+}
+
+.resizer {
+    position: absolute;
+    opacity: 0;
+    right: 0;
+    top: 0;
+    height: 100%;
+    width: 4px;
+    /* vùng kéo rộng 5px */
+    cursor: col-resize;
+    /* hiển thị icon resize */
+    background: #e9ecef;
+    z-index: 10;
+    user-select: none;
+    touch-action: none;
+    border-radius: 6px;
+}
+
+.resizer.isResizing {
+    background: #6b7181;
+    /* màu highlight khi đang resize */
+    opacity: 1;
+}
+
+*:hover>.resizer {
     opacity: 1;
 }
 
@@ -239,6 +270,21 @@ button:focus-visible {
     body {
         @apply bg-background text-foreground;
     }
+}
+
+/* Chiều rộng & cao của scrollbar */
+::-webkit-scrollbar {
+    @apply w-1.5 h-2;
+}
+
+/* Track (phần nền phía sau thanh kéo) */
+::-webkit-scrollbar-track {
+    @apply bg-transparent;
+}
+
+/* Thumb (phần kéo được của scrollbar) */
+::-webkit-scrollbar-thumb {
+    @apply rounded-full bg-border border-[1px] border-transparent border-solid;
 }
 
 /* Chiều rộng & cao của scrollbar */

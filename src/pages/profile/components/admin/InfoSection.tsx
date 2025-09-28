@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { CircleUserRound, LogOut } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import type { AccountWithProfile } from "@/types/models/account";
@@ -7,21 +7,18 @@ import AccountStatusTag from "@/components/AccountStatusTag";
 import Tag from "@/components/Tag";
 import { useWindowSize } from "@uidotdev/usehooks";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import ChangePasswordForm from "../ChangePasswordForm";
 import { useChangePassword } from "@/services/auth/hooks/useChangePassword";
 
 type AdminInfoProps = {
   user?: AccountWithProfile | null;
 };
+
+// Avatar Box
 export const AdminAvatarBox = ({ user }: AdminInfoProps) => {
   return (
     <div className="flex flex-col gap-2 justify-center items-center bg-slate-100 px-[56px] py-[34px] rounded-[20px] shadow-md">
-      <CircleUserRound
-        strokeWidth={1.4}
-        size={160}
-        className="  text-gray-primary"
-      />
+      <CircleUserRound strokeWidth={1.4} size={160} className="text-gray-primary" />
       {user && (
         <Tag
           text={user.role}
@@ -33,27 +30,21 @@ export const AdminAvatarBox = ({ user }: AdminInfoProps) => {
   );
 };
 
-const InfoSection = ({
-  title,
-  children,
-}: {
-  title: string;
-  children: React.ReactNode;
-}) => (
+// Section wrapper
+const InfoSection = ({ title, children }: { title: string; children: React.ReactNode }) => (
   <div className="flex flex-col gap-2">
     <h3 className="text-2xl font-semibold font-inter">{title}</h3>
     {children}
   </div>
 );
 
+// Info content
 const InfoContent = ({ user }: AdminInfoProps) => (
   <>
     <InfoSection title="Information">
       {user ? (
         <>
-          <p className="font-inter">
-            <strong>Email:</strong> {user.email}
-          </p>
+          <p className="font-inter"><strong>Email:</strong> {user.email}</p>
           <p className="font-inter flex flex-row gap-2">
             <strong>Status:</strong>
             <span className="inline-flex">
@@ -62,9 +53,7 @@ const InfoContent = ({ user }: AdminInfoProps) => (
           </p>
         </>
       ) : (
-        <p className="font-inter text-center text-gray-400">
-          No data available
-        </p>
+        <p className="font-inter text-center text-gray-400">No data available</p>
       )}
     </InfoSection>
 
@@ -76,13 +65,16 @@ const InfoContent = ({ user }: AdminInfoProps) => (
   </>
 );
 
+// Info box with logout
 export const AdminInfoBox = ({ user }: AdminInfoProps) => {
   const { handleLogout } = useAuth();
   const navigate = useNavigate();
+
   const onLogout = async () => {
     await handleLogout();
     navigate("/login", { replace: true });
   };
+
   return (
     <div className="flex flex-col h-full justify-between gap-6 bg-slate-100 px-[42px] py-[25px] rounded-[20px] shadow-md">
       <div className="gap-5 flex flex-col">
@@ -100,9 +92,11 @@ export const AdminInfoBox = ({ user }: AdminInfoProps) => {
   );
 };
 
+// Responsive general info box
 export const GeneralInfoBox = ({ user }: AdminInfoProps) => {
   const { height, width = 0 } = useWindowSize();
   const [isBreakpoint, setIsBreakpoint] = useState(false);
+
   useEffect(() => {
     if (!width || !height) return;
     setIsBreakpoint(width > 450);
@@ -110,11 +104,7 @@ export const GeneralInfoBox = ({ user }: AdminInfoProps) => {
 
   return (
     <div className="flex flex-col gap-5 justify-center items-center bg-slate-100 px-[44px] py-[34px] rounded-[20px] shadow-md">
-      <CircleUserRound
-        strokeWidth={1.4}
-        size={160}
-        className="text-gray-primary"
-      />
+      <CircleUserRound strokeWidth={1.4} size={160} className="text-gray-primary" />
 
       {user && (
         <Tag
@@ -125,8 +115,7 @@ export const GeneralInfoBox = ({ user }: AdminInfoProps) => {
       )}
 
       <div
-        className={`gap-5 flex w-full ${isBreakpoint ? "flex-row justify-around" : "flex-col justify-around"
-          }`}
+        className={`gap-5 flex w-full ${isBreakpoint ? "flex-row justify-around" : "flex-col justify-around"}`}
       >
         <InfoContent user={user} />
       </div>
@@ -141,6 +130,7 @@ export const GeneralInfoBox = ({ user }: AdminInfoProps) => {
   );
 };
 
+// Detailed settings box
 export const DetailSettingBox = () => {
   const { form, handleChangePassword } = useChangePassword();
   return (
