@@ -14,18 +14,18 @@ import { useState } from "react";
 import { NavLink } from "react-router-dom";
 import type { ChangePasswordFormData } from "./profile/libs/schema";
 
-
-
 type ChangePasswordFormProps = {
   form: ReturnType<typeof useForm<ChangePasswordFormData>>;
   onSubmit: (data: ChangePasswordFormData) => void;
 };
 
-export default function ChangePasswordForm({ form, onSubmit }: ChangePasswordFormProps) {
+export default function ChangePasswordForm({
+  form,
+  onSubmit,
+}: ChangePasswordFormProps) {
   const [showPassword, setShowPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmNewPassword, setShowConfirmNewPassword] = useState(false);
-
 
   return (
     <Form {...form}>
@@ -121,7 +121,7 @@ export default function ChangePasswordForm({ form, onSubmit }: ChangePasswordFor
               </FormItem>
             )}
           />
-          <div className="space-y-4 mt-4 grid grid-cols-2">
+          <div className="space-y-2 mt-4 grid grid-cols-1">
             <Button
               type="submit"
               className="w-fit !bg-purple-primary !font-inter !text-white hover:scale-105 transition-transform duration-150"
@@ -130,7 +130,7 @@ export default function ChangePasswordForm({ form, onSubmit }: ChangePasswordFor
             </Button>
             <NavLink
               to="/forgot-password"
-              className=" !underline !text-xs !font-inter text-right "
+              className=" !underline !text-xs !font-inter text-left "
             >
               Forgot Password?
             </NavLink>
