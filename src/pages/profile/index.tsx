@@ -1,10 +1,9 @@
-import * as React from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { lazy, Suspense } from "react";
 import { AccountRole } from "@/types/enums/role";
 import Loading from "@/components/Loading";
 
-const AdminProfile = lazy(() => import("./components/AdminProfile"));
+const AdminProfile = lazy(() => import("./components/admin/AdminProfile"));
 const Profile = lazy(() => import("./components/profile/Profile"));
 
 const roleComponents = {

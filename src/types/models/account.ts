@@ -13,13 +13,12 @@ export interface AccountWithProfile {
     updatedAt: string;
 }
 
-
 export type Customer = {
-    firstName: string;
-    lastName: string;
-    address?: string;
-    is_premium: boolean;
-}
+  firstName: string;
+  lastName: string;
+  address?: string;
+  is_premium: boolean;
+};
 
 export type Employee = {
     firstName: string;

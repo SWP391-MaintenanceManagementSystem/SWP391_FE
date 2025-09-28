@@ -1,12 +1,19 @@
 import * as React from "react";
+import { cn } from "@/lib/utils";
 
 interface Props {
   children: React.ReactNode;
+  className?: string;
 }
 
-export default function MainContentLayout({ children }: Props) {
+export default function MainContentLayout({ children, className }: Props) {
   return (
-    <div className="mt-4 py-[48px] px-[12px] h-full flex lg:flex-row flex-col gap-12 flex-1" >
+    <div
+      className={cn(
+        "mt-4 pt-4 pb-12 px-[12px] h-full flex flex-1 w-full",
+        className,
+      )}
+    >
       {children}
     </div>
   );

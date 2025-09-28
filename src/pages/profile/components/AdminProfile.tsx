@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button";
 import DynamicBreadcrumbs from "@/components/DynamicBreadcrumb";
 import AccountStatusTag from "@/components/AccountStatusTag";
 import Tag from "@/components/Tag";
-import PasswordForm from "@/pages/profile/components/PasswordForm";
 import { useWindowSize } from "@uidotdev/usehooks";
 import { useEffect, useState } from "react";
 import MainContentLayout from "@/components/MainContentLayout";
