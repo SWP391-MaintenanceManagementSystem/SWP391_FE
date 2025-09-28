@@ -11,9 +11,9 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { NavLink } from "react-router-dom";
-import { type ChangePasswordFormData, ChangePasswordFormDataValues, ChangePasswordSchema } from "./profile/libs/schema";
+import type { ChangePasswordFormData } from "./profile/libs/schema";
+
 
 
 type ChangePasswordFormProps = {
