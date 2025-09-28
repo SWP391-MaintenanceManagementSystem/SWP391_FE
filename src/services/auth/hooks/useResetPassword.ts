@@ -27,7 +27,6 @@ export default function useResetPassword() {
         code: resetCodeForm,
     }
     const handleRequestReset = async (formData: ForgotPasswordFormData) => {
-        console.log("Requesting password reset for:", formData.email);
         try {
             await requestResetPassword(formData.email);
             setPageType(PageType.VERIFY);

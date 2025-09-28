@@ -7,6 +7,10 @@ const wrap = (client: typeof axiosPrivate | typeof axiosPublic) => {
             const res = await client.get<T>(url, options);
             return res.data;
         },
+        myGet: async <T>(url: string, options?: AxiosRequestConfig) => {
+            const res = await client.get<T>(url, options);
+            return res.data;
+        },
         post: async <T>(url: string, body?: any, options?: AxiosRequestConfig) => {
             const res = await client.post<T>(url, body, options);
             return res.data;
