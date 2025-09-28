@@ -5,6 +5,7 @@ import type {
   RegisterFormData,
   RegisterResponse,
 } from "@/pages/auth/lib/schema";
+import type { ChangePasswordFormData } from "@/pages/profile/components/profile/libs/schema";
 import type { AccountWithProfile } from "@/types/models/account";
 import type { BaseResponse } from "@/types/models/response";
 
@@ -40,10 +41,10 @@ export const refresh = async () => {
 export const getMe = async (token?: string) => {
   const config = token
     ? {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
     : {};
 
   return await httpPrivate.get<BaseResponse<{ account: AccountWithProfile }>>(
@@ -83,3 +84,12 @@ export const resetPassword = async (
     { code, newPassword, confirmNewPassword }
   );
 };
+
+
+export const changePassword = async (data: ChangePasswordFormData) => {
+  return await httpPrivate.patch<BaseResponse<null>>("auth/me/change-password", {
+    oldPassword: data.oldPassword,
+    newPassword: data.newPassword,
+    confirmNewPassword: data.confirmNewPassword,
+  });
+}

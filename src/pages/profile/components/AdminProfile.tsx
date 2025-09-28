@@ -10,6 +10,9 @@ import PasswordForm from "@/pages/profile/components/PasswordForm";
 import { useWindowSize } from "@uidotdev/usehooks";
 import { useEffect, useState } from "react";
 import MainContentLayout from "@/components/MainContentLayout";
+import { InfoSection } from "./InfoSection";
+import ChangePasswordForm from "./ChangePasswordForm";
+import { useChangePassword } from "@/services/auth/hooks/useChangePassword";
 type AdminInfoProps = {
   user?: AccountWithProfile | null;
 };
@@ -32,18 +35,6 @@ const AdminAvatarBox = ({ user }: AdminInfoProps) => {
   );
 };
 
-const InfoSection = ({
-  title,
-  children,
-}: {
-  title: string;
-  children: React.ReactNode;
-}) => (
-  <div className="flex flex-col gap-2">
-    <h3 className="text-2xl font-semibold font-inter">{title}</h3>
-    {children}
-  </div>
-);
 
 const AdminInfoBox = ({ user }: AdminInfoProps) => {
   return (
@@ -140,12 +131,13 @@ const GeneraInfoBox = ({ user }: AdminInfoProps) => {
 };
 
 const DetailSettingBox = () => {
+  const { form: passwordForm, handleChangePassword } = useChangePassword();
   return (
     <div className="bg-slate-100 px-[42px] min-w-[200px] pt-10 flex-1 rounded-[20px] shadow-md flex flex-col gap-[10%] min-h-[500px]">
       <h3 className="!font-inter font-bold text-3xl grid text-gray-text-header items-center">
         Detailed Settings
       </h3>
-      <PasswordForm />
+      <ChangePasswordForm form={passwordForm} onSubmit={handleChangePassword} />
     </div>
   );
 };

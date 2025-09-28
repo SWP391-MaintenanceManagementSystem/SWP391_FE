@@ -15,7 +15,6 @@ export const PersistLogin = () => {
                     setLoading(false);
                     return;
                 }
-
                 if (!auth.accessToken) {
                     const res = await refresh();
                     const { accessToken } = res.data

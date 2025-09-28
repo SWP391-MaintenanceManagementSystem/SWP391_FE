@@ -1,13 +1,12 @@
 import type { AccountStatus } from "../enums/accountStatus";
-import type { Role } from "../enums/role";
+import type { AccountRole } from "../enums/role";
 
 export interface AccountWithProfile {
     id: string;
     email: string;
     avatar?: string;
-    role: Role;
+    role: AccountRole;
     phone?: string;
-    address?: string;
     status: AccountStatus;
     profile?: Profile;
     createdAt: string;
@@ -25,7 +24,6 @@ export type Customer = {
 export type Employee = {
     firstName: string;
     lastName: string;
-    specialization?: string;
     experienceYears?: number;
     // TODO: make certificate DTO
     certificate?: string;

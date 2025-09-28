@@ -132,7 +132,7 @@ const getMenuItems = (role: AccountRole) => {
       return customerItems;
     case AccountRole.STAFF:
       break;
-    case AccountRole.TECHNICAN:
+    case AccountRole.TECHNICIAN:
       break;
     default:
       return [];
@@ -141,12 +141,12 @@ const getMenuItems = (role: AccountRole) => {
 
 export function AppSidebar() {
   const { auth } = useAuth();
-  const role = auth.user?.role;
+  const role = auth.user?.role!;
   const [collapsed, setCollapsed] = useState(false);
   const items = getMenuItems(role) || [];
   return (
     <Sidebar
-      className={`transition-all duration-300 h-[calc(100vh-32px)] my-4 ml-4 mr-0 rounded-xl overflow-hidden relative
+      className={`transition-all duration-300 h-[calc(100vh-32px)] my-4 ml-4 mr-0 rounded-xl overflow-hidden relative min-h-[500px]
           ${collapsed ? "w-16" : "w-64"}
         `}
     >
@@ -182,14 +182,14 @@ export function AppSidebar() {
                     className={({ isActive }) =>
                       clsx(
                         "flex items-center gap-2 !text-gray-primary font-inter",
-                        collapsed && "justify-center",
+                        collapsed && "justify-between",
                         isActive &&
-                          "bg-purple-primary rounded-md !text-slate-200 !outline-0",
+                        "bg-purple-primary rounded-md !text-slate-200 !outline-0",
                       )
                     }
                   >
-                    <SidebarMenuButton className="!bg-transparent !outline-0  ">
-                      <item.icon className="h-5 w-5" />
+                    <SidebarMenuButton className="!bg-transparent outline-0 flex ">
+                      <item.icon className={clsx("h-5 w-5", collapsed && "mx-auto")} />
                       {!collapsed && <span>{item.title}</span>}
                     </SidebarMenuButton>
                   </NavLink>
@@ -216,7 +216,7 @@ export function AppSidebar() {
             <>
               <div className="flex items-center gap-2">
                 <CircleUserRound />
-                {!collapsed && <span className=" text-sm">Username</span>}
+                {!collapsed && <span className=" text-sm">{auth.user?.profile?.firstName + " " + auth.user?.profile?.lastName}</span>}
               </div>
               {!collapsed &&
                 (isActive ? (
