@@ -4,7 +4,7 @@ import { lazy, Suspense } from "react";
 import { AccountRole } from "@/types/enums/role";
 import Loading from "@/components/Loading";
 
-const AdminProfile = lazy(() => import("./components/AdminProfile"));
+const AdminProfile = lazy(() => import("./components/admin/AdminProfile"));
 // const UserProfile = lazy(() => import("./components/UserProfile"));
 //
 const roleComponents = {

@@ -120,6 +120,30 @@ button:focus-visible {
     outline: 4px auto -webkit-focus-ring-color;
 }
 
+.resizer {
+    position: absolute;
+    opacity: 0;
+    right: 0;
+    top: 0;
+    height: 100%;
+    width: 4px; /* vùng kéo rộng 5px */
+    cursor: col-resize; /* hiển thị icon resize */
+    background: #e9ecef;
+    z-index: 10;
+    user-select: none;
+    touch-action: none;
+    border-radius: 6px;
+}
+
+.resizer.isResizing {
+    background: #6b7181; /* màu highlight khi đang resize */
+    opacity: 1;
+}
+
+*:hover > .resizer {
+    opacity: 1;
+}
+
 @media (prefers-color-scheme: light) {
     :root {
         color: #213547;

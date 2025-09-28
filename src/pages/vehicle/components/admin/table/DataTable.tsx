@@ -4,11 +4,13 @@ import {
   useReactTable,
   getFilteredRowModel,
   getPaginationRowModel,
+  getSortedRowModel,
   type ColumnFiltersState,
   type PaginationState,
+  type VisibilityState,
 } from "@tanstack/react-table";
 
-import type { ColumnDef } from "@tanstack/react-table";
+import type { ColumnDef, Row } from "@tanstack/react-table";
 
 import {
   Table,
@@ -38,6 +40,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { DeleteDialog } from "@/components/dialog/DeleteDialog";
+import type { CustomerTable } from "./columns";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -58,6 +61,7 @@ export function DataTable<TData, TValue>({
     pageIndex: 0,
     pageSize,
   });
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
 
   const table = useReactTable({
     data,
@@ -66,13 +70,34 @@ export function DataTable<TData, TValue>({
       columnFilters,
       rowSelection,
       pagination,
+      columnVisibility,
+    },
+    filterFns: {
+      equals: (
+        row: Row<CustomerTable>,
+        columnId: string,
+        filterValue: string[],
+      ) => {
+        if (!filterValue || filterValue.length === 0) return true;
+        const cellValue = row.getValue(columnId);
+        console.log(cellValue);
+        if (typeof cellValue === "boolean") {
+          const label = cellValue ? "Yes" : "No";
+          return filterValue.includes(label);
+        }
+        return filterValue.includes(String(cellValue));
+      },
     },
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    getSortedRowModel: getSortedRowModel(),
     onColumnFiltersChange: setColumnFilters,
     onRowSelectionChange: setRowSelection,
     onPaginationChange: setPagination,
-    getPaginationRowModel: getPaginationRowModel(),
+    onColumnVisibilityChange: setColumnVisibility,
+    enableColumnResizing: true,
+    columnResizeMode: "onChange",
   });
 
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
@@ -135,7 +160,7 @@ export function DataTable<TData, TValue>({
                       column.toggleVisibility(!!value)
                     }
                   >
-                    {column.id}
+                    {column.columnDef.meta?.title ?? column.id}
                   </DropdownMenuCheckboxItem>
                 );
               })}
@@ -152,13 +177,23 @@ export function DataTable<TData, TValue>({
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
                   return (
-                    <TableHead key={header.id}>
+                    <TableHead
+                      key={header.id}
+                      style={{ position: "relative", width: header.getSize() }}
+                    >
                       {header.isPlaceholder
                         ? null
                         : flexRender(
                             header.column.columnDef.header,
                             header.getContext(),
                           )}
+                      {header.column.getCanResize() && (
+                        <div
+                          onMouseDown={header.getResizeHandler()}
+                          onTouchStart={header.getResizeHandler()}
+                          className={`resizer ${header.column.getIsResizing() ? "isResizing" : ""}`}
+                        ></div>
+                      )}
                     </TableHead>
                   );
                 })}
@@ -214,9 +249,21 @@ export function DataTable<TData, TValue>({
           >
             <ChevronLeft />
           </Button>
-          <Button variant="outline" disabled>
-            {table.getState().pagination.pageIndex + 1}
-          </Button>
+          <Input
+            type="number"
+            value={table.getState().pagination.pageIndex + 1}
+            min="1"
+            max={table.getPageCount()}
+            defaultValue={table.getState().pagination.pageIndex + 1}
+            onChange={(e) => {
+              let page = Number(e.target.value);
+              if (isNaN(page) || page < 1) page = 1;
+              if (page > table.getPageCount()) page = table.getPageCount();
+
+              table.setPageIndex(page - 1);
+            }}
+            className="border border-gray-300 rounded px-2 w-14 text-center"
+          />
           <Button
             variant="outline"
             className="!outline-none"

@@ -5,7 +5,7 @@ import type { AccountWithProfile } from "@/types/models/account";
 import { Button } from "@/components/ui/button";
 import AccountStatusTag from "@/components/AccountStatusTag";
 import Tag from "@/components/Tag";
-import PasswordForm from "@/pages/profile/components/PasswordForm";
+import PasswordForm from "@/pages/profile/components/admin/PasswordForm";
 import { useWindowSize } from "@uidotdev/usehooks";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";

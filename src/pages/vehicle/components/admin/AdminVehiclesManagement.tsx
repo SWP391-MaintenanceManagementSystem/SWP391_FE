@@ -1,7 +1,7 @@
 import DynamicBreadcrumbs from "@/components/DynamicBreadcrumb";
 import MainContentLayout from "@/components/MainContentLayout";
-import { columns, dummyData, type CustomerTable } from "./columns";
-import { DataTable } from "./DataTable";
+import { columns, dummyData, type CustomerTable } from "./table/columns";
+import { DataTable } from "./table/DataTable";
 
 async function getData(): Promise<CustomerTable[]> {
   return [];
