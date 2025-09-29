@@ -12,11 +12,13 @@ type ThemeProviderProps = {
 type ThemeProviderState = {
     theme: Theme;
     setTheme: (theme: Theme) => void;
+    resolvedTheme: "dark" | "light";
 };
 
 const initialState: ThemeProviderState = {
     theme: "system",
     setTheme: () => null,
+    resolvedTheme: "light",
 };
 
 const ThemeProviderContext = createContext<ThemeProviderState>(initialState);

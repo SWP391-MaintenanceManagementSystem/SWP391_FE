@@ -190,7 +190,7 @@ export function AppSidebar() {
                         "flex items-center gap-2 !text-gray-primary font-inter",
                         collapsed && "justify-between",
                         isActive &&
-                        "bg-purple-primary rounded-md dark:!text-amber-primary !outline-0",
+                        "bg-purple-primary rounded-md dark:!text-amber-primary !text-white !outline-0",
                       )
                     }
                   >
