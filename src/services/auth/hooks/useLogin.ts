@@ -18,7 +18,7 @@ export default function useLogin() {
         try {
             setPendingEmail(formData.email)
             await handleLogin(formData);
-            navigate("/", { replace: true });
+            navigate("/dashboard", { replace: true });
         } catch (error: unknown) {
             let msg = "An unexpected error occurred. Please try again later.";
             if (error instanceof AxiosError) {
