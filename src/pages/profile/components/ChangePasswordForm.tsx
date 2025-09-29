@@ -14,23 +14,23 @@ import { useState } from "react";
 import { NavLink } from "react-router-dom";
 import type { ChangePasswordFormData } from "./profile/libs/schema";
 
-
-
 type ChangePasswordFormProps = {
   form: ReturnType<typeof useForm<ChangePasswordFormData>>;
   onSubmit: (data: ChangePasswordFormData) => void;
 };
 
-export default function ChangePasswordForm({ form, onSubmit }: ChangePasswordFormProps) {
+export default function ChangePasswordForm({
+  form,
+  onSubmit,
+}: ChangePasswordFormProps) {
   const [showPassword, setShowPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmNewPassword, setShowConfirmNewPassword] = useState(false);
 
-
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)}>
-        <div className="grid grid-cols-1 w-full gap-6 md:items-start items-center">
+        <div className="grid grid-cols-1 w-full gap-4 md:items-start items-center">
           <FormField
             control={form.control}
             name="oldPassword"

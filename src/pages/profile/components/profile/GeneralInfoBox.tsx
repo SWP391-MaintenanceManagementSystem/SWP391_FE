@@ -6,10 +6,11 @@ import AccountStatusTag from "@/components/AccountStatusTag";
 import { NavLink } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ModeToggle } from "@/components/theme/ModeToggle";
+import { Switch } from "@/components/ui/switch";
 
 type GeneralInfoBoxProps = {
-    user: AccountWithProfile | undefined;
-    handleLogout: () => Promise<void>;
+  user: AccountWithProfile | undefined;
+  handleLogout: () => Promise<void>;
 };
 
 const GeneralInfoBox = ({ user, handleLogout }: GeneralInfoBoxProps) => {

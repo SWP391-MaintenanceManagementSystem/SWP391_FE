@@ -1,5 +1,5 @@
 import type { Column } from "@tanstack/react-table";
-import type { CustomerTable } from "./columns";
+import type { CustomerTable } from "../../pages/vehicle/components/admin/table/columns";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,

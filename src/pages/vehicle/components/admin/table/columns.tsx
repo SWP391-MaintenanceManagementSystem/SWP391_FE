@@ -1,35 +1,37 @@
-import type { Customer as CustomerModel } from "@/types/models/account";
-import { AccountStatus } from "@/types/enums/accountStatus";
-import { faker } from "@faker-js/faker";
 import { createColumnHelper } from "@tanstack/react-table";
-import AccountStatusTag from "@/components/AccountStatusTag";
 import { Checkbox } from "@/components/ui/checkbox";
+import SortHeader from "@/components/table/SortHeader";
+import FilterHeader from "@/components/table/FilterHeader";
+import AccountStatusTag from "@/components/AccountStatusTag";
 import ColActions from "./ColActions";
-import SortHeader from "./SortHeader";
-import FilterHeader from "./FilterHeader";
+import { type AccountStatus } from "@/types/enums/accountStatus";
+import { type Customer } from "@/types/models/account";
+// import { faker } from "@faker-js/faker";
 
-export type CustomerTable = CustomerModel & {
+// export type CustomerTable = AccountWithProfile;
+// // Dummy Data -- CUSTOMER
+// const createRandomCustomer = (numCustomer: number) => Array.from({ length: numCustomer }, () => ({
+//   firstName: faker.person.firstName(),
+//   lastName: faker.person.lastName(),
+//   email: faker.internet.email(),
+//   address: faker.location.streetAddress(),
+//   is_premium: faker.helpers.arrayElement([true, false]),
+//   status: faker.helpers.enumValue(AccountStatus),
+// }));
+// export const dummyData: CustomerTable[] = createRandomCustomer(300);
+
+export type CustomerTable = {
+  id: string;
   email: string;
+  phone: string;
   status: AccountStatus;
+  profile?: Customer;
 };
-
-// Dummy Data -- CUSTOMER
-const createRandomCustomer = (numCustomer: number) =>
-  Array.from({ length: numCustomer }, () => ({
-    firstName: faker.person.firstName(),
-    lastName: faker.person.lastName(),
-    email: faker.internet.email(),
-    address: faker.location.streetAddress(),
-    is_premium: faker.helpers.arrayElement([true, false]),
-    status: faker.helpers.enumValue(AccountStatus),
-  }));
-
-export const dummyData: CustomerTable[] = createRandomCustomer(300);
 
 const columnHelper = createColumnHelper<CustomerTable>();
 
 export const columns = [
-  // SELECT
+  // SELECT checkbox
   columnHelper.display({
     id: "select",
     header: ({ table }) => (
@@ -52,14 +54,12 @@ export const columns = [
         className="!outline-none"
       />
     ),
-    meta: {
-      title: "Select",
-    },
     enableSorting: false,
     enableHiding: false,
   }),
 
-  columnHelper.accessor("firstName", {
+  // FIRST NAME
+  columnHelper.accessor("profile.firstName", {
     header: (info) => <SortHeader title="First Name" info={info} />,
     size: 50,
     cell: (info) => info.getValue(),
@@ -68,7 +68,8 @@ export const columns = [
     },
   }),
 
-  columnHelper.accessor("lastName", {
+  // LAST NAME
+  columnHelper.accessor("profile.lastName", {
     header: (info) => <SortHeader title="Last Name" info={info} />,
     size: 50,
     cell: (info) => info.getValue(),
@@ -77,6 +78,7 @@ export const columns = [
     },
   }),
 
+  // EMAIL
   columnHelper.accessor("email", {
     header: (info) => <SortHeader title="Email" info={info} />,
     size: 100,
@@ -86,7 +88,18 @@ export const columns = [
     },
   }),
 
-  columnHelper.accessor("address", {
+  // PHONE
+  columnHelper.accessor("phone", {
+    header: (info) => <SortHeader title="Phone" info={info} />,
+    size: 50,
+    cell: (info) => info.getValue(),
+    meta: {
+      title: "Phone",
+    },
+  }),
+
+  // ADDRESS
+  columnHelper.accessor("profile.address", {
     header: (info) => <SortHeader title="Address" info={info} />,
     size: 100,
     cell: (info) => info.getValue(),
@@ -95,41 +108,54 @@ export const columns = [
     },
   }),
 
-  columnHelper.accessor("is_premium", {
+  // PREMIUM (from profile)
+  columnHelper.accessor("profile.isPremium", {
     header: (info) => <FilterHeader column={info.column} title="Premium" />,
     size: 50,
+    cell: (info) => (info.getValue() ? "Yes" : "No"),
     filterFn: "equals",
-    cell: (info) => (info.row.getValue("is_premium") ? "Yes" : "No"),
     meta: {
+      title: "Premium",
       filterVariant: "filterPremium",
       filterOptions: ["true", "false"],
       labelOptions: { true: "Yes", false: "No" },
-      title: "Premium",
     },
   }),
 
+  // STATUS
   columnHelper.accessor("status", {
     header: (info) => <FilterHeader column={info.column} title="Status" />,
     size: 50,
-    filterFn: "equals",
     cell: (info) => <AccountStatusTag status={info.getValue()} />,
+    filterFn: "equals",
     meta: {
+      title: "Status",
       filterVariant: "filterStatus",
-      filterOptions: ["VERIFIED", "NOT_VERIFIED", "DISABLED", "BANNED"],
+      filterOptions: ["VERIFIED", "NOT_VERIFY", "DISABLED", "BANNED"],
       labelOptions: {
         VERIFIED: "Verified",
-        NOT_VERIFIED: "Not verified",
+        NOT_VERIFY: "Not verified",
         DISABLED: "Disabled",
         BANNED: "Banned",
       },
-      title: "Status",
     },
   }),
 
+  // ACTIONS
   columnHelper.display({
     id: "action",
     header: () => "Action",
     size: 20,
-    cell: (props) => <ColActions row={props.row} />,
+    cell: (props) => {
+      const { pageIndex, pageSize } = props.table.getState().pagination;
+
+      return (
+        <ColActions
+          row={props.row}
+          currentPage={pageIndex + 1}
+          currentPageSize={pageSize}
+        />
+      );
+    },
   }),
 ];

@@ -51,9 +51,15 @@ export default function CustomerVehiclesManagement() {
                 }}
             />
 
-            <MainContentLayout className="flex-1 overflow-auto">
-                {/* <div ref={scrollRef} className="grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-8 h-screen"> 
-                </div>*/}
+            <MainContentLayout className="flex flex-col ">
+                <div>
+                    <h1 className="text-2xl font-bold mb-4">My Vehicles</h1>
+                </div>
+                <div className="grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-8 h-screen overflow-auto">
+                    {data && data.map((vehicle) => (
+                        <VehicleCard key={vehicle.id} vehicle={vehicle} />
+                    ))}
+                </div>
 
                 {/* {virtualizer.getVirtualItems().map((virtualRow) => {
                             const vehicle = data[virtualRow.index];
@@ -64,11 +70,9 @@ export default function CustomerVehiclesManagement() {
                                 </div>
                             )
                         })} */}
-                {/* {data && data.map((vehicle) => (
-                        <VehicleCard key={vehicle.id} vehicle={vehicle} />
-                    ))} */}
 
-                <VehicleList vehicles={data ?? []} />
+
+                {/* <VehicleList vehicles={data ?? []} /> */}
             </MainContentLayout>
         </div>
     );

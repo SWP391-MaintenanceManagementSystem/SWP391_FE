@@ -1,4 +1,4 @@
-import { queryKeys } from "@/services/keys";
+import { queryKeys } from "./keys";
 import { useQuery } from "@tanstack/react-query";
 import { getMyVehicles } from "../apis/vehicle.api";
 import { toast } from "sonner";

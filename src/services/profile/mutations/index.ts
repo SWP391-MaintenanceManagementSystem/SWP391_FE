@@ -2,7 +2,7 @@ import type { ChangeProfileFormData } from "@/pages/profile/components/profile/l
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { updateInfo } from "../apis/profile.api";
 import { toast } from "sonner";
-import { queryKeys } from "../../keys";
+import { queryKeys } from "../queries/keys";
 
 export const useUpdateProfileMutation = () => {
     const queryClient = useQueryClient();

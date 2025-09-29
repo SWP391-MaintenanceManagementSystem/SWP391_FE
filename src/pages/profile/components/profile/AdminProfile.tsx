@@ -3,17 +3,18 @@ import DynamicBreadcrumbs from "@/components/DynamicBreadcrumb";
 import { useWindowSize } from "@uidotdev/usehooks";
 import { useEffect, useState } from "react";
 import MainContentLayout from "@/components/MainContentLayout";
-import {
-  GeneralInfoBox,
-  AdminAvatarBox,
-  AdminInfoBox,
-  DetailSettingBox,
-} from "./InfoSection";
+import DetailSettingBox from "./DetailedSettingBox";
+import AvatarBox from "./AvatarBox";
+import GeneralInfoBox from "./GeneralInfoBox";
+import InfoBox from "./InfoBox";
+import { useGetProfile } from "@/services/profile/queries";
+import Loading from "@/components/Loading";
 
 export default function AdminProfile() {
-  const { auth } = useAuth();
+  const { handleLogout } = useAuth();
   const { height, width = 0 } = useWindowSize();
   const [isMobile, setIsMobile] = useState(false);
+  const { data: profile, isLoading } = useGetProfile();
 
   useEffect(() => {
     if (!width || !height) return;
@@ -25,19 +26,23 @@ export default function AdminProfile() {
     }
   }, [width, height]);
 
+  if (isLoading) {
+    return <Loading />;
+  }
+
   return (
     <div className=" w-full h-[calc(100vh-32px)]">
       <DynamicBreadcrumbs />
       <MainContentLayout className="lg:flex-row flex-col gap-12 ">
         {isMobile ? (
-          <GeneralInfoBox user={auth.user} />
+          <GeneralInfoBox user={profile} handleLogout={handleLogout} />
         ) : (
           <div className="flex flex-col gap-5 ">
-            <AdminAvatarBox user={auth.user} />
-            <AdminInfoBox user={auth.user} />
+            <AvatarBox user={profile} />
+            <InfoBox user={profile} handleLogout={handleLogout} />
           </div>
         )}
-        <DetailSettingBox />
+        <DetailSettingBox user={profile} />
       </MainContentLayout>
     </div>
   );

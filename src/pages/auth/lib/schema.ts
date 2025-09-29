@@ -4,7 +4,7 @@ import { z } from "zod";
 
 export const LoginSchema = z.object({
   email: z.email({ message: "Invalid email address" }),
-  password: z.string({ error: "Password is required" }).min(6).max(100),
+  password: z.string({ error: "Password is required" }),
 });
 
 export const ChangePasswordSchema = z
