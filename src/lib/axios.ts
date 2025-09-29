@@ -1,10 +1,13 @@
-import { defaultAuth, setAuthStorage, getAuthStorage } from "@/contexts/AuthContext";
+import {
+  defaultAuth,
+  setAuthStorage,
+  getAuthStorage,
+} from "@/contexts/AuthContext";
 import { refresh } from "@/services/auth/apis/auth.api";
 import _axios from "axios";
 import { toast } from "sonner";
 
 const BASE_URL = import.meta.env.VITE_API_URL ?? "http://localhost:3000/api";
-
 
 export const axiosPublic = _axios.create({
   baseURL: BASE_URL,
@@ -13,7 +16,6 @@ export const axiosPublic = _axios.create({
   },
   withCredentials: true,
 });
-
 
 export const axiosPrivate = _axios.create({
   baseURL: BASE_URL,
@@ -31,7 +33,7 @@ axiosPrivate.interceptors.request.use(
     }
     return config;
   },
-  (error) => Promise.reject(error)
+  (error) => Promise.reject(error),
 );
 
 axiosPrivate.interceptors.response.use(
@@ -51,7 +53,11 @@ axiosPrivate.interceptors.response.use(
       try {
         const res = await refresh();
         const { accessToken } = res.data;
-        setAuthStorage({ ...getAuthStorage(), accessToken, isAuthenticated: true });
+        setAuthStorage({
+          ...getAuthStorage(),
+          accessToken,
+          isAuthenticated: true,
+        });
         originalRequest.headers.Authorization = `Bearer ${accessToken}`;
         return axiosPrivate(originalRequest);
       } catch {
@@ -62,5 +68,5 @@ axiosPrivate.interceptors.response.use(
     }
 
     return Promise.reject(error);
-  }
+  },
 );

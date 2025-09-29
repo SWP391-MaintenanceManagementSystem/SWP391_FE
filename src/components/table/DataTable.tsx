@@ -10,7 +10,7 @@ import {
   type VisibilityState,
 } from "@tanstack/react-table";
 
-import type { ColumnDef, Row } from "@tanstack/react-table";
+import type { ColumnDef } from "@tanstack/react-table";
 
 import {
   Table,
@@ -28,7 +28,9 @@ import {
   Trash,
   ChevronLeft,
   ChevronRight,
+  Loader,
 } from "lucide-react";
+import "animate.css";
 
 import {
   DropdownMenu,
@@ -40,25 +42,34 @@ import {
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { DeleteDialog } from "@/components/dialog/DeleteDialog";
-import type { CustomerTable } from "./columns";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
-  searchValue: string;
+  searchValue?: string;
+  pageIndex: number;
   pageSize: number;
+  onPageChange: (pageIndex: number) => void;
+  onPageSizeChange: (pageSize: number) => void;
+  isLoading?: boolean;
+  totalPage?: number;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
   searchValue,
+  pageIndex,
   pageSize,
+  onPageChange,
+  onPageSizeChange,
+  isLoading,
+  totalPage,
 }: DataTableProps<TData, TValue>) {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [rowSelection, setRowSelection] = useState({});
   const [pagination, setPagination] = useState<PaginationState>({
-    pageIndex: 0,
+    pageIndex,
     pageSize,
   });
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
@@ -72,32 +83,26 @@ export function DataTable<TData, TValue>({
       pagination,
       columnVisibility,
     },
-    filterFns: {
-      equals: (
-        row: Row<CustomerTable>,
-        columnId: string,
-        filterValue: string[],
-      ) => {
-        if (!filterValue || filterValue.length === 0) return true;
-        const cellValue = row.getValue(columnId);
-        console.log(cellValue);
-        if (typeof cellValue === "boolean") {
-          const label = cellValue ? "Yes" : "No";
-          return filterValue.includes(label);
-        }
-        return filterValue.includes(String(cellValue));
-      },
-    },
+    filterFns: {},
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
     onColumnFiltersChange: setColumnFilters,
     onRowSelectionChange: setRowSelection,
-    onPaginationChange: setPagination,
+
     onColumnVisibilityChange: setColumnVisibility,
     enableColumnResizing: true,
     columnResizeMode: "onChange",
+    pageCount: totalPage ?? -1,
+    manualPagination: true,
+    onPaginationChange: (updater) => {
+      const next =
+        typeof updater === "function" ? updater(pagination) : updater;
+      setPagination(next);
+      onPageChange(next.pageIndex);
+      onPageSizeChange(next.pageSize);
+    },
   });
 
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
@@ -116,7 +121,7 @@ export function DataTable<TData, TValue>({
             className="absolute text-gray-500 top-[25%] left-2"
           />
           <Input
-            placeholder={"Searching " + searchValue + "..."}
+            placeholder={"Search by " + searchValue + "..."}
             value={
               (table.getColumn(`${searchValue}`)?.getFilterValue() as string) ??
               ""
@@ -220,6 +225,12 @@ export function DataTable<TData, TValue>({
                   ))}
                 </TableRow>
               ))
+            ) : isLoading ? (
+              <TableRow>
+                <TableCell colSpan={columns.length} className="h-24">
+                  <Loader className="animate-spin text-gray-500 mx-auto" />
+                </TableCell>
+              </TableRow>
             ) : (
               <TableRow>
                 <TableCell
@@ -234,12 +245,14 @@ export function DataTable<TData, TValue>({
         </Table>
       </div>
 
-      {/*PAGINATION*/}
+      {/* ROWS SELECTED */}
       <div className="flex justify-between items-center">
         <div className=" text-sm text-gray-500">
           {table.getSelectedRowModel().rows.length} of{" "}
           {table.getFilteredRowModel().rows.length} row selected
         </div>
+
+        {/*PAGINATION*/}
         <div className="flex items-center gap-1">
           <Button
             variant="outline"
@@ -253,14 +266,14 @@ export function DataTable<TData, TValue>({
             type="number"
             value={table.getState().pagination.pageIndex + 1}
             min="1"
-            max={table.getPageCount()}
+            max={totalPage}
             defaultValue={table.getState().pagination.pageIndex + 1}
             onChange={(e) => {
-              let page = Number(e.target.value);
-              if (isNaN(page) || page < 1) page = 1;
-              if (page > table.getPageCount()) page = table.getPageCount();
-
-              table.setPageIndex(page - 1);
+              let newPage = Number(e.target.value) - 1;
+              if (newPage < 0) newPage = 0;
+              if (newPage >= table.getPageCount())
+                newPage = table.getPageCount() - 1;
+              table.setPageIndex(newPage);
             }}
             className="border border-gray-300 rounded px-2 w-14 text-center"
           />

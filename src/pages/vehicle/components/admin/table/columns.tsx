@@ -5,8 +5,8 @@ import { createColumnHelper } from "@tanstack/react-table";
 import AccountStatusTag from "@/components/AccountStatusTag";
 import { Checkbox } from "@/components/ui/checkbox";
 import ColActions from "./ColActions";
-import SortHeader from "./SortHeader";
-import FilterHeader from "./FilterHeader";
+import SortHeader from "@/components/table/SortHeader";
+import FilterHeader from "@/components/table/FilterHeader";
 
 export type CustomerTable = CustomerModel & {
   email: string;

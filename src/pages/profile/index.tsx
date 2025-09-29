@@ -3,7 +3,7 @@ import { lazy, Suspense } from "react";
 import { AccountRole } from "@/types/enums/role";
 import Loading from "@/components/Loading";
 
-const AdminProfile = lazy(() => import("./components/admin/AdminProfile"));
+const AdminProfile = lazy(() => import("./components/profile/AdminProfile"));
 const Profile = lazy(() => import("./components/profile/Profile"));
 
 const roleComponents = {
@@ -31,9 +31,5 @@ export default function ProfilePage() {
     }
   };
 
-  return (
-    <Suspense fallback={<Loading />}>
-      {getComponent()}
-    </Suspense>
-  );
+  return <Suspense fallback={<Loading />}>{getComponent()}</Suspense>;
 }

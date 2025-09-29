@@ -3,10 +3,10 @@ import DynamicBreadcrumbs from "@/components/DynamicBreadcrumb";
 import { useWindowSize } from "@uidotdev/usehooks";
 import { useEffect, useState } from "react";
 import MainContentLayout from "@/components/MainContentLayout";
-import DetailSettingBox from "../profile/DetailedSettingBox";
-import AvatarBox from "../profile/AvatarBox";
-import GeneralInfoBox from "../profile/GeneralInfoBox";
-import InfoBox from "../profile/InfoBox";
+import DetailSettingBox from "./DetailedSettingBox";
+import AvatarBox from "./AvatarBox";
+import GeneralInfoBox from "./GeneralInfoBox";
+import InfoBox from "./InfoBox";
 import { useGetProfile } from "@/services/profile/queries";
 import Loading from "@/components/Loading";
 

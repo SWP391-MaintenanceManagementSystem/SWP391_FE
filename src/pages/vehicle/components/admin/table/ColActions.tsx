@@ -1,26 +1,11 @@
 import type { Row } from "@tanstack/react-table";
 import type { CustomerTable } from "./columns";
-import type { ReactNode } from "react";
 import { Maximize2, Pencil, Trash } from "lucide-react";
+import ActionBtn from "@/components/table/ActionBtn";
 
 interface ColActionsProps {
   row: Row<CustomerTable>;
 }
-interface ActionsBtnProps {
-  icon: ReactNode;
-  onClick?: React.MouseEventHandler<HTMLButtonElement>;
-}
-
-const ActionBtn = ({ icon, onClick }: ActionsBtnProps) => {
-  return (
-    <button
-      onClick={onClick}
-      className="p-2 rounded hover:bg-accent bg-white transition border-1 border-[#CED4DA] !outline-none "
-    >
-      {icon}
-    </button>
-  );
-};
 
 export default function ColActions({ row }: ColActionsProps) {
   return (
