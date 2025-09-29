@@ -14,7 +14,7 @@ export default function Tag({ text, bg, textColor }: TagProps) {
   return (
     <div
       style={{ backgroundColor: bg, color: textColor }}
-      className="px-4 py-1 rounded-3xl font-inter font-semibold text-[14px]"
+      className="px-4 py-1 rounded-3xl font-inter font-semibold text-[14px] dark:!text-amber-primary dark:!bg-purple-primary"
     >
       {format(text)}
     </div>

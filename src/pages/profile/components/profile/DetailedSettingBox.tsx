@@ -13,7 +13,7 @@ const DetailSettingBox = ({ user }: DetailedSettingBoxProps) => {
     const { form, handleSubmit } = useChangeProfile(user);
     const { form: passwordForm, handleChangePassword } = useChangePassword();
     return (
-        <div className="bg-slate-100 px-[42px] min-w-[200px] py-10 flex-1 rounded-[20px] shadow-md gap-5 flex flex-col min-h-fit">
+        <div className="bg-slate-100 px-[42px] min-w-[200px] py-10 flex-1 rounded-[20px] shadow-md gap-3 flex flex-col min-h-fit">
             <h3 className="!font-inter font-bold text-3xl grid text-gray-text-header items-center">
                 Detailed Settings
             </h3>

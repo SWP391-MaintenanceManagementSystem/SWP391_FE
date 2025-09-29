@@ -45,7 +45,7 @@ export default function AccountStatusTag({ status }: Props) {
 
   return (
     <span
-      className=" flex flex-row gap-2 items-center"
+      className=" flex flex-row gap-2 items-center dark:!text-white"
       style={{ color: textColor }}
     >
       <span

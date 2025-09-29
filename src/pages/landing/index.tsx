@@ -1,41 +1,42 @@
-import { Button } from "@/components/ui/button"
-import { useAuth } from "@/contexts/AuthContext"
-import { Link, useNavigate } from "react-router-dom"
-
+import Hero from "./components/Hero";
+import Header from "./components/Header";
+import AboutSection from "./components/AboutSection";
+import ServiceSection from "./components/ServiceSection";
+import BusinessProcess from "./components/BusinessProcess";
+import Testimonials from "./components/Testimonials";
+import Footer from "./components/Footer";
 export default function LandingPage() {
-    const { auth, handleLogout } = useAuth()
-    const navigate = useNavigate()
-    const onLogout = async () => {
-        await handleLogout();
-        navigate("/login", { replace: true });
-    }
-
-
-    return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-50">
-            <div className="max-w-md w-full space-y-8 p-6 bg-white rounded-lg shadow-md text-center">
-                <div>
-                    <h1 className="text-4xl font-bold text-gray-900 mb-4">Welcome</h1>
-                    <p className="text-gray-600 mb-8">Welcome to our SWP391 application</p>
-                </div>
-                <div className="space-y-4">
-                    <Link
-                        to="/login"
-                        className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                    >
-                        Login
-                    </Link>
-                    <Link
-                        to="/register"
-                        className="w-full flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                    >
-                        Register
-                    </Link>
-                </div>
-                {auth.isAuthenticated && (
-                    <Button onClick={onLogout}>Logout</Button>
-                )}
-            </div>
+  return (
+    <div>
+      <div className="sticky top-8 w-full max-w-7xl mx-auto px-4 md:px-8 lg:px-16 overflow-x-hidden z-100">
+        <Header />
+      </div>
+      <div className="w-full max-w-7xl mx-auto px-4 md:px-8 lg:px-16 overflow-x-hidden">
+        <div id="home">
+          <Hero />
         </div>
-    )
+      </div>
+
+      <div className=" outline-1 outline-green-500 overflow-x-hidden" id="about">
+        <AboutSection />
+      </div>
+
+      <div className=" outline-1 outline-blue-500 overflow-x-hidden" id="services">
+        <ServiceSection />
+      </div>
+
+      <div className=" outline-1 outline-yellow-500 overflow-x-hidden" id="process">
+        <BusinessProcess />
+      </div>
+
+      <div className=" outline-1 outline-purple-500 overflow-x-hidden" id="testimonials">
+        <Testimonials />
+      </div>
+
+      <div className=" outline-1 outline-orange-500 overflow-x-hidden" id="footer">
+        <Footer />
+      </div>
+    </div>
+  );
 }
+

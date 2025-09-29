@@ -8,6 +8,7 @@ import { Toaster } from 'sonner';
 import { SidebarProvider } from './components/ui/sidebar.tsx';
 import { AppSidebar } from './components/side-bar/AppSideBar.tsx';
 import MainLayout from './layout/index.tsx';
+import { ThemeProvider } from './components/theme/ThemeProvider.tsx';
 
 
 const queryClient = new QueryClient({
@@ -24,8 +25,10 @@ createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <AuthProvider>
       <QueryClientProvider client={queryClient}>
-        <Toaster richColors position='top-right' />
-        <App />
+        <ThemeProvider defaultTheme='system' storageKey='vite-ui-theme'>
+          <Toaster richColors position='top-right' />
+          <App />
+        </ThemeProvider>
       </QueryClientProvider>
     </AuthProvider>
   </StrictMode>,
