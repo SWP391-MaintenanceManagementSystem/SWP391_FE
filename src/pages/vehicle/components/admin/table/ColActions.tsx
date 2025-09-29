@@ -41,6 +41,14 @@ export default function ColActions({
         icon={<Pencil size={12} />}
         onClick={() => {
           console.log("Row data to edit:", row.original);
+          form.reset({
+            firstName: row.original.profile?.firstName,
+            lastName: row.original.profile?.lastName,
+            email: row.original.email,
+            status: row.original.status,
+            phone: row.original.phone,
+            address: row.original.profile?.address,
+          });
           setOpenEditDialog(true);
         }}
       />
