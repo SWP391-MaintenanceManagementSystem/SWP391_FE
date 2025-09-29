@@ -23,18 +23,18 @@ import {
   Sparkles,
   IdCardLanyard,
   PackageOpen,
-  ChevronUp,
-  ChevronDown,
 } from "lucide-react";
-import logo from "/logo.svg";
-import logoWithoutText from "/logo-without-text-light.svg";
+import logoLight from "/logo.svg";
+import logoWithoutTextLight from "/logo-without-text-light.svg";
+import logoDark from "/logo-dark-mode.svg";
+import logoWithoutTextDark from "/logo-without-text-dark.svg";
 import { NavLink } from "react-router-dom";
-import { useEffect, useState } from "react";
 import { AccountRole } from "@/types/enums/role";
 import type { SidebarItem } from "@/types/models/sidebar-item";
 import clsx from "clsx";
 import { useAuth } from "@/contexts/AuthContext";
-import { SheetContent } from "../ui/sheet";
+import { useTheme } from "@/components/theme/ThemeProvider";
+import { useState } from "react";
 const customerItems: SidebarItem[] = [
   {
     title: "Dashboard",
@@ -139,9 +139,10 @@ const getMenuItems = (role: AccountRole) => {
 };
 
 export function AppSidebar() {
+
   const { auth } = useAuth();
   const role = auth.user?.role!;
-
+  const { resolvedTheme } = useTheme();
   const [collapsed, setCollapsed] = useState(false);
   const items = getMenuItems(role) || [];
   const { isMobile } = useSidebar();
@@ -152,10 +153,10 @@ export function AppSidebar() {
           ${collapsed ? "w-16" : "w-64"}
         `}
     >
-      <SidebarHeader className="!bg-slate-100 p-4 text-black">
+      <SidebarHeader className="!bg-slate-100 p-4 text-black dark:text-white">
         {!collapsed && (
           <div className="text-lg font-bold flex justify-between items-center">
-            <img src={logo} />
+            <img src={resolvedTheme === "dark" ? logoDark : logoLight} />
             <PanelLeftClose
               className="h-6 w-6 cursor-pointer"
               onClick={() => {
@@ -168,7 +169,7 @@ export function AppSidebar() {
         {collapsed && (
           <div className="flex justify-center">
             <img
-              src={logoWithoutText}
+              src={resolvedTheme === "dark" ? logoWithoutTextDark : logoWithoutTextLight}
               onClick={() => setCollapsed(!collapsed)}
               className="cursor-pointer"
             />
@@ -189,7 +190,7 @@ export function AppSidebar() {
                         "flex items-center gap-2 !text-gray-primary font-inter",
                         collapsed && "justify-between",
                         isActive &&
-                        "bg-purple-primary rounded-md !text-slate-200 !outline-0",
+                        "bg-purple-primary rounded-md dark:!text-amber-primary !text-white !outline-0",
                       )
                     }
                   >
@@ -221,24 +222,18 @@ export function AppSidebar() {
           {({ isActive }) => (
             <>
               <div className="flex items-center gap-2">
-                <CircleUserRound />
+                <CircleUserRound className={clsx(isActive && "dark:text-amber-primary")} />
                 {!collapsed &&
-                  <span className=" text-sm">
+                  <span className={clsx(`text-sm`, isActive && "dark:text-amber-primary")}>
                     {auth.user?.role === AccountRole.ADMIN && "Admin"}
                     {auth.user?.role !== AccountRole.ADMIN && (auth.user?.profile?.firstName + " " + auth.user?.profile?.lastName)}
                   </span>}
               </div>
-              {!collapsed &&
-                (isActive ? (
-                  <ChevronUp className="h-5 w-5" />
-                ) : (
-                  <ChevronDown className="h-5 w-5" />
-                ))}
             </>
           )}
         </NavLink>
       </SidebarFooter>
 
-    </Sidebar>
+    </Sidebar >
   );
 }

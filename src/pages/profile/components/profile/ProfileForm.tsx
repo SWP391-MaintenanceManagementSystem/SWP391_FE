@@ -106,17 +106,13 @@ export default function ProfileForm({
             />
           )}
 
-          <div className="mt-4 flex justify-start lg:justify-end">
-            <Button
-              type="submit"
-              className="!bg-purple-primary !text-white cursor-pointer"
-              disabled={form.formState.isSubmitting}
-            >
-              Save Changes
-            </Button>
-          </div>
-        </div>
-      </form>
-    </Form>
-  );
+                    <div className="mt-4 flex justify-start lg:justify-end">
+                        <Button type="submit" className="!bg-purple-primary !text-white dark:!text-black cursor-pointer" disabled={form.formState.isSubmitting}>
+                            Save Changes
+                        </Button>
+                    </div>
+                </div>
+            </form>
+        </Form>
+    );
 }
