@@ -17,9 +17,8 @@ export type Customer = {
   firstName: string;
   lastName: string;
   address?: string;
-  is_premium: boolean;
+  isPremium: boolean;
 };
-
 
 export type Employee = {
   firstName: string;
@@ -27,7 +26,6 @@ export type Employee = {
   experienceYears?: number;
   // TODO: make certificate DTO
   certificate?: string;
-}
+};
 
 export type Profile = Customer | Employee;
-

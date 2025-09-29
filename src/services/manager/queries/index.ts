@@ -9,7 +9,6 @@ export const useGetCustomerList = (page: number, pageSize: number) => {
     queryFn: async () => {
       try {
         const response = await getCustomers({ page, pageSize });
-        console.log(response);
         return response.data;
       } catch (error) {
         toast.error("Fail to fetch customer list");

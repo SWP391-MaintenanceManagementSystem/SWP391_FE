@@ -4,35 +4,38 @@ import MainContentLayout from "@/components/MainContentLayout";
 import { columns, type CustomerTable } from "./table/columns";
 import { DataTable } from "@/components/table/DataTable";
 import { useGetCustomerList } from "@/services/manager/queries";
-import type { Customer, Profile } from "@/types/models/account";
+import { DEFAULT_PAGE_SIZE } from "@/utils/constant";
 
 export default function AdminVehiclesManagement() {
   // Pagination state
   const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState(12);
+  const [pageSize, setPageSize] = useState(DEFAULT_PAGE_SIZE);
 
   // Query customer list
   const { data, isLoading } = useGetCustomerList(page, pageSize);
   // console.log("loading:", isLoading, "data:", data);
 
-  // Type guard to check if profile is Customer
-  function isCustomer(profile: Profile | undefined): profile is Customer {
-    return !!profile && "is_premium" in profile;
-  }
-
   const accounts = data?.data ?? [];
 
-  // Map API data into CustomerTable for DataTable
   const customers: CustomerTable[] =
     accounts?.map((acc) => {
       const profile = acc.profile;
+
+      const isCustomerProfile =
+        profile && "isPremium" in profile && profile.isPremium !== undefined;
+      // console.log("Customer Profile:", profile);
       return {
-        firstName: profile?.firstName ?? "",
-        lastName: profile?.lastName ?? "",
+        id: acc.id,
         email: acc.email,
-        is_premium: isCustomer(profile) ? profile.is_premium : false,
+        phone: acc.phone ?? "",
         status: acc.status,
-        address: isCustomer(profile) ? (profile.address ?? "") : "",
+        profile: {
+          firstName: profile && "firstName" in profile ? profile.firstName : "",
+          lastName: profile && "lastName" in profile ? profile.lastName : "",
+          isPremium: isCustomerProfile ? profile.isPremium === true : false,
+          address:
+            profile && "address" in profile ? (profile.address ?? "") : "",
+        },
       };
     }) ?? [];
 
@@ -54,6 +57,9 @@ export default function AdminVehiclesManagement() {
           onPageChange={(newPage) => setPage(newPage + 1)}
           onPageSizeChange={(newSize) => setPageSize(newSize)}
           isLoading={isLoading}
+          onSearchChange={() => {
+            console.log("search value changed");
+          }}
         />
       </MainContentLayout>
     </div>
