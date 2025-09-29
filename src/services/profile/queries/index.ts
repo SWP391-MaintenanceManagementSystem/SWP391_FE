@@ -10,8 +10,8 @@ export const useGetProfile = () => {
         queryFn: async () => {
             try {
                 const response = await getProfile();
-                setAuth((prev) => ({ ...prev, user: response.data.data.account }));
-                return response.data.data.account;
+                setAuth((prev) => ({ ...prev, user: response.data.account }));
+                return response.data.account;
             } catch (error) {
                 toast.error("Failed to fetch profile");
             }
