@@ -5,6 +5,7 @@ import { InfoSection } from "../InfoSection";
 import AccountStatusTag from "@/components/AccountStatusTag";
 import { NavLink } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { ModeToggle } from "@/components/theme/ModeToggle";
 
 type GeneralInfoBoxProps = {
     user: AccountWithProfile | undefined;
@@ -48,9 +49,10 @@ const GeneralInfoBox = ({ user, handleLogout }: GeneralInfoBoxProps) => {
                 </InfoSection>
                 {/* PREFERENCES */}
                 <InfoSection title="Preferences">
-                    <p className="font-inter flex flex-row gap-2">
-                        <strong>Light/dark:</strong>
-                    </p>
+                    <div className="flex flex-row gap-4 items-center">
+                        <span className="font-inter font-semibold">Modes:</span>
+                        <ModeToggle />
+                    </div>
                 </InfoSection>
             </div>
             <NavLink to="/" className="mx-auto">

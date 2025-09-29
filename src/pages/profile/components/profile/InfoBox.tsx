@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { LogOut } from "lucide-react";
 import type { AccountWithProfile, Customer, Employee } from "@/types/models/account";
 import { AccountRole } from "@/types/enums/role";
-import { Switch } from "@/components/ui/switch";
+import { ModeToggle } from "@/components/theme/ModeToggle";
 type InfoBoxProps = {
     user: AccountWithProfile | undefined;
     handleLogout: () => Promise<void>;
@@ -55,7 +55,7 @@ const InfoBox = ({ user, handleLogout }: InfoBoxProps) => {
                                 </p>
                             )}
                             <p className="font-inter flex flex-row gap-2">
-                                <strong>Status:</strong>
+                                <strong className="font-inter">Status:</strong>
                                 <span className="inline-flex">
                                     <AccountStatusTag status={user.status} />
                                 </span>
@@ -68,19 +68,19 @@ const InfoBox = ({ user, handleLogout }: InfoBoxProps) => {
                     )}
                 </InfoSection>
                 {/* PREFERENCES */}
-                <InfoSection title="Preferences">
-                    <div className="font-inter flex flex-row items-center gap-3">
-                        <p>
-                            <strong>Light/dark:</strong>
-                        </p>
-                        <Switch className="data-[state=checked]:bg-purple-primary" />
-                    </div>
-                </InfoSection>
+                <div className="mt-2">
+                    <InfoSection title="Preferences" >
+                        <div className="flex flex-row gap-4 items-center">
+                            <span className="font-inter font-semibold">Modes:</span>
+                            <ModeToggle />
+                        </div>
+                    </InfoSection>
+                </div>
             </div>
 
             <NavLink to="/" className="mx-auto">
-                <Button className="!font-inter !bg-purple-primary text-white hover:scale-105 transition-transform duration-300" onClick={() => handleLogout()}>
-                    <LogOut className="mr-2 h-4 w-4" />
+                <Button className="!font-inter !bg-purple-primary !text-white dark:!text-black hover:scale-105 transition-transform duration-300" onClick={() => handleLogout()}>
+                    <LogOut className="mr-2 h-4 w-4 !text-white dark:!text-black" />
                     Logout
                 </Button>
             </NavLink>

@@ -124,7 +124,7 @@ export default function ChangePasswordForm({ form, onSubmit }: ChangePasswordFor
           <div className="space-y-4 mt-4 grid grid-cols-2">
             <Button
               type="submit"
-              className="w-fit !bg-purple-primary !font-inter !text-white hover:scale-105 transition-transform duration-150"
+              className="w-fit !bg-purple-primary !font-inter !text-white dark:!text-black hover:scale-105 transition-transform duration-150"
             >
               Save Changes
             </Button>

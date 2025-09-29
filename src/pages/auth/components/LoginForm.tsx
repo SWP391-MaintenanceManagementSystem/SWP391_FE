@@ -83,12 +83,7 @@ export const LoginForm = ({ form, onSubmit }: LoginFormProps) => {
                         <Button
                             type="button"
                             variant="outline"
-                            className="w-full h-11
-                        flex items-center justify-center
-                        rounded-xl border !border-gray-300
-                        !bg-white text-sm font-medium !text-gray-700
-                        shadow-sm !hover:bg-gray-50
-                         transition"
+                            className="w-full h-11"
                             onClick={() =>
                                 (window.location.href = `${import.meta.env.VITE_API_URL}/auth/google/login`)
                             }
