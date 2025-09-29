@@ -128,17 +128,15 @@ export function DataTable<TData, TValue>({
   return (
     <div className="w-full flex flex-col gap-2 font-inter min-h-[480px]">
       {/* TABLE ACTIONS*/}
-      <div className="flex flex-col md:flex-row gap-2">
-        {searchValue ?? (
+      <div className="flex flex-col md:flex-row gap-2 ">
+        {searchValue && (
           <div className="relative w-full">
             <Search
               size={16}
               className="absolute text-gray-500 top-[25%] left-2"
             />
             <Input
-              placeholder={
-                searchValue ? `Search by ${searchValue}...` : "Search..."
-              }
+              placeholder={`Search by ${searchValue}...`}
               value={searchText}
               onChange={(e) => handleSearchInput(e.target.value)}
               className="pl-8 w-sm"
