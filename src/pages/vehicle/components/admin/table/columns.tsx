@@ -146,6 +146,16 @@ export const columns = [
     id: "action",
     header: () => "Action",
     size: 20,
-    cell: (props) => <ColActions row={props.row} />,
+    cell: (props) => {
+      const { pageIndex, pageSize } = props.table.getState().pagination;
+
+      return (
+        <ColActions
+          row={props.row}
+          currentPage={pageIndex + 1}
+          currentPageSize={pageSize}
+        />
+      );
+    },
   }),
 ];

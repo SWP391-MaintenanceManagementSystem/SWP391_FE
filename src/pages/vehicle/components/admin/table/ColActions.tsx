@@ -9,12 +9,23 @@ import CustomerInfoForm from "../CustomerInfoForm";
 
 interface ColActionsProps {
   row: Row<CustomerTable>;
+  currentPage: number;
+  currentPageSize: number;
 }
 
-export default function ColActions({ row }: ColActionsProps) {
+export default function ColActions({
+  row,
+  currentPage,
+  currentPageSize,
+}: ColActionsProps) {
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [openEditDialog, setOpenEditDialog] = useState(false);
-  const { form, handleEditCustomerInfo } = useEditCustomerInfo(row);
+
+  const { form, handleEditCustomerInfo } = useEditCustomerInfo(
+    row,
+    currentPage,
+    currentPageSize,
+  );
   const handleDelete = ({ row }: { row: Row<CustomerTable> }) => {
     console.log("Delete");
     console.log(row.original);

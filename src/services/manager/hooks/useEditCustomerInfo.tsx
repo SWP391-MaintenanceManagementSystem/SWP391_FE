@@ -12,7 +12,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
  * Custom hook để edit thông tin customer dựa trên 1 row của TanStack Table
  * @param row Row<CustomerTable> - row được click để edit
  */
-export const useEditCustomerInfo = (row: Row<CustomerTable>) => {
+export const useEditCustomerInfo = (
+  row: Row<CustomerTable>,
+  currentPage: number,
+  currentPageSize: number,
+) => {
   // Khởi tạo mutation từ React Query
   const mutation = useUpdateCustomerInfo();
 
@@ -34,7 +38,12 @@ export const useEditCustomerInfo = (row: Row<CustomerTable>) => {
    * @param data ChangeProfileFormData - dữ liệu form đã validate
    */
   const handleEditCustomerInfo = (data: ChangeProfileFormData) => {
-    mutation.mutate({ id: row.original.id, data });
+    mutation.mutate({
+      id: row.original.id,
+      data,
+      currentPage,
+      currentPageSize,
+    });
   };
 
   return {

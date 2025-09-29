@@ -11,16 +11,25 @@ export const useUpdateCustomerInfo = () => {
     mutationFn: async ({
       data,
       id,
+      currentPage,
+      currentPageSize,
     }: {
       data: ChangeProfileFormData;
       id: string;
+      currentPage: number;
+      currentPageSize: number;
     }) => {
       const { email, ...rest } = data;
       const updatedCustomerInfo = await updateCustomerInfo(id, rest);
       return updatedCustomerInfo.data;
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.customer });
+    onSuccess: (_data, variables) => {
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.customers(
+          variables.currentPage,
+          variables.currentPageSize,
+        ),
+      });
       toast.success("Profile updated successfully");
     },
     onError: () => {
