@@ -30,7 +30,7 @@ export default function ChangePasswordForm({
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)}>
-        <div className="grid grid-cols-1 w-full gap-6 md:items-start items-center">
+        <div className="grid grid-cols-1 w-full gap-4 md:items-start items-center">
           <FormField
             control={form.control}
             name="oldPassword"
@@ -121,7 +121,7 @@ export default function ChangePasswordForm({
               </FormItem>
             )}
           />
-          <div className="space-y-2 mt-4 grid grid-cols-1">
+          <div className="space-y-4 mt-4 grid grid-cols-2">
             <Button
               type="submit"
               className="w-fit !bg-purple-primary !font-inter !text-white hover:scale-105 transition-transform duration-150"
@@ -130,7 +130,7 @@ export default function ChangePasswordForm({
             </Button>
             <NavLink
               to="/forgot-password"
-              className=" !underline !text-xs !font-inter text-left "
+              className=" !underline !text-xs !font-inter text-right "
             >
               Forgot Password?
             </NavLink>
