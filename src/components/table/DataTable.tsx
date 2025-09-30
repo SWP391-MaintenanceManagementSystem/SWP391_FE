@@ -4,7 +4,6 @@ import {
   useReactTable,
   getFilteredRowModel,
   getPaginationRowModel,
-  getSortedRowModel,
   type ColumnFiltersState,
   type PaginationState,
   type VisibilityState,

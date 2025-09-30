@@ -44,8 +44,8 @@ export const getCustomerById = (customerId: string) => {
 export const getSortedCustomersList = (params: {
   page: number;
   pageSize: number;
-  sortField: string;
-  sortOrder: string;
+  sortBy: string;
+  orderBy: string;
 }) => {
   return httpPrivate.get<BaseResponse<PaginationResponse<AccountWithProfile>>>(
     "/customers",

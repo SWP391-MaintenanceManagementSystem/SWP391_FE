@@ -51,7 +51,6 @@ export const useGetCustomerById = (customerId: string) => {
       const [_key, customerId] = queryKey;
       try {
         const response = await getCustomerById(customerId);
-        // console.log("Response Data:", response.data);
         return response.data.account;
       } catch (error) {
         toast.error("Failed to fetch customer");

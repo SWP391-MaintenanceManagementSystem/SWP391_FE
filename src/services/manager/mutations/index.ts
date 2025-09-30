@@ -30,6 +30,10 @@ export const useUpdateCustomerInfo = () => {
           variables.currentPageSize,
         ),
       });
+
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.customerById(variables.id),
+      });
       toast.success("Profile updated successfully");
     },
     onError: () => {

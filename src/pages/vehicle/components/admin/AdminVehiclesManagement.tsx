@@ -1,10 +1,7 @@
 import { useState } from "react";
 import DynamicBreadcrumbs from "@/components/DynamicBreadcrumb";
 import MainContentLayout from "@/components/MainContentLayout";
-import {
-  columns,
-  type CustomerTable,
-} from "./customerManagement/table/columns";
+import { columns } from "./customerManagement/table/columns";
 
 import { DataTable } from "@/components/table/DataTable";
 import {
@@ -12,7 +9,8 @@ import {
   useSearchCustomersByEmail,
   useGetSortedCustomersList,
 } from "@/services/manager/queries";
-import { type SortingState } from "@tanstack/react-table";
+import type { SortingState, ColumnDef } from "@tanstack/react-table";
+import type { CustomerTable } from "./customerManagement/type";
 
 export default function AdminVehiclesManagement() {
   // Pagination state
@@ -56,6 +54,7 @@ export default function AdminVehiclesManagement() {
         email: acc.email,
         phone: acc.phone ?? "",
         status: acc.status,
+        role: acc.role,
         profile: {
           firstName: profile && "firstName" in profile ? profile.firstName : "",
           lastName: profile && "lastName" in profile ? profile.lastName : "",
@@ -74,8 +73,8 @@ export default function AdminVehiclesManagement() {
         }}
       />
       <MainContentLayout>
-        <DataTable<CustomerTable, any>
-          columns={columns}
+        <DataTable<CustomerTable, unknown>
+          columns={columns as ColumnDef<CustomerTable, unknown>[]}
           searchValue="email"
           data={customers}
           pageIndex={(data?.page ?? 1) - 1}

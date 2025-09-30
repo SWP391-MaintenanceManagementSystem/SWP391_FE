@@ -1,5 +1,4 @@
 import type { Row } from "@tanstack/react-table";
-import type { CustomerTable } from "./columns";
 import { Maximize2, Pencil, Trash } from "lucide-react";
 import ActionBtn from "@/components/table/ActionBtn";
 import { DeleteDialog } from "@/components/dialog/DeleteDialog";
@@ -11,6 +10,7 @@ import { AccountStatus } from "@/types/enums/accountStatus";
 import { toast } from "sonner";
 import { encodeBase64 } from "@/utils/base64";
 import { useNavigate } from "react-router-dom";
+import type { CustomerTable } from "../type";
 
 interface ColActionsProps {
   row: Row<CustomerTable>;
@@ -28,8 +28,10 @@ export default function ColActions({
   const { mutate: deleteCustomer } = useDeleteCustomer();
   const navigate = useNavigate();
 
+  const customer = row.original;
+
   const { form, handleEditCustomerInfo } = useEditCustomerInfo(
-    row,
+    customer,
     currentPage,
     currentPageSize,
   );
@@ -44,10 +46,10 @@ export default function ColActions({
       <ActionBtn
         icon={<Maximize2 size={12} />}
         onClick={() => {
-          console.log("View Detail");
-          console.log(row.original.id);
           const encodedId = encodeBase64(row.original.id);
-          navigate(`/vehicles/${encodedId}`);
+          navigate(`/vehicles/${encodedId}`, {
+            state: { currentPage, currentPageSize },
+          });
         }}
       />
       <ActionBtn
@@ -60,7 +62,7 @@ export default function ColActions({
             email: row.original.email,
             status: row.original.status,
             phone: row.original.phone,
-            address: row.original.profile?.address,
+            address: row.original.profile?.address ?? "",
           });
           setOpenEditDialog(true);
         }}
