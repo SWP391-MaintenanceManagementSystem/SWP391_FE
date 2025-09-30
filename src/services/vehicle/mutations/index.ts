@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { addVehicle } from "../apis/vehicle.api";
+import { addVehicle, deleteVehicle } from "../apis/vehicle.api";
 import type { AddVehicleFormData } from "@/pages/vehicle/components/libs/schema";
 import { queryKeys } from "../queries/keys";
 import { toast } from "sonner";
@@ -18,6 +18,24 @@ export const useAddVehicleMutation = () => {
         },
         onError: (err: any) => {
             toast.error(err.message || "Failed to add vehicle");
+        },
+    });
+}
+
+
+export const useDeleteVehicleMutation = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: async (vehicleId: string) => {
+            const response = await deleteVehicle(vehicleId);
+            return response.data;
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: queryKeys.myVehicles });
+            toast.success("Vehicle deleted successfully");
+        },
+        onError: (err: any) => {
+            toast.error(err.message || "Failed to delete vehicle");
         },
     });
 }

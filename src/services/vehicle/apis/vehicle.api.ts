@@ -26,3 +26,7 @@ export const addVehicle = async (formData: AddVehicleFormData) => {
     const { brandId, ...rest } = formattedData;
     return await httpPrivate.post<BaseResponse<{ data: Vehicle }>>("/vehicles", rest);
 }
+
+export const deleteVehicle = async (vehicleId: string) => {
+    return await httpPrivate.del<BaseResponse<{ data: Vehicle }>>(`/vehicles/${vehicleId}`);
+}
