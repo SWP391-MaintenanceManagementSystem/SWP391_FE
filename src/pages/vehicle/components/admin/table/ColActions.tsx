@@ -64,7 +64,7 @@ export default function ColActions({
           setOpenDeleteDialog(true);
           if (row.original.status === AccountStatus.DISABLED) {
             setOpenDeleteDialog(false);
-            toast("Cannot delete disabled account");
+            toast.info("Cannot delete disabled account");
           }
         }}
       />
