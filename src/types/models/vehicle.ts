@@ -15,9 +15,25 @@ export type Vehicle = {
     "customerId": string,
     "status": VehicleStatus,
     "deletedAt": string | null,
-    "lastServiceDate": string | null,
+    "lastService": string | null,
     "createdAt": string,
     "updatedAt": string,
+}
+
+
+export type VehicleBrand = {
+    id: string,
+    name: string,
+
+}
+
+export type VehicleModel = {
+    id: string,
+    name: string,
+    brandId: string,
+    productionYear: number,
+    createdAt: string,
+    updatedAt: string,
 }
 
 
