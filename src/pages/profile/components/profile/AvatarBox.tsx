@@ -18,13 +18,7 @@ const AvatarBox = ({ user }: AvatarBoxProps) => {
       {!isAdmin && (
         <span>{user?.profile?.firstName + " " + user?.profile?.lastName}</span>
       )}
-      {user && (
-        <Tag
-          text={user.role}
-          bg="var(--color-purple-secondary)"
-          textColor="var(--color-brown-primary)"
-        />
-      )}
+      {user && <Tag text={user.role} />}
     </div>
   );
 };
