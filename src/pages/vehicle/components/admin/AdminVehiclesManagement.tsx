@@ -1,7 +1,10 @@
 import { useState } from "react";
 import DynamicBreadcrumbs from "@/components/DynamicBreadcrumb";
 import MainContentLayout from "@/components/MainContentLayout";
-import { columns, type CustomerTable } from "./table/columns";
+import {
+  columns,
+  type CustomerTable,
+} from "./customerManagement/table/columns";
 
 import { DataTable } from "@/components/table/DataTable";
 import {
