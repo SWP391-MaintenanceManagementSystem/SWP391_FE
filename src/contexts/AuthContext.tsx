@@ -4,6 +4,7 @@ import type { AccountWithProfile } from "@/types/models/account";
 import { createContext, useContext, useState } from "react";
 import { useLocalStorage } from "@uidotdev/usehooks";
 import { toast } from "sonner";
+import { useQueryClient } from "@tanstack/react-query";
 
 export type AuthType = {
     isAuthenticated: boolean;
@@ -43,6 +44,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const [auth, setAuth] = useLocalStorage<AuthType>("auth", defaultAuth);
     const [pendingEmail, setPendingEmail] = useState<string>("");
     const [isNotVerified, setIsNotVerified] = useState<boolean>(false);
+    const queryClient = useQueryClient();
     const handleLogin = async (formData: LoginFormData) => {
         const response = await login(formData);
         const { accessToken, account } = response.data;
@@ -62,6 +64,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             toast.success("Logout Successful", {
                 description: "See you next time!",
             });
+            queryClient.clear();
         } catch (error: any) {
             setAuth(defaultAuth);
             console.error("Logout error:", error);

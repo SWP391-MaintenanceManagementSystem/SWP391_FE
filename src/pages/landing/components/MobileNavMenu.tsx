@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger, SheetFooter } from "@/components/ui/sheet";
 import { ArrowUpRight, Menu } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 
 export default function MobileNavMenu() {
   return (
@@ -32,12 +32,15 @@ export default function MobileNavMenu() {
             Testimonials
           </span>
         </nav>
-        <Button className="w-full !bg-purple-primary !h-12">
-          <Link to="/login">
-            Login
-          </Link>
+        <NavLink
+          to="/login"
+          className="w-full !bg-purple-primary !h-12 flex gap-x-1 items-center justify-center 
+             bg-purple-primary px-6 py-[18px] w-[115px] h-14 
+             rounded-md text-white hover:bg-purple-700"
+        >
+          Login
           <ArrowUpRight />
-        </Button>
+        </NavLink>
       </SheetContent>
     </Sheet>
   );
