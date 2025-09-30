@@ -6,19 +6,6 @@ import AccountStatusTag from "@/components/AccountStatusTag";
 import ColActions from "./ColActions";
 import { type AccountStatus } from "@/types/enums/accountStatus";
 import { type Customer } from "@/types/models/account";
-// import { faker } from "@faker-js/faker";
-
-// export type CustomerTable = AccountWithProfile;
-// // Dummy Data -- CUSTOMER
-// const createRandomCustomer = (numCustomer: number) => Array.from({ length: numCustomer }, () => ({
-//   firstName: faker.person.firstName(),
-//   lastName: faker.person.lastName(),
-//   email: faker.internet.email(),
-//   address: faker.location.streetAddress(),
-//   is_premium: faker.helpers.arrayElement([true, false]),
-//   status: faker.helpers.enumValue(AccountStatus),
-// }));
-// export const dummyData: CustomerTable[] = createRandomCustomer(300);
 
 export type CustomerTable = {
   id: string;
