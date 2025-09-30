@@ -8,18 +8,17 @@
     --font-roboto: "Roboto Flex", sans-serif;
     --font-inter: "Inter", sans-serif;
 
-  /* Purple */
-  --color-purple-primary: #6B4692;
-  --color-purple-light: #E7D0FF;
-  --color-purple-landing: #B5A2C8;
-  --color-sub-text: #999999;
-  --color-primary-gray: #71717A;
-  --color-sub-feedback: #797979;
+    /* Purple */
+    --color-purple-primary: #6b4692;
+    --color-purple-light: #e7d0ff;
+    --color-purple-landing: #b5a2c8;
+    --color-sub-text: #999999;
+    --color-primary-gray: #71717a;
+    --color-sub-feedback: #797979;
 
-  /* Slate */
-  --color-slate-100: #F5F5F5;
-  --color-slate-50: #F8FAFC;
-  
+    /* Slate */
+    --color-slate-100: #f5f5f5;
+    --color-slate-50: #f8fafc;
 
     /* Gray - Light Mode */
     --color-gray-primary: #71717a;
@@ -34,27 +33,28 @@
     --color-warning: #f59e0b;
     --color-disable: #495057;
 
-
     /* Amber */
-    --color-amber-primary: #451A03;
+    --color-amber-primary: #451a03;
 
     /* Dark Mode Variants */
-    --color-purple-primary-dark: #E7D0FF;
+    --color-purple-primary-dark: #e7d0ff;
     --color-purple-secondary-dark: #3d2a5c;
     --color-purple-landing-dark: #7a6b8a;
     --color-sub-text-dark: #b0b0b0;
-    
+
     --color-slate-100-dark: #2a2a2a;
-    
+
     --color-gray-primary-dark: #a0a0a0;
     --color-gray-text-header-dark: #e0e0e0;
-    
+
     --color-brown-primary-dark: #8b4513;
-    
+
     --color-success-dark: #4ade80;
     --color-banned-dark: #ef4444;
     --color-warning-dark: #f59e0b;
     --color-disable-dark: #6b7280;
+
+    --color-gray-dark-bg: #27272a;
 }
 
 :root {
@@ -104,7 +104,6 @@
     --sidebar-ring: oklch(0.708 0 0);
 }
 
-
 html {
     scroll-behavior: smooth;
 }
@@ -117,7 +116,6 @@ html {
 a:hover {
     color: #535bf2;
 }*/
-
 
 body {
     margin: 0;
@@ -144,6 +142,7 @@ button {
 
 button:hover {
     border-color: #646cff;
+    outline: none;
 }
 
 button:focus,
@@ -174,7 +173,7 @@ button:focus-visible {
     opacity: 1;
 }
 
-*:hover>.resizer {
+*:hover > .resizer {
     opacity: 1;
 }
 
@@ -201,7 +200,7 @@ button:focus-visible {
     opacity: 1;
 }
 
-*:hover>.resizer {
+*:hover > .resizer {
     opacity: 1;
 }
 
@@ -290,7 +289,7 @@ button:focus-visible {
     --sidebar-accent-foreground: oklch(0.985 0 0);
     --sidebar-border: oklch(1 0 0 / 10%);
     --sidebar-ring: oklch(0.556 0 0);
-    
+
     /* Custom colors for dark mode */
     --color-purple-primary: var(--color-purple-primary-dark);
     --color-purple-secondary: var(--color-purple-secondary-dark);

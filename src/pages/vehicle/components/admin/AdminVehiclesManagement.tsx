@@ -4,12 +4,11 @@ import MainContentLayout from "@/components/MainContentLayout";
 import { columns, type CustomerTable } from "./table/columns";
 import { DataTable } from "@/components/table/DataTable";
 import { useGetCustomerList } from "@/services/manager/queries";
-import { DEFAULT_PAGE_SIZE } from "@/utils/constant";
 
 export default function AdminVehiclesManagement() {
   // Pagination state
   const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState(DEFAULT_PAGE_SIZE);
+  const [pageSize, setPageSize] = useState(10);
 
   // Query customer list
   const { data, isLoading } = useGetCustomerList(page, pageSize);
@@ -52,7 +51,7 @@ export default function AdminVehiclesManagement() {
           searchValue="email"
           data={customers}
           pageIndex={(data?.page ?? 1) - 1}
-          pageSize={data?.pageSize ?? 12}
+          pageSize={data?.pageSize ?? 10}
           totalPage={data?.totalPages ?? 1}
           onPageChange={(newPage) => setPage(newPage + 1)}
           onPageSizeChange={(newSize) => setPageSize(newSize)}

@@ -40,7 +40,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useState, useRef, useLayoutEffect } from "react";
 import { DeleteDialog } from "@/components/dialog/DeleteDialog";
 
 interface DataTableProps<TData, TValue> {
@@ -78,6 +78,31 @@ export function DataTable<TData, TValue>({
   });
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [searchText, setSearchText] = useState("");
+
+  const tableContainerRef = useRef<HTMLDivElement>(null);
+  useLayoutEffect(() => {
+    const el = tableContainerRef.current;
+    if (!el) return;
+
+    const MIN_ROWS = 10;
+    const rowHeight = 48;
+    const headerHeight = 48;
+    const observer = new ResizeObserver(() => {
+      const containerHeight = el.clientHeight;
+      const usableHeight = containerHeight - headerHeight;
+      const newSize = Math.max(
+        1,
+        Math.floor(usableHeight / rowHeight),
+        MIN_ROWS,
+      );
+
+      setPagination((prev) => ({ ...prev, pageSize: newSize }));
+      onPageSizeChange(newSize);
+    });
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [onPageSizeChange]);
 
   const table = useReactTable({
     data,
@@ -182,7 +207,10 @@ export function DataTable<TData, TValue>({
       </div>
 
       {/*TABLE*/}
-      <div className="overflow-hidden rounded-md border flex flex-col flex-2/3">
+      <div
+        ref={tableContainerRef}
+        className="overflow-hidden rounded-md border flex flex-col flex-2/3"
+      >
         <Table>
           {/*TABLE HEADER*/}
           <TableHeader className="bg-background z-10 sticky top-0 shadow-xs">
@@ -221,7 +249,7 @@ export function DataTable<TData, TValue>({
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
-                  className={index % 2 === 0 ? "bg-accent" : "bg-background"}
+                  className={`${index % 2 === 0 ? "bg-accent" : "bg-background"} w-full`}
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>

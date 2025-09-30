@@ -43,7 +43,7 @@ export function DeleteDialog({
           <AlertDialogAction asChild>
             <Button
               variant="destructive"
-              className="!outline-none"
+              className="!outline-none text-white !bg-red-600 hover:scale-105 transition-transform duration-300"
               onClick={() => {
                 onConfirm();
                 onOpenChange(false);
