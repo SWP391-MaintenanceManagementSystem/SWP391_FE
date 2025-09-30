@@ -5,10 +5,8 @@ import App from './App.tsx'
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import AuthProvider from './contexts/AuthContext.tsx';
 import { Toaster } from 'sonner';
-import { SidebarProvider } from './components/ui/sidebar.tsx';
-import { AppSidebar } from './components/side-bar/AppSideBar.tsx';
-import MainLayout from './layout/index.tsx';
 import { ThemeProvider } from './components/theme/ThemeProvider.tsx';
+import { DEFAULT_CACHE_TIME, DEFAULT_STALE_TIME } from './utils/constant.ts';
 
 
 const queryClient = new QueryClient({
@@ -16,6 +14,8 @@ const queryClient = new QueryClient({
     queries: {
       retry: 3,
       refetchOnWindowFocus: false,
+      staleTime: DEFAULT_STALE_TIME,
+      gcTime: DEFAULT_CACHE_TIME
     },
   },
 });

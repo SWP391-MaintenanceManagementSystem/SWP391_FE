@@ -10,7 +10,7 @@ export const useUpdateProfileMutation = () => {
         mutationFn: async (data: ChangeProfileFormData) => {
             const { email, ...rest } = data;
             const updatedUser = await updateInfo(rest);
-            return updatedUser.data.data.account;
+            return updatedUser.data.account;
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: queryKeys.profile });
