@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/button";
 import { ArrowUpRight } from "lucide-react";
 import logo from "/logo.svg";
 import MobileNavMenu from "./MobileNavMenu";
@@ -26,12 +25,15 @@ export default function Header() {
 
       {/* Desktop Button */}
       <div className="hidden lg:block">
-        <Button className="!bg-purple-primary !px-6 !py-[18px] !w-[115px] h-14">
-          <NavLink to="/login">
-            Login
-          </NavLink>
+        <NavLink
+          to="/login"
+          className="flex gap-x-1 items-center justify-center 
+             bg-purple-primary px-6 py-[18px] w-[115px] h-14 
+             rounded-md text-white hover:bg-purple-700"
+        >
+          Login
           <ArrowUpRight />
-        </Button>
+        </NavLink>
       </div>
     </header>
   );
