@@ -225,9 +225,11 @@ export function AppSidebar() {
           {({ isActive }) => (
             <>
               <div className="flex items-center gap-2">
-                <CircleUserRound
-                  className={clsx(isActive && "dark:text-amber-primary")}
-                />
+                <TooltipWrapper content="View Profile" side="right">
+                  <CircleUserRound
+                    className={clsx(isActive && "dark:text-amber-primary")}
+                  />
+                </TooltipWrapper>
                 {!collapsed && (
                   <span
                     className={clsx(
