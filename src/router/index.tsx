@@ -15,6 +15,7 @@ import { AccountRole } from "@/types/enums/role";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import ProfilePage from "@/pages/profile";
 import Unauthorized from "@/pages/unauthorized";
+import ViewDetailInfo from "@/pages/vehicle/components/admin/ViewDetailInfo";
 
 const RouterComponent = () => {
   const router = createBrowserRouter([
@@ -45,7 +46,12 @@ const RouterComponent = () => {
         {
           element: (
             <RequireAuth
-              allowedRoles={[AccountRole.CUSTOMER, AccountRole.ADMIN, AccountRole.STAFF, AccountRole.TECHNICIAN]}
+              allowedRoles={[
+                AccountRole.CUSTOMER,
+                AccountRole.ADMIN,
+                AccountRole.STAFF,
+                AccountRole.TECHNICIAN,
+              ]}
             />
           ),
           children: [
@@ -62,6 +68,13 @@ const RouterComponent = () => {
                   element: <Vehicle />,
                   hydrateFallbackElement: <CircularIndeterminate />,
                 },
+
+                {
+                  path: "/vehicles/:id",
+                  element: <ViewDetailInfo />,
+                  hydrateFallbackElement: <CircularIndeterminate />,
+                },
+
                 {
                   path: "/profile",
                   element: <ProfilePage />,

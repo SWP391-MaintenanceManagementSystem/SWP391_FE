@@ -9,6 +9,8 @@ import CustomerInfoForm from "../CustomerInfoForm";
 import { useDeleteCustomer } from "@/services/manager/mutations";
 import { AccountStatus } from "@/types/enums/accountStatus";
 import { toast } from "sonner";
+import { encodeBase64 } from "@/utils/base64";
+import { useNavigate } from "react-router-dom";
 
 interface ColActionsProps {
   row: Row<CustomerTable>;
@@ -24,6 +26,7 @@ export default function ColActions({
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [openEditDialog, setOpenEditDialog] = useState(false);
   const { mutate: deleteCustomer } = useDeleteCustomer();
+  const navigate = useNavigate();
 
   const { form, handleEditCustomerInfo } = useEditCustomerInfo(
     row,
@@ -40,7 +43,12 @@ export default function ColActions({
     <div className="flex gap-1">
       <ActionBtn
         icon={<Maximize2 size={12} />}
-        onClick={() => console.log("View Detail")}
+        onClick={() => {
+          console.log("View Detail");
+          console.log(row.original.id);
+          const encodedId = encodeBase64(row.original.id);
+          navigate(`/vehicles/${encodedId}`);
+        }}
       />
       <ActionBtn
         icon={<Pencil size={12} />}
