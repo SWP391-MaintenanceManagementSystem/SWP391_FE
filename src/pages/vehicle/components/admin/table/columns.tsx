@@ -6,6 +6,7 @@ import AccountStatusTag from "@/components/AccountStatusTag";
 import ColActions from "./ColActions";
 import { type AccountStatus } from "@/types/enums/accountStatus";
 import { type Customer } from "@/types/models/account";
+import { useGetSortedCustomersList } from "@/services/manager/queries";
 // import { faker } from "@faker-js/faker";
 
 // export type CustomerTable = AccountWithProfile;
@@ -60,6 +61,7 @@ export const columns = [
 
   // FIRST NAME
   columnHelper.accessor("profile.firstName", {
+    id: "firstName",
     header: (info) => <SortHeader title="First Name" info={info} />,
     size: 50,
     cell: (info) => info.getValue(),
@@ -70,6 +72,7 @@ export const columns = [
 
   // LAST NAME
   columnHelper.accessor("profile.lastName", {
+    id: "lastName",
     header: (info) => <SortHeader title="Last Name" info={info} />,
     size: 50,
     cell: (info) => info.getValue(),
@@ -80,6 +83,7 @@ export const columns = [
 
   // EMAIL
   columnHelper.accessor("email", {
+    id: "email",
     header: (info) => <SortHeader title="Email" info={info} />,
     size: 100,
     cell: (info) => info.getValue(),
@@ -90,6 +94,7 @@ export const columns = [
 
   // PHONE
   columnHelper.accessor("phone", {
+    id: "phone",
     header: (info) => <SortHeader title="Phone" info={info} />,
     size: 50,
     cell: (info) => info.getValue(),
@@ -100,6 +105,7 @@ export const columns = [
 
   // ADDRESS
   columnHelper.accessor("profile.address", {
+    id: "address",
     header: (info) => <SortHeader title="Address" info={info} />,
     size: 100,
     cell: (info) => info.getValue(),
@@ -110,6 +116,7 @@ export const columns = [
 
   // PREMIUM (from profile)
   columnHelper.accessor("profile.isPremium", {
+    id: "isPremium",
     header: (info) => <FilterHeader column={info.column} title="Premium" />,
     size: 50,
     cell: (info) => (info.getValue() ? "Yes" : "No"),
@@ -124,6 +131,7 @@ export const columns = [
 
   // STATUS
   columnHelper.accessor("status", {
+    id: "status",
     header: (info) => <FilterHeader column={info.column} title="Status" />,
     size: 50,
     cell: (info) => <AccountStatusTag status={info.getValue()} />,

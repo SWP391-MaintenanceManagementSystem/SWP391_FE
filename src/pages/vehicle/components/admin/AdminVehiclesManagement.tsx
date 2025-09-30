@@ -2,17 +2,42 @@ import { useState } from "react";
 import DynamicBreadcrumbs from "@/components/DynamicBreadcrumb";
 import MainContentLayout from "@/components/MainContentLayout";
 import { columns, type CustomerTable } from "./table/columns";
+
 import { DataTable } from "@/components/table/DataTable";
-import { useGetCustomerList } from "@/services/manager/queries";
+import {
+  useGetCustomerList,
+  useSearchCustomersByEmail,
+  useGetSortedCustomersList,
+} from "@/services/manager/queries";
+import { type SortingState } from "@tanstack/react-table";
 
 export default function AdminVehiclesManagement() {
   // Pagination state
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
+  const [searchValue, setSearchValue] = useState("");
+  const [sorting, setSorting] = useState<SortingState>([]);
 
-  // Query customer list
-  const { data, isLoading } = useGetCustomerList(page, pageSize);
-  // console.log("loading:", isLoading, "data:", data);
+  // Query customer list and search list
+  const customerListQuery = useGetCustomerList(page, pageSize);
+  const searchQuery = useSearchCustomersByEmail(searchValue);
+  const sortedQuery = useGetSortedCustomersList({
+    page,
+    pageSize,
+    sortBy: sorting[0]?.id ?? "createdAt",
+    orderBy: sorting[0]?.desc ? "desc" : "asc",
+  });
+
+  const data = searchValue
+    ? searchQuery.data
+    : sorting.length > 0
+      ? sortedQuery.data
+      : customerListQuery.data;
+  const isLoading = searchValue
+    ? searchQuery.isLoading
+    : sorting.length > 0
+      ? sortedQuery.isLoading
+      : customerListQuery.isLoading;
 
   const accounts = data?.data ?? [];
 
@@ -56,9 +81,9 @@ export default function AdminVehiclesManagement() {
           onPageChange={(newPage) => setPage(newPage + 1)}
           onPageSizeChange={(newSize) => setPageSize(newSize)}
           isLoading={isLoading}
-          onSearchChange={() => {
-            console.log("search value changed");
-          }}
+          onSearchChange={(value) => setSearchValue(value)}
+          sorting={sorting}
+          onSortingChange={setSorting}
         />
       </MainContentLayout>
     </div>

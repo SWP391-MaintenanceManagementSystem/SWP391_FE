@@ -8,6 +8,7 @@ import {
   type ColumnFiltersState,
   type PaginationState,
   type VisibilityState,
+  type SortingState,
 } from "@tanstack/react-table";
 
 import type { ColumnDef } from "@tanstack/react-table";
@@ -55,6 +56,8 @@ interface DataTableProps<TData, TValue> {
   onPageSizeChange: (pageSize: number) => void;
   onSearchChange?: (search: string) => void;
   onDeleteAll?: () => void;
+  sorting: SortingState;
+  onSortingChange: (sorting: SortingState) => void;
 }
 
 export function DataTable<TData, TValue>({
@@ -69,6 +72,8 @@ export function DataTable<TData, TValue>({
   onPageSizeChange,
   onSearchChange,
   onDeleteAll,
+  sorting,
+  onSortingChange,
 }: DataTableProps<TData, TValue>) {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [rowSelection, setRowSelection] = useState({});
@@ -112,12 +117,13 @@ export function DataTable<TData, TValue>({
       rowSelection,
       pagination,
       columnVisibility,
+      sorting,
     },
     filterFns: {},
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
-    getSortedRowModel: getSortedRowModel(),
+    // getSortedRowModel: getSortedRowModel(),
     onColumnFiltersChange: setColumnFilters,
     onRowSelectionChange: setRowSelection,
 
@@ -133,6 +139,14 @@ export function DataTable<TData, TValue>({
       onPageChange(next.pageIndex);
       onPageSizeChange(next.pageSize);
       if (onSearchChange) onSearchChange(searchText);
+    },
+    manualSorting: true,
+    onSortingChange: (updaterOrValue) => {
+      if (typeof updaterOrValue === "function") {
+        onSortingChange(updaterOrValue(sorting));
+      } else {
+        onSortingChange(updaterOrValue);
+      }
     },
   });
 
