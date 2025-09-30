@@ -1,17 +1,24 @@
+import * as React from "react";
 import type { ReactNode } from "react";
 
-interface ActionsBtnProps {
+interface ActionBtnProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   icon: ReactNode;
-  onClick?: React.MouseEventHandler<HTMLButtonElement>;
 }
 
-export default function ActionBtn({ icon, onClick }: ActionsBtnProps) {
-  return (
-    <button
-      onClick={onClick}
-      className="p-2 rounded hover:bg-accent bg-white transition border-1 border-[#CED4DA] !outline-none "
-    >
-      {icon}
-    </button>
-  );
-}
+const ActionBtn = React.forwardRef<HTMLButtonElement, ActionBtnProps>(
+  ({ icon, className, ...props }, ref) => {
+    return (
+      <button
+        ref={ref}
+        className={`p-2 rounded hover:bg-accent bg-white dark:bg-gray-dark-bg dark:border-gray-500 transition border border-[#CED4DA] !outline-none ${className ?? ""}`}
+        {...props}
+      >
+        {icon}
+      </button>
+    );
+  },
+);
+
+ActionBtn.displayName = "ActionBtn";
+
+export default ActionBtn;

@@ -3,17 +3,16 @@ import {
   ChangeProfileSchema,
   type ChangeProfileFormData,
 } from "@/pages/profile/components/profile/libs/schema";
-import { type Row } from "@tanstack/react-table";
-import { type CustomerTable } from "@/pages/vehicle/components/admin/table/columns";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import type { CustomerTable } from "@/pages/vehicle/components/admin/customerManagement/type";
 
 /**
  * Custom hook để edit thông tin customer dựa trên 1 row của TanStack Table
  * @param row Row<CustomerTable> - row được click để edit
  */
 export const useEditCustomerInfo = (
-  row: Row<CustomerTable>,
+  customer: CustomerTable,
   currentPage: number,
   currentPageSize: number,
 ) => {
@@ -24,12 +23,12 @@ export const useEditCustomerInfo = (
   const form = useForm<ChangeProfileFormData>({
     resolver: zodResolver(ChangeProfileSchema),
     defaultValues: {
-      email: row.original.email || "",
-      firstName: row.original.profile?.firstName || "",
-      lastName: row.original.profile?.lastName || "",
-      phone: row.original.phone || "",
-      status: row.original.status || "",
-      address: row.original.profile?.address || "",
+      firstName: customer.profile?.firstName || "",
+      lastName: customer.profile?.lastName || "",
+      email: customer.email || "",
+      phone: customer.phone || "",
+      address: customer.profile?.address || "",
+      status: customer.status,
     },
   });
 
@@ -39,7 +38,7 @@ export const useEditCustomerInfo = (
    */
   const handleEditCustomerInfo = (data: ChangeProfileFormData) => {
     mutation.mutate({
-      id: row.original.id,
+      id: customer.id,
       data,
       currentPage,
       currentPageSize,

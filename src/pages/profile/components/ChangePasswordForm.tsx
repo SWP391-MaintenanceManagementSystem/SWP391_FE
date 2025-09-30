@@ -125,6 +125,7 @@ export default function ChangePasswordForm({
             <Button
               type="submit"
               className="w-fit !bg-purple-primary !font-inter !text-white dark:!text-black hover:scale-105 transition-transform duration-150"
+              disabled={!form.formState.isDirty}
             >
               Save Changes
             </Button>

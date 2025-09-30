@@ -1,5 +1,5 @@
 import { type HeaderContext } from "@tanstack/react-table";
-import { type CustomerTable } from "@/pages/vehicle/components/admin/table/columns";
+import { type CustomerTable } from "@/pages/vehicle/components/admin/customerManagement/table/columns";
 import { ArrowDownAZ, ArrowUpZA, ArrowDownUp } from "lucide-react";
 
 interface SortHeaderProps<T> {
