@@ -71,7 +71,7 @@ export function EditDialog<TFormValues extends FieldValues>({
               <Button
                 type="submit"
                 className="!outline-none bg-purple-primary"
-                disabled={form.formState.isSubmitting}
+                disabled={!form.formState.isDirty}
               >
                 Save Changes
               </Button>
