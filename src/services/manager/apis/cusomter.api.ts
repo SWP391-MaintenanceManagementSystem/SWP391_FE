@@ -18,3 +18,7 @@ export const updateCustomerInfo = (id: string, data: ChangeProfileFormData) => {
     data,
   );
 };
+
+export const deleteCustomer = (id: string) => {
+  return httpPrivate.del<BaseResponse<void>>(`/customers/${id}`);
+};

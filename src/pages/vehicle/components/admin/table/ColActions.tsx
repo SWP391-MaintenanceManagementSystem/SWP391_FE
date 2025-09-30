@@ -6,6 +6,9 @@ import { DeleteDialog } from "@/components/dialog/DeleteDialog";
 import { useState } from "react";
 import { useEditCustomerInfo } from "@/services/manager/hooks/useEditCustomerInfo";
 import CustomerInfoForm from "../CustomerInfoForm";
+import { useDeleteCustomer } from "@/services/manager/mutations";
+import { AccountStatus } from "@/types/enums/accountStatus";
+import { toast } from "sonner";
 
 interface ColActionsProps {
   row: Row<CustomerTable>;
@@ -20,6 +23,7 @@ export default function ColActions({
 }: ColActionsProps) {
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [openEditDialog, setOpenEditDialog] = useState(false);
+  const { mutate: deleteCustomer } = useDeleteCustomer();
 
   const { form, handleEditCustomerInfo } = useEditCustomerInfo(
     row,
@@ -28,7 +32,8 @@ export default function ColActions({
   );
   const handleDelete = ({ row }: { row: Row<CustomerTable> }) => {
     console.log("Delete");
-    console.log(row.original);
+
+    deleteCustomer({ id: row.original.id, currentPage, currentPageSize });
   };
 
   return (
@@ -54,11 +59,18 @@ export default function ColActions({
       />
       <ActionBtn
         icon={<Trash size={12} />}
-        onClick={() => setOpenDeleteDialog(true)}
+        onClick={() => {
+          console.log("Row data to delete:", row.original);
+          setOpenDeleteDialog(true);
+          if (row.original.status === AccountStatus.DISABLED) {
+            setOpenDeleteDialog(false);
+            toast("Cannot delete disabled account");
+          }
+        }}
       />
       <DeleteDialog
         open={openDeleteDialog}
-        onOpenChange={() => setOpenDeleteDialog(false)}
+        onOpenChange={(open) => setOpenDeleteDialog(open)}
         onConfirm={() => handleDelete({ row })}
       />
 
