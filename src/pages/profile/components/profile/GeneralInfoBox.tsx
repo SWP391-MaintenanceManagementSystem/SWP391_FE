@@ -57,7 +57,7 @@ const GeneralInfoBox = ({ user, handleLogout }: GeneralInfoBoxProps) => {
                 </InfoSection>
             </div>
             <NavLink to="/" className="mx-auto">
-                <Button className="!font-inter !bg-purple-primary text-white hover:scale-105 transition-transform duration-300" onClick={() => handleLogout()}>
+                <Button className="!font-inter !bg-purple-primary text-white dark:text-black hover:scale-105 transition-transform duration-300" onClick={() => handleLogout()}>
                     <LogOut className="mr-2 h-4 w-4" />
                     Logout
                 </Button>
