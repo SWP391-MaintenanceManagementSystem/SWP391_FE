@@ -6,7 +6,6 @@ import AccountStatusTag from "@/components/AccountStatusTag";
 import ColActions from "./ColActions";
 import { type AccountStatus } from "@/types/enums/accountStatus";
 import { type Customer } from "@/types/models/account";
-import { useGetSortedCustomersList } from "@/services/manager/queries";
 // import { faker } from "@faker-js/faker";
 
 // export type CustomerTable = AccountWithProfile;
