@@ -197,8 +197,8 @@ export function AppSidebar() {
                     <SidebarMenuButton className="!bg-transparent outline-0 flex">
                       {collapsed ? (
                         <TooltipWrapper side="right" content={item.title}>
-                          <div>
-                            <item.icon className="h-5 w-5 mx-auto" />
+                          <div className="mx-auto">
+                            <item.icon className="h-5 w-5" />
                           </div>
                         </TooltipWrapper>
                       ) : (
