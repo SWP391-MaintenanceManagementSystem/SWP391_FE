@@ -111,8 +111,6 @@ export const useGetVehicleList = (customerId: string) => {
       const [_key, customerId] = queryKey;
       try {
         const response = await getVehicleByCustomerId(customerId);
-        // console.log("Raw response:", response);
-        // console.log("Parsed response:", response.data);
         return response.data;
       } catch (error) {
         toast.error("Failed to fetch vehicles");

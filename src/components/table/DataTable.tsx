@@ -42,6 +42,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { useState, useRef, useLayoutEffect } from "react";
 // import { DeleteDialog } from "@/components/dialog/DeleteDialog";
+import { useMemo } from "react";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -54,11 +55,12 @@ interface DataTableProps<TData, TValue> {
   onPageChange?: (pageIndex: number) => void;
   onPageSizeChange?: (pageSize: number) => void;
   onSearchChange?: (search: string) => void;
-  onDeleteAll?: () => void;
   sorting?: SortingState;
   onSortingChange?: (sorting: SortingState) => void;
   manualPagination?: boolean;
   manualSorting?: boolean;
+  isSearch?: boolean;
+  manualSearch?: boolean;
 }
 
 export function DataTable<TData, TValue>({
@@ -72,11 +74,12 @@ export function DataTable<TData, TValue>({
   onPageChange,
   onPageSizeChange,
   onSearchChange,
-  // onDeleteAll,
   sorting,
   onSortingChange,
   manualPagination = false,
   manualSorting = false,
+  isSearch = false,
+  manualSearch = false,
 }: DataTableProps<TData, TValue>) {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [rowSelection, setRowSelection] = useState({});
@@ -87,6 +90,17 @@ export function DataTable<TData, TValue>({
 
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [searchText, setSearchText] = useState("");
+
+  const filteredData = useMemo(() => {
+    if (manualSearch) return data;
+    if (!searchText) return data;
+
+    return data.filter((item: any) =>
+      ["vin", "model", "brand", "licensePlate"].some((key) =>
+        String(item[key]).toLowerCase().includes(searchText.toLowerCase()),
+      ),
+    );
+  }, [data, searchText, manualSearch]);
 
   const tableContainerRef = useRef<HTMLDivElement>(null);
   useLayoutEffect(() => {
@@ -114,7 +128,7 @@ export function DataTable<TData, TValue>({
   }, [onPageSizeChange]);
 
   const table = useReactTable({
-    data,
+    data: filteredData,
     columns,
     state: {
       columnFilters,
@@ -175,7 +189,7 @@ export function DataTable<TData, TValue>({
     <div className="grid gap-4 h-full font-inter grid-rows-[auto_1fr_auto]">
       {/* TABLE ACTIONS*/}
       <div className="flex flex-col md:flex-row w-full gap-2 items-end justify-end">
-        {searchValue && (
+        {isSearch && (
           <div className="relative w-full">
             <Search
               size={16}

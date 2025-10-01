@@ -14,6 +14,7 @@ import type { Vehicle } from "@/types/models/vehicle";
 import { DataTable } from "@/components/table/DataTable";
 import { columns } from "./vehicleManagement/table/column";
 import type { ColumnDef } from "@tanstack/react-table";
+import { useState } from "react";
 
 export default function ViewDetailInfo() {
   const { id } = useParams<{ id: string }>();
@@ -58,6 +59,17 @@ export default function ViewDetailInfo() {
       updatedAt: item.updatedAt ?? "",
     })) ?? [];
 
+  const [searchValue, setSearchValue] = useState("");
+  const searchVehicleList = (query: string) => {
+    if (!query) return vehiclesList;
+    return vehiclesList.filter((v) =>
+      [v.vin, v.brand, v.model, v.licensePlate].some((field) =>
+        field.toLowerCase().includes(query.toLowerCase()),
+      ),
+    );
+  };
+  const filteredVehicles = searchVehicleList(searchValue);
+
   if (!user) return <Loading />;
   return (
     <div className="w-full h-[calc(100vh-32px)] font-inter">
@@ -80,8 +92,10 @@ export default function ViewDetailInfo() {
           <DataTable<Vehicle, unknown>
             columns={columns as ColumnDef<Vehicle, unknown>[]}
             data={vehiclesList}
+            searchValue="VIN, License Plate, Model"
             isLoading={isLoading}
             manualPagination={false}
+            isSearch={true}
           />
         </div>
       </MainContentLayout>

@@ -1,11 +1,11 @@
 import { useDeleteVehicle } from "../mutations";
 
-export default function useVehicle() {
+export default function useVehicle(customerId: string) {
   const deleteVehicleMutation = useDeleteVehicle();
 
-  const handleDelete = (vehicleId: string, customerId: string) => {
+  const handleDelete = (id: string) => {
     deleteVehicleMutation.mutate({
-      id: vehicleId,
+      id,
       customerId,
     });
   };

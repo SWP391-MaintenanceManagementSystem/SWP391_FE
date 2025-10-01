@@ -68,8 +68,9 @@ export const columns = [
   columnHelper.display({
     id: "actions",
     header: "Actions",
-    cell: (props) => <ColActions row={props.row} />,
-    enableSorting: false,
-    enableHiding: false,
+    cell: (props) => {
+      // const { pageIndex, pageSize } = props.table.getState().pagination;
+      return <ColActions row={props.row} />;
+    },
   }),
 ];
