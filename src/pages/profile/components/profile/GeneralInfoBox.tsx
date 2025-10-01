@@ -1,8 +1,8 @@
-import Tag from "@/components/Tag";
+import Tag from "@/components/tag/Tag";
 import type { AccountWithProfile } from "@/types/models/account";
 import { CircleUserRound, LogOut } from "lucide-react";
 import { InfoSection } from "../InfoSection";
-import AccountStatusTag from "@/components/AccountStatusTag";
+import AccountStatusTag from "@/components/tag/AccountStatusTag";
 import { NavLink } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ModeToggle } from "@/components/theme/ModeToggle";
