@@ -230,13 +230,17 @@ export function AppSidebar() {
         >
           {({ isActive }) => (
             <div>
-              <div className="flex items-center gap-2">
-                {/*<TooltipWrapper content="View Profile" side="right">
+              {collapsed ? (
+                <TooltipWrapper content="View Profile" side="right">
                   <CircleUserRound
                     className={clsx(isActive && "dark:text-amber-primary")}
                   />
                 </TooltipWrapper>
-                {!collapsed && (
+              ) : (
+                <div className="flex items-center gap-2">
+                  <CircleUserRound
+                    className={clsx(isActive && "dark:text-amber-primary")}
+                  />
                   <span
                     className={clsx(
                       `text-sm`,
@@ -249,33 +253,8 @@ export function AppSidebar() {
                         " " +
                         auth.user?.profile?.lastName}
                   </span>
-                )}*/}
-                {collapsed ? (
-                  <TooltipWrapper content="View Profile" side="right">
-                    <CircleUserRound
-                      className={clsx(isActive && "dark:text-amber-primary")}
-                    />
-                  </TooltipWrapper>
-                ) : (
-                  <div>
-                    <CircleUserRound
-                      className={clsx(isActive && "dark:text-amber-primary")}
-                    />
-                    <span
-                      className={clsx(
-                        `text-sm`,
-                        isActive && "dark:text-amber-primary",
-                      )}
-                    >
-                      {auth.user?.role === AccountRole.ADMIN && "Admin"}
-                      {auth.user?.role !== AccountRole.ADMIN &&
-                        auth.user?.profile?.firstName +
-                          " " +
-                          auth.user?.profile?.lastName}
-                    </span>
-                  </div>
-                )}
-              </div>
+                </div>
+              )}
             </div>
           )}
         </NavLink>
