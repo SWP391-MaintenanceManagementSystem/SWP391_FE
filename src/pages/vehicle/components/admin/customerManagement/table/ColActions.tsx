@@ -71,7 +71,7 @@ export default function ColActions({
             console.log("Row data to delete:", row.original);
             if (row.original.status === AccountStatus.DISABLED) {
               setOpenDeleteDialog(false);
-              toast.info("Cannot delete disabled account");
+              toast.error("Cannot delete disabled account");
             }
             setOpenDeleteDialog(true);
           }}
@@ -81,6 +81,7 @@ export default function ColActions({
         open={openDeleteDialog}
         onOpenChange={(open) => setOpenDeleteDialog(open)}
         onConfirm={() => handleDeleteCustomer(row.original.id)}
+        isDisabled={row.original.status === AccountStatus.DISABLED}
       />
 
       <CustomerInfoForm

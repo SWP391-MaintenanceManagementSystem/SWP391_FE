@@ -6,6 +6,7 @@ import type { Vehicle } from "@/types/models/vehicle";
 import { useState } from "react";
 import { DeleteDialog } from "@/components/dialog/DeleteDialog";
 import useVehicle from "@/services/manager/hooks/useVehicle";
+import { toast } from "sonner";
 
 interface ColActionsProps {
   row: Row<Vehicle>;
@@ -14,7 +15,7 @@ interface ColActionsProps {
 export default function ColActions({ row }: ColActionsProps) {
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [openEditDialog, setOpenEditDialog] = useState(false);
-  const { handleDelete } = useVehicle();
+  const { handleDelete } = useVehicle(row.original.customerId);
 
   return (
     <div className="flex gap-1">
@@ -42,6 +43,10 @@ export default function ColActions({ row }: ColActionsProps) {
           icon={<Trash size={12} />}
           onClick={() => {
             console.log("Row data to delete:", row.original);
+            if (row.original.status === "INACTIVE") {
+              toast.error("Can not delete inactive vehicle");
+              setOpenDeleteDialog(false);
+            }
             setOpenDeleteDialog(true);
           }}
         />
@@ -51,9 +56,11 @@ export default function ColActions({ row }: ColActionsProps) {
         open={openDeleteDialog}
         onOpenChange={(open) => setOpenDeleteDialog(open)}
         onConfirm={() => {
-          handleDelete(row.original.id, row.original.customerId);
+          handleDelete(row.original.id);
+
           setOpenDeleteDialog(false);
         }}
+        isDisabled={row.original.status === "INACTIVE"}
       />
     </div>
   );
