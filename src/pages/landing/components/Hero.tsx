@@ -9,7 +9,7 @@ export default function Hero() {
       {/* Title + Hero Image */}
       <div className="relative flex flex-col items-center justify-center my-16 md:my-24">
         <div className="flex flex-col items-center text-center leading-none">
-          <span className="text-5xl md:text-9xl lg:text-[200px] font-bold">
+          <span className="text-5xl md:text-9xl lg:text-[200px] font-bold ">
             SMOOTH
           </span>
           <span className="text-5xl md:text-9xl lg:text-[200px] font-bold text-purple-landing">

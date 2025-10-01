@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { DollarSign, Clock, ShieldCheck, Wrench } from "lucide-react";
 export default function ServiceSection() {
   return (
-    <section className="w-full bg-white py-16 sm:py-24 md:py-32">
+    <section className="w-full bg-white py-16 sm:py-24 md:py-32 dark:bg-black">
       <div className="flex flex-col items-center text-center gap-2">
         <div className="flex flex-row items-center ">
           <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-purple-primary" />
@@ -13,7 +13,7 @@ export default function ServiceSection() {
             WHAT WE OFFER
           </span>
         </div>
-        <span className="mt-3 text-xl sm:text-2xl md:text-3xl font-extrabold  leading-snug">EXPLORE OUR SERVICES</span>
+        <span className="mt-3 text-xl sm:text-2xl md:text-3xl font-extrabold  leading-snug dark:text-slate-50">EXPLORE OUR SERVICES</span>
       </div>
       <div className="grid md:grid-cols-2 gap-12 mt-14 px-11">
         <div className="relative group overflow-hidden ">
@@ -55,7 +55,7 @@ export default function ServiceSection() {
         {/* Item 1 */}
         <div className="flex items-center gap-5">
           <div className="w-14 h-14 flex items-center justify-center rounded-full px-3.5 py-3.5 bg-purple-primary">
-            <DollarSign className="w-6 h-6 text-white" />
+            <DollarSign className="w-6 h-6 text-white dark:text-amber-primary" />
           </div>
           <div>
             <h3 className="text-2xl font-bold text-purple-primary">
@@ -71,7 +71,7 @@ export default function ServiceSection() {
         {/* Item 2 */}
         <div className="flex items-center gap-5">
           <div className="w-14 h-14 flex items-center justify-center rounded-full px-3.5 py-3.5 bg-purple-primary">
-            <Clock className="w-6 h-6 text-white" />
+            <Clock className="w-6 h-6 text-white dark:text-amber-primary" />
           </div>
           <div>
             <h3 className="text-2xl font-bold text-purple-primary">
@@ -88,7 +88,7 @@ export default function ServiceSection() {
         {/* Item 3 */}
         <div className="flex items-center gap-5">
           <div className="w-14 h-14 flex items-center justify-center rounded-full px-3.5 py-3.5 bg-purple-primary">
-            <ShieldCheck className="w-6 h-6 text-white" />
+            <ShieldCheck className="w-6 h-6 text-white dark:text-amber-primary" />
           </div>
           <div>
             <h3 className="text-2xl font-bold text-purple-primary">
@@ -104,7 +104,7 @@ export default function ServiceSection() {
         {/* Item 4 */}
         <div className="flex items-center gap-5">
           <div className="w-14 h-14 flex items-center justify-center rounded-full px-3.5 py-3.5 bg-purple-primary">
-            <Wrench className="w-6 h-6 text-white" />
+            <Wrench className="w-6 h-6 text-white dark:text-amber-primary" />
           </div>
           <div>
             <h3 className="text-2xl font-bold text-purple-primary">

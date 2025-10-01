@@ -51,7 +51,7 @@ export default function Testimonials() {
   ];
 
   return (
-    <section className=" w-full py-32 bg-white ">
+    <section className=" w-full py-32 bg-white dark:bg-black">
       <div className="flex flex-col items-center text-center gap-2">
         <div className="flex flex-row items-center gap-2">
           <Sparkles className="w-5 h-5 text-purple-primary" />

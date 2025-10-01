@@ -6,6 +6,7 @@ import BusinessProcess from "./components/BusinessProcess";
 import Testimonials from "./components/Testimonials";
 import Footer from "./components/Footer";
 export default function LandingPage() {
+
   return (
     <div>
       <div className="sticky top-8 w-full max-w-7xl mx-auto px-4 md:px-8 lg:px-16 overflow-x-hidden z-100">
@@ -17,26 +18,25 @@ export default function LandingPage() {
         </div>
       </div>
 
-      <div className=" outline-1 outline-green-500 overflow-x-hidden" id="about">
+      <div className="  overflow-x-hidden" id="about">
         <AboutSection />
       </div>
 
-      <div className=" outline-1 outline-blue-500 overflow-x-hidden" id="services">
+      <div className=" overflow-x-hidden" id="services">
         <ServiceSection />
       </div>
 
-      <div className=" outline-1 outline-yellow-500 overflow-x-hidden" id="process">
+      <div className="  overflow-x-hidden" id="process">
         <BusinessProcess />
       </div>
 
-      <div className=" outline-1 outline-purple-500 overflow-x-hidden" id="testimonials">
+      <div className="  overflow-x-hidden" id="testimonials">
         <Testimonials />
       </div>
 
-      <div className=" outline-1 outline-orange-500 overflow-x-hidden" id="footer">
+      <div className="  overflow-x-hidden" id="footer">
         <Footer />
       </div>
     </div>
   );
 }
-

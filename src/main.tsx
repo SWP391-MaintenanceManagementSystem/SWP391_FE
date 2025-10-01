@@ -25,7 +25,7 @@ createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
+        <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme" >
           <TooltipProvider delayDuration={200}>
             <Toaster richColors position="top-right" />
             <App />
