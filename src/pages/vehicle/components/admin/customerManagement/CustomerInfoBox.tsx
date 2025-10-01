@@ -36,6 +36,9 @@ const CustomerInfoBox = ({
             size={160}
             className="  text-gray-primary min-h-[100px] min-w-[100px]"
           />
+          <span>
+            {customer?.profile?.firstName + " " + customer?.profile?.lastName}
+          </span>
           <Tag text={customer.role || ""} />
         </div>
         <InfoSection title="Information">
