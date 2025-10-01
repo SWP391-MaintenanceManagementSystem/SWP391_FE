@@ -12,7 +12,7 @@ import type { CustomerTable } from "../libs/table-types";
 import type { Customer } from "@/types/models/account";
 import type { Vehicle } from "@/types/models/vehicle";
 import { DataTable } from "@/components/table/DataTable";
-import { columns } from "../admin/vehicleManagement/table/column";
+import { columns } from "./vehicleManagement/table/column";
 import type { ColumnDef } from "@tanstack/react-table";
 
 export default function ViewDetailInfo() {
@@ -44,7 +44,7 @@ export default function ViewDetailInfo() {
   const { data: apiResponse, isLoading } = useGetVehicleList(userId ?? "");
 
   const vehiclesList: Vehicle[] =
-    apiResponse?.data?.map((item) => ({
+    apiResponse?.data?.map((item: Vehicle) => ({
       id: item.id ?? "",
       vin: item.vin ?? "",
       model: item.model ?? "",

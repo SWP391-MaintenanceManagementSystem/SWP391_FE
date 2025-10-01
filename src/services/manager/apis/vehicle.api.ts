@@ -7,3 +7,7 @@ export const getVehicleByCustomerId = (customerId: string) => {
     `/vehicles/accounts/${customerId}`,
   );
 };
+
+export const deleteVehicle = (vehicleId: string) => {
+  return httpPrivate.del<BaseResponse<void>>(`/vehicles/${vehicleId}`);
+};

@@ -11,11 +11,11 @@ import type { CustomerTable } from "@/pages/vehicle/components/libs/table-types"
  * Custom hook để edit thông tin customer dựa trên 1 row của TanStack Table
  * @param row Row<CustomerTable> - row được click để edit
  */
-export const useCustomer = (
+export default function useCustomer(
   customer: CustomerTable,
   currentPage: number,
   currentPageSize: number,
-) => {
+) {
   // Khởi tạo mutation từ React Query
   const updateCustomerInfoMutation = useUpdateCustomerInfo();
   const deleteCustomerMutation = useDeleteCustomer();
@@ -59,4 +59,4 @@ export const useCustomer = (
     handleEditCustomerInfo,
     handleDeleteCustomer,
   };
-};
+}

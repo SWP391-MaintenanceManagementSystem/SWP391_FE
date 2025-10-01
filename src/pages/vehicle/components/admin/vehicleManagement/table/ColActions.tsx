@@ -4,6 +4,8 @@ import ActionBtn from "@/components/table/ActionBtn";
 import { TooltipWrapper } from "@/components/TooltipWrapper";
 import type { Vehicle } from "@/types/models/vehicle";
 import { useState } from "react";
+import { DeleteDialog } from "@/components/dialog/DeleteDialog";
+import useVehicle from "@/services/manager/hooks/useVehicle";
 
 interface ColActionsProps {
   row: Row<Vehicle>;
@@ -12,6 +14,8 @@ interface ColActionsProps {
 export default function ColActions({ row }: ColActionsProps) {
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [openEditDialog, setOpenEditDialog] = useState(false);
+  const { handleDelete } = useVehicle();
+
   return (
     <div className="flex gap-1">
       <TooltipWrapper content="View Details">
@@ -38,11 +42,19 @@ export default function ColActions({ row }: ColActionsProps) {
           icon={<Trash size={12} />}
           onClick={() => {
             console.log("Row data to delete:", row.original);
-
             setOpenDeleteDialog(true);
           }}
         />
       </TooltipWrapper>
+
+      <DeleteDialog
+        open={openDeleteDialog}
+        onOpenChange={(open) => setOpenDeleteDialog(open)}
+        onConfirm={() => {
+          handleDelete(row.original.id, row.original.customerId);
+          setOpenDeleteDialog(false);
+        }}
+      />
     </div>
   );
 }

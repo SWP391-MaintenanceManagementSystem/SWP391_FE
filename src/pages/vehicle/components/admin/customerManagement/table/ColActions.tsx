@@ -3,7 +3,7 @@ import { Maximize2, Pencil, Trash } from "lucide-react";
 import ActionBtn from "@/components/table/ActionBtn";
 import { DeleteDialog } from "@/components/dialog/DeleteDialog";
 import { useState } from "react";
-import { useCustomer } from "@/services/manager/hooks/useCustomer";
+import useCustomer from "@/services/manager/hooks/useCustomer";
 import CustomerInfoForm from "../CustomerInfoForm";
 import { AccountStatus } from "@/types/enums/accountStatus";
 import { toast } from "sonner";

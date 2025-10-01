@@ -5,7 +5,7 @@ import AccountStatusTag from "@/components/tag/AccountStatusTag";
 import { Button } from "@/components/ui/button";
 import CustomerInfoForm from "./CustomerInfoForm";
 import { useState } from "react";
-import { useCustomer } from "@/services/manager/hooks/useCustomer";
+import useCustomer from "@/services/manager/hooks/useCustomer";
 import type { CustomerTable } from "../../libs/table-types";
 
 type CustomerInfoBoxProps = {
