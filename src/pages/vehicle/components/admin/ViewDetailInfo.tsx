@@ -67,13 +67,13 @@ export default function ViewDetailInfo() {
           [id ?? ""]: "Detailed Information",
         }}
       />
-      <MainContentLayout className="lg:flex-row flex-col gap-12 ">
+      <MainContentLayout className="grid grid-cols-1 lg:grid-cols-[auto_1fr] gap-8">
         <CustomerInfoBox
           customer={customer}
           currentPage={currentPage}
           currentPageSize={currentPageSize}
         />
-        <div className="w-full h-full flex flex-col bg-slate-100 rounded-3xl px-6 py-8 shadow-sm min-h-[600px]">
+        <div className=" w-full h-full flex flex-col bg-slate-100 rounded-3xl px-6 py-8 shadow-sm min-h-[600px]">
           <h3 className="text-2xl font-semibold mb-4 text-gray-text-header">
             Customer Vehicle List
           </h3>

@@ -172,20 +172,20 @@ export function DataTable<TData, TValue>({
   };
 
   return (
-    <div className="flex flex-col h-full gap-4 w-full font-inter">
+    <div className="grid gap-4 h-full font-inter grid-rows-[auto_1fr_auto]">
       {/* TABLE ACTIONS*/}
-      <div className="flex flex-col md:flex-row gap-2 justify-end">
+      <div className="flex flex-col md:flex-row w-full gap-2 items-end justify-end">
         {searchValue && (
           <div className="relative w-full">
             <Search
               size={16}
-              className="absolute text-gray-500 top-[25%] left-2"
+              className="absolute text-gray-500 top-[10px] left-2"
             />
             <Input
               placeholder={`Search by ${searchValue}...`}
               value={searchText}
               onChange={(e) => handleSearchInput(e.target.value)}
-              className="pl-8 w-sm"
+              className="pl-8 lg:w-sm w-full "
             />
           </div>
         )}
@@ -201,7 +201,7 @@ export function DataTable<TData, TValue>({
         {/*Visible Column*/}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" className=" !outline-none">
+            <Button variant="outline" className=" !outline-none w-full md:w-28">
               Columns <ChevronDown />
             </Button>
           </DropdownMenuTrigger>
@@ -229,7 +229,7 @@ export function DataTable<TData, TValue>({
 
       {/*TABLE*/}
       <div
-        className="overflow-hidden rounded-md border flex flex-col h-3/4"
+        className=" h-full rounded-md border flex flex-col overflow-x-auto w-full table-auto"
         ref={tableContainerRef}
       >
         <Table>
@@ -303,7 +303,7 @@ export function DataTable<TData, TValue>({
       </div>
 
       {/* ROWS SELECTED */}
-      <div className="flex justify-between items-center">
+      <div className="flex justify-between items-start">
         {table.getSelectedRowModel().rows.length > 0 && (
           <div className=" text-sm text-gray-500">
             {table.getSelectedRowModel().rows.length} of{" "}

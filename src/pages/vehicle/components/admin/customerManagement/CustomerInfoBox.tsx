@@ -28,7 +28,7 @@ const CustomerInfoBox = ({
   );
 
   return (
-    <div className="flex flex-col justify-between gap-4 min-h-[600px] items-center font-inter bg-slate-100 px-[40px] py-[34px] rounded-[20px] shadow-md">
+    <div className="flex flex-col justify-between gap-4 min-h-[600px] lg:max-w-[300px] items-center font-inter bg-slate-100 px-[40px] py-[34px] rounded-[20px] shadow-md">
       <div className="space-y-4">
         <div className="w-full flex flex-col gap-2 justify-center items-center">
           <CircleUserRound

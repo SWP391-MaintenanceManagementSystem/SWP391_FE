@@ -72,7 +72,7 @@ export default function AdminVehiclesManagement() {
           vehicles: "Customers & Vehicles Management",
         }}
       />
-      <MainContentLayout>
+      <MainContentLayout className="grid w-full">
         <DataTable<CustomerTable, unknown>
           columns={columns as ColumnDef<CustomerTable, unknown>[]}
           searchValue="email"
