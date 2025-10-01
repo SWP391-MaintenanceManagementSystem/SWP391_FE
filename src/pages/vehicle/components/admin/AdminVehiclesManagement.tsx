@@ -10,7 +10,7 @@ import {
   useGetSortedCustomersList,
 } from "@/services/manager/queries";
 import type { SortingState, ColumnDef } from "@tanstack/react-table";
-import type { CustomerTable } from "./customerManagement/type";
+import type { CustomerTable } from "../libs/table-types";
 
 export default function AdminVehiclesManagement() {
   // Pagination state
@@ -86,6 +86,8 @@ export default function AdminVehiclesManagement() {
           onSearchChange={(value) => setSearchValue(value)}
           sorting={sorting}
           onSortingChange={setSorting}
+          manualPagination={true}
+          manualSorting={true}
         />
       </MainContentLayout>
     </div>

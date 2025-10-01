@@ -10,7 +10,7 @@ import { AccountStatus } from "@/types/enums/accountStatus";
 import { toast } from "sonner";
 import { encodeBase64 } from "@/utils/base64";
 import { useNavigate } from "react-router-dom";
-import type { CustomerTable } from "../type";
+import type { CustomerTable } from "../../../libs/table-types";
 import { TooltipWrapper } from "@/components/TooltipWrapper";
 
 interface ColActionsProps {

@@ -1,5 +1,5 @@
 export const queryKeys = {
-  customers: (page: number, pageSize: number) =>
+  customersList: (page: number, pageSize: number) =>
     ["customers", { page, pageSize }] as const,
 
   customerSearchByEmail: (email: string) => ["customerSearchByEmail", email],
@@ -12,4 +12,6 @@ export const queryKeys = {
     sortBy: string;
     orderBy: string;
   }) => ["sortedCustomers", params] as const,
+
+  vehiclesList: (customerId: string) => ["vehicles", customerId] as const,
 };

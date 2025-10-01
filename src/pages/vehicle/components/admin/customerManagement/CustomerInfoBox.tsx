@@ -1,12 +1,12 @@
 import { InfoSection } from "@/pages/profile/components/InfoSection";
 import { CircleUserRound, PenLine } from "lucide-react";
-import Tag from "@/components/Tag";
-import AccountStatusTag from "@/components/AccountStatusTag";
+import Tag from "@/components/tag/Tag";
+import AccountStatusTag from "@/components/tag/AccountStatusTag";
 import { Button } from "@/components/ui/button";
 import CustomerInfoForm from "./CustomerInfoForm";
 import { useState } from "react";
 import { useEditCustomerInfo } from "@/services/manager/hooks/useEditCustomerInfo";
-import type { CustomerTable } from "./type";
+import type { CustomerTable } from "../../libs/table-types";
 
 type CustomerInfoBoxProps = {
   customer: CustomerTable;
@@ -28,7 +28,7 @@ const CustomerInfoBox = ({
   );
 
   return (
-    <div className="flex flex-col justify-between gap-4 min-h-[540px] items-center font-inter bg-slate-100 px-[40px] py-[34px] rounded-[20px] shadow-md">
+    <div className="flex flex-col justify-between gap-4 min-h-[600px] items-center font-inter bg-slate-100 px-[40px] py-[34px] rounded-[20px] shadow-md">
       <div className="space-y-4">
         <div className="w-full flex flex-col gap-2 justify-center items-center">
           <CircleUserRound
@@ -71,7 +71,7 @@ const CustomerInfoBox = ({
         </InfoSection>
       </div>
       <Button
-        className="!font-inter !bg-purple-primary text-white hover:scale-105 transition-transform duration-300"
+        className="!font-inter !bg-purple-primary text-white dark:text-amber-primary hover:scale-105 transition-transform duration-300"
         onClick={() => {
           form.reset({
             firstName: customer.profile?.firstName || "",

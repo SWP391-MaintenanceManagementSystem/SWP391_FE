@@ -1,0 +1,9 @@
+import { httpPrivate } from "@/lib/http";
+import type { BaseResponse } from "@/types/models/response";
+import type { Vehicle } from "@/types/models/vehicle";
+
+export const getVehicleByCustomerId = (customerId: string) => {
+  return httpPrivate.get<BaseResponse<Vehicle[]>>(
+    `/vehicles/accounts/${customerId}`,
+  );
+};

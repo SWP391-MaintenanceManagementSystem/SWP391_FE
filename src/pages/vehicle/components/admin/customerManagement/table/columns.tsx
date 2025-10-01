@@ -2,9 +2,9 @@ import { createColumnHelper } from "@tanstack/react-table";
 import { Checkbox } from "@/components/ui/checkbox";
 import SortHeader from "@/components/table/SortHeader";
 import FilterHeader from "@/components/table/FilterHeader";
-import AccountStatusTag from "@/components/AccountStatusTag";
+import AccountStatusTag from "@/components/tag/AccountStatusTag";
 import ColActions from "./ColActions";
-import type { CustomerTable } from "../type";
+import type { CustomerTable } from "../../../libs/table-types";
 
 const columnHelper = createColumnHelper<CustomerTable>();
 
