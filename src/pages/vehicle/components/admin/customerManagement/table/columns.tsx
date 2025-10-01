@@ -2,18 +2,9 @@ import { createColumnHelper } from "@tanstack/react-table";
 import { Checkbox } from "@/components/ui/checkbox";
 import SortHeader from "@/components/table/SortHeader";
 import FilterHeader from "@/components/table/FilterHeader";
-import AccountStatusTag from "@/components/AccountStatusTag";
+import AccountStatusTag from "@/components/tag/AccountStatusTag";
 import ColActions from "./ColActions";
-import { type AccountStatus } from "@/types/enums/accountStatus";
-import { type Customer } from "@/types/models/account";
-
-export type CustomerTable = {
-  id: string;
-  email: string;
-  phone: string;
-  status: AccountStatus;
-  profile?: Customer;
-};
+import type { CustomerTable } from "../../../libs/table-types";
 
 const columnHelper = createColumnHelper<CustomerTable>();
 
@@ -120,7 +111,9 @@ export const columns = [
     id: "status",
     header: (info) => <FilterHeader column={info.column} title="Status" />,
     size: 50,
-    cell: (info) => <AccountStatusTag status={info.getValue()} />,
+    cell: (info) => (
+      <AccountStatusTag status={info.getValue() || "NOT_VERIFY"} />
+    ),
     filterFn: "equals",
     meta: {
       title: "Status",

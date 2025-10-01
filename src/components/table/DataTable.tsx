@@ -4,7 +4,6 @@ import {
   useReactTable,
   getFilteredRowModel,
   getPaginationRowModel,
-  getSortedRowModel,
   type ColumnFiltersState,
   type PaginationState,
   type VisibilityState,
@@ -26,7 +25,7 @@ import { Input } from "@/components/ui/input";
 import {
   Search,
   ChevronDown,
-  Trash,
+  // Trash,
   ChevronLeft,
   ChevronRight,
   Loader,
@@ -42,22 +41,24 @@ import {
 
 import { Button } from "@/components/ui/button";
 import { useState, useRef, useLayoutEffect } from "react";
-import { DeleteDialog } from "@/components/dialog/DeleteDialog";
+// import { DeleteDialog } from "@/components/dialog/DeleteDialog";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   searchValue?: string;
-  pageIndex: number;
-  pageSize: number;
+  pageIndex?: number;
+  pageSize?: number;
   isLoading?: boolean;
   totalPage?: number;
-  onPageChange: (pageIndex: number) => void;
-  onPageSizeChange: (pageSize: number) => void;
+  onPageChange?: (pageIndex: number) => void;
+  onPageSizeChange?: (pageSize: number) => void;
   onSearchChange?: (search: string) => void;
   onDeleteAll?: () => void;
-  sorting: SortingState;
-  onSortingChange: (sorting: SortingState) => void;
+  sorting?: SortingState;
+  onSortingChange?: (sorting: SortingState) => void;
+  manualPagination?: boolean;
+  manualSorting?: boolean;
 }
 
 export function DataTable<TData, TValue>({
@@ -71,16 +72,19 @@ export function DataTable<TData, TValue>({
   onPageChange,
   onPageSizeChange,
   onSearchChange,
-  onDeleteAll,
+  // onDeleteAll,
   sorting,
   onSortingChange,
+  manualPagination = false,
+  manualSorting = false,
 }: DataTableProps<TData, TValue>) {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [rowSelection, setRowSelection] = useState({});
   const [pagination, setPagination] = useState<PaginationState>({
-    pageIndex,
-    pageSize,
+    pageIndex: pageIndex ?? 0,
+    pageSize: pageSize ?? 10,
   });
+
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [searchText, setSearchText] = useState("");
 
@@ -89,7 +93,7 @@ export function DataTable<TData, TValue>({
     const el = tableContainerRef.current;
     if (!el) return;
 
-    const MIN_ROWS = 10;
+    const MIN_ROWS = 5;
     const rowHeight = 48;
     const headerHeight = 48;
     const observer = new ResizeObserver(() => {
@@ -102,7 +106,7 @@ export function DataTable<TData, TValue>({
       );
 
       setPagination((prev) => ({ ...prev, pageSize: newSize }));
-      onPageSizeChange(newSize);
+      if (onPageSizeChange) onPageSizeChange(newSize);
     });
 
     observer.observe(el);
@@ -130,33 +134,36 @@ export function DataTable<TData, TValue>({
     onColumnVisibilityChange: setColumnVisibility,
     enableColumnResizing: true,
     columnResizeMode: "onChange",
-    pageCount: totalPage ?? -1,
-    manualPagination: true,
+    pageCount: totalPage,
+    manualPagination: manualPagination,
     onPaginationChange: (updater) => {
       const next =
         typeof updater === "function" ? updater(pagination) : updater;
       setPagination(next);
-      onPageChange(next.pageIndex);
-      onPageSizeChange(next.pageSize);
+      setPagination(next);
+      if (onPageChange) onPageChange(next.pageIndex);
+      if (onPageSizeChange) onPageSizeChange(next.pageSize);
       if (onSearchChange) onSearchChange(searchText);
     },
-    manualSorting: true,
+    manualSorting: manualSorting,
     onSortingChange: (updaterOrValue) => {
+      if (!onSortingChange) return;
+
       if (typeof updaterOrValue === "function") {
-        onSortingChange(updaterOrValue(sorting));
+        onSortingChange(updaterOrValue(sorting ?? []));
       } else {
         onSortingChange(updaterOrValue);
       }
     },
   });
 
-  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
-  const handleDeleteAll = () => {
-    console.log("Deleting rows: ", table.getSelectedRowModel().rows);
-    if (onDeleteAll) {
-      onDeleteAll();
-    }
-  };
+  //const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+  // const handleDeleteAll = () => {
+  //   console.log("Deleting rows: ", table.getSelectedRowModel().rows);
+  //   if (onDeleteAll) {
+  //     onDeleteAll();
+  //   }
+  // };
 
   const handleSearchInput = (value: string) => {
     setSearchText(value);
@@ -165,24 +172,24 @@ export function DataTable<TData, TValue>({
   };
 
   return (
-    <div className="w-full flex flex-col gap-2 font-inter min-h-[480px]">
+    <div className="grid gap-4 h-full font-inter grid-rows-[auto_1fr_auto]">
       {/* TABLE ACTIONS*/}
-      <div className="flex flex-col md:flex-row gap-2 ">
+      <div className="flex flex-col md:flex-row w-full gap-2 items-end justify-end">
         {searchValue && (
           <div className="relative w-full">
             <Search
               size={16}
-              className="absolute text-gray-500 top-[25%] left-2"
+              className="absolute text-gray-500 top-[10px] left-2"
             />
             <Input
               placeholder={`Search by ${searchValue}...`}
               value={searchText}
               onChange={(e) => handleSearchInput(e.target.value)}
-              className="pl-8 w-sm"
+              className="pl-8 lg:w-sm w-full "
             />
           </div>
         )}
-        {table.getSelectedRowModel().rows.length > 1 && (
+        {/*{table.getSelectedRowModel().rows.length > 1 && (
           <Button
             variant="destructive"
             className="mr-auto"
@@ -190,11 +197,11 @@ export function DataTable<TData, TValue>({
           >
             Delete All <Trash />
           </Button>
-        )}
+        )}*/}
         {/*Visible Column*/}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="mr-auto !outline-none">
+            <Button variant="outline" className=" !outline-none w-full md:w-28">
               Columns <ChevronDown />
             </Button>
           </DropdownMenuTrigger>
@@ -222,8 +229,8 @@ export function DataTable<TData, TValue>({
 
       {/*TABLE*/}
       <div
+        className=" h-full rounded-md border flex flex-col overflow-x-auto w-full table-auto"
         ref={tableContainerRef}
-        className="overflow-hidden rounded-md border flex flex-col flex-2/3"
       >
         <Table>
           {/*TABLE HEADER*/}
@@ -296,11 +303,13 @@ export function DataTable<TData, TValue>({
       </div>
 
       {/* ROWS SELECTED */}
-      <div className="flex justify-between items-center">
-        <div className=" text-sm text-gray-500">
-          {table.getSelectedRowModel().rows.length} of{" "}
-          {table.getFilteredRowModel().rows.length} row selected
-        </div>
+      <div className="flex justify-between items-start">
+        {table.getSelectedRowModel().rows.length > 0 && (
+          <div className=" text-sm text-gray-500">
+            {table.getSelectedRowModel().rows.length} of{" "}
+            {table.getFilteredRowModel().rows.length} row selected
+          </div>
+        )}
 
         {/*PAGINATION*/}
         <div className="flex items-center gap-1">
@@ -338,16 +347,16 @@ export function DataTable<TData, TValue>({
           <Button variant="outline" disabled>
             {table.getPageCount().toLocaleString()}
           </Button>
-          <span className="text-sm text-gray-600">/ Page</span>
+          <span className="text-sm text-accent-foreground">/ Page</span>
         </div>
       </div>
 
       {/*MODALS*/}
-      <DeleteDialog
+      {/*<DeleteDialog
         open={openDeleteDialog}
         onOpenChange={setOpenDeleteDialog}
         onConfirm={handleDeleteAll}
-      />
+      />*/}
     </div>
   );
 }

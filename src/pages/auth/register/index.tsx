@@ -14,7 +14,7 @@ export default function RegisterPage() {
     const { auth } = useAuth()
 
     if (auth.isAuthenticated) {
-        return <Navigate to={"/"} replace />
+        return <Navigate to={"/dasboard"} replace />
     }
 
     useEffect(() => {

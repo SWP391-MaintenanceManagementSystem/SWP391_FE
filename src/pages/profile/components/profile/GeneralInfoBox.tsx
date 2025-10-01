@@ -1,8 +1,8 @@
-import Tag from "@/components/Tag";
+import Tag from "@/components/tag/Tag";
 import type { AccountWithProfile } from "@/types/models/account";
 import { CircleUserRound, LogOut } from "lucide-react";
 import { InfoSection } from "../InfoSection";
-import AccountStatusTag from "@/components/AccountStatusTag";
+import AccountStatusTag from "@/components/tag/AccountStatusTag";
 import { NavLink } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ModeToggle } from "@/components/theme/ModeToggle";
@@ -51,7 +51,7 @@ const GeneralInfoBox = ({ user, handleLogout }: GeneralInfoBoxProps) => {
       </div>
       <NavLink to="/" className="mx-auto">
         <Button
-          className="!font-inter !bg-purple-primary text-white hover:scale-105 transition-transform duration-300"
+          className="!font-inter !bg-purple-primary text-white dark:text-black hover:scale-105 transition-transform duration-300"
           onClick={() => handleLogout()}
         >
           <LogOut className="mr-2 h-4 w-4" />

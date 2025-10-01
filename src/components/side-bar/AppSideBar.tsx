@@ -35,6 +35,8 @@ import clsx from "clsx";
 import { useAuth } from "@/contexts/AuthContext";
 import { useTheme } from "@/components/theme/ThemeProvider";
 import { useState } from "react";
+import { TooltipWrapper } from "../TooltipWrapper";
+
 const customerItems: SidebarItem[] = [
   {
     title: "Dashboard",
@@ -115,11 +117,6 @@ const adminItems: SidebarItem[] = [
     url: "/finance",
     icon: CreditCard,
   },
-  {
-    title: "Settings",
-    url: "/settings",
-    icon: Settings,
-  },
 ];
 
 // Define menu items here for different roles
@@ -139,7 +136,6 @@ const getMenuItems = (role: AccountRole) => {
 };
 
 export function AppSidebar() {
-
   const { auth } = useAuth();
   const role = auth.user?.role!;
   const { resolvedTheme } = useTheme();
@@ -161,7 +157,7 @@ export function AppSidebar() {
               className="h-6 w-6 cursor-pointer"
               onClick={() => {
                 if (isMobile) return;
-                setCollapsed(!collapsed)
+                setCollapsed(!collapsed);
               }}
             />
           </div>
@@ -169,7 +165,11 @@ export function AppSidebar() {
         {collapsed && (
           <div className="flex justify-center">
             <img
-              src={resolvedTheme === "dark" ? logoWithoutTextDark : logoWithoutTextLight}
+              src={
+                resolvedTheme === "dark"
+                  ? logoWithoutTextDark
+                  : logoWithoutTextLight
+              }
               onClick={() => setCollapsed(!collapsed)}
               className="cursor-pointer"
             />
@@ -190,14 +190,23 @@ export function AppSidebar() {
                         "flex items-center gap-2 !text-gray-primary font-inter",
                         collapsed && "justify-between",
                         isActive &&
-                        "bg-purple-primary rounded-md dark:!text-amber-primary !text-white !outline-0",
+                          "bg-purple-primary rounded-md dark:!text-amber-primary !text-white !outline-0",
                       )
                     }
                   >
-                    <SidebarMenuButton className="!bg-transparent outline-0 flex ">
-                      <item.icon className={clsx("h-5 w-5", collapsed && "mx-auto")} />
-                      {!collapsed && <span>{item.title}</span>}
-
+                    <SidebarMenuButton className="!bg-transparent outline-0 flex">
+                      {collapsed ? (
+                        <TooltipWrapper side="right" content={item.title}>
+                          <div className="mx-auto">
+                            <item.icon className="h-5 w-5" />
+                          </div>
+                        </TooltipWrapper>
+                      ) : (
+                        <>
+                          <item.icon className="h-5 w-5" />
+                          <span>{item.title}</span>
+                        </>
+                      )}
                     </SidebarMenuButton>
                   </NavLink>
                 </SidebarMenuItem>
@@ -220,20 +229,36 @@ export function AppSidebar() {
           }
         >
           {({ isActive }) => (
-            <>
-              <div className="flex items-center gap-2">
-                <CircleUserRound className={clsx(isActive && "dark:text-amber-primary")} />
-                {!collapsed &&
-                  <span className={clsx(`text-sm`, isActive && "dark:text-amber-primary")}>
+            <div>
+              {collapsed ? (
+                <TooltipWrapper content="View Profile" side="right">
+                  <CircleUserRound
+                    className={clsx(isActive && "dark:text-amber-primary")}
+                  />
+                </TooltipWrapper>
+              ) : (
+                <div className="flex items-center gap-2">
+                  <CircleUserRound
+                    className={clsx(isActive && "dark:text-amber-primary")}
+                  />
+                  <span
+                    className={clsx(
+                      `text-sm`,
+                      isActive && "dark:text-amber-primary",
+                    )}
+                  >
                     {auth.user?.role === AccountRole.ADMIN && "Admin"}
-                    {auth.user?.role !== AccountRole.ADMIN && (auth.user?.profile?.firstName + " " + auth.user?.profile?.lastName)}
-                  </span>}
-              </div>
-            </>
+                    {auth.user?.role !== AccountRole.ADMIN &&
+                      auth.user?.profile?.firstName +
+                        " " +
+                        auth.user?.profile?.lastName}
+                  </span>
+                </div>
+              )}
+            </div>
           )}
         </NavLink>
       </SidebarFooter>
-
-    </Sidebar >
+    </Sidebar>
   );
 }

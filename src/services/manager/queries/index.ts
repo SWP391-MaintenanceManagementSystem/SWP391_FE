@@ -7,10 +7,17 @@ import {
   getCustomerById,
   getSortedCustomersList,
 } from "@/services/manager/apis/cusomter.api";
+import { getVehicleByCustomerId } from "../apis/vehicle.api";
 
+/**
+ * Get customer list
+ * @param page
+ * @param pageSize
+ * @returns
+ */
 export const useGetCustomerList = (page: number, pageSize: number) => {
   return useQuery({
-    queryKey: queryKeys.customers(page, pageSize),
+    queryKey: queryKeys.customersList(page, pageSize),
     queryFn: async () => {
       try {
         const response = await getCustomersList({ page, pageSize });
@@ -25,6 +32,11 @@ export const useGetCustomerList = (page: number, pageSize: number) => {
   });
 };
 
+/**
+ * Get customer list by email
+ * @param email
+ * @returns
+ */
 export const useSearchCustomersByEmail = (email: string) => {
   return useQuery({
     queryKey: queryKeys.customerSearchByEmail(email),
@@ -51,7 +63,6 @@ export const useGetCustomerById = (customerId: string) => {
       const [_key, customerId] = queryKey;
       try {
         const response = await getCustomerById(customerId);
-        // console.log("Response Data:", response.data);
         return response.data.account;
       } catch (error) {
         toast.error("Failed to fetch customer");
@@ -64,6 +75,11 @@ export const useGetCustomerById = (customerId: string) => {
   });
 };
 
+/**
+ * Get sorted customer list
+ * @param params
+ * @returns
+ */
 export const useGetSortedCustomersList = (params: {
   page: number;
   pageSize: number;
@@ -83,6 +99,28 @@ export const useGetSortedCustomersList = (params: {
       }
     },
     enabled: !!params,
+    placeholderData: (prev) => prev,
+    staleTime: 5 * 60 * 1000,
+  });
+};
+
+export const useGetVehicleList = (customerId: string) => {
+  return useQuery({
+    queryKey: queryKeys.vehiclesList(customerId),
+    queryFn: async ({ queryKey }) => {
+      const [_key, customerId] = queryKey;
+      try {
+        const response = await getVehicleByCustomerId(customerId);
+        // console.log("Raw response:", response);
+        // console.log("Parsed response:", response.data);
+        return response.data;
+      } catch (error) {
+        toast.error("Failed to fetch vehicles");
+
+        throw error;
+      }
+    },
+    enabled: !!customerId,
     placeholderData: (prev) => prev,
     staleTime: 5 * 60 * 1000,
   });

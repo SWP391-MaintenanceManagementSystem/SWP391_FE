@@ -3,6 +3,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { updateCustomerInfo, deleteCustomer } from "../apis/cusomter.api";
 import { toast } from "sonner";
 import { queryKeys } from "../queries/keys";
+import { deleteVehicle } from "../apis/vehicle.api";
 
 export const useUpdateCustomerInfo = () => {
   const queryClient = useQueryClient();
@@ -25,10 +26,14 @@ export const useUpdateCustomerInfo = () => {
     },
     onSuccess: (_data, variables) => {
       queryClient.invalidateQueries({
-        queryKey: queryKeys.customers(
+        queryKey: queryKeys.customersList(
           variables.currentPage,
           variables.currentPageSize,
         ),
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.customerById(variables.id),
       });
       toast.success("Profile updated successfully");
     },
@@ -56,7 +61,7 @@ export const useDeleteCustomer = () => {
     },
     onSuccess: (_data, variables) => {
       queryClient.invalidateQueries({
-        queryKey: queryKeys.customers(
+        queryKey: queryKeys.customersList(
           variables.currentPage,
           variables.currentPageSize,
         ),
@@ -65,6 +70,33 @@ export const useDeleteCustomer = () => {
     },
     onError: () => {
       toast.error("Failed to delete customer");
+    },
+  });
+};
+
+export const useDeleteVehicle = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({
+      id,
+      customerId,
+    }: {
+      id: string;
+      customerId: string;
+    }) => {
+      const deletedVehicle = await deleteVehicle(id);
+      return deletedVehicle.data;
+    },
+    onSuccess: (_data, variables) => {
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.vehiclesList(variables.customerId),
+      });
+      toast.success("Vehicle deleted successfully");
+    },
+
+    onError: () => {
+      toast.error("Failed to delete vehicle");
     },
   });
 };
