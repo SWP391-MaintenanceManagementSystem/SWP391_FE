@@ -55,7 +55,7 @@ export default function Header() {
           to="/login"
           className="flex gap-x-1 items-center justify-center 
              bg-purple-primary px-6 py-[18px] w-[115px] h-14 
-             rounded-md text-white hover:bg-purple-700"
+             rounded-md text-white hover:bg-purple-700 dark:text-amber-primary"
         >
           Login
           <ArrowUpRight />
