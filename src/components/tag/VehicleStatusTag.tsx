@@ -15,7 +15,7 @@ const getColor = (status: Vehicle["status"]) => {
 
     case "INACTIVE":
       return {
-        color: "var(--color-warning)",
+        color: "var(--color-banned)",
         text: "Inactive",
         textColor: "black",
       };
