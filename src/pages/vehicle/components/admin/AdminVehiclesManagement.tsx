@@ -88,6 +88,7 @@ export default function AdminVehiclesManagement() {
           onSortingChange={setSorting}
           manualPagination={true}
           manualSorting={true}
+          isSearch={true}
         />
       </MainContentLayout>
     </div>
