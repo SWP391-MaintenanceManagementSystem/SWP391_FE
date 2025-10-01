@@ -25,7 +25,7 @@ export const useUpdateCustomerInfo = () => {
     },
     onSuccess: (_data, variables) => {
       queryClient.invalidateQueries({
-        queryKey: queryKeys.customers(
+        queryKey: queryKeys.customersList(
           variables.currentPage,
           variables.currentPageSize,
         ),
@@ -60,7 +60,7 @@ export const useDeleteCustomer = () => {
     },
     onSuccess: (_data, variables) => {
       queryClient.invalidateQueries({
-        queryKey: queryKeys.customers(
+        queryKey: queryKeys.customersList(
           variables.currentPage,
           variables.currentPageSize,
         ),
