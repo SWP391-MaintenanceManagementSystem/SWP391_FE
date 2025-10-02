@@ -1,5 +1,5 @@
 import { CircleUserRound } from "lucide-react";
-import Tag from "@/components/Tag";
+import Tag from "@/components/tag/Tag";
 import type { AccountWithProfile } from "@/types/models/account";
 import { AccountRole } from "@/types/enums/role";
 

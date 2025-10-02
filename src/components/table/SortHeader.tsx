@@ -1,13 +1,14 @@
 import { type HeaderContext } from "@tanstack/react-table";
-import { type CustomerTable } from "@/pages/vehicle/components/admin/customerManagement/table/columns";
 import { ArrowDownAZ, ArrowUpZA, ArrowDownUp } from "lucide-react";
 
-interface SortHeaderProps<T> {
-  info: HeaderContext<CustomerTable, T>;
+interface SortHeaderProps<TData, TValue> {
+  info: HeaderContext<TData, TValue>;
   title: string;
 }
-
-export default function SortHeader<T>({ info, title }: SortHeaderProps<T>) {
+export default function SortHeader<TData, TValue>({
+  info,
+  title,
+}: SortHeaderProps<TData, TValue>) {
   const currentSorted = info.column.getIsSorted();
 
   const handleSorted = () => {

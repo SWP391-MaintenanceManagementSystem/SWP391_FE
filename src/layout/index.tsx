@@ -5,7 +5,7 @@ import { Outlet } from "react-router-dom";
 export default function MainLayout() {
   return (
     <SidebarProvider>
-      <div className="flex min-h-screen min-w-full md:gap-6 ">
+      <div className="flex min-h-screen min-w-full md:gap-6">
         <AppSidebar />
         <SidebarTrigger
           size={"icon"}

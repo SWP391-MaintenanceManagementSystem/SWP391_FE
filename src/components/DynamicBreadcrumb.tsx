@@ -36,14 +36,14 @@ export default function DynamicBreadcrumbs({ pathTitles }: Props) {
               {index > 0 && <BreadcrumbSeparator />}
               <BreadcrumbItem>
                 {isLast ? (
-                  <BreadcrumbPage className="capitalize font-medium text-2xl font-inter">
+                  <BreadcrumbPage className="capitalize font-medium text-xs lg:text-2xl md:text-sm font-inter">
                     {title}
                   </BreadcrumbPage>
                 ) : (
                   <BreadcrumbLink asChild>
                     <Link
                       to={href}
-                      className="capitalize font-medium text-2xl font-inter"
+                      className="capitalize font-medium text-xs lg:text-2xl md:text-sm font-inter"
                     >
                       {title}
                     </Link>

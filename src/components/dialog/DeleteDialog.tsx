@@ -13,11 +13,13 @@ interface DeleteDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onConfirm: () => void;
+  isDisabled: boolean;
 }
 export function DeleteDialog({
   open,
   onOpenChange,
   onConfirm,
+  isDisabled,
 }: DeleteDialogProps) {
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
@@ -47,6 +49,7 @@ export function DeleteDialog({
                 onConfirm();
                 onOpenChange(false);
               }}
+              disabled={isDisabled}
             >
               Delete
             </Button>

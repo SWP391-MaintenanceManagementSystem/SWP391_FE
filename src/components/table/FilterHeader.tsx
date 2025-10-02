@@ -1,20 +1,26 @@
 import type { Column } from "@tanstack/react-table";
-import type { CustomerTable } from "../../pages/vehicle/components/admin/table/columns";
 import {
   DropdownMenu,
-  DropdownMenuCheckboxItem,
   DropdownMenuContent,
+  DropdownMenuRadioItem,
   DropdownMenuTrigger,
+  DropdownMenuRadioGroup,
 } from "@/components/ui/dropdown-menu";
 import { Filter } from "lucide-react";
 
-interface FilterHeaderProps {
-  column: Column<CustomerTable, unknown>;
+interface FilterHeaderProps<TData> {
+  column: Column<TData, unknown>;
   title: string;
+  onFilterChange?: (value: string) => void;
+  selectedValue?: string;
 }
 
-export default function FilterHeader({ column, title }: FilterHeaderProps) {
-  const columnFilterValue = column.getFilterValue();
+export default function FilterHeader<TData>({
+  column,
+  title,
+  onFilterChange,
+  selectedValue,
+}: FilterHeaderProps<TData>) {
   const { filterOptions, labelOptions } = column.columnDef.meta ?? {};
 
   return (
@@ -27,30 +33,19 @@ export default function FilterHeader({ column, title }: FilterHeaderProps) {
       </DropdownMenuTrigger>
 
       <DropdownMenuContent align="end">
-        {filterOptions?.map((option: string) => (
-          <DropdownMenuCheckboxItem
-            key={option}
-            checked={
-              Array.isArray(columnFilterValue)
-                ? columnFilterValue.includes(option)
-                : columnFilterValue === option
-            }
-            onCheckedChange={(checked) => {
-              let next: string[] = Array.isArray(columnFilterValue)
-                ? [...columnFilterValue]
-                : columnFilterValue
-                  ? [String(columnFilterValue)]
-                  : [];
-
-              if (checked) next.push(option);
-              else next = next.filter((v) => v !== option);
-
-              column.setFilterValue(next.length ? next : undefined);
-            }}
-          >
-            {labelOptions[option] ?? option}
-          </DropdownMenuCheckboxItem>
-        ))}
+        <DropdownMenuRadioGroup
+          value={selectedValue}
+          onValueChange={onFilterChange}
+        >
+          <DropdownMenuRadioItem key="all" value="">
+            All
+          </DropdownMenuRadioItem>
+          {filterOptions?.map((option: string) => (
+            <DropdownMenuRadioItem key={option} value={option}>
+              {labelOptions?.[option] ?? option}
+            </DropdownMenuRadioItem>
+          ))}
+        </DropdownMenuRadioGroup>
       </DropdownMenuContent>
     </DropdownMenu>
   );

@@ -194,13 +194,19 @@ export function AppSidebar() {
                       )
                     }
                   >
-                    <SidebarMenuButton className="!bg-transparent outline-0 flex ">
-                      <TooltipWrapper content={item.title} side="right">
-                        <item.icon
-                          className={clsx("h-5 w-5", collapsed && "mx-auto")}
-                        />
-                      </TooltipWrapper>
-                      {!collapsed && <span>{item.title}</span>}
+                    <SidebarMenuButton className="!bg-transparent outline-0 flex">
+                      {collapsed ? (
+                        <TooltipWrapper side="right" content={item.title}>
+                          <div className="mx-auto">
+                            <item.icon className="h-5 w-5" />
+                          </div>
+                        </TooltipWrapper>
+                      ) : (
+                        <>
+                          <item.icon className="h-5 w-5" />
+                          <span>{item.title}</span>
+                        </>
+                      )}
                     </SidebarMenuButton>
                   </NavLink>
                 </SidebarMenuItem>
@@ -223,14 +229,18 @@ export function AppSidebar() {
           }
         >
           {({ isActive }) => (
-            <>
-              <div className="flex items-center gap-2">
+            <div>
+              {collapsed ? (
                 <TooltipWrapper content="View Profile" side="right">
                   <CircleUserRound
                     className={clsx(isActive && "dark:text-amber-primary")}
                   />
                 </TooltipWrapper>
-                {!collapsed && (
+              ) : (
+                <div className="flex items-center gap-2">
+                  <CircleUserRound
+                    className={clsx(isActive && "dark:text-amber-primary")}
+                  />
                   <span
                     className={clsx(
                       `text-sm`,
@@ -243,9 +253,9 @@ export function AppSidebar() {
                         " " +
                         auth.user?.profile?.lastName}
                   </span>
-                )}
-              </div>
-            </>
+                </div>
+              )}
+            </div>
           )}
         </NavLink>
       </SidebarFooter>
