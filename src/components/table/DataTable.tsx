@@ -1,3 +1,6 @@
+import { useState, useRef, useLayoutEffect } from "react";
+// import { DeleteDialog } from "@/components/dialog/DeleteDialog";
+import { useMemo } from "react";
 import {
   flexRender,
   getCoreRowModel,
@@ -9,9 +12,8 @@ import {
   type PaginationState,
   type VisibilityState,
   type SortingState,
+  type ColumnDef,
 } from "@tanstack/react-table";
-
-import type { ColumnDef } from "@tanstack/react-table";
 
 import {
   Table,
@@ -21,7 +23,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
   Search,
@@ -40,26 +42,24 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-import { Button } from "@/components/ui/button";
-import { useState, useRef, useLayoutEffect } from "react";
-// import { DeleteDialog } from "@/components/dialog/DeleteDialog";
-import { useMemo } from "react";
-
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  isLoading?: boolean;
+  // PAGINATION
   pageIndex?: number;
   pageSize?: number;
   totalPage?: number;
   onPageChange?: (pageIndex: number) => void;
   onPageSizeChange?: (pageSize: number) => void;
   manualPagination?: boolean;
-  isLoading?: boolean;
+  // SEARCH
   isSearch?: boolean;
   manualSearch?: boolean;
   searchValue?: string[];
   searchPlaceholder?: string;
   onSearchChange?: (search: string) => void;
+  //SORTED
   sorting?: SortingState;
   onSortingChange?: (sorting: SortingState) => void;
   manualSorting?: boolean;
@@ -68,35 +68,34 @@ interface DataTableProps<TData, TValue> {
 export function DataTable<TData, TValue>({
   columns,
   data,
+  isLoading,
+  //PAGINATION
   pageIndex,
   pageSize,
   totalPage,
   onPageChange,
   onPageSizeChange,
   manualPagination = false,
-  isLoading,
+  //SEARCH
   isSearch = false,
   searchValue = [],
   searchPlaceholder,
   onSearchChange,
   manualSearch = false,
+  //SORTED
   sorting,
   onSortingChange,
   manualSorting = false,
 }: DataTableProps<TData, TValue>) {
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const [rowSelection, setRowSelection] = useState({});
-  const [pagination, setPagination] = useState<PaginationState>({
-    pageIndex: pageIndex ?? 0,
-    pageSize: pageSize ?? 10,
-  });
-  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
+  /** ------------------ SEARCH DATA ------------------ */
   const [searchText, setSearchText] = useState("");
-
   const filteredData = useMemo(() => {
-    if (manualSearch) return data;
-    if (!searchText) return data;
+    if (manualSearch) return data; // if manualSearch is true, return data as is
+    if (!searchText) return data; // if searchText is empty, return data as is
 
+    // if searchText is not empty, filter data
+    // searchText is string[]
+    // example: searchText = ["firstName", "lastName"]
     return data.filter((item) =>
       searchValue.some((key) =>
         String(item[key as keyof TData] ?? "")
@@ -106,31 +105,49 @@ export function DataTable<TData, TValue>({
     );
   }, [data, searchText, manualSearch, searchValue]);
 
+  /** ------------------ AUTO RESIZE PAGESIZE based on the container height ------------------ */
+  // Create a ref to access the table container DOM element
   const tableContainerRef = useRef<HTMLDivElement>(null);
+
+  // Run after layout to measure the container element
   useLayoutEffect(() => {
+    // Get the table container element
     const el = tableContainerRef.current;
     if (!el) return;
 
+    // MIN_ROWS of table
     const MIN_ROWS = 5;
     const rowHeight = 48;
     const headerHeight = 48;
+    // Observe changes in the container size
     const observer = new ResizeObserver(() => {
       const containerHeight = el.clientHeight;
       const usableHeight = containerHeight - headerHeight;
       const newSize = Math.max(
-        1,
-        Math.floor(usableHeight / rowHeight),
-        MIN_ROWS,
+        1, // minimum number of rows (can not be less than 1)
+        Math.floor(usableHeight / rowHeight), // number of rows that fit in the container
+        MIN_ROWS, // newSize >= MIN_ROWS, even container too small
       );
-
+      // Update pagination state with new page size
       setPagination((prev) => ({ ...prev, pageSize: newSize }));
       if (onPageSizeChange) onPageSizeChange(newSize);
     });
-
+    // Start observing the container element
     observer.observe(el);
+    // Cleanup: stop observing when the component unmounts to prevent memory leaks
     return () => observer.disconnect();
   }, [onPageSizeChange]);
 
+  /** ------------------ PAGINATION, FILTER, SELECTION, VISIBILITY STATE ------------------ */
+  const [pagination, setPagination] = useState<PaginationState>({
+    pageIndex: pageIndex ?? 0,
+    pageSize: pageSize ?? 10,
+  });
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [rowSelection, setRowSelection] = useState({});
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
+
+  /** ------------------ REACT TABLE ------------------ */
   const table = useReactTable({
     data: filteredData,
     columns,
@@ -143,14 +160,15 @@ export function DataTable<TData, TValue>({
     },
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
     onColumnFiltersChange: setColumnFilters,
     onRowSelectionChange: setRowSelection,
     onColumnVisibilityChange: setColumnVisibility,
     enableColumnResizing: true,
     columnResizeMode: "onChange",
-    pageCount: totalPage,
+    getPaginationRowModel: getPaginationRowModel(),
     manualPagination: manualPagination,
+    pageCount: totalPage, // when using manualPagination
+    // Handle pagination change - manualPagination = false
     onPaginationChange: (updater) => {
       const next =
         typeof updater === "function" ? updater(pagination) : updater;
@@ -159,6 +177,7 @@ export function DataTable<TData, TValue>({
       if (onPageSizeChange) onPageSizeChange(next.pageSize);
       if (onSearchChange) onSearchChange(searchText);
     },
+    // Handle sorting change - manualSorting = false
     ...(manualSorting ? {} : { getSortedRowModel: getSortedRowModel() }),
     manualSorting: manualSorting,
     onSortingChange: (updaterOrValue) => {
@@ -180,6 +199,7 @@ export function DataTable<TData, TValue>({
   //   }
   // };
 
+  // Search handler: update, reset page
   const handleSearchInput = (value: string) => {
     setSearchText(value);
     setPagination((prev) => ({ ...prev, pageIndex: 0 }));
@@ -188,8 +208,9 @@ export function DataTable<TData, TValue>({
 
   return (
     <div className="grid gap-4 h-full font-inter grid-rows-[auto_1fr_auto]">
-      {/* TABLE ACTIONS*/}
+      {/* --- TABLE ACTIONS --- */}
       <div className="flex flex-col md:flex-row w-full gap-2 items-end justify-end">
+        {/* Search input */}
         {isSearch && (
           <div className="relative w-full">
             <Search
@@ -204,6 +225,8 @@ export function DataTable<TData, TValue>({
             />
           </div>
         )}
+
+        {/* Delete all button */}
         {/*{table.getSelectedRowModel().rows.length > 1 && (
           <Button
             variant="destructive"
@@ -213,7 +236,8 @@ export function DataTable<TData, TValue>({
             Delete All <Trash />
           </Button>
         )}*/}
-        {/*Visible Column*/}
+
+        {/* Visible Column */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className=" !outline-none w-full md:w-28">
@@ -242,13 +266,13 @@ export function DataTable<TData, TValue>({
         </DropdownMenu>
       </div>
 
-      {/*TABLE*/}
+      {/* --- TABLE --- */}
       <div
         className=" h-full rounded-md border flex flex-col overflow-x-auto w-full table-auto"
         ref={tableContainerRef}
       >
         <Table>
-          {/*TABLE HEADER*/}
+          {/*--- HEADER ---*/}
           <TableHeader className="bg-background z-10 sticky top-0 shadow-xs">
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
@@ -278,7 +302,7 @@ export function DataTable<TData, TValue>({
             ))}
           </TableHeader>
 
-          {/*TABLE BODY*/}
+          {/*--- BODY ---*/}
           <TableBody>
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
@@ -317,7 +341,7 @@ export function DataTable<TData, TValue>({
         </Table>
       </div>
 
-      {/* ROWS SELECTED */}
+      {/* --- ROWS SELECTED ---*/}
       <div className="flex justify-between items-start">
         {table.getSelectedRowModel().rows.length > 0 && (
           <div className=" text-sm text-gray-500">
@@ -326,7 +350,7 @@ export function DataTable<TData, TValue>({
           </div>
         )}
 
-        {/*PAGINATION*/}
+        {/* --- PAGINATION ---*/}
         <div className="flex items-center gap-1">
           <Button
             variant="outline"
@@ -365,7 +389,7 @@ export function DataTable<TData, TValue>({
         </div>
       </div>
 
-      {/*MODALS*/}
+      {/* --- MODALS DELETE ALL --- */}
       {/*<DeleteDialog
         open={openDeleteDialog}
         onOpenChange={setOpenDeleteDialog}
