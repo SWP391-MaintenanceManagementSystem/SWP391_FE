@@ -1,5 +1,4 @@
 import type { Column } from "@tanstack/react-table";
-import type { CustomerTable } from "@/pages/vehicle/components/libs/table-types";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -9,25 +8,20 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Filter } from "lucide-react";
 
-interface FilterHeaderProps {
-  column: Column<CustomerTable, unknown>;
+interface FilterHeaderProps<TData> {
+  column: Column<TData, unknown>;
   title: string;
-  onFilterChange: (value: string) => void;
-  selectedValue: string;
+  onFilterChange?: (value: string) => void;
+  selectedValue?: string;
 }
 
-export default function FilterHeader({
+export default function FilterHeader<TData>({
   column,
   title,
   onFilterChange,
   selectedValue,
-}: FilterHeaderProps) {
+}: FilterHeaderProps<TData>) {
   const { filterOptions, labelOptions } = column.columnDef.meta ?? {};
-  // const [selected, setSelected] = useState(selectedValue);
-  // const handleSelect = (value: string) => {
-  //   setSelected(value);
-  //   onFilterChange(value);
-  // };
 
   return (
     <DropdownMenu>

@@ -72,7 +72,7 @@ export const useGetVehicleList = (customerId: string) => {
       const [_key, id] = queryKey;
       try {
         const response = await getVehicleByCustomerId(id);
-        return response.data;
+        return response.data.data;
       } catch {
         toast.error("Failed to fetch vehicles");
         throw new Error("Fetch vehicles failed");

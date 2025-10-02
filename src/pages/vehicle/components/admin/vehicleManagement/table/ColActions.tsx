@@ -46,8 +46,9 @@ export default function ColActions({ row }: ColActionsProps) {
             if (row.original.status === "INACTIVE") {
               toast.error("Can not delete inactive vehicle");
               setOpenDeleteDialog(false);
+            } else {
+              setOpenDeleteDialog(true);
             }
-            setOpenDeleteDialog(true);
           }}
         />
       </TooltipWrapper>
@@ -57,7 +58,6 @@ export default function ColActions({ row }: ColActionsProps) {
         onOpenChange={(open) => setOpenDeleteDialog(open)}
         onConfirm={() => {
           handleDelete(row.original.id);
-
           setOpenDeleteDialog(false);
         }}
         isDisabled={row.original.status === "INACTIVE"}

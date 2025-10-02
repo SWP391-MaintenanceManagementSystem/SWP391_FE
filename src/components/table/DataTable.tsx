@@ -4,6 +4,7 @@ import {
   useReactTable,
   getFilteredRowModel,
   getPaginationRowModel,
+  getSortedRowModel,
   type ColumnFiltersState,
   type PaginationState,
   type VisibilityState,
@@ -89,7 +90,6 @@ export function DataTable<TData, TValue>({
     pageIndex: pageIndex ?? 0,
     pageSize: pageSize ?? 10,
   });
-
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [searchText, setSearchText] = useState("");
 
@@ -145,10 +145,8 @@ export function DataTable<TData, TValue>({
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
-    // getSortedRowModel: getSortedRowModel(),
     onColumnFiltersChange: setColumnFilters,
     onRowSelectionChange: setRowSelection,
-
     onColumnVisibilityChange: setColumnVisibility,
     enableColumnResizing: true,
     columnResizeMode: "onChange",
@@ -162,6 +160,7 @@ export function DataTable<TData, TValue>({
       if (onPageSizeChange) onPageSizeChange(next.pageSize);
       if (onSearchChange) onSearchChange(searchText);
     },
+    ...(manualSorting ? {} : { getSortedRowModel: getSortedRowModel() }),
     manualSorting: manualSorting,
     onSortingChange: (updaterOrValue) => {
       if (!onSortingChange) return;

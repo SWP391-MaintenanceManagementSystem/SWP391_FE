@@ -15,11 +15,24 @@ import { DataTable } from "@/components/table/DataTable";
 import { columns } from "./vehicleManagement/table/column";
 import type { ColumnDef } from "@tanstack/react-table";
 import { useState } from "react";
+import type { SortingState } from "@tanstack/react-table";
 
 export default function ViewDetailInfo() {
   const { id } = useParams<{ id: string }>();
   const userId = id ? b64DecodeUnicode(id) : null;
   const { data: user } = useGetCustomerById(userId ?? "");
+  const [sorting, setSorting] = useState<SortingState>([]);
+  // const [filters, setFilters] = useState({
+  //   status: "ACTIVE" | "INACTIVE",
+  // });
+  // const handleFilterChange = (field: string, value: string | undefined) => {
+  //   setFilters((prevFilters) => ({
+  //     ...prevFilters,
+  //     [field]: value,
+  //   }));
+  // };
+
+  // const columns = getColumns(handleFilterChange, filters);
 
   const customer: CustomerTable = {
     id: user?.id ?? "",
@@ -45,7 +58,7 @@ export default function ViewDetailInfo() {
   const { data: apiResponse, isLoading } = useGetVehicleList(userId ?? "");
 
   const vehiclesList: Vehicle[] =
-    apiResponse?.data?.map((item: Vehicle) => ({
+    apiResponse?.map((item: Vehicle) => ({
       id: item.id ?? "",
       vin: item.vin ?? "",
       model: item.model ?? "",
@@ -59,16 +72,11 @@ export default function ViewDetailInfo() {
       updatedAt: item.updatedAt ?? "",
     })) ?? [];
 
-  const [searchValue, setSearchValue] = useState("");
-  const searchVehicleList = (query: string) => {
-    if (!query) return vehiclesList;
-    return vehiclesList.filter((v) =>
-      [v.vin, v.brand, v.model, v.licensePlate].some((field) =>
-        field.toLowerCase().includes(query.toLowerCase()),
-      ),
-    );
-  };
-  const filteredVehicles = searchVehicleList(searchValue);
+  // const filteredVehicles = vehiclesList.filter(
+  //   (v) => !filters.status || v.status === filters.status,
+  // );
+
+  // console.log(filteredVehicles);
 
   if (!user) return <Loading />;
   return (
@@ -92,10 +100,13 @@ export default function ViewDetailInfo() {
           <DataTable<Vehicle, unknown>
             columns={columns as ColumnDef<Vehicle, unknown>[]}
             data={vehiclesList}
-            searchValue="VIN, License Plate, Model"
+            searchPlaceholder="VIN, License Plate, Model"
+            searchValue={["vin", "brand", "model", "licensePlate"]}
             isLoading={isLoading}
             manualPagination={false}
             isSearch={true}
+            sorting={sorting}
+            onSortingChange={setSorting}
           />
         </div>
       </MainContentLayout>
