@@ -26,10 +26,10 @@ export const useUpdateCustomerInfo = () => {
     },
     onSuccess: (_data, variables) => {
       queryClient.invalidateQueries({
-        queryKey: queryKeys.customersList(
-          variables.currentPage,
-          variables.currentPageSize,
-        ),
+        queryKey: queryKeys.customers({
+          page: variables.currentPage,
+          pageSize: variables.currentPageSize,
+        }),
       });
 
       queryClient.invalidateQueries({
@@ -61,10 +61,10 @@ export const useDeleteCustomer = () => {
     },
     onSuccess: (_data, variables) => {
       queryClient.invalidateQueries({
-        queryKey: queryKeys.customersList(
-          variables.currentPage,
-          variables.currentPageSize,
-        ),
+        queryKey: queryKeys.customers({
+          page: variables.currentPage,
+          pageSize: variables.currentPageSize,
+        }),
       });
       toast.success("Customer deleted successfully");
     },

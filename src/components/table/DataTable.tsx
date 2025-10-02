@@ -48,41 +48,41 @@ import { useMemo } from "react";
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
-  searchPlaceholder?: string;
   pageIndex?: number;
   pageSize?: number;
-  isLoading?: boolean;
   totalPage?: number;
   onPageChange?: (pageIndex: number) => void;
   onPageSizeChange?: (pageSize: number) => void;
-  onSearchChange?: (search: string) => void;
-  sorting?: SortingState;
-  onSortingChange?: (sorting: SortingState) => void;
   manualPagination?: boolean;
-  manualSorting?: boolean;
+  isLoading?: boolean;
   isSearch?: boolean;
   manualSearch?: boolean;
   searchValue?: string[];
+  searchPlaceholder?: string;
+  onSearchChange?: (search: string) => void;
+  sorting?: SortingState;
+  onSortingChange?: (sorting: SortingState) => void;
+  manualSorting?: boolean;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
-  searchPlaceholder,
   pageIndex,
   pageSize,
-  isLoading,
   totalPage,
   onPageChange,
   onPageSizeChange,
+  manualPagination = false,
+  isLoading,
+  isSearch = false,
+  searchValue = [],
+  searchPlaceholder,
   onSearchChange,
+  manualSearch = false,
   sorting,
   onSortingChange,
-  manualPagination = false,
   manualSorting = false,
-  isSearch = false,
-  manualSearch = false,
-  searchValue = [],
 }: DataTableProps<TData, TValue>) {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [rowSelection, setRowSelection] = useState({});
@@ -141,7 +141,6 @@ export function DataTable<TData, TValue>({
       columnVisibility,
       sorting,
     },
-    filterFns: {},
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
