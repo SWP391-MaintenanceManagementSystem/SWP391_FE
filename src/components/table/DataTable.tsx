@@ -47,7 +47,7 @@ import { useMemo } from "react";
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
-  searchValue?: string;
+  searchPlaceholder?: string;
   pageIndex?: number;
   pageSize?: number;
   isLoading?: boolean;
@@ -61,12 +61,13 @@ interface DataTableProps<TData, TValue> {
   manualSorting?: boolean;
   isSearch?: boolean;
   manualSearch?: boolean;
+  searchValue?: string[];
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
-  searchValue,
+  searchPlaceholder,
   pageIndex,
   pageSize,
   isLoading,
@@ -80,6 +81,7 @@ export function DataTable<TData, TValue>({
   manualSorting = false,
   isSearch = false,
   manualSearch = false,
+  searchValue = [],
 }: DataTableProps<TData, TValue>) {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [rowSelection, setRowSelection] = useState({});
@@ -95,12 +97,14 @@ export function DataTable<TData, TValue>({
     if (manualSearch) return data;
     if (!searchText) return data;
 
-    return data.filter((item: any) =>
-      ["vin", "model", "brand", "licensePlate"].some((key) =>
-        String(item[key]).toLowerCase().includes(searchText.toLowerCase()),
+    return data.filter((item) =>
+      searchValue.some((key) =>
+        String(item[key as keyof TData] ?? "")
+          .toLowerCase()
+          .includes(searchText.toLowerCase()),
       ),
     );
-  }, [data, searchText, manualSearch]);
+  }, [data, searchText, manualSearch, searchValue]);
 
   const tableContainerRef = useRef<HTMLDivElement>(null);
   useLayoutEffect(() => {
@@ -154,7 +158,6 @@ export function DataTable<TData, TValue>({
       const next =
         typeof updater === "function" ? updater(pagination) : updater;
       setPagination(next);
-      setPagination(next);
       if (onPageChange) onPageChange(next.pageIndex);
       if (onPageSizeChange) onPageSizeChange(next.pageSize);
       if (onSearchChange) onSearchChange(searchText);
@@ -196,7 +199,7 @@ export function DataTable<TData, TValue>({
               className="absolute text-gray-500 top-[10px] left-2"
             />
             <Input
-              placeholder={`Search by ${searchValue}...`}
+              placeholder={`Search by ${searchPlaceholder}...`}
               value={searchText}
               onChange={(e) => handleSearchInput(e.target.value)}
               className="pl-8 lg:w-sm w-full "
@@ -280,11 +283,11 @@ export function DataTable<TData, TValue>({
           {/*TABLE BODY*/}
           <TableBody>
             {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row, index) => (
+              table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
-                  className={`${index % 2 === 0 ? "bg-accent" : "bg-background"} w-full`}
+                  className="w-full odd:bg-accent even:bg-background"
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
@@ -340,7 +343,6 @@ export function DataTable<TData, TValue>({
             value={table.getState().pagination.pageIndex + 1}
             min="1"
             max={totalPage}
-            defaultValue={table.getState().pagination.pageIndex + 1}
             onChange={(e) => {
               let newPage = Number(e.target.value) - 1;
               if (newPage < 0) newPage = 0;
