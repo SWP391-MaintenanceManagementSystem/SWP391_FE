@@ -3,18 +3,26 @@ import type { PaginationResponse, BaseResponse } from "@/types/models/response";
 import type { AccountWithProfile } from "@/types/models/account";
 import type { ChangeProfileFormData } from "@/pages/profile/components/profile/libs/schema";
 
-export const getCustomersList = (params: {
+/** Lấy danh sách customers với search + filter + sort */
+export const getCustomers = (params: {
   page: number;
   pageSize: number;
+  firstName?: string;
+  lastName?: string;
+  status?: string;
+  email?: string;
+  phone?: string;
+  sortBy?: string;
+  orderBy?: "asc" | "desc";
+  // isPremium?: boolean;
 }) => {
   return httpPrivate.get<BaseResponse<PaginationResponse<AccountWithProfile>>>(
     "/customers",
-    {
-      params,
-    },
+    { params },
   );
 };
 
+/** Cập nhật thông tin */
 export const updateCustomerInfo = (id: string, data: ChangeProfileFormData) => {
   return httpPrivate.patch<BaseResponse<AccountWithProfile>>(
     `/customers/${id}`,
@@ -22,35 +30,14 @@ export const updateCustomerInfo = (id: string, data: ChangeProfileFormData) => {
   );
 };
 
+/** Xoá customer */
 export const deleteCustomer = (id: string) => {
   return httpPrivate.del<BaseResponse<void>>(`/customers/${id}`);
 };
 
-export const searchCustomersByEmail = (params: { searchValue: string }) => {
-  return httpPrivate.get<BaseResponse<PaginationResponse<AccountWithProfile>>>(
-    "/customers",
-    {
-      params,
-    },
-  );
-};
-
+/** Lấy 1 customer theo ID */
 export const getCustomerById = (customerId: string) => {
   return httpPrivate.get<BaseResponse<{ account: AccountWithProfile }>>(
     `/customers/{id}?id=${customerId}`,
-  );
-};
-
-export const getSortedCustomersList = (params: {
-  page: number;
-  pageSize: number;
-  sortBy: string;
-  orderBy: string;
-}) => {
-  return httpPrivate.get<BaseResponse<PaginationResponse<AccountWithProfile>>>(
-    "/customers",
-    {
-      params,
-    },
   );
 };

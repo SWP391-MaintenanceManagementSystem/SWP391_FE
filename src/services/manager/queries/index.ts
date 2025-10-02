@@ -2,71 +2,58 @@ import { useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { queryKeys } from "./keys";
 import {
-  getCustomersList,
-  searchCustomersByEmail,
+  getCustomers,
   getCustomerById,
-  getSortedCustomersList,
 } from "@/services/manager/apis/cusomter.api";
 import { getVehicleByCustomerId } from "../apis/vehicle.api";
 
 /**
- * Get customer list
- * @param page
- * @param pageSize
- * @returns
+ * Hook lấy danh sách customers (search + sort + filter + pagination)
  */
-export const useGetCustomerList = (page: number, pageSize: number) => {
+export const useGetCustomers = (params: {
+  page: number;
+  pageSize: number;
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  status?: string;
+  phone?: string;
+  sortBy?: string;
+  orderBy?: "asc" | "desc";
+}) => {
   return useQuery({
-    queryKey: queryKeys.customersList(page, pageSize),
-    queryFn: async () => {
+    queryKey: queryKeys.customers(params),
+    queryFn: async ({ queryKey }) => {
+      const [_key, queryParams] = queryKey;
       try {
-        const response = await getCustomersList({ page, pageSize });
+        const response = await getCustomers(queryParams);
         return response.data;
       } catch (error) {
-        toast.error("Fail to fetch customer list");
+        toast.error("Failed to fetch customers");
         throw error;
       }
     },
+    enabled: !!params.page && !!params.pageSize,
     placeholderData: (prev) => prev,
     staleTime: 5 * 60 * 1000,
   });
 };
 
 /**
- * Get customer list by email
- * @param email
- * @returns
+ * Hook lấy thông tin customer theo ID
  */
-export const useSearchCustomersByEmail = (email: string) => {
-  return useQuery({
-    queryKey: queryKeys.customerSearchByEmail(email),
-    queryFn: async ({ queryKey }) => {
-      const [_key, email] = queryKey;
-      try {
-        const response = await searchCustomersByEmail({ email });
-        return response.data;
-      } catch (error) {
-        toast.error("Failed to search customers");
-        throw error;
-      }
-    },
-    enabled: !!email,
-    placeholderData: (prev) => prev,
-    staleTime: 5 * 60 * 1000,
-  });
-};
-
 export const useGetCustomerById = (customerId: string) => {
   return useQuery({
     queryKey: queryKeys.customerById(customerId),
     queryFn: async ({ queryKey }) => {
-      const [_key, customerId] = queryKey;
+      const [_key, id] = queryKey;
       try {
-        const response = await getCustomerById(customerId);
+        const response = await getCustomerById(id);
         return response.data.account;
-      } catch (error) {
+        console.log(response.data.account);
+      } catch {
         toast.error("Failed to fetch customer");
-        throw error;
+        throw new Error("Fetch customer failed");
       }
     },
     enabled: !!customerId,
@@ -76,46 +63,19 @@ export const useGetCustomerById = (customerId: string) => {
 };
 
 /**
- * Get sorted customer list
- * @param params
- * @returns
+ * Hook lấy danh sách vehicles theo customer ID
  */
-export const useGetSortedCustomersList = (params: {
-  page: number;
-  pageSize: number;
-  sortBy: string;
-  orderBy: string;
-}) => {
-  return useQuery({
-    queryKey: queryKeys.sortedCustomers(params),
-    queryFn: async ({ queryKey }) => {
-      const [_key, params] = queryKey;
-      try {
-        const response = await getSortedCustomersList(params);
-        return response.data;
-      } catch (error) {
-        toast.error("Failed to fetch sorted customers");
-        throw error;
-      }
-    },
-    enabled: !!params,
-    placeholderData: (prev) => prev,
-    staleTime: 5 * 60 * 1000,
-  });
-};
-
 export const useGetVehicleList = (customerId: string) => {
   return useQuery({
     queryKey: queryKeys.vehiclesList(customerId),
     queryFn: async ({ queryKey }) => {
-      const [_key, customerId] = queryKey;
+      const [_key, id] = queryKey;
       try {
-        const response = await getVehicleByCustomerId(customerId);
+        const response = await getVehicleByCustomerId(id);
         return response.data;
-      } catch (error) {
+      } catch {
         toast.error("Failed to fetch vehicles");
-
-        throw error;
+        throw new Error("Fetch vehicles failed");
       }
     },
     enabled: !!customerId,
