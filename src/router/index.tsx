@@ -16,6 +16,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import ProfilePage from "@/pages/profile";
 import Unauthorized from "@/pages/unauthorized";
 import ViewDetailInfo from "@/pages/vehicle/components/admin/ViewDetailInfo";
+import MembershipPage from "@/pages/membership";
 
 const RouterComponent = () => {
   const router = createBrowserRouter([
@@ -74,7 +75,15 @@ const RouterComponent = () => {
                   element: <ViewDetailInfo />,
                   hydrateFallbackElement: <CircularIndeterminate />,
                 },
-
+                 {
+                  element: <RequireAuth  allowedRoles={[AccountRole.ADMIN, AccountRole.CUSTOMER]}/>,
+                  children: [
+                    {
+                      path: "/membership",
+                      element: <MembershipPage/>
+                    }
+                  ]
+                 },
                 {
                   path: "/profile",
                   element: <ProfilePage />,

@@ -3,10 +3,9 @@ import {
   Sheet,
   SheetContent,
   SheetTrigger,
-  SheetFooter,
 } from "@/components/ui/sheet";
 import { ArrowUpRight, Menu } from "lucide-react";
-import { Link, NavLink } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 export default function MobileNavMenu() {
   return (
