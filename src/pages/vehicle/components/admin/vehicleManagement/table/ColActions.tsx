@@ -7,14 +7,16 @@ import { useState } from "react";
 import { DeleteDialog } from "@/components/dialog/DeleteDialog";
 import useVehicle from "@/services/manager/hooks/useVehicle";
 import { toast } from "sonner";
+import { ViewDetailDialog } from "@/components/dialog/ViewDetailDialog";
+import { ViewDetailVehicle } from "../ViewDetailVehicleInfo";
 
-interface ColActionsProps {
+export interface ColActionsProps {
   row: Row<Vehicle>;
 }
 
 export default function ColActions({ row }: ColActionsProps) {
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
-  const [openEditDialog, setOpenEditDialog] = useState(false);
+  const [openViewDialog, setOpenViewDialog] = useState(false);
   const { handleDelete } = useVehicle(row.original.customerId);
 
   return (
@@ -24,6 +26,7 @@ export default function ColActions({ row }: ColActionsProps) {
           icon={<Maximize2 size={12} />}
           onClick={() => {
             console.log("View Details");
+            setOpenViewDialog(true);
           }}
         />
       </TooltipWrapper>
@@ -33,7 +36,7 @@ export default function ColActions({ row }: ColActionsProps) {
           onClick={() => {
             console.log("Row data to edit:", row.original);
 
-            setOpenEditDialog(true);
+            // setOpenEditDialog(true);
           }}
         />
       </TooltipWrapper>
@@ -52,6 +55,14 @@ export default function ColActions({ row }: ColActionsProps) {
           }}
         />
       </TooltipWrapper>
+
+      <ViewDetailDialog
+        open={openViewDialog}
+        onOpenChange={(open) => setOpenViewDialog(open)}
+        title="Vehicle Detail Information"
+      >
+        <ViewDetailVehicle vehicleId={row.original.id} />
+      </ViewDetailDialog>
 
       <DeleteDialog
         open={openDeleteDialog}
