@@ -3,6 +3,8 @@ import type { Vehicle } from "@/types/models/vehicle";
 import VehicleStatusTag from "@/components/tag/VehicleStatusTag";
 import ColActions from "./ColActions";
 import dayjs from "dayjs";
+import SortHeader from "@/components/table/SortHeader";
+import FilterHeader from "@/components/table/FilterHeader";
 
 const columnHelper = createColumnHelper<Vehicle>();
 
@@ -21,7 +23,7 @@ export const columns = [
   }),
   columnHelper.accessor("model", {
     id: "model",
-    header: "Model",
+    header: (info) => <SortHeader title="Model" info={info} />,
     cell: (info) => info.getValue(),
     meta: {
       title: "Model",
@@ -29,7 +31,7 @@ export const columns = [
   }),
   columnHelper.accessor("licensePlate", {
     id: "licensePlate",
-    header: "License Plate",
+    header: (info) => <SortHeader title="License Plate" info={info} />,
     cell: (info) => info.getValue(),
     meta: {
       title: "License Plate",
@@ -37,7 +39,7 @@ export const columns = [
   }),
   columnHelper.accessor("vin", {
     id: "vin",
-    header: "VIN",
+    header: (info) => <SortHeader title="VIN" info={info} />,
     cell: (info) => info.getValue(),
     meta: {
       title: "VIN",
@@ -45,15 +47,27 @@ export const columns = [
   }),
   columnHelper.accessor("status", {
     id: "status",
-    header: "Status",
+    header: (info) => (
+      <FilterHeader
+        title="Status"
+        column={info.column}
+        onFilterChange={(value) => {
+          info.column.setFilterValue(value || undefined);
+        }}
+        selectedValue={(info.column.getFilterValue() as string) || ""}
+      />
+    ),
     cell: (info) => <VehicleStatusTag status={info.getValue()} />,
+    filterFn: "equalsString",
     meta: {
       title: "Status",
+      filterOptions: ["ACTIVE", "INACTIVE"],
+      labelOptions: { ACTIVE: "Active", INACTIVE: "Inactive" },
     },
   }),
   columnHelper.accessor("lastService", {
     id: "lastService",
-    header: "Last Service",
+    header: (info) => <SortHeader title="Last Service" info={info} />,
     cell: (info) => {
       const lastServiceDate = info.getValue();
       return lastServiceDate
@@ -69,7 +83,6 @@ export const columns = [
     id: "actions",
     header: "Actions",
     cell: (props) => {
-      // const { pageIndex, pageSize } = props.table.getState().pagination;
       return <ColActions row={props.row} />;
     },
   }),

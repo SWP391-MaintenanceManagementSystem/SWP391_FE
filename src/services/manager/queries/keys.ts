@@ -1,17 +1,20 @@
 export const queryKeys = {
-  customersList: (page: number, pageSize: number) =>
-    ["customers", { page, pageSize }] as const,
-
-  customerSearchByEmail: (email: string) => ["customerSearchByEmail", email],
-
-  customerById: (customerId: string) => ["customerById", customerId],
-
-  sortedCustomers: (params: {
+  // customers (list, search, sort, filter)
+  customers: (params: {
     page: number;
     pageSize: number;
-    sortBy: string;
-    orderBy: string;
-  }) => ["sortedCustomers", params] as const,
+    firstName?: string;
+    lastName?: string;
+    status?: string;
+    email?: string;
+    phone?: string;
+    sortBy?: string;
+    orderBy?: "asc" | "desc";
+  }) => ["customers", params] as const,
 
+  // Customer theo ID
+  customerById: (customerId: string) => ["customerById", customerId] as const,
+
+  // Vehicles theo customer
   vehiclesList: (customerId: string) => ["vehicles", customerId] as const,
 };

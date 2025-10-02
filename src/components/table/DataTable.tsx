@@ -4,6 +4,7 @@ import {
   useReactTable,
   getFilteredRowModel,
   getPaginationRowModel,
+  getSortedRowModel,
   type ColumnFiltersState,
   type PaginationState,
   type VisibilityState,
@@ -47,39 +48,41 @@ import { useMemo } from "react";
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
-  searchValue?: string;
   pageIndex?: number;
   pageSize?: number;
-  isLoading?: boolean;
   totalPage?: number;
   onPageChange?: (pageIndex: number) => void;
   onPageSizeChange?: (pageSize: number) => void;
+  manualPagination?: boolean;
+  isLoading?: boolean;
+  isSearch?: boolean;
+  manualSearch?: boolean;
+  searchValue?: string[];
+  searchPlaceholder?: string;
   onSearchChange?: (search: string) => void;
   sorting?: SortingState;
   onSortingChange?: (sorting: SortingState) => void;
-  manualPagination?: boolean;
   manualSorting?: boolean;
-  isSearch?: boolean;
-  manualSearch?: boolean;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
-  searchValue,
   pageIndex,
   pageSize,
-  isLoading,
   totalPage,
   onPageChange,
   onPageSizeChange,
+  manualPagination = false,
+  isLoading,
+  isSearch = false,
+  searchValue = [],
+  searchPlaceholder,
   onSearchChange,
+  manualSearch = false,
   sorting,
   onSortingChange,
-  manualPagination = false,
   manualSorting = false,
-  isSearch = false,
-  manualSearch = false,
 }: DataTableProps<TData, TValue>) {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [rowSelection, setRowSelection] = useState({});
@@ -87,7 +90,6 @@ export function DataTable<TData, TValue>({
     pageIndex: pageIndex ?? 0,
     pageSize: pageSize ?? 10,
   });
-
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [searchText, setSearchText] = useState("");
 
@@ -95,12 +97,14 @@ export function DataTable<TData, TValue>({
     if (manualSearch) return data;
     if (!searchText) return data;
 
-    return data.filter((item: any) =>
-      ["vin", "model", "brand", "licensePlate"].some((key) =>
-        String(item[key]).toLowerCase().includes(searchText.toLowerCase()),
+    return data.filter((item) =>
+      searchValue.some((key) =>
+        String(item[key as keyof TData] ?? "")
+          .toLowerCase()
+          .includes(searchText.toLowerCase()),
       ),
     );
-  }, [data, searchText, manualSearch]);
+  }, [data, searchText, manualSearch, searchValue]);
 
   const tableContainerRef = useRef<HTMLDivElement>(null);
   useLayoutEffect(() => {
@@ -137,14 +141,11 @@ export function DataTable<TData, TValue>({
       columnVisibility,
       sorting,
     },
-    filterFns: {},
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
-    // getSortedRowModel: getSortedRowModel(),
     onColumnFiltersChange: setColumnFilters,
     onRowSelectionChange: setRowSelection,
-
     onColumnVisibilityChange: setColumnVisibility,
     enableColumnResizing: true,
     columnResizeMode: "onChange",
@@ -154,11 +155,11 @@ export function DataTable<TData, TValue>({
       const next =
         typeof updater === "function" ? updater(pagination) : updater;
       setPagination(next);
-      setPagination(next);
       if (onPageChange) onPageChange(next.pageIndex);
       if (onPageSizeChange) onPageSizeChange(next.pageSize);
       if (onSearchChange) onSearchChange(searchText);
     },
+    ...(manualSorting ? {} : { getSortedRowModel: getSortedRowModel() }),
     manualSorting: manualSorting,
     onSortingChange: (updaterOrValue) => {
       if (!onSortingChange) return;
@@ -196,7 +197,7 @@ export function DataTable<TData, TValue>({
               className="absolute text-gray-500 top-[10px] left-2"
             />
             <Input
-              placeholder={`Search by ${searchValue}...`}
+              placeholder={`Search by ${searchPlaceholder}...`}
               value={searchText}
               onChange={(e) => handleSearchInput(e.target.value)}
               className="pl-8 lg:w-sm w-full "
@@ -280,11 +281,11 @@ export function DataTable<TData, TValue>({
           {/*TABLE BODY*/}
           <TableBody>
             {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row, index) => (
+              table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
-                  className={`${index % 2 === 0 ? "bg-accent" : "bg-background"} w-full`}
+                  className="w-full odd:bg-accent even:bg-background"
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
@@ -340,7 +341,6 @@ export function DataTable<TData, TValue>({
             value={table.getState().pagination.pageIndex + 1}
             min="1"
             max={totalPage}
-            defaultValue={table.getState().pagination.pageIndex + 1}
             onChange={(e) => {
               let newPage = Number(e.target.value) - 1;
               if (newPage < 0) newPage = 0;
