@@ -11,3 +11,9 @@ export const getVehicleByCustomerId = (customerId: string) => {
 export const deleteVehicle = (vehicleId: string) => {
   return httpPrivate.del<BaseResponse<void>>(`/vehicles/${vehicleId}`);
 };
+
+export const getVehicleById = (vehicleId: string) => {
+  return httpPrivate.get<BaseResponse<{ data: Vehicle }>>(
+    `/vehicles/${vehicleId}`,
+  );
+};

@@ -5,7 +5,7 @@ import {
   getCustomers,
   getCustomerById,
 } from "@/services/manager/apis/cusomter.api";
-import { getVehicleByCustomerId } from "../apis/vehicle.api";
+import { getVehicleByCustomerId, getVehicleById } from "../apis/vehicle.api";
 
 /**
  * Hook lấy danh sách customers (search + sort + filter + pagination)
@@ -79,6 +79,28 @@ export const useGetVehicleList = (customerId: string) => {
       }
     },
     enabled: !!customerId,
+    placeholderData: (prev) => prev,
+    staleTime: 5 * 60 * 1000,
+  });
+};
+
+/**
+ * Hook lấy thông tin vehicle theo ID
+ */
+export const useGetVehicleById = (vehicleId: string) => {
+  return useQuery({
+    queryKey: queryKeys.vehicleById(vehicleId),
+    queryFn: async ({ queryKey }) => {
+      const [_key, id] = queryKey;
+      try {
+        const response = await getVehicleById(id);
+        return response.data.data;
+      } catch {
+        toast.error("Failed to fetch vehicle");
+        throw new Error("Fetch vehicle failed");
+      }
+    },
+    enabled: !!vehicleId,
     placeholderData: (prev) => prev,
     staleTime: 5 * 60 * 1000,
   });

@@ -17,4 +17,7 @@ export const queryKeys = {
 
   // Vehicles theo customer
   vehiclesList: (customerId: string) => ["vehicles", customerId] as const,
+
+  // Vehicle theo ID
+  vehicleById: (vehicleId: string) => ["vehicleById", vehicleId] as const,
 };
