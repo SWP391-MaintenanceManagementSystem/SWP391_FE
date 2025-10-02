@@ -343,7 +343,7 @@ export function DataTable<TData, TValue>({
 
       {/* --- ROWS SELECTED ---*/}
       <div className="flex justify-between items-start">
-        {table.getSelectedRowModel().rows.length > 0 && (
+        {table.getAllColumns().some((col) => col.id === "select") && (
           <div className=" text-sm text-gray-500">
             {table.getSelectedRowModel().rows.length} of{" "}
             {table.getFilteredRowModel().rows.length} row selected

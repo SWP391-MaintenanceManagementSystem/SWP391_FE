@@ -66,7 +66,7 @@ export function ViewDetailVehicle({ vehicleId }: ViewDetailVehicleProps) {
             <InputDisableWithLabel
               label="Owner"
               value={name || ""}
-              id="status"
+              id="owner"
             />
           </InfoSection>
           <InfoSection
