@@ -94,8 +94,8 @@ export function ViewDetailVehicle({ vehicleId }: ViewDetailVehicleProps) {
               id="servicePakage"
             />
             <InputDisableWithLabel
-              label="Service Detail"
-              value="Service Detail"
+              label="Service Details"
+              value="Service Details"
               id="serviceDetail"
               styleFormat="md:col-span-2"
             />
