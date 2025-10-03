@@ -9,7 +9,7 @@ export default function AboutSection() {
         {/* Heading */}
         <div className="text-left">
           <div className="flex items-center gap-2">
-            <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-purple-light dark:text-purple-landing" />
+            <Sparkles className="w-5 h-5 sm:w-5 sm:h-5 text-purple-light dark:text-purple-landing" />
             <span className="text-base sm:text-lg md:text-2xl text-purple-light tracking-widest dark:text-purple-landing">
               WHO WE ARE
             </span>

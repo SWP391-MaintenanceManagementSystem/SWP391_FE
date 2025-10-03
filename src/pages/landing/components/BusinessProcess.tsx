@@ -14,7 +14,7 @@ export default function BusinessProcess() {
       {/* Header */}
       <div className="text-center">
         <div className="flex items-center justify-center gap-2">
-          <Sparkles className="w-5 h-5 text-purple-light dark:text-purple-landing-dark" />
+          <Sparkles className="w-5 h-5 sm:w-5 sm:h-5 text-purple-light dark:text-purple-landing-dark" />
           <span className="text-xl sm:text-2xl text-purple-light tracking-widest dark:text-purple-landing-dark">
             HOW IT WORKS
           </span>
