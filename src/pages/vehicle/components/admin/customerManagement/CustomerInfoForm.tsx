@@ -40,7 +40,8 @@ export default function CustomerInfoForm({
       onConfirm={onConfirm}
       form={form}
       title="Customer Information"
-      styleFormLayout="grid-rows-6 md:grid-cols-2 md:grid-rows-3"
+      styleFormLayout="grid-rows-6 md:grid-cols-2 md:grid-rows-3 "
+      styleLayoutFooter="md:col-start-2"
     >
       <FormField
         control={form.control}

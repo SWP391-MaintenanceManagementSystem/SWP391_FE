@@ -3,7 +3,8 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { updateCustomerInfo, deleteCustomer } from "../apis/cusomter.api";
 import { toast } from "sonner";
 import { queryKeys } from "../queries/keys";
-import { deleteVehicle } from "../apis/vehicle.api";
+import { deleteVehicle, editVehicle } from "../apis/vehicle.api";
+import type { AddVehicleFormData } from "@/pages/vehicle/components/libs/schema";
 
 export const useUpdateCustomerInfo = () => {
   const queryClient = useQueryClient();
@@ -97,6 +98,38 @@ export const useDeleteVehicle = () => {
 
     onError: () => {
       toast.error("Failed to delete vehicle");
+    },
+  });
+};
+
+export const useEditVehicle = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({
+      vehicleId,
+      customerId,
+      data,
+    }: {
+      vehicleId: string;
+      customerId: string;
+      data: AddVehicleFormData;
+    }) => {
+      const updatedVehicle = await editVehicle(vehicleId, data);
+      return updatedVehicle.data;
+    },
+    onSuccess: (_data, variables) => {
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.vehiclesList(variables.customerId),
+      });
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.vehicleById(variables.vehicleId),
+      });
+      toast.success("Vehicle information updated successfully");
+    },
+    onError: (error) => {
+      console.error(error);
+      toast.error("Failed to update vehicle information");
     },
   });
 };

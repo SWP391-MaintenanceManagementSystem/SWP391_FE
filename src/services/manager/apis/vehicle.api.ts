@@ -1,6 +1,7 @@
 import { httpPrivate } from "@/lib/http";
 import type { BaseResponse } from "@/types/models/response";
-import type { Vehicle } from "@/types/models/vehicle";
+import type { Vehicle, VehicleModel } from "@/types/models/vehicle";
+import type { AddVehicleFormData } from "@/pages/vehicle/components/libs/schema";
 
 export const getVehicleByCustomerId = (customerId: string) => {
   return httpPrivate.get<BaseResponse<{ data: Vehicle[] }>>(
@@ -15,5 +16,22 @@ export const deleteVehicle = (vehicleId: string) => {
 export const getVehicleById = (vehicleId: string) => {
   return httpPrivate.get<BaseResponse<{ data: Vehicle }>>(
     `/vehicles/${vehicleId}`,
+  );
+};
+
+export const editVehicle = (vehicleId: string, data: AddVehicleFormData) => {
+  const { brandId, ...rest } = data;
+  return httpPrivate.patch<BaseResponse<{ data: Vehicle }>>(
+    `/vehicles/${vehicleId}`,
+    {
+      ...rest,
+      modelId: Number(rest.modelId),
+    },
+  );
+};
+
+export const getVehicleModelsByBrandId = async (brandId: number | string) => {
+  return await httpPrivate.get<BaseResponse<{ data: VehicleModel[] }>>(
+    `/vehicles/brands/${brandId}/models`,
   );
 };

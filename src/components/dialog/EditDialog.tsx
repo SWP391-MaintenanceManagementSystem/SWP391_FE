@@ -19,6 +19,7 @@ interface EditDialogProps<TFormValues extends FieldValues> {
   form: ReturnType<typeof useForm<TFormValues>>;
   children: React.ReactNode;
   styleFormLayout?: string;
+  styleLayoutFooter?: string;
   title: string;
 }
 
@@ -29,6 +30,7 @@ export function EditDialog<TFormValues extends FieldValues>({
   form,
   children,
   styleFormLayout,
+  styleLayoutFooter,
   title,
 }: EditDialogProps<TFormValues>) {
   const onSubmit = async (values: TFormValues) => {
@@ -42,7 +44,7 @@ export function EditDialog<TFormValues extends FieldValues>({
 
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
-      <AlertDialogContent className="font-inter md:min-h-40 md:min-w-[600px] space-y-6 min-w-[300px]">
+      <AlertDialogContent className="font-inter md:min-h-40 md:max-w-[600px] space-y-6 min-w-[300px] overflow-y-auto">
         <AlertDialogHeader>
           <AlertDialogTitle>Edit {title}</AlertDialogTitle>
           <AlertDialogDescription>
@@ -57,7 +59,9 @@ export function EditDialog<TFormValues extends FieldValues>({
             className={cn("grid grid-cols-1 gap-6", styleFormLayout)}
           >
             {children}
-            <AlertDialogFooter className="md:col-start-2 flex flex-row justify-end">
+            <AlertDialogFooter
+              className={cn("flex flex-row justify-end", styleLayoutFooter)}
+            >
               <AlertDialogCancel asChild>
                 <Button
                   variant="outline"

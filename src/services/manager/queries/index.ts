@@ -6,6 +6,8 @@ import {
   getCustomerById,
 } from "@/services/manager/apis/cusomter.api";
 import { getVehicleByCustomerId, getVehicleById } from "../apis/vehicle.api";
+import { getVehicleBrands } from "@/services/vehicle/apis/vehicle.api";
+import { getVehicleModelsByBrandId } from "@/services/manager/apis/vehicle.api";
 
 /**
  * Hook lấy danh sách customers (search + sort + filter + pagination)
@@ -23,10 +25,9 @@ export const useGetCustomers = (params: {
 }) => {
   return useQuery({
     queryKey: queryKeys.customers(params),
-    queryFn: async ({ queryKey }) => {
-      const [_key, queryParams] = queryKey;
+    queryFn: async () => {
       try {
-        const response = await getCustomers(queryParams);
+        const response = await getCustomers(params);
         return response.data;
       } catch (error) {
         toast.error("Failed to fetch customers");
@@ -45,10 +46,9 @@ export const useGetCustomers = (params: {
 export const useGetCustomerById = (customerId: string) => {
   return useQuery({
     queryKey: queryKeys.customerById(customerId),
-    queryFn: async ({ queryKey }) => {
-      const [_key, id] = queryKey;
+    queryFn: async () => {
       try {
-        const response = await getCustomerById(id);
+        const response = await getCustomerById(customerId);
         return response.data.account;
         console.log(response.data.account);
       } catch {
@@ -68,10 +68,9 @@ export const useGetCustomerById = (customerId: string) => {
 export const useGetVehicleList = (customerId: string) => {
   return useQuery({
     queryKey: queryKeys.vehiclesList(customerId),
-    queryFn: async ({ queryKey }) => {
-      const [_key, id] = queryKey;
+    queryFn: async () => {
       try {
-        const response = await getVehicleByCustomerId(id);
+        const response = await getVehicleByCustomerId(customerId);
         return response.data.data;
       } catch {
         toast.error("Failed to fetch vehicles");
@@ -90,17 +89,61 @@ export const useGetVehicleList = (customerId: string) => {
 export const useGetVehicleById = (vehicleId: string) => {
   return useQuery({
     queryKey: queryKeys.vehicleById(vehicleId),
-    queryFn: async ({ queryKey }) => {
-      const [_key, id] = queryKey;
+    queryFn: async () => {
       try {
-        const response = await getVehicleById(id);
+        const response = await getVehicleById(vehicleId);
         return response.data.data;
       } catch {
         toast.error("Failed to fetch vehicle");
-        throw new Error("Fetch vehicle failed");
+        return [];
       }
     },
     enabled: !!vehicleId,
+    placeholderData: (prev) => prev,
+    staleTime: 5 * 60 * 1000,
+  });
+};
+
+/**
+ * Hook lấy brand theo Vehicle ID
+ */
+
+export const useGetVehicleBrand = () => {
+  return useQuery({
+    queryKey: queryKeys.vehicleBrand(),
+    queryFn: async () => {
+      try {
+        const response = await getVehicleBrands();
+        console.log(response.data.data);
+        return response.data.data;
+      } catch {
+        toast.error("Failed to fetch vehicle brand");
+        return [];
+      }
+    },
+    placeholderData: (prev) => prev,
+    staleTime: 5 * 60 * 1000,
+  });
+};
+
+/**
+ * Hook lấy model theo Brand ID
+ */
+
+export const useGetVehicleModel = (brandId: number | string) => {
+  return useQuery({
+    queryKey: queryKeys.vehicleModel(brandId),
+    queryFn: async () => {
+      try {
+        const response = await getVehicleModelsByBrandId(brandId);
+        console.log(response.data.data);
+        return response.data.data;
+      } catch {
+        toast.error("Failed to fetch vehicle model");
+        throw new Error("Fetch vehicle model failed");
+      }
+    },
+    enabled: !!brandId,
     placeholderData: (prev) => prev,
     staleTime: 5 * 60 * 1000,
   });
