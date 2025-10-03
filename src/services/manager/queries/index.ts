@@ -50,7 +50,6 @@ export const useGetCustomerById = (customerId: string) => {
       try {
         const response = await getCustomerById(customerId);
         return response.data.account;
-        console.log(response.data.account);
       } catch {
         toast.error("Failed to fetch customer");
         throw new Error("Fetch customer failed");
@@ -95,7 +94,7 @@ export const useGetVehicleById = (vehicleId: string) => {
         return response.data.data;
       } catch {
         toast.error("Failed to fetch vehicle");
-        return [];
+        return null;
       }
     },
     enabled: !!vehicleId,
@@ -114,7 +113,6 @@ export const useGetVehicleBrand = () => {
     queryFn: async () => {
       try {
         const response = await getVehicleBrands();
-        console.log(response.data.data);
         return response.data.data;
       } catch {
         toast.error("Failed to fetch vehicle brand");
@@ -136,7 +134,6 @@ export const useGetVehicleModel = (brandId: number | string) => {
     queryFn: async () => {
       try {
         const response = await getVehicleModelsByBrandId(brandId);
-        console.log(response.data.data);
         return response.data.data;
       } catch {
         toast.error("Failed to fetch vehicle model");

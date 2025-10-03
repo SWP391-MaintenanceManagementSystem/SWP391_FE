@@ -94,7 +94,10 @@ export default function CustomerInfoForm({
             <FormControl>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="outline" className="w-full !outline-none">
+                  <Button
+                    variant="outline"
+                    className="w-full !outline-none flex justify-between"
+                  >
                     <AccountStatusTag status={field.value as AccountStatus} />
                     <ChevronDown className="mr-2 h-4 w-4" />
                   </Button>

@@ -9,7 +9,6 @@ import {
 import VehicleStatusTag from "@/components/tag/VehicleStatusTag";
 import { Loader } from "lucide-react";
 import "animate.css";
-import dayjs from "dayjs";
 
 type ViewDetailVehicleProps = {
   vehicleId: string;
@@ -17,7 +16,8 @@ type ViewDetailVehicleProps = {
 
 export function ViewDetailVehicle({ vehicleId }: ViewDetailVehicleProps) {
   const { data: vehicle, isLoading } = useGetVehicleById(vehicleId);
-  const { data: customer } = useGetCustomerById(vehicle?.customerId || "");
+  const customerId = vehicle?.customerId;
+  const { data: customer } = useGetCustomerById(customerId || "");
   const name = customer?.profile?.firstName + " " + customer?.profile?.lastName;
 
   return (
@@ -67,37 +67,6 @@ export function ViewDetailVehicle({ vehicleId }: ViewDetailVehicleProps) {
               label="Owner"
               value={name || ""}
               id="owner"
-            />
-          </InfoSection>
-          <InfoSection
-            title="Service Information"
-            styleFormLayout="md:grid-cols-2 md:grid-rows-3"
-          >
-            <InputDisableWithLabel
-              label="Last Service"
-              value={dayjs(vehicle?.lastService).format("YYYY-MM-DD") || ""}
-              id="lastService"
-            />
-            <InputDisableWithLabel
-              label="Next Appointment"
-              value="next appointment"
-              id="nextAppointment"
-            />
-            <InputDisableWithLabel
-              label="Technican"
-              value="Technican"
-              id="lastService"
-            />
-            <InputDisableWithLabel
-              label="Service Package"
-              value="Service Package"
-              id="servicePakage"
-            />
-            <InputDisableWithLabel
-              label="Service Details"
-              value="Service Details"
-              id="serviceDetail"
-              styleFormat="md:col-span-2"
             />
           </InfoSection>
         </div>
