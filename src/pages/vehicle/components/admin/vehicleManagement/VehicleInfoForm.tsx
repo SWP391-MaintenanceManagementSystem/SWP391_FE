@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/button";
 import { useForm } from "react-hook-form";
 import {
   FormControl,
@@ -8,13 +7,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { ChevronDown } from "lucide-react";
 import {
   Select,
   SelectTrigger,
@@ -26,11 +18,7 @@ import {
 import { EditDialog } from "@/components/dialog/EditDialog";
 import VehicleStatusTag from "@/components/tag/VehicleStatusTag";
 import type { AddVehicleFormData } from "../../libs/schema";
-import type {
-  VehicleBrand,
-  VehicleModel,
-  VehicleStatus,
-} from "@/types/models/vehicle";
+import type { VehicleBrand, VehicleModel } from "@/types/models/vehicle";
 import { useEffect, useState } from "react";
 import {
   useGetVehicleBrand,
@@ -104,7 +92,7 @@ export default function VehicleInfoForm({
           </FormItem>
         )}
       />
-      <FormField
+      {/*<FormField
         control={form.control}
         name="status"
         render={({ field }) => (
@@ -135,6 +123,35 @@ export default function VehicleInfoForm({
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />*/}
+
+      <FormField
+        control={form.control}
+        name="status"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>Status</FormLabel>
+            <FormControl>
+              <Select onValueChange={field.onChange} value={field.value}>
+                <SelectTrigger className="w-full ">
+                  <SelectValue
+                    placeholder="Select status"
+                    className="text-black"
+                  />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="ACTIVE">
+                    <VehicleStatusTag status="ACTIVE" />
+                  </SelectItem>
+                  <SelectItem value="INACTIVE">
+                    <VehicleStatusTag status="INACTIVE" />
+                  </SelectItem>
+                </SelectContent>
+              </Select>
             </FormControl>
             <FormMessage />
           </FormItem>
