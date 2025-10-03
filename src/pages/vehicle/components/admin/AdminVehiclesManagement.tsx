@@ -51,7 +51,7 @@ export default function AdminVehiclesManagement() {
       // console.log("Customer Profile:", profile);
       return {
         id: acc.id,
-        email: acc.email,
+        email: acc.email, 
         phone: acc.phone ?? "",
         status: acc.status,
         role: acc.role,

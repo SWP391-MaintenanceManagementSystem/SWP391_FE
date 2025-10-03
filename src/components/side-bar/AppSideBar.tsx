@@ -23,6 +23,7 @@ import {
   Sparkles,
   IdCardLanyard,
   PackageOpen,
+  UserStar ,
 } from "lucide-react";
 import logoLight from "/logo.svg";
 import logoWithoutTextLight from "/logo-without-text-light.svg";
@@ -37,12 +38,20 @@ import { useTheme } from "@/components/theme/ThemeProvider";
 import { useState } from "react";
 import { TooltipWrapper } from "../TooltipWrapper";
 
+
 const customerItems: SidebarItem[] = [
   {
     title: "Dashboard",
     url: "/dashboard",
     icon: Home,
   },
+
+  {
+    title: "Membership",
+    url: "/membership",
+    icon: UserStar,
+  },
+
   {
     title: "My Vehicles",
     url: "/vehicles",
