@@ -2,59 +2,58 @@ import { useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { queryKeys } from "./keys";
 import {
-  getCustomersList,
-  searchCustomersByEmail,
+  getCustomers,
   getCustomerById,
-  getSortedCustomersList,
 } from "@/services/manager/apis/cusomter.api";
+import { getVehicleByCustomerId } from "../apis/vehicle.api";
 
-export const useGetCustomerList = (page: number, pageSize: number) => {
+/**
+ * Hook lấy danh sách customers (search + sort + filter + pagination)
+ */
+export const useGetCustomers = (params: {
+  page: number;
+  pageSize: number;
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  status?: string;
+  phone?: string;
+  sortBy?: string;
+  orderBy?: "asc" | "desc";
+}) => {
   return useQuery({
-    queryKey: queryKeys.customers(page, pageSize),
-    queryFn: async () => {
-      try {
-        const response = await getCustomersList({ page, pageSize });
-        return response.data;
-      } catch (error) {
-        toast.error("Fail to fetch customer list");
-        throw error;
-      }
-    },
-    placeholderData: (prev) => prev,
-    staleTime: 5 * 60 * 1000,
-  });
-};
-
-export const useSearchCustomersByEmail = (email: string) => {
-  return useQuery({
-    queryKey: queryKeys.customerSearchByEmail(email),
+    queryKey: queryKeys.customers(params),
     queryFn: async ({ queryKey }) => {
-      const [_key, email] = queryKey;
+      const [_key, queryParams] = queryKey;
       try {
-        const response = await searchCustomersByEmail({ email });
+        const response = await getCustomers(queryParams);
         return response.data;
       } catch (error) {
-        toast.error("Failed to search customers");
+        toast.error("Failed to fetch customers");
         throw error;
       }
     },
-    enabled: !!email,
+    enabled: !!params.page && !!params.pageSize,
     placeholderData: (prev) => prev,
     staleTime: 5 * 60 * 1000,
   });
 };
 
+/**
+ * Hook lấy thông tin customer theo ID
+ */
 export const useGetCustomerById = (customerId: string) => {
   return useQuery({
     queryKey: queryKeys.customerById(customerId),
     queryFn: async ({ queryKey }) => {
-      const [_key, customerId] = queryKey;
+      const [_key, id] = queryKey;
       try {
-        const response = await getCustomerById(customerId);
+        const response = await getCustomerById(id);
         return response.data.account;
-      } catch (error) {
+        console.log(response.data.account);
+      } catch {
         toast.error("Failed to fetch customer");
-        throw error;
+        throw new Error("Fetch customer failed");
       }
     },
     enabled: !!customerId,
@@ -63,25 +62,23 @@ export const useGetCustomerById = (customerId: string) => {
   });
 };
 
-export const useGetSortedCustomersList = (params: {
-  page: number;
-  pageSize: number;
-  sortBy: string;
-  orderBy: string;
-}) => {
+/**
+ * Hook lấy danh sách vehicles theo customer ID
+ */
+export const useGetVehicleList = (customerId: string) => {
   return useQuery({
-    queryKey: queryKeys.sortedCustomers(params),
+    queryKey: queryKeys.vehiclesList(customerId),
     queryFn: async ({ queryKey }) => {
-      const [_key, params] = queryKey;
+      const [_key, id] = queryKey;
       try {
-        const response = await getSortedCustomersList(params);
-        return response.data;
-      } catch (error) {
-        toast.error("Failed to fetch sorted customers");
-        throw error;
+        const response = await getVehicleByCustomerId(id);
+        return response.data.data;
+      } catch {
+        toast.error("Failed to fetch vehicles");
+        throw new Error("Fetch vehicles failed");
       }
     },
-    enabled: !!params,
+    enabled: !!customerId,
     placeholderData: (prev) => prev,
     staleTime: 5 * 60 * 1000,
   });

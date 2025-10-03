@@ -7,9 +7,9 @@ export default function ServiceSection() {
   return (
     <section className="w-full bg-white py-16 sm:py-24 md:py-32 dark:bg-black">
       <div className="flex flex-col items-center text-center gap-2">
-        <div className="flex flex-row items-center ">
-          <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-purple-primary" />
-          <span className="text-base sm:text-lg md:text-2xl text-purple-primary tracking-widest">
+        <div className="flex flex-row items-center gap-2  ">
+          <Sparkles className="w-5 h-5 sm:w-5 sm:h-5  text-purple-primary" />
+          <span className="text-xl sm:text-2xl text-purple-primary tracking-widest">
             WHAT WE OFFER
           </span>
         </div>

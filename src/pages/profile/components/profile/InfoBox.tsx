@@ -1,4 +1,4 @@
-import AccountStatusTag from "@/components/AccountStatusTag";
+import AccountStatusTag from "@/components/tag/AccountStatusTag";
 import { InfoSection } from "../InfoSection";
 import { NavLink } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -53,7 +53,7 @@ const InfoBox = ({ user, handleLogout }: InfoBoxProps) => {
                   <strong>Tel:</strong> {user.phone}
                 </p>
               )}
-              {(customerProfile?.address) && (
+              {customerProfile?.address && (
                 <p className="font-inter">
                   <strong>Address:</strong> {customerProfile?.address}
                 </p>
@@ -78,7 +78,7 @@ const InfoBox = ({ user, handleLogout }: InfoBoxProps) => {
         </InfoSection>
         {/* PREFERENCES */}
         <div className="mt-2">
-          <InfoSection title="Preferences" >
+          <InfoSection title="Preferences">
             <div className="flex flex-row gap-4 items-center">
               <span className="font-inter font-semibold">Modes:</span>
               <ModeToggle />
@@ -88,7 +88,10 @@ const InfoBox = ({ user, handleLogout }: InfoBoxProps) => {
       </div>
 
       <NavLink to="/" className="mx-auto">
-        <Button className="!font-inter !bg-purple-primary !text-white dark:!text-black hover:scale-105 transition-transform duration-300" onClick={() => handleLogout()}>
+        <Button
+          className="!font-inter !bg-purple-primary !text-white dark:!text-black hover:scale-105 transition-transform duration-300"
+          onClick={() => handleLogout()}
+        >
           <LogOut className="mr-2 h-4 w-4 !text-white dark:!text-black" />
           Logout
         </Button>

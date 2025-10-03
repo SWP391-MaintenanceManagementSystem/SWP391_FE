@@ -75,7 +75,15 @@ const RouterComponent = () => {
                   element: <ViewDetailInfo />,
                   hydrateFallbackElement: <CircularIndeterminate />,
                 },
-
+                 {
+                  element: <RequireAuth  allowedRoles={[AccountRole.ADMIN, AccountRole.CUSTOMER]}/>,
+                  children: [
+                    {
+                      path: "/membership",
+                      element: <MembershipPage/>
+                    }
+                  ]
+                 },
                 {
                   element: (
                     <RequireAuth
