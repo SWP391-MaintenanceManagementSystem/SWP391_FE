@@ -17,6 +17,7 @@ import ProfilePage from "@/pages/profile";
 import Unauthorized from "@/pages/unauthorized";
 import ViewDetailInfo from "@/pages/vehicle/components/admin/ViewDetailInfo";
 import MembershipPage from "@/pages/membership";
+import Booking from "@/pages/booking/customer/Booking";
 
 const RouterComponent = () => {
   const router = createBrowserRouter([
@@ -81,6 +82,15 @@ const RouterComponent = () => {
                     {
                       path: "/membership",
                       element: <MembershipPage/>
+                    }
+                  ]
+                 },
+                 {
+                  element: <RequireAuth  allowedRoles={[AccountRole.ADMIN, AccountRole.CUSTOMER]}/>,
+                  children: [
+                    {
+                      path: "/booking",
+                      element: <Booking />
                     }
                   ]
                  },
