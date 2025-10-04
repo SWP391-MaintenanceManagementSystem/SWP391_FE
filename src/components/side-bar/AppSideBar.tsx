@@ -103,25 +103,28 @@ export function AppSidebar() {
   const items = getMenuItems(role!) || [];
   const { isMobile } = useSidebar();
   const location = useLocation();
+  const effectiveCollapsed = isMobile ? false : collapsed;
 
   return (
     <Sidebar
       className={clsx(
         "transition-all font-inter duration-300 h-[calc(100vh-32px)] my-4 ml-4 mr-0 rounded-xl overflow-hidden relative min-h-[500px]",
-        collapsed ? "w-16" : "w-64",
+        effectiveCollapsed ? "w-16" : "w-64",
       )}
     >
       {/* HEADER */}
       <SidebarHeader className="!bg-slate-100 p-4 text-black dark:text-white">
-        {!collapsed ? (
+        {!effectiveCollapsed ? (
           <div className="text-lg font-bold flex justify-between items-center">
             <img src={resolvedTheme === "dark" ? logoDark : logoLight} />
-            <PanelLeftClose
-              className="h-6 w-6 cursor-pointer"
-              onClick={() => {
-                if (!isMobile) setCollapsed(!collapsed);
-              }}
-            />
+            {!isMobile && (
+              <PanelLeftClose
+                className="h-5 w-5 cursor-pointer"
+                onClick={() => {
+                  if (!isMobile) setCollapsed(!collapsed);
+                }}
+              />
+            )}
           </div>
         ) : (
           <div className="flex justify-center">
@@ -160,7 +163,7 @@ export function AppSidebar() {
                           <CollapsibleTrigger asChild>
                             <SidebarMenuButton
                               onClick={(e) => {
-                                if (collapsed) {
+                                if (effectiveCollapsed) {
                                   e.preventDefault();
                                   setCollapsed(false);
                                 }
@@ -171,7 +174,7 @@ export function AppSidebar() {
                                   "bg-purple-primary text-white dark:text-amber-primary",
                               )}
                             >
-                              {collapsed ? (
+                              {effectiveCollapsed ? (
                                 <TooltipWrapper
                                   side="right"
                                   content={item.title}
@@ -190,7 +193,7 @@ export function AppSidebar() {
                             </SidebarMenuButton>
                           </CollapsibleTrigger>
 
-                          {!collapsed && (
+                          {!effectiveCollapsed && (
                             <CollapsibleContent>
                               <SidebarMenuSub>
                                 {item.children.map((child) => (
@@ -224,14 +227,14 @@ export function AppSidebar() {
                         className={({ isActive }) =>
                           clsx(
                             "flex items-center gap-2 !text-gray-primary font-inter",
-                            collapsed && "justify-between",
+                            effectiveCollapsed && "justify-between",
                             isActive &&
                               "bg-purple-primary rounded-md dark:!text-amber-primary !text-white !outline-0",
                           )
                         }
                       >
                         <SidebarMenuButton className="!bg-transparent outline-0 flex">
-                          {collapsed ? (
+                          {effectiveCollapsed ? (
                             <TooltipWrapper side="right" content={item.title}>
                               <div className="mx-auto">
                                 <item.icon className="h-5 w-5" />
@@ -255,21 +258,21 @@ export function AppSidebar() {
       </SidebarContent>
 
       {/* FOOTER */}
-      <SidebarFooter className="p-3 bg-slate-100">
+      <SidebarFooter className=" p-3 bg-slate-100">
         <NavLink
           to="/profile"
           end
           className={({ isActive }) =>
             clsx(
-              "flex items-center justify-between !text-gray-primary h-10 py-0.5 px-4 rounded-lg font-inter",
-              collapsed && "justify-center",
+              "flex items-center justify-between !text-gray-primary h-10 py-0.5 px-2 rounded-lg font-inter",
+              effectiveCollapsed && "justify-center",
               isActive && "bg-purple-primary rounded-md !text-white !outline-0",
             )
           }
         >
           {({ isActive }) => (
             <div>
-              {collapsed ? (
+              {effectiveCollapsed ? (
                 <TooltipWrapper content="View Profile" side="right">
                   <CircleUserRound
                     className={clsx(isActive && "dark:text-amber-primary")}
@@ -282,13 +285,15 @@ export function AppSidebar() {
                   />
                   <span
                     className={clsx(
-                      "text-sm",
+                      `text-sm`,
                       isActive && "dark:text-amber-primary",
                     )}
                   >
-                    {auth.user?.role === AccountRole.ADMIN
-                      ? "Admin"
-                      : `${auth.user?.profile?.firstName} ${auth.user?.profile?.lastName}`}
+                    {auth.user?.role === AccountRole.ADMIN && "Admin"}
+                    {auth.user?.role !== AccountRole.ADMIN &&
+                      auth.user?.profile?.firstName +
+                        " " +
+                        auth.user?.profile?.lastName}
                   </span>
                 </div>
               )}
