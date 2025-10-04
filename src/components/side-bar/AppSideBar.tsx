@@ -107,7 +107,10 @@ export function AppSidebar() {
                         defaultOpen={isChildActive}
                       >
                         <SidebarGroup className="p-0">
-                          <CollapsibleTrigger asChild>
+                          <CollapsibleTrigger
+                            asChild
+                            className="group/label text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground text-sm"
+                          >
                             <SidebarMenuButton
                               onClick={(e) => {
                                 if (effectiveCollapsed) {
@@ -118,7 +121,9 @@ export function AppSidebar() {
                               className={clsx(
                                 "outline-0 flex text-gray-primary transition-colors",
                                 isChildActive &&
-                                  "bg-purple-primary text-white dark:text-amber-primary",
+                                  (effectiveCollapsed
+                                    ? "bg-purple-primary text-white dark:text-amber-primary"
+                                    : "text-sidebar-accent bg-purple-primary  dark:text-amber-primary hover:dark:text-white group-data-[state=open]/collapsible:text-foreground group-data-[state=open]/collapsible:bg-slate-100 group-data-[state=open]/collapsible:dark:text-primary-gray"),
                               )}
                             >
                               {effectiveCollapsed ? (
@@ -173,11 +178,11 @@ export function AppSidebar() {
                         end
                         className={({ isActive }) =>
                           clsx(
-                            "flex items-center gap-2 !text-gray-primary font-inter",
+                            "flex items-center gap-2 !text-gray-primary font-inter  transition-colors hover:bg-accent rounded-md",
                             effectiveCollapsed && "justify-between",
                             (isActive ||
                               location.pathname.startsWith(`${item.url}/`)) &&
-                              "bg-purple-primary rounded-md dark:!text-amber-primary !text-white !outline-0",
+                              "bg-purple-primary  dark:!text-amber-primary !text-white !outline-0",
                           )
                         }
                       >
