@@ -1,7 +1,9 @@
-import React from 'react'
+import Membership from "./components/customer/Membership";
 
 export default function MembershipPage() {
   return (
-    <div>Membership</div>
+    <div>
+        <Membership/>
+    </div>
   )
 }

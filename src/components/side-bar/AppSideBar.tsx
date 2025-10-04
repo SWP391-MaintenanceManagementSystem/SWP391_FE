@@ -57,11 +57,7 @@ const customerItems: SidebarItem[] = [
     url: "/vehicles",
     icon: Car,
   },
-  {
-    title: "Memberships",
-    url: "/membership",
-    icon:  UserStar,
-  },
+ 
   {
     title: "Service Booking",
     url: "/booking",
