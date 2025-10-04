@@ -15,7 +15,7 @@ const DetailSettingBox = ({ user }: DetailedSettingBoxProps) => {
   const isAdmin = user?.role === AccountRole.ADMIN;
 
   return (
-    <div className="bg-slate-100 px-[42px] min-w-[200px] pt-10 pb-5 flex-1 rounded-[20px] shadow-md gap-5 flex flex-col min-h-fit">
+    <div className="bg-slate-100 font-inter px-[42px] min-w-[200px] pt-10 pb-5 flex-1 rounded-[20px] shadow-md gap-5 flex flex-col min-h-fit">
       <h3 className="!font-inter font-bold text-3xl grid text-gray-text-header items-center">
         Detailed Settings
       </h3>
