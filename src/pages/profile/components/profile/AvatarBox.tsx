@@ -1,7 +1,7 @@
 import { CircleUserRound } from "lucide-react";
-import Tag from "@/components/tag/Tag";
 import type { AccountWithProfile } from "@/types/models/account";
 import { AccountRole } from "@/types/enums/role";
+import Tag from "@/components/tag/Tag";
 
 type AvatarBoxProps = {
   user: AccountWithProfile | undefined;
@@ -18,7 +18,13 @@ const AvatarBox = ({ user }: AvatarBoxProps) => {
       {!isAdmin && (
         <span>{user?.profile?.firstName + " " + user?.profile?.lastName}</span>
       )}
-      {user && <Tag text={user.role} />}
+      {user && (
+        <Tag
+          text={user.role}
+          bg="var(--color-purple-secondary)"
+          textColor="var(--color-brown-primary)"
+        />
+      )}
     </div>
   );
 };
