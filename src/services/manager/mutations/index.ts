@@ -1,6 +1,6 @@
 import type { ChangeProfileFormData } from "@/pages/profile/components/profile/libs/schema";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { updateCustomerInfo, deleteCustomer } from "../apis/cusomter.api";
+import { updateCustomerInfo, deleteCustomer } from "../apis/customer.api";
 import { toast } from "sonner";
 import { queryKeys } from "../queries/keys";
 import { deleteVehicle, editVehicle } from "../apis/vehicle.api";

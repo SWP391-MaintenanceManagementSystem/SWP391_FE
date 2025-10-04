@@ -4,10 +4,11 @@ import { queryKeys } from "./keys";
 import {
   getCustomers,
   getCustomerById,
-} from "@/services/manager/apis/cusomter.api";
+} from "@/services/manager/apis/customer.api";
 import { getVehicleByCustomerId, getVehicleById } from "../apis/vehicle.api";
 import { getVehicleBrands } from "@/services/vehicle/apis/vehicle.api";
 import { getVehicleModelsByBrandId } from "@/services/manager/apis/vehicle.api";
+import { getStaffs } from "@/services/manager/apis/staff.api";
 
 /**
  * Hook lấy danh sách customers (search + sort + filter + pagination)
@@ -141,6 +142,38 @@ export const useGetVehicleModel = (brandId: number | string) => {
       }
     },
     enabled: !!brandId,
+    placeholderData: (prev) => prev,
+    staleTime: 5 * 60 * 1000,
+  });
+};
+
+/**
+ * Hook lấy danh sách staffs (search + sort + filter + pagination)
+ */
+export const useGetStaffs = (params: {
+  page: number;
+  pageSize: number;
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  status?: string;
+  phone?: string;
+  sortBy?: string;
+  orderBy?: "asc" | "desc";
+}) => {
+  return useQuery({
+    queryKey: queryKeys.staffs(params),
+    queryFn: async () => {
+      try {
+        const response = await getStaffs(params);
+        console.log(response.data);
+        return response.data;
+      } catch (error) {
+        toast.error("Failed to fetch customers");
+        throw error;
+      }
+    },
+    enabled: !!params.page && !!params.pageSize,
     placeholderData: (prev) => prev,
     staleTime: 5 * 60 * 1000,
   });
