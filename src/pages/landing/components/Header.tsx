@@ -2,7 +2,7 @@ import { ArrowUpRight } from "lucide-react";
 import logo from "/logo.svg";
 import logoDark from "/logo-light.svg";
 import MobileNavMenu from "./MobileNavMenu";
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 
 interface HeaderProps {
@@ -11,16 +11,23 @@ interface HeaderProps {
 
 export default function Header({ scrolled }: HeaderProps) {
   const { auth } = useAuth();
+  const location = useLocation();
+
+  const isHome = location.pathname === "/";
+
   return (
     <header
       className={`
-        sticky top-0 z-50 flex items-center justify-between
+        sticky z-50 flex items-center justify-between
         p-2 sm:p-4 shadow-sm transition-all duration-500
         ${
-          scrolled
-            ? "w-full rounded-none bg-white text-black dark:bg-black dark:text-white"
-            : "mx-4 sm:mx-8 lg:mx-16 rounded-lg bg-white text-black dark:bg-black dark:text-white"
+          isHome
+            ? scrolled
+              ? "top-0 w-full rounded-none"
+              : "top-8 mx-4 sm:mx-8 lg:mx-16 rounded-lg" 
+            : "top-0 w-full rounded-none" 
         }
+        bg-white text-black dark:bg-black dark:text-white
       `}
     >
       {/* Logo */}
