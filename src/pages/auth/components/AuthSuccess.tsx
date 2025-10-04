@@ -27,8 +27,7 @@ export default function AuthSuccess() {
                     accessToken: token,
                     isAuthenticated: true,
                 });
-
-                navigate("/");
+                navigate("/dashboard");
                 toast.success("Login Successful", {
                     description: "Welcome back!",
                 });

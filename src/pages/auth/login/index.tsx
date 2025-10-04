@@ -1,6 +1,6 @@
 import { useAuth } from "@/contexts/AuthContext"
 import { LoginForm } from "../components/LoginForm"
-import { Link, Navigate, useNavigate } from "react-router-dom"
+import { Link, Navigate } from "react-router-dom"
 import { useEffect, useState } from "react"
 import logo from "/logo.svg"
 import loginImg from "@/assets/login-img.png"

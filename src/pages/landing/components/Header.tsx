@@ -3,12 +3,14 @@ import logo from "/logo.svg";
 import logoDark from "/logo-light.svg";
 import MobileNavMenu from "./MobileNavMenu";
 import { NavLink } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface HeaderProps {
   scrolled: boolean;
 }
 
 export default function Header({ scrolled }: HeaderProps) {
+  const { auth } = useAuth();
   return (
     <header
       className={`
@@ -75,15 +77,27 @@ export default function Header({ scrolled }: HeaderProps) {
 
       {/* Desktop Button */}
       <div className="hidden lg:block">
-        <NavLink
-          to="/login"
-          className="flex gap-x-1 items-center justify-center 
-             bg-purple-primary px-6 py-[18px] w-[115px] h-14 
-             rounded-md text-white hover:bg-purple-700"
-        >
-          Login
-          <ArrowUpRight />
-        </NavLink>
+        {auth.isAuthenticated ? (
+          <NavLink
+            to="/dashboard"
+            className="flex items-center justify-center gap-x-1 
+             bg-purple-primary px-6 py-[18px] h-14 
+             rounded-md text-white hover:bg-purple-700 whitespace-nowrap"
+          >
+            Get Started
+            <ArrowUpRight />
+          </NavLink>
+        ) : (
+          <NavLink
+            to="/login"
+            className="flex gap-x-1 items-center justify-center 
+               bg-purple-primary px-6 py-[18px] w-[115px] h-14 
+               rounded-md text-white hover:bg-purple-700"
+          >
+            Login
+            <ArrowUpRight />
+          </NavLink>
+        )}
       </div>
     </header>
   );
