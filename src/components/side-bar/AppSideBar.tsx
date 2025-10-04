@@ -228,7 +228,8 @@ export function AppSidebar() {
                           clsx(
                             "flex items-center gap-2 !text-gray-primary font-inter",
                             effectiveCollapsed && "justify-between",
-                            isActive &&
+                            (isActive ||
+                              location.pathname.startsWith(`${item.url}/`)) &&
                               "bg-purple-primary rounded-md dark:!text-amber-primary !text-white !outline-0",
                           )
                         }
