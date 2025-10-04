@@ -4,12 +4,18 @@ import {
   SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
+  SidebarMenuSub,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
+import {
+  Collapsible,
+  CollapsibleTrigger,
+  CollapsibleContent,
+} from "@/components/ui/collapsible";
 import {
   Home,
   Settings,
@@ -23,7 +29,11 @@ import {
   Sparkles,
   IdCardLanyard,
   PackageOpen,
-   UserStar,
+  UserStar,
+  ChevronRight,
+  Users,
+  UserRoundCog,
+  CalendarClock,
 } from "lucide-react";
 import logoLight from "/logo.svg";
 import logoWithoutTextLight from "/logo-without-text-light.svg";
@@ -52,7 +62,7 @@ const customerItems: SidebarItem[] = [
   {
     title: "Memberships",
     url: "/membership",
-    icon:  UserStar,
+    icon: UserStar,
   },
   {
     title: "Service Booking",
@@ -114,9 +124,17 @@ const adminItems: SidebarItem[] = [
     icon: PackageOpen,
   },
   {
-    title: "Staff Management",
-    url: "/employees",
+    title: "Employee Management",
     icon: IdCardLanyard,
+    children: [
+      { title: "Staffs", url: "/employees/staffs", icon: Users },
+      {
+        title: "Technicians",
+        url: "/employees/technicians",
+        icon: UserRoundCog,
+      },
+      { title: "Shifts", url: "/employees/shifts", icon: CalendarClock },
+    ],
   },
   {
     title: "Finance & Reports",
@@ -155,6 +173,7 @@ export function AppSidebar() {
           ${collapsed ? "w-16" : "w-64"}
         `}
     >
+      {/* --- HEADER ---*/}
       <SidebarHeader className="!bg-slate-100 p-4 text-black dark:text-white">
         {!collapsed && (
           <div className="text-lg font-bold flex justify-between items-center">
@@ -182,39 +201,119 @@ export function AppSidebar() {
           </div>
         )}
       </SidebarHeader>
+
+      {/* --- CONTENT ---*/}
       <SidebarContent className="!bg-slate-100">
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu>
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
-                  <NavLink
-                    to={item.url}
-                    end
-                    className={({ isActive }) =>
-                      clsx(
-                        "flex items-center gap-2 !text-gray-primary font-inter",
-                        collapsed && "justify-between",
-                        isActive &&
-                          "bg-purple-primary rounded-md dark:!text-amber-primary !text-white !outline-0",
-                      )
-                    }
-                  >
-                    <SidebarMenuButton className="!bg-transparent outline-0 flex">
-                      {collapsed ? (
-                        <TooltipWrapper side="right" content={item.title}>
-                          <div className="mx-auto">
+                  {item.children ? (
+                    // SIDEBAR ITEM HAVE CHILDREN
+                    <Collapsible
+                      key={item.title}
+                      title={item.title}
+                      defaultOpen
+                      className="group/collapsible"
+                    >
+                      <SidebarGroup className="p-0">
+                        <CollapsibleTrigger asChild>
+                          <SidebarMenuButton
+                            className="!bg-transparent outline-0 flex"
+                            onClick={(e) => {
+                              if (collapsed) {
+                                e.preventDefault();
+                                setCollapsed(false);
+                                return;
+                              }
+                            }}
+                          >
+                            {collapsed ? (
+                              <TooltipWrapper side="right" content={item.title}>
+                                <div className="mx-auto">
+                                  <item.icon className="h-5 w-5" />
+                                </div>
+                              </TooltipWrapper>
+                            ) : (
+                              <>
+                                <item.icon className="h-5 w-5" />
+                                <span>{item.title}</span>
+                                <ChevronRight className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-90" />
+                              </>
+                            )}
+                          </SidebarMenuButton>
+                        </CollapsibleTrigger>
+                        {!collapsed && (
+                          <CollapsibleContent>
+                            <SidebarMenuSub>
+                              {item.children.map((child) => (
+                                <NavLink
+                                  to={child.url || "#"}
+                                  end
+                                  className={({ isActive }) =>
+                                    clsx(
+                                      "flex items-center gap-2 !text-gray-primary font-inter",
+                                      collapsed && "justify-between",
+                                      isActive &&
+                                        "bg-purple-primary rounded-md dark:!text-amber-primary !text-white !outline-0",
+                                    )
+                                  }
+                                >
+                                  <SidebarMenuButton className="!bg-transparent outline-0 flex">
+                                    {collapsed ? (
+                                      <TooltipWrapper
+                                        side="right"
+                                        content={child.title}
+                                      >
+                                        <div className="mx-auto">
+                                          <child.icon className="h-5 w-5" />
+                                        </div>
+                                      </TooltipWrapper>
+                                    ) : (
+                                      <>
+                                        <child.icon className="h-5 w-5" />
+                                        <span>{child.title}</span>
+                                      </>
+                                    )}
+                                  </SidebarMenuButton>
+                                </NavLink>
+                              ))}
+                            </SidebarMenuSub>
+                          </CollapsibleContent>
+                        )}
+                      </SidebarGroup>
+                    </Collapsible>
+                  ) : (
+                    // no CHILDREN
+                    <NavLink
+                      to={item.url || "#"}
+                      end
+                      className={({ isActive }) =>
+                        clsx(
+                          "flex items-center gap-2 !text-gray-primary font-inter",
+                          collapsed && "justify-between",
+                          isActive &&
+                            "bg-purple-primary rounded-md dark:!text-amber-primary !text-white !outline-0",
+                        )
+                      }
+                    >
+                      <SidebarMenuButton className="!bg-transparent outline-0 flex">
+                        {collapsed ? (
+                          <TooltipWrapper side="right" content={item.title}>
+                            <div className="mx-auto">
+                              <item.icon className="h-5 w-5" />
+                            </div>
+                          </TooltipWrapper>
+                        ) : (
+                          <>
                             <item.icon className="h-5 w-5" />
-                          </div>
-                        </TooltipWrapper>
-                      ) : (
-                        <>
-                          <item.icon className="h-5 w-5" />
-                          <span>{item.title}</span>
-                        </>
-                      )}
-                    </SidebarMenuButton>
-                  </NavLink>
+                            <span>{item.title}</span>
+                          </>
+                        )}
+                      </SidebarMenuButton>
+                    </NavLink>
+                  )}
                 </SidebarMenuItem>
               ))}
             </SidebarMenu>
@@ -222,6 +321,7 @@ export function AppSidebar() {
         </SidebarGroup>
       </SidebarContent>
 
+      {/* --- FOOTER ---*/}
       <SidebarFooter className="p-3 bg-slate-100">
         <NavLink
           to="/profile"
