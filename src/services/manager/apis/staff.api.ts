@@ -18,3 +18,11 @@ export const getStaffs = (params: {
     { params },
   );
 };
+
+export const deleteStaff = (id: string) => {
+  return httpPrivate.del<BaseResponse<void>>(`/staff/${id}`);
+};
+
+export const getStaffById = (id: string) => {
+  return httpPrivate.get<BaseResponse<AccountWithProfile>>(`/staff/${id}`);
+};

@@ -1,10 +1,11 @@
 import type { Row } from "@tanstack/react-table";
 import { Maximize2, Pencil, Trash } from "lucide-react";
 import ActionBtn from "@/components/table/ActionBtn";
-// import { DeleteDialog } from "@/components/dialog/DeleteDialog";
-// import { useState } from "react";
+import { DeleteDialog } from "@/components/dialog/DeleteDialog";
+import { useState } from "react";
 import { TooltipWrapper } from "@/components/TooltipWrapper";
 import type { EmployeeTable } from "@/pages/employees/libs/table-types";
+import { useEmployee } from "@/services/manager/hooks/useEmployee";
 
 interface ColActionsProps {
   row: Row<EmployeeTable>;
@@ -17,8 +18,14 @@ export default function ColActions({
   currentPage,
   currentPageSize,
 }: ColActionsProps) {
-  // const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   // const [openEditDialog, setOpenEditDialog] = useState(false);
+  //
+  const { handleDeleteEmployee } = useEmployee(
+    row.original,
+    currentPage,
+    currentPageSize,
+  );
 
   return (
     <div className="flex gap-1">
@@ -44,9 +51,19 @@ export default function ColActions({
           icon={<Trash size={12} />}
           onClick={() => {
             console.log("Row data to delete:", row.original);
+            setOpenDeleteDialog(true);
           }}
         />
       </TooltipWrapper>
+
+      <DeleteDialog
+        open={openDeleteDialog}
+        onOpenChange={(open) => setOpenDeleteDialog(open)}
+        onConfirm={() => {
+          handleDeleteEmployee(row.original.id);
+          setOpenDeleteDialog(false);
+        }}
+      />
     </div>
   );
 }

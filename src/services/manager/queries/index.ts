@@ -166,7 +166,6 @@ export const useGetStaffs = (params: {
     queryFn: async () => {
       try {
         const response = await getStaffs(params);
-        console.log(response.data);
         return response.data;
       } catch (error) {
         toast.error("Failed to fetch customers");

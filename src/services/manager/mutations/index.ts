@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { queryKeys } from "../queries/keys";
 import { deleteVehicle, editVehicle } from "../apis/vehicle.api";
 import type { AddVehicleFormData } from "@/pages/vehicle/components/libs/schema";
+import { deleteStaff } from "../apis/staff.api";
 
 export const useUpdateCustomerInfo = () => {
   const queryClient = useQueryClient();
@@ -130,6 +131,37 @@ export const useEditVehicle = () => {
     onError: (error) => {
       console.error(error);
       toast.error("Failed to update vehicle information");
+    },
+  });
+};
+
+export const useDeleteStaff = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({
+      id,
+      currentPage,
+      currentPageSize,
+    }: {
+      id: string;
+      currentPage: number;
+      currentPageSize: number;
+    }) => {
+      const deletedStaff = await deleteStaff(id);
+      return deletedStaff.data;
+    },
+    onSuccess: (_data, variables) => {
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.staffs({
+          page: variables.currentPage,
+          pageSize: variables.currentPageSize,
+        }),
+      });
+      toast.success("Staff deleted successfully");
+    },
+    onError: () => {
+      toast.error("Failed to delete staff");
     },
   });
 };
