@@ -16,72 +16,19 @@ import {
   CollapsibleTrigger,
   CollapsibleContent,
 } from "@/components/ui/collapsible";
-import {
-  Home,
-  Settings,
-  PanelLeftClose,
-  CircleUserRound,
-  Car,
-  NotebookPen,
-  BookOpen,
-  CreditCard,
-  CircleQuestionMark,
-  Sparkles,
-  IdCardLanyard,
-  PackageOpen,
-  UserStar,
-  ChevronRight,
-  Users,
-  UserRoundCog,
-  CalendarClock,
-} from "lucide-react";
+import { PanelLeftClose, CircleUserRound, ChevronRight } from "lucide-react";
 import logoLight from "/logo.svg";
 import logoWithoutTextLight from "/logo-without-text-light.svg";
 import logoDark from "/logo-dark-mode.svg";
 import logoWithoutTextDark from "/logo-without-text-dark.svg";
 import { NavLink, useLocation } from "react-router-dom";
 import { AccountRole } from "@/types/enums/role";
-import type { SidebarItem } from "@/types/models/sidebar-item";
 import clsx from "clsx";
 import { useAuth } from "@/contexts/AuthContext";
 import { useTheme } from "@/components/theme/ThemeProvider";
 import { useState } from "react";
 import { TooltipWrapper } from "../TooltipWrapper";
-
-// ----------------- CUSTOMER ITEMS -----------------
-const customerItems: SidebarItem[] = [
-  { title: "Dashboard", url: "/dashboard", icon: Home },
-  { title: "My Vehicles", url: "/vehicles", icon: Car },
-  { title: "Memberships", url: "/membership", icon: UserStar },
-  { title: "Service Booking", url: "/booking", icon: NotebookPen },
-  { title: "Maintenance History", url: "/history", icon: BookOpen },
-  { title: "Payments", url: "/payments", icon: CreditCard },
-  { title: "Settings", url: "/settings", icon: Settings },
-  { title: "Help & Support", url: "/support", icon: CircleQuestionMark },
-  { title: "Feedback", url: "/feedback", icon: Sparkles },
-];
-// ----------------- ADMIN ITEMS -----------------
-const adminItems: SidebarItem[] = [
-  { title: "Dashboard", url: "/dashboard", icon: Home },
-  { title: "Customers & Vehicles", url: "/vehicles", icon: Car },
-  { title: "Appointments", url: "/appointments", icon: NotebookPen },
-  { title: "Service Process", url: "/service-process", icon: Sparkles },
-  { title: "Inventory", url: "/inventory", icon: PackageOpen },
-  {
-    title: "Employee Management",
-    icon: IdCardLanyard,
-    children: [
-      { title: "Staffs", url: "/employees/staffs", icon: Users },
-      {
-        title: "Technicians",
-        url: "/employees/technicians",
-        icon: UserRoundCog,
-      },
-      { title: "Shifts", url: "/employees/shifts", icon: CalendarClock },
-    ],
-  },
-  { title: "Finance & Reports", url: "/finance", icon: CreditCard },
-];
+import { adminItems, customerItems } from "./sidebarItems";
 
 const getMenuItems = (role: AccountRole) => {
   switch (role) {
