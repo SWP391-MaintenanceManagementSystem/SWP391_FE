@@ -63,25 +63,19 @@ export const RegisterSchema = z
 
     confirmPassword: z.string().nonempty("Password confirmation is required"),
 
-    firstName: z
-      .string()
-      .nonempty("First name is required")
-      .min(2, "First name must be between 2 and 30 characters long")
-      .max(30, "First name must be between 2 and 30 characters long")
-      .regex(
-        /^[a-zA-Z\s'-]+$/,
-        "First name can only contain letters, spaces, hyphens and apostrophes",
-      ),
+   firstName: z
+    .string()
+    .nonempty("First name is required")
+    .min(2, "First name must be between 2 and 30 characters long")
+    .max(30, "First name must be between 2 and 30 characters long")
+    .regex(/^[\p{L}\s'-]+$/u, "First name can only contain letters, spaces, hyphens and apostrophes"),
 
-    lastName: z
-      .string()
-      .nonempty("Last name is required")
-      .min(2, "Last name must be between 2 and 30 characters long")
-      .max(30, "Last name must be between 2 and 30 characters long")
-      .regex(
-        /^[a-zA-Z\s'-]+$/,
-        "Last name can only contain letters, spaces, hyphens and apostrophes",
-      ),
+  lastName: z
+    .string()
+    .nonempty("Last name is required")
+    .min(2, "Last name must be between 2 and 30 characters long")
+    .max(30, "Last name must be between 2 and 30 characters long")
+    .regex(/^[\p{L}\s'-]+$/u, "Last name can only contain letters, spaces, hyphens and apostrophes"),
     phone: z.string().optional(),
     address: z.string().optional(),
   })

@@ -40,7 +40,8 @@ export default function CustomerInfoForm({
       onConfirm={onConfirm}
       form={form}
       title="Customer Information"
-      styleFormLayout="grid-rows-6 md:grid-cols-2 md:grid-rows-3"
+      styleFormLayout="grid-rows-6 md:grid-cols-2 md:grid-rows-3 "
+      styleLayoutFooter="md:col-start-2"
     >
       <FormField
         control={form.control}
@@ -93,7 +94,10 @@ export default function CustomerInfoForm({
             <FormControl>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="outline" className="w-full !outline-none">
+                  <Button
+                    variant="outline"
+                    className="w-full !outline-none flex justify-between"
+                  >
                     <AccountStatusTag status={field.value as AccountStatus} />
                     <ChevronDown className="mr-2 h-4 w-4" />
                   </Button>
