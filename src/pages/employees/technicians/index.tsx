@@ -6,17 +6,17 @@ import TotalBox from "../components/TotalBox";
 import { useGetTechnicians } from "@/services/manager/queries";
 import { useState } from "react";
 import type { SortingState, ColumnDef } from "@tanstack/react-table";
-import { getColumns } from "./components/table/comlums";
+import { getColumns } from "./table/comlums";
 import TechnicianBlack from "@/assets/technician-black.png";
 import TechnicianWhite from "@/assets/technician-white.png";
+import { useMemo } from "react";
+
 export default function TechniciansManagementPage() {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [searchValue, setSearchValue] = useState("");
   const [sorting, setSorting] = useState<SortingState>([]);
-  const [filters, setFilters] = useState({
-    status: "",
-  });
+  const [filters, setFilters] = useState({ status: "" });
   const { data, isLoading } = useGetTechnicians({
     page,
     pageSize,
@@ -25,20 +25,22 @@ export default function TechniciansManagementPage() {
     orderBy: sorting[0]?.desc ? "desc" : "asc",
   });
 
-  const accounts = data?.data ?? [];
-  console.log("Accounts:", accounts);
-  const technicians: EmployeeTable[] = accounts
-    .filter((acc) => acc.role === "TECHNICIAN")
-    .map((acc) => ({
-      id: acc.id,
-      email: acc.email,
-      phone: acc.phone ?? "",
-      status: acc.status,
-      role: acc.role,
-      profile: acc.profile
-        ? { firstName: acc.profile.firstName, lastName: acc.profile.lastName }
-        : undefined,
-    }));
+  const technicians = useMemo(() => {
+    const accounts = data?.data ?? [];
+    return accounts
+      .filter((acc) => acc.role === "TECHNICIAN")
+      .filter((acc) => (filters.status ? acc.status === filters.status : true))
+      .map((acc) => ({
+        id: acc.id,
+        email: acc.email,
+        phone: acc.phone ?? "",
+        status: acc.status,
+        role: acc.role,
+        profile: acc.profile
+          ? { firstName: acc.profile.firstName, lastName: acc.profile.lastName }
+          : undefined,
+      }));
+  }, [data, filters]);
 
   const handleStatusChange = (field: string, value: string) => {
     setFilters((prevFilters) => ({
@@ -48,6 +50,7 @@ export default function TechniciansManagementPage() {
   };
 
   const columns = getColumns(handleStatusChange, filters);
+  console.log(filters);
 
   return (
     <div className="w-full h-[calc(100vh-32px)] font-inter">
@@ -61,7 +64,7 @@ export default function TechniciansManagementPage() {
 
       <MainContentLayout className="grid grid-cols-1 lg:grid-cols-[auto_1fr] gap-8">
         <TotalBox
-          title="Staffs"
+          title="Technicians"
           iconDark={TechnicianBlack}
           iconLight={TechnicianWhite}
           total={data?.total ?? 0}

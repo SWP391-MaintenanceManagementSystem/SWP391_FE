@@ -1,10 +1,10 @@
 import { createColumnHelper } from "@tanstack/react-table";
-import { type EmployeeTable } from "../../../libs/table-types";
+import { type EmployeeTable } from "../../libs/table-types";
 import { Checkbox } from "@/components/ui/checkbox";
 import SortHeader from "@/components/table/SortHeader";
 import FilterHeader from "@/components/table/FilterHeader";
 import AccountStatusTag from "@/components/tag/AccountStatusTag";
-import ColActions from "./ColAction";
+import ColActions from "../../components/ColActions";
 
 export const getColumns = (
   handleFilterChange: (field: string, value: string) => void,

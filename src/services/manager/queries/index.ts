@@ -195,7 +195,6 @@ export const useGetTechnicians = (params: {
     queryFn: async () => {
       try {
         const response = await getTechnicians(params);
-        console.log(response.data);
         return response.data;
       } catch (error) {
         toast.error("Failed to fetch technicians");
@@ -203,6 +202,24 @@ export const useGetTechnicians = (params: {
       }
     },
     enabled: !!params.page && !!params.pageSize,
+    placeholderData: (prev) => prev,
+    staleTime: 5 * 60 * 1000,
+  });
+};
+
+export const useGetTechnicianById = (id: string) => {
+  return useQuery({
+    queryKey: queryKeys.techniciansById(id),
+    queryFn: async () => {
+      try {
+        const response = await getTechnicianById(id);
+        return response.data;
+      } catch (error) {
+        toast.error("Failed to fetch technician");
+        throw error;
+      }
+    },
+    enabled: !!id,
     placeholderData: (prev) => prev,
     staleTime: 5 * 60 * 1000,
   });

@@ -6,6 +6,9 @@ import { useState } from "react";
 import { TooltipWrapper } from "@/components/TooltipWrapper";
 import type { EmployeeTable } from "@/pages/employees/libs/table-types";
 import { useEmployee } from "@/services/manager/hooks/useEmployee";
+import { ViewDetailDialog } from "@/components/dialog/ViewDetailDialog";
+import ViewDetailEmployeeInfo from "@/pages/employees/components/ViewDetail";
+import { toast } from "sonner";
 
 interface ColActionsProps {
   row: Row<EmployeeTable>;
@@ -20,8 +23,8 @@ export default function ColActions({
 }: ColActionsProps) {
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   // const [openEditDialog, setOpenEditDialog] = useState(false);
-  //
-  const { handleDeleteStaff } = useEmployee(
+  const [openViewDetailDialog, setOpenViewDetailDialog] = useState(false);
+  const { handleDeleteTechnician, handleDeleteStaff } = useEmployee(
     row.original,
     currentPage,
     currentPageSize,
@@ -34,6 +37,7 @@ export default function ColActions({
           icon={<Maximize2 size={12} />}
           onClick={() => {
             console.log("Row data to view:", row.original);
+            setOpenViewDetailDialog(true);
           }}
         />
       </TooltipWrapper>
@@ -51,6 +55,10 @@ export default function ColActions({
           icon={<Trash size={12} />}
           onClick={() => {
             console.log("Row data to delete:", row.original);
+            if (row.original.status === "DISABLED") {
+              toast.error("Cannot delete disabled technician");
+              return;
+            }
             setOpenDeleteDialog(true);
           }}
         />
@@ -60,9 +68,21 @@ export default function ColActions({
         open={openDeleteDialog}
         onOpenChange={(open) => setOpenDeleteDialog(open)}
         onConfirm={() => {
-          handleDeleteStaff(row.original.id);
+          if (row.original.role === "TECHNICIAN") {
+            handleDeleteTechnician(row.original.id);
+          } else if (row.original.role === "STAFF") {
+            handleDeleteStaff(row.original.id);
+          }
           setOpenDeleteDialog(false);
         }}
+        isDisabled={row.original.status === "DISABLED"}
+      />
+      <ViewDetailDialog
+        open={openViewDetailDialog}
+        onOpenChange={(open) => setOpenViewDetailDialog(open)}
+        title="Technicians Information"
+        children={<ViewDetailEmployeeInfo employee={row.original} />}
+        styleContent="md:max-w-[560px]"
       />
     </div>
   );

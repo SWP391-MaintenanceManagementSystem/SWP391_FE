@@ -1,10 +1,10 @@
 import DynamicBreadcrumbs from "@/components/DynamicBreadcrumb";
 import MainContentLayout from "@/components/MainContentLayout";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import type { SortingState, ColumnDef } from "@tanstack/react-table";
 import { useGetStaffs } from "@/services/manager/queries";
 import { DataTable } from "@/components/table/DataTable";
-import { getColumns } from "./components/table/columns";
+import { getColumns } from "./table/columns";
 import type { EmployeeTable } from "@/pages/employees/libs/table-types";
 import TotalBox from "../components/TotalBox";
 import StaffBlackIcon from "@/assets/staff-black.png";
@@ -24,20 +24,23 @@ export default function StaffsManagementPage() {
     sortBy: sorting[0]?.id ?? "createdAt",
     orderBy: sorting[0]?.desc ? "desc" : "asc",
   });
-  const accounts = data?.data ?? [];
 
-  const staffs: EmployeeTable[] = accounts
-    .filter((acc) => acc.role === "STAFF")
-    .map((acc) => ({
-      id: acc.id,
-      email: acc.email,
-      phone: acc.phone ?? "",
-      status: acc.status,
-      role: acc.role,
-      profile: acc.profile
-        ? { firstName: acc.profile.firstName, lastName: acc.profile.lastName }
-        : undefined,
-    }));
+  const staffs = useMemo(() => {
+    const accounts = data?.data ?? [];
+    return accounts
+      .filter((acc) => acc.role === "STAFF")
+      .filter((acc) => (filters.status ? acc.status === filters.status : true))
+      .map((acc) => ({
+        id: acc.id,
+        email: acc.email,
+        phone: acc.phone ?? "",
+        status: acc.status,
+        role: acc.role,
+        profile: acc.profile
+          ? { firstName: acc.profile.firstName, lastName: acc.profile.lastName }
+          : undefined,
+      }));
+  }, [data, filters]);
 
   const handleStatusChange = (field: string, value: string) => {
     setFilters((prevFilters) => ({

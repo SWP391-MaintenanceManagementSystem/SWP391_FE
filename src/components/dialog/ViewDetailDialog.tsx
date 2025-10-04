@@ -14,6 +14,7 @@ interface ViewDetailDialogProps {
   onOpenChange: (open: boolean) => void;
   children: React.ReactNode;
   title: string;
+  styleContent?: string;
 }
 
 type InputDisableWithLabelProps = {
@@ -49,12 +50,12 @@ export const InfoSection = ({
   styleFormLayout,
 }: {
   children: React.ReactNode;
-  title: string;
+  title?: string;
   styleFormLayout?: string;
 }) => {
   return (
     <div className="flex flex-col gap-2">
-      <h2 className="text-[16px] font-medium">{title}</h2>
+      <h2 className="text-[16px] font-medium">{title || ""}</h2>
       <div className={cn("grid grid-cols-1 gap-4", styleFormLayout)}>
         {children}
       </div>
@@ -67,11 +68,14 @@ export function ViewDetailDialog({
   onOpenChange,
   children,
   title,
+  styleContent,
 }: ViewDetailDialogProps) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <form>
-        <DialogContent className="sm:max-w-[425px] md:max-w-[760px] font-inter  ">
+        <DialogContent
+          className={cn("sm:max-w-[425px]  font-inter", styleContent)}
+        >
           <DialogHeader className="mb-3">
             <DialogTitle className="text-center text-xl">{title}</DialogTitle>
           </DialogHeader>

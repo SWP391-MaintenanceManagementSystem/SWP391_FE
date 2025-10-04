@@ -22,3 +22,7 @@ export const getTechnicians = (params: {
 export const deleteTechnician = (id: string) => {
   return httpPrivate.del<BaseResponse<void>>(`/technician/${id}`);
 };
+
+export const getTechnicianById = (id: string) => {
+  return httpPrivate.get<BaseResponse<AccountWithProfile>>(`/technician/${id}`);
+};

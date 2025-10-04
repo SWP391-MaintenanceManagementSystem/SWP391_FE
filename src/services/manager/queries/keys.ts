@@ -53,4 +53,7 @@ export const queryKeys = {
     sortBy?: string;
     orderBy?: "asc" | "desc";
   }) => ["technicians", params] as const,
+
+  // technicians by ID
+  techniciansById: (id: string) => ["techniciansById", id] as const,
 };
