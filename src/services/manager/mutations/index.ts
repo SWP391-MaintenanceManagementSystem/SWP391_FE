@@ -6,6 +6,7 @@ import { queryKeys } from "../queries/keys";
 import { deleteVehicle, editVehicle } from "../apis/vehicle.api";
 import type { AddVehicleFormData } from "@/pages/vehicle/components/libs/schema";
 import { deleteStaff } from "../apis/staff.api";
+import { deleteTechnician } from "../apis/technician.api";
 
 export const useUpdateCustomerInfo = () => {
   const queryClient = useQueryClient();
@@ -162,6 +163,37 @@ export const useDeleteStaff = () => {
     },
     onError: () => {
       toast.error("Failed to delete staff");
+    },
+  });
+};
+
+export const useDeleteTechnician = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({
+      id,
+      currentPage,
+      currentPageSize,
+    }: {
+      id: string;
+      currentPage: number;
+      currentPageSize: number;
+    }) => {
+      const deletedTechnician = await deleteTechnician(id);
+      return deletedTechnician.data;
+    },
+    onSuccess: (_data, variables) => {
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.technicians({
+          page: variables.currentPage,
+          pageSize: variables.currentPageSize,
+        }),
+      });
+      toast.success("Technician deleted successfully");
+    },
+    onError: () => {
+      toast.error("Failed to delete technician");
     },
   });
 };

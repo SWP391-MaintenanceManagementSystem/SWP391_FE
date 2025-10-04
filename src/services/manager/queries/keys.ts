@@ -40,4 +40,17 @@ export const queryKeys = {
     sortBy?: string;
     orderBy?: "asc" | "desc";
   }) => ["staffs", params] as const,
+
+  // technicians (list, search, sort, filter)
+  technicians: (params: {
+    page: number;
+    pageSize: number;
+    firstName?: string;
+    lastName?: string;
+    status?: string;
+    email?: string;
+    phone?: string;
+    sortBy?: string;
+    orderBy?: "asc" | "desc";
+  }) => ["technicians", params] as const,
 };

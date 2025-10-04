@@ -9,6 +9,7 @@ import { getVehicleByCustomerId, getVehicleById } from "../apis/vehicle.api";
 import { getVehicleBrands } from "@/services/vehicle/apis/vehicle.api";
 import { getVehicleModelsByBrandId } from "@/services/manager/apis/vehicle.api";
 import { getStaffs } from "@/services/manager/apis/staff.api";
+import { getTechnicians, getTechnicianById } from "../apis/technician.api";
 
 /**
  * Hook lấy danh sách customers (search + sort + filter + pagination)
@@ -169,6 +170,35 @@ export const useGetStaffs = (params: {
         return response.data;
       } catch (error) {
         toast.error("Failed to fetch customers");
+        throw error;
+      }
+    },
+    enabled: !!params.page && !!params.pageSize,
+    placeholderData: (prev) => prev,
+    staleTime: 5 * 60 * 1000,
+  });
+};
+
+export const useGetTechnicians = (params: {
+  page: number;
+  pageSize: number;
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  status?: string;
+  phone?: string;
+  sortBy?: string;
+  orderBy?: "asc" | "desc";
+}) => {
+  return useQuery({
+    queryKey: queryKeys.technicians(params),
+    queryFn: async () => {
+      try {
+        const response = await getTechnicians(params);
+        console.log(response.data);
+        return response.data;
+      } catch (error) {
+        toast.error("Failed to fetch technicians");
         throw error;
       }
     },

@@ -21,7 +21,7 @@ export default function ColActions({
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   // const [openEditDialog, setOpenEditDialog] = useState(false);
   //
-  const { handleDeleteStaff } = useEmployee(
+  const { handleDeleteTechnician } = useEmployee(
     row.original,
     currentPage,
     currentPageSize,
@@ -60,7 +60,7 @@ export default function ColActions({
         open={openDeleteDialog}
         onOpenChange={(open) => setOpenDeleteDialog(open)}
         onConfirm={() => {
-          handleDeleteStaff(row.original.id);
+          handleDeleteTechnician(row.original.id);
           setOpenDeleteDialog(false);
         }}
       />
