@@ -39,7 +39,7 @@ import logoLight from "/logo.svg";
 import logoWithoutTextLight from "/logo-without-text-light.svg";
 import logoDark from "/logo-dark-mode.svg";
 import logoWithoutTextDark from "/logo-without-text-dark.svg";
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import { AccountRole } from "@/types/enums/role";
 import type { SidebarItem } from "@/types/models/sidebar-item";
 import clsx from "clsx";
@@ -48,81 +48,25 @@ import { useTheme } from "@/components/theme/ThemeProvider";
 import { useState } from "react";
 import { TooltipWrapper } from "../TooltipWrapper";
 
+// ----------------- CUSTOMER ITEMS -----------------
 const customerItems: SidebarItem[] = [
-  {
-    title: "Dashboard",
-    url: "/dashboard",
-    icon: Home,
-  },
-  {
-    title: "My Vehicles",
-    url: "/vehicles",
-    icon: Car,
-  },
-  {
-    title: "Memberships",
-    url: "/membership",
-    icon: UserStar,
-  },
-  {
-    title: "Service Booking",
-    url: "/booking",
-    icon: NotebookPen,
-  },
-  {
-    title: "Maintenance History",
-    url: "/history",
-    icon: BookOpen,
-  },
-  {
-    title: "Payments",
-    url: "/payments",
-    icon: CreditCard,
-  },
-  {
-    title: "Settings",
-    url: "/settings",
-    icon: Settings,
-  },
-  {
-    title: "Help & Support",
-    url: "/support",
-    icon: CircleQuestionMark,
-  },
-  {
-    title: "Feedback",
-    url: "/feedback",
-    icon: Sparkles,
-  },
+  { title: "Dashboard", url: "/dashboard", icon: Home },
+  { title: "My Vehicles", url: "/vehicles", icon: Car },
+  { title: "Memberships", url: "/membership", icon: UserStar },
+  { title: "Service Booking", url: "/booking", icon: NotebookPen },
+  { title: "Maintenance History", url: "/history", icon: BookOpen },
+  { title: "Payments", url: "/payments", icon: CreditCard },
+  { title: "Settings", url: "/settings", icon: Settings },
+  { title: "Help & Support", url: "/support", icon: CircleQuestionMark },
+  { title: "Feedback", url: "/feedback", icon: Sparkles },
 ];
-
+// ----------------- ADMIN ITEMS -----------------
 const adminItems: SidebarItem[] = [
-  {
-    title: "Dashboard",
-    url: "/dashboard",
-    icon: Home,
-  },
-  {
-    title: "Customers & Vehicles",
-    url: "/vehicles",
-    icon: Car,
-  },
-  {
-    title: "Appointments",
-    url: "/appointments",
-    icon: NotebookPen,
-  },
-
-  {
-    title: "Service Process",
-    url: "/service-process",
-    icon: Sparkles,
-  },
-  {
-    title: "Inventory",
-    url: "/inventory",
-    icon: PackageOpen,
-  },
+  { title: "Dashboard", url: "/dashboard", icon: Home },
+  { title: "Customers & Vehicles", url: "/vehicles", icon: Car },
+  { title: "Appointments", url: "/appointments", icon: NotebookPen },
+  { title: "Service Process", url: "/service-process", icon: Sparkles },
+  { title: "Inventory", url: "/inventory", icon: PackageOpen },
   {
     title: "Employee Management",
     icon: IdCardLanyard,
@@ -136,58 +80,50 @@ const adminItems: SidebarItem[] = [
       { title: "Shifts", url: "/employees/shifts", icon: CalendarClock },
     ],
   },
-  {
-    title: "Finance & Reports",
-    url: "/finance",
-    icon: CreditCard,
-  },
+  { title: "Finance & Reports", url: "/finance", icon: CreditCard },
 ];
 
-// Define menu items here for different roles
 const getMenuItems = (role: AccountRole) => {
   switch (role) {
     case AccountRole.ADMIN:
       return adminItems;
     case AccountRole.CUSTOMER:
       return customerItems;
-    case AccountRole.STAFF:
-      break;
-    case AccountRole.TECHNICIAN:
-      break;
     default:
       return [];
   }
 };
 
+// ----------------- SIDEBAR COMPONENT -----------------
 export function AppSidebar() {
   const { auth } = useAuth();
-  const role = auth.user?.role!;
+  const role = auth.user?.role;
   const { resolvedTheme } = useTheme();
   const [collapsed, setCollapsed] = useState(false);
-  const items = getMenuItems(role) || [];
+  const items = getMenuItems(role!) || [];
   const { isMobile } = useSidebar();
+  const location = useLocation();
 
   return (
     <Sidebar
-      className={`transition-all duration-300 h-[calc(100vh-32px)] my-4 ml-4 mr-0 rounded-xl overflow-hidden relative min-h-[500px]
-          ${collapsed ? "w-16" : "w-64"}
-        `}
+      className={clsx(
+        "transition-all font-inter duration-300 h-[calc(100vh-32px)] my-4 ml-4 mr-0 rounded-xl overflow-hidden relative min-h-[500px]",
+        collapsed ? "w-16" : "w-64",
+      )}
     >
-      {/* --- HEADER ---*/}
+      {/* HEADER */}
       <SidebarHeader className="!bg-slate-100 p-4 text-black dark:text-white">
-        {!collapsed && (
+        {!collapsed ? (
           <div className="text-lg font-bold flex justify-between items-center">
             <img src={resolvedTheme === "dark" ? logoDark : logoLight} />
             <PanelLeftClose
               className="h-6 w-6 cursor-pointer"
               onClick={() => {
-                if (isMobile) return;
-                setCollapsed(!collapsed);
+                if (!isMobile) setCollapsed(!collapsed);
               }}
             />
           </div>
-        )}
-        {collapsed && (
+        ) : (
           <div className="flex justify-center">
             <img
               src={
@@ -195,133 +131,130 @@ export function AppSidebar() {
                   ? logoWithoutTextDark
                   : logoWithoutTextLight
               }
-              onClick={() => setCollapsed(!collapsed)}
+              onClick={() => setCollapsed(false)}
               className="cursor-pointer"
             />
           </div>
         )}
       </SidebarHeader>
 
-      {/* --- CONTENT ---*/}
+      {/* CONTENT */}
       <SidebarContent className="!bg-slate-100">
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu>
-              {items.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  {item.children ? (
-                    // SIDEBAR ITEM HAVE CHILDREN
-                    <Collapsible
-                      key={item.title}
-                      title={item.title}
-                      defaultOpen
-                      className="group/collapsible"
-                    >
-                      <SidebarGroup className="p-0">
-                        <CollapsibleTrigger asChild>
-                          <SidebarMenuButton
-                            className="!bg-transparent outline-0 flex"
-                            onClick={(e) => {
-                              if (collapsed) {
-                                e.preventDefault();
-                                setCollapsed(false);
-                                return;
-                              }
-                            }}
-                          >
-                            {collapsed ? (
-                              <TooltipWrapper side="right" content={item.title}>
-                                <div className="mx-auto">
-                                  <item.icon className="h-5 w-5" />
-                                </div>
-                              </TooltipWrapper>
-                            ) : (
-                              <>
-                                <item.icon className="h-5 w-5" />
-                                <span>{item.title}</span>
-                                <ChevronRight className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-90" />
-                              </>
-                            )}
-                          </SidebarMenuButton>
-                        </CollapsibleTrigger>
-                        {!collapsed && (
-                          <CollapsibleContent>
-                            <SidebarMenuSub>
-                              {item.children.map((child) => (
-                                <NavLink
-                                  to={child.url || "#"}
-                                  end
-                                  className={({ isActive }) =>
-                                    clsx(
-                                      "flex items-center gap-2 !text-gray-primary font-inter",
-                                      collapsed && "justify-between",
-                                      isActive &&
-                                        "bg-purple-primary rounded-md dark:!text-amber-primary !text-white !outline-0",
-                                    )
-                                  }
+              {items.map((item) => {
+                const isChildActive = item.children?.some((child) =>
+                  location.pathname.startsWith(child.url || "#"),
+                );
+
+                return (
+                  <SidebarMenuItem key={item.title}>
+                    {item.children ? (
+                      <Collapsible
+                        key={item.title}
+                        className="group/collapsible"
+                        defaultOpen={isChildActive}
+                      >
+                        <SidebarGroup className="p-0">
+                          <CollapsibleTrigger asChild>
+                            <SidebarMenuButton
+                              onClick={(e) => {
+                                if (collapsed) {
+                                  e.preventDefault();
+                                  setCollapsed(false);
+                                }
+                              }}
+                              className={clsx(
+                                "outline-0 flex text-gray-primary transition-colors",
+                                isChildActive &&
+                                  "bg-purple-primary text-white dark:text-amber-primary",
+                              )}
+                            >
+                              {collapsed ? (
+                                <TooltipWrapper
+                                  side="right"
+                                  content={item.title}
                                 >
-                                  <SidebarMenuButton className="!bg-transparent outline-0 flex">
-                                    {collapsed ? (
-                                      <TooltipWrapper
-                                        side="right"
-                                        content={child.title}
-                                      >
-                                        <div className="mx-auto">
-                                          <child.icon className="h-5 w-5" />
-                                        </div>
-                                      </TooltipWrapper>
-                                    ) : (
-                                      <>
-                                        <child.icon className="h-5 w-5" />
-                                        <span>{child.title}</span>
-                                      </>
-                                    )}
-                                  </SidebarMenuButton>
-                                </NavLink>
-                              ))}
-                            </SidebarMenuSub>
-                          </CollapsibleContent>
-                        )}
-                      </SidebarGroup>
-                    </Collapsible>
-                  ) : (
-                    // no CHILDREN
-                    <NavLink
-                      to={item.url || "#"}
-                      end
-                      className={({ isActive }) =>
-                        clsx(
-                          "flex items-center gap-2 !text-gray-primary font-inter",
-                          collapsed && "justify-between",
-                          isActive &&
-                            "bg-purple-primary rounded-md dark:!text-amber-primary !text-white !outline-0",
-                        )
-                      }
-                    >
-                      <SidebarMenuButton className="!bg-transparent outline-0 flex">
-                        {collapsed ? (
-                          <TooltipWrapper side="right" content={item.title}>
-                            <div className="mx-auto">
+                                  <div className={clsx("mx-auto")}>
+                                    <item.icon className="h-5 w-5" />
+                                  </div>
+                                </TooltipWrapper>
+                              ) : (
+                                <>
+                                  <item.icon className="h-5 w-5" />
+                                  <span>{item.title}</span>
+                                  <ChevronRight className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-90" />
+                                </>
+                              )}
+                            </SidebarMenuButton>
+                          </CollapsibleTrigger>
+
+                          {!collapsed && (
+                            <CollapsibleContent>
+                              <SidebarMenuSub>
+                                {item.children.map((child) => (
+                                  <NavLink
+                                    key={child.title}
+                                    to={child.url || "#"}
+                                    end
+                                    className={({ isActive }) =>
+                                      clsx(
+                                        "flex items-center gap-2 !text-gray-primary font-inter",
+                                        isActive &&
+                                          "bg-purple-primary rounded-md dark:!text-amber-primary !text-white !outline-0",
+                                      )
+                                    }
+                                  >
+                                    <SidebarMenuButton className="!bg-transparent outline-0 flex">
+                                      <child.icon className="h-5 w-5" />
+                                      <span>{child.title}</span>
+                                    </SidebarMenuButton>
+                                  </NavLink>
+                                ))}
+                              </SidebarMenuSub>
+                            </CollapsibleContent>
+                          )}
+                        </SidebarGroup>
+                      </Collapsible>
+                    ) : (
+                      <NavLink
+                        to={item.url || "#"}
+                        end
+                        className={({ isActive }) =>
+                          clsx(
+                            "flex items-center gap-2 !text-gray-primary font-inter",
+                            collapsed && "justify-between",
+                            isActive &&
+                              "bg-purple-primary rounded-md dark:!text-amber-primary !text-white !outline-0",
+                          )
+                        }
+                      >
+                        <SidebarMenuButton className="!bg-transparent outline-0 flex">
+                          {collapsed ? (
+                            <TooltipWrapper side="right" content={item.title}>
+                              <div className="mx-auto">
+                                <item.icon className="h-5 w-5" />
+                              </div>
+                            </TooltipWrapper>
+                          ) : (
+                            <>
                               <item.icon className="h-5 w-5" />
-                            </div>
-                          </TooltipWrapper>
-                        ) : (
-                          <>
-                            <item.icon className="h-5 w-5" />
-                            <span>{item.title}</span>
-                          </>
-                        )}
-                      </SidebarMenuButton>
-                    </NavLink>
-                  )}
-                </SidebarMenuItem>
-              ))}
+                              <span>{item.title}</span>
+                            </>
+                          )}
+                        </SidebarMenuButton>
+                      </NavLink>
+                    )}
+                  </SidebarMenuItem>
+                );
+              })}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
 
-      {/* --- FOOTER ---*/}
+      {/* FOOTER */}
       <SidebarFooter className="p-3 bg-slate-100">
         <NavLink
           to="/profile"
@@ -349,15 +282,13 @@ export function AppSidebar() {
                   />
                   <span
                     className={clsx(
-                      `text-sm`,
+                      "text-sm",
                       isActive && "dark:text-amber-primary",
                     )}
                   >
-                    {auth.user?.role === AccountRole.ADMIN && "Admin"}
-                    {auth.user?.role !== AccountRole.ADMIN &&
-                      auth.user?.profile?.firstName +
-                        " " +
-                        auth.user?.profile?.lastName}
+                    {auth.user?.role === AccountRole.ADMIN
+                      ? "Admin"
+                      : `${auth.user?.profile?.firstName} ${auth.user?.profile?.lastName}`}
                   </span>
                 </div>
               )}
