@@ -14,11 +14,11 @@ export default function MembershipCard({
 }: MembershipCardProps) {
   return (
     <div
-      className="rounded-2xl p-6 
+      className="rounded-2xl p-6 overflow-x-auto
       bg-gradient-to-br from-purple-500 via-purple-400 to-pink-500
       dark:from-purple-800 dark:to-pink-600
-      text-white flex flex-col w-96 h-full font-inter 
-      transition-transform duration-300 hover:scale-105 hover:shadow-2xl  dark:from-purple-200 dark:via-purple-300 dark:to-pink-200  "
+      text-white flex flex-col w-72 h-[450px] font-inter 
+      transition-transform duration-300 hover:scale-105 hover:shadow-md dark:from-purple-200 dark:via-purple-300 dark:to-pink-200  "
     >
       <div
         className="w-14 h-14 flex items-center justify-center rounded-full 

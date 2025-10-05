@@ -9,7 +9,7 @@ interface Props {
 export default function MainContentLayout({ children, className }: Props) {
   return (
     <div
-      className={cn("mt-4 pt-4 pb-12 px-[12px] h-full min-w-full", className)}
+      className={cn("mt-4 pt-4 pb-12 px-[12px] h-full min-w-screen", className)}
     >
       {children}
     </div>

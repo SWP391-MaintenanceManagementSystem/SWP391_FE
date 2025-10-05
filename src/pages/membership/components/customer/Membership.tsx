@@ -9,23 +9,23 @@ export default function Membership() {
   return (
     <div>
       <DynamicBreadcrumbs pathTitles={{ membership: "Membership" }} />
-      <MainContentLayout>
-        <div className="flex gap-3 border-b border-gray-200 dark:border-gray-700 mb-6">
+      <MainContentLayout className="flex flex-col">
+        <div className="flex border-b border-gray-200 dark:border-gray-700 mb-6">
           <button
             onClick={() => setActiveTab("options")}
-            className={`px-4 py-2 rounded-t-lg font-medium transition-colors ${
+            className={`px-4 py-2 rounded-lg font-medium transition-colors w-44 h-9  ${
               activeTab === "options"
-                ? "bg-purple-500 text-white"
+                ? "bg-purple-primary text-white"
                 : "text-gray-600 dark:text-gray-300 hover:text-purple-500"
             }`}
           >
-            Membership Options
+            Available Plans
           </button>
           <button
             onClick={() => setActiveTab("my")}
-            className={`px-4 py-2 rounded-t-lg font-medium transition-colors ${
+            className={`px-4 py-2 rounded-lg font-medium transition-colors w-44 h-9  ${
               activeTab === "my"
-                ? "bg-purple-500 text-white"
+                ? "bg-purple-primary text-white"
                 : "text-gray-600 dark:text-gray-300 hover:text-purple-500"
             }`}
           >
@@ -33,7 +33,7 @@ export default function Membership() {
           </button>
         </div>
 
-        <div>{activeTab === "options" && <MembershipOptions />}</div>
+        {activeTab === "options" && <MembershipOptions />}
       </MainContentLayout>
     </div>
   );
