@@ -17,6 +17,8 @@ import ProfilePage from "@/pages/profile";
 import Unauthorized from "@/pages/unauthorized";
 import ViewDetailInfo from "@/pages/vehicle/components/admin/ViewDetailInfo";
 import MembershipPage from "@/pages/membership";
+import Booking from "@/pages/booking/customer/Booking";
+import AuthFailed from "@/pages/auth/components/AuthFailed";
 
 const RouterComponent = () => {
   const router = createBrowserRouter([
@@ -37,6 +39,7 @@ const RouterComponent = () => {
     },
     { path: "/forgot-password", element: <ForgotPasswordPage /> },
     { path: "/auth/success", element: <AuthSuccess /> },
+    { path: "auth/failed", element: <AuthFailed /> },
     { path: "/auth/verify", element: <VerifySuccess /> },
     { path: "/unauthorized", element: <Unauthorized /> },
     { path: "*", element: <NotFound /> },
