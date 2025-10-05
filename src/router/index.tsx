@@ -87,6 +87,15 @@ const RouterComponent = () => {
                     }
                   ]
                  },
+                 {
+                  element: <RequireAuth  allowedRoles={[AccountRole.ADMIN, AccountRole.CUSTOMER]}/>,
+                  children: [
+                    {
+                      path: "/booking",
+                      element: <Booking />
+                    }
+                  ]
+                 },
                 {
                   element: (
                     <RequireAuth
