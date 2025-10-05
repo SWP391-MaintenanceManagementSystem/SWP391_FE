@@ -13,7 +13,7 @@ interface DeleteDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onConfirm: () => void;
-  isDisabled: boolean;
+  isDisabled?: boolean;
 }
 export function DeleteDialog({
   open,

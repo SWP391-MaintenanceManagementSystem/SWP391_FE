@@ -83,6 +83,7 @@ export default function ColActions({ row }: ColActionsProps) {
         open={openViewDialog}
         onOpenChange={(open) => setOpenViewDialog(open)}
         title="Vehicle Detail Information"
+        styleContent="md:max-w-[660px]"
       >
         <ViewDetailVehicle vehicleId={row.original.id} />
       </ViewDetailDialog>

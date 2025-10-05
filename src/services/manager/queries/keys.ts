@@ -27,4 +27,33 @@ export const queryKeys = {
   // Vehicle Model
   vehicleModel: (brandId: number | string) =>
     ["vehicleModel", brandId] as const,
+
+  // staffs (list, search, sort, filter)
+  staffs: (params: {
+    page: number;
+    pageSize: number;
+    firstName?: string;
+    lastName?: string;
+    status?: string;
+    email?: string;
+    phone?: string;
+    sortBy?: string;
+    orderBy?: "asc" | "desc";
+  }) => ["staffs", params] as const,
+
+  // technicians (list, search, sort, filter)
+  technicians: (params: {
+    page: number;
+    pageSize: number;
+    firstName?: string;
+    lastName?: string;
+    status?: string;
+    email?: string;
+    phone?: string;
+    sortBy?: string;
+    orderBy?: "asc" | "desc";
+  }) => ["technicians", params] as const,
+
+  // technicians by ID
+  techniciansById: (id: string) => ["techniciansById", id] as const,
 };

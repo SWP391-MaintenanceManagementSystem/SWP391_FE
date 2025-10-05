@@ -1,7 +1,6 @@
-
 export type SidebarItem = {
-    title: string;
-    url: string;
-    icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
-}
-
+  title: string;
+  url?: string;
+  icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
+  children?: SidebarItem[];
+};
