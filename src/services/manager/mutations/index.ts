@@ -5,8 +5,8 @@ import { toast } from "sonner";
 import { queryKeys } from "../queries/keys";
 import { deleteVehicle, editVehicle } from "../apis/vehicle.api";
 import type { AddVehicleFormData } from "@/pages/vehicle/components/libs/schema";
-import { deleteStaff } from "../apis/staff.api";
-import { deleteTechnician } from "../apis/technician.api";
+import { deleteStaff, updateStaff } from "../apis/staff.api";
+import { deleteTechnician, updateTechnician } from "../apis/technician.api";
 
 export const useUpdateCustomerInfo = () => {
   const queryClient = useQueryClient();

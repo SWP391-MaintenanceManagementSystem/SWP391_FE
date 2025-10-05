@@ -1,6 +1,7 @@
 import { httpPrivate } from "@/lib/http";
 import type { PaginationResponse, BaseResponse } from "@/types/models/response";
 import type { AccountWithProfile } from "@/types/models/account";
+import type { ChangeProfileFormData } from "@/pages/profile/components/profile/libs/schema";
 
 export const getStaffs = (params: {
   page: number;
@@ -25,4 +26,11 @@ export const deleteStaff = (id: string) => {
 
 export const getStaffById = (id: string) => {
   return httpPrivate.get<BaseResponse<AccountWithProfile>>(`/staff/${id}`);
+};
+
+export const updateStaff = (id: string, data: ChangeProfileFormData) => {
+  return httpPrivate.patch<BaseResponse<AccountWithProfile>>(
+    `/staff/${id}`,
+    data,
+  );
 };
