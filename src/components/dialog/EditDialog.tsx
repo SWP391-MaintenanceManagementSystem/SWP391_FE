@@ -46,7 +46,7 @@ export function EditDialog<TFormValues extends FieldValues>({
     <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogContent className="font-inter md:min-h-40 md:max-w-[600px] space-y-6 min-w-[300px] overflow-y-auto">
         <AlertDialogHeader>
-          <AlertDialogTitle>Edit {title}</AlertDialogTitle>
+          <AlertDialogTitle>Edit {title} Infomations</AlertDialogTitle>
           <AlertDialogDescription>
             Make changes to {title} here. Click save when you're done.
           </AlertDialogDescription>

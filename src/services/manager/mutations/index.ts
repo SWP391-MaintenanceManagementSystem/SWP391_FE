@@ -197,3 +197,55 @@ export const useDeleteTechnician = () => {
     },
   });
 };
+
+export const useUpdateEmployeeInfo = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({
+      role,
+      data,
+      id,
+      currentPage,
+      currentPageSize,
+    }: {
+      role: "STAFF" | "TECHNICIAN";
+      data: ChangeProfileFormData;
+      id: string;
+      currentPage: number;
+      currentPageSize: number;
+    }) => {
+      const { email, ...rest } = data;
+
+      if (role === "STAFF") {
+        return (await updateStaff(id, rest)).data;
+      }
+
+      return (await updateTechnician(id, rest)).data;
+    },
+
+    onSuccess: (_data, variables) => {
+      if (variables.role === "STAFF") {
+        queryClient.invalidateQueries({
+          queryKey: queryKeys.staffs({
+            page: variables.currentPage,
+            pageSize: variables.currentPageSize,
+          }),
+        });
+      } else {
+        queryClient.invalidateQueries({
+          queryKey: queryKeys.technicians({
+            page: variables.currentPage,
+            pageSize: variables.currentPageSize,
+          }),
+        });
+      }
+
+      toast.success(`${variables.role} updated successfully`);
+    },
+
+    onError: () => {
+      toast.error("Failed to update employee information");
+    },
+  });
+};

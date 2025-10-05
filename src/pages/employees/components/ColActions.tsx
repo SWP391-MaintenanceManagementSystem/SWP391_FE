@@ -9,6 +9,7 @@ import { useEmployee } from "@/services/manager/hooks/useEmployee";
 import { ViewDetailDialog } from "@/components/dialog/ViewDetailDialog";
 import ViewDetailEmployeeInfo from "@/pages/employees/components/ViewDetail";
 import { toast } from "sonner";
+import EditEmployeeInfoForm from "./EditEmployeeInfoForm";
 
 interface ColActionsProps {
   row: Row<EmployeeTable>;
@@ -22,13 +23,14 @@ export default function ColActions({
   currentPageSize,
 }: ColActionsProps) {
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
-  // const [openEditDialog, setOpenEditDialog] = useState(false);
+  const [openEditDialog, setOpenEditDialog] = useState(false);
   const [openViewDetailDialog, setOpenViewDetailDialog] = useState(false);
-  const { handleDeleteTechnician, handleDeleteStaff } = useEmployee(
-    row.original,
-    currentPage,
-    currentPageSize,
-  );
+  const {
+    handleDeleteTechnician,
+    handleDeleteStaff,
+    form,
+    handleUpdateEmployeeInfo,
+  } = useEmployee(row.original, currentPage, currentPageSize);
 
   return (
     <div className="flex gap-1">
@@ -46,6 +48,7 @@ export default function ColActions({
           icon={<Pencil size={12} />}
           onClick={() => {
             console.log("Row data to edit:", row.original);
+            setOpenEditDialog(true);
           }}
         />
       </TooltipWrapper>
@@ -83,6 +86,20 @@ export default function ColActions({
         title="Technicians Information"
         children={<ViewDetailEmployeeInfo employee={row.original} />}
         styleContent="md:max-w-[560px]"
+      />
+
+      <EditEmployeeInfoForm
+        open={openEditDialog}
+        onOpenChange={(open) => setOpenEditDialog(open)}
+        form={form}
+        title={row.original.role === "STAFF" ? "Staff" : "Technician"}
+        onConfirm={() => {
+          if (row.original.role === "STAFF") {
+            handleUpdateEmployeeInfo(row.original.id, "STAFF");
+          } else if (row.original.role === "TECHNICIAN") {
+            handleUpdateEmployeeInfo(row.original.id, "TECHNICIAN");
+          }
+        }}
       />
     </div>
   );

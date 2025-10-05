@@ -26,8 +26,6 @@ export default function TechniciansManagementPage() {
     orderBy: sorting[0]?.desc ? "desc" : "asc",
   });
 
-  console.log("Fetching:", isFetching);
-
   const technicians = useMemo(() => {
     const accounts = data?.data ?? [];
     return accounts
@@ -53,7 +51,6 @@ export default function TechniciansManagementPage() {
   };
 
   const columns = getColumns(handleStatusChange, filters);
-  console.log(filters);
 
   return (
     <div className="w-full h-[calc(100vh-32px)] font-inter">
