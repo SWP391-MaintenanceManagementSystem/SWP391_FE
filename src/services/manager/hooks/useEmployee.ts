@@ -1,8 +1,4 @@
-import {
-  useDeleteStaff,
-  useDeleteTechnician,
-  useUpdateEmployeeInfo,
-} from "../mutations";
+import { useDeleteEmployee, useUpdateEmployeeInfo } from "../mutations";
 import type { EmployeeTable } from "@/pages/employees/libs/table-types";
 import {
   ChangeProfileSchema,
@@ -13,28 +9,12 @@ import { useForm } from "react-hook-form";
 
 export const useEmployee = (
   employee: EmployeeTable,
+  role: "STAFF" | "TECHNICIAN",
   currentPage: number,
   currentPageSize: number,
 ) => {
-  const deleteStaffMutation = useDeleteStaff();
-  const deleteTechnicianMutation = useDeleteTechnician();
+  const deleteEmployeeMutation = useDeleteEmployee();
   const updateEmployeeInfoMutation = useUpdateEmployeeInfo();
-
-  const handleDeleteStaff = (id: string) => {
-    deleteStaffMutation.mutate({
-      id,
-      currentPage,
-      currentPageSize,
-    });
-  };
-
-  const handleDeleteTechnician = (id: string) => {
-    deleteTechnicianMutation.mutate({
-      id,
-      currentPage,
-      currentPageSize,
-    });
-  };
 
   const form = useForm<ChangeProfileFormData>({
     resolver: zodResolver(ChangeProfileSchema),
@@ -47,10 +27,16 @@ export const useEmployee = (
     },
   });
 
-  const handleUpdateEmployeeInfo = (
-    id: string,
-    role: "STAFF" | "TECHNICIAN",
-  ) => {
+  const handleDeleteEmployee = (id: string) => {
+    deleteEmployeeMutation.mutate({
+      id,
+      role,
+      currentPage,
+      currentPageSize,
+    });
+  };
+
+  const handleUpdateEmployeeInfo = (id: string) => {
     updateEmployeeInfoMutation.mutate({
       id,
       role,
@@ -59,10 +45,10 @@ export const useEmployee = (
       currentPageSize,
     });
   };
+
   return {
     form,
-    handleDeleteStaff,
-    handleDeleteTechnician,
+    handleDeleteEmployee,
     handleUpdateEmployeeInfo,
   };
 };

@@ -25,12 +25,12 @@ export default function ColActions({
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [openEditDialog, setOpenEditDialog] = useState(false);
   const [openViewDetailDialog, setOpenViewDetailDialog] = useState(false);
-  const {
-    handleDeleteTechnician,
-    handleDeleteStaff,
-    form,
-    handleUpdateEmployeeInfo,
-  } = useEmployee(row.original, currentPage, currentPageSize);
+  const { handleDeleteEmployee, form, handleUpdateEmployeeInfo } = useEmployee(
+    row.original,
+    row.original.role as "STAFF" | "TECHNICIAN",
+    currentPage,
+    currentPageSize,
+  );
 
   return (
     <div className="flex gap-1">
@@ -72,9 +72,9 @@ export default function ColActions({
         onOpenChange={(open) => setOpenDeleteDialog(open)}
         onConfirm={() => {
           if (row.original.role === "TECHNICIAN") {
-            handleDeleteTechnician(row.original.id);
+            handleDeleteEmployee(row.original.id);
           } else if (row.original.role === "STAFF") {
-            handleDeleteStaff(row.original.id);
+            handleDeleteEmployee(row.original.id);
           }
           setOpenDeleteDialog(false);
         }}
@@ -95,9 +95,9 @@ export default function ColActions({
         title={row.original.role === "STAFF" ? "Staff" : "Technician"}
         onConfirm={() => {
           if (row.original.role === "STAFF") {
-            handleUpdateEmployeeInfo(row.original.id, "STAFF");
+            handleUpdateEmployeeInfo(row.original.id);
           } else if (row.original.role === "TECHNICIAN") {
-            handleUpdateEmployeeInfo(row.original.id, "TECHNICIAN");
+            handleUpdateEmployeeInfo(row.original.id);
           }
         }}
       />

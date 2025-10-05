@@ -136,64 +136,54 @@ export const useEditVehicle = () => {
   });
 };
 
-export const useDeleteStaff = () => {
+export const useDeleteEmployee = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async ({
       id,
+      role,
       currentPage,
       currentPageSize,
     }: {
       id: string;
+      role: "STAFF" | "TECHNICIAN";
       currentPage: number;
       currentPageSize: number;
     }) => {
-      const deletedStaff = await deleteStaff(id);
-      return deletedStaff.data;
+      if (role === "STAFF") {
+        const deletedStaff = await deleteStaff(id);
+        return deletedStaff.data;
+      } else if (role === "TECHNICIAN") {
+        const deletedTechnician = await deleteTechnician(id);
+        return deletedTechnician.data;
+      }
+
+      if (role !== "STAFF" && role !== "TECHNICIAN") {
+        throw new Error("Invalid role. Only STAFF or TECHNICIAN allowed.");
+      }
     },
     onSuccess: (_data, variables) => {
-      queryClient.invalidateQueries({
-        queryKey: queryKeys.staffs({
-          page: variables.currentPage,
-          pageSize: variables.currentPageSize,
-        }),
-      });
-      toast.success("Staff deleted successfully");
+      if (variables.role === "STAFF") {
+        queryClient.invalidateQueries({
+          queryKey: queryKeys.staffs({
+            page: variables.currentPage,
+            pageSize: variables.currentPageSize,
+          }),
+        });
+        toast.success("Staff deleted successfully");
+      } else if (variables.role === "TECHNICIAN") {
+        queryClient.invalidateQueries({
+          queryKey: queryKeys.technicians({
+            page: variables.currentPage,
+            pageSize: variables.currentPageSize,
+          }),
+        });
+        toast.success("Technician deleted successfully");
+      }
     },
     onError: () => {
-      toast.error("Failed to delete staff");
-    },
-  });
-};
-
-export const useDeleteTechnician = () => {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: async ({
-      id,
-      currentPage,
-      currentPageSize,
-    }: {
-      id: string;
-      currentPage: number;
-      currentPageSize: number;
-    }) => {
-      const deletedTechnician = await deleteTechnician(id);
-      return deletedTechnician.data;
-    },
-    onSuccess: (_data, variables) => {
-      queryClient.invalidateQueries({
-        queryKey: queryKeys.technicians({
-          page: variables.currentPage,
-          pageSize: variables.currentPageSize,
-        }),
-      });
-      toast.success("Technician deleted successfully");
-    },
-    onError: () => {
-      toast.error("Failed to delete technician");
+      toast.error("Failed to delete employee");
     },
   });
 };
@@ -219,9 +209,12 @@ export const useUpdateEmployeeInfo = () => {
 
       if (role === "STAFF") {
         return (await updateStaff(id, rest)).data;
+      } else if (role === "TECHNICIAN") {
+        return (await updateTechnician(id, rest)).data;
       }
-
-      return (await updateTechnician(id, rest)).data;
+      if (role !== "STAFF" && role !== "TECHNICIAN") {
+        throw new Error("Invalid role. Only STAFF or TECHNICIAN allowed.");
+      }
     },
 
     onSuccess: (_data, variables) => {
@@ -232,16 +225,16 @@ export const useUpdateEmployeeInfo = () => {
             pageSize: variables.currentPageSize,
           }),
         });
-      } else {
+        toast.success("Staff updated successfully");
+      } else if (variables.role === "TECHNICIAN") {
         queryClient.invalidateQueries({
           queryKey: queryKeys.technicians({
             page: variables.currentPage,
             pageSize: variables.currentPageSize,
           }),
         });
+        toast.success(`Technician updated successfully`);
       }
-
-      toast.success(`${variables.role} updated successfully`);
     },
 
     onError: () => {
