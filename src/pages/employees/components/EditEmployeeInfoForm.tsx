@@ -132,7 +132,6 @@ export default function EmployeeInfoForm({
           </FormItem>
         )}
       />
-
       <FormField
         control={form.control}
         name="phone"
@@ -140,7 +139,7 @@ export default function EmployeeInfoForm({
           <FormItem>
             <FormLabel>Phone</FormLabel>
             <FormControl>
-              <Input placeholder="+1 (555) 555-5555" {...field} />
+              <Input placeholder="+84 912 345 678" {...field} />
             </FormControl>
             <FormMessage />
           </FormItem>
