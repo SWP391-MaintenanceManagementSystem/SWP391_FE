@@ -16,7 +16,7 @@ export default function StaffsManagementPage() {
   const [searchValue, setSearchValue] = useState("");
   const [sorting, setSorting] = useState<SortingState>([]);
   const [filters, setFilters] = useState({ status: "" });
-  const { data, isLoading } = useGetStaffs({
+  const { data, isLoading, isFetching } = useGetStaffs({
     page,
     pageSize,
     email: searchValue || undefined,
@@ -34,7 +34,7 @@ export default function StaffsManagementPage() {
         id: acc.id,
         email: acc.email,
         phone: acc.phone ?? "",
-        status: acc.status,
+        status: acc.status || undefined,
         role: acc.role,
         profile: acc.profile
           ? { firstName: acc.profile.firstName, lastName: acc.profile.lastName }
@@ -76,6 +76,7 @@ export default function StaffsManagementPage() {
             pageSize={data?.pageSize ?? 10}
             totalPage={data?.totalPages ?? 1}
             isLoading={isLoading}
+            isFetching={isFetching}
             onPageChange={(newPage) => setPage(newPage + 1)}
             onPageSizeChange={setPageSize}
             onSearchChange={setSearchValue}

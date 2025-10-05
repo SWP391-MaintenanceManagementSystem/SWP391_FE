@@ -17,13 +17,16 @@ export default function TechniciansManagementPage() {
   const [searchValue, setSearchValue] = useState("");
   const [sorting, setSorting] = useState<SortingState>([]);
   const [filters, setFilters] = useState({ status: "" });
-  const { data, isLoading } = useGetTechnicians({
+  const { data, isLoading, isFetching } = useGetTechnicians({
     page,
     pageSize,
     email: searchValue || undefined,
+    status: filters.status || undefined,
     sortBy: sorting[0]?.id ?? "createdAt",
     orderBy: sorting[0]?.desc ? "desc" : "asc",
   });
+
+  console.log("Fetching:", isFetching);
 
   const technicians = useMemo(() => {
     const accounts = data?.data ?? [];
@@ -34,7 +37,7 @@ export default function TechniciansManagementPage() {
         id: acc.id,
         email: acc.email,
         phone: acc.phone ?? "",
-        status: acc.status,
+        status: acc.status || undefined,
         role: acc.role,
         profile: acc.profile
           ? { firstName: acc.profile.firstName, lastName: acc.profile.lastName }
@@ -81,6 +84,7 @@ export default function TechniciansManagementPage() {
             pageSize={data?.pageSize ?? 10}
             totalPage={data?.totalPages ?? 1}
             isLoading={isLoading}
+            isFetching={isFetching}
             onPageChange={(newPage) => setPage(newPage + 1)}
             onPageSizeChange={setPageSize}
             onSearchChange={setSearchValue}
