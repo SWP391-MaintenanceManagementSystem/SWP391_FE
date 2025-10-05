@@ -42,8 +42,8 @@ export default function EmployeeInfoForm({
       onConfirm={onConfirm}
       form={form}
       title={title}
-      styleFormLayout="grid-rows-6 md:grid-cols-2 md:grid-rows-3 "
-      styleLayoutFooter="md:col-start-2"
+      styleFormLayout="grid-rows-6 md:grid-cols-2 md:grid-rows-4 "
+      styleLayoutFooter="md:col-start-2 md:row-start-4"
     >
       <FormField
         control={form.control}
@@ -81,6 +81,20 @@ export default function EmployeeInfoForm({
             <FormLabel className="text-gray-500">Email</FormLabel>
             <FormControl>
               <Input placeholder="email@example.com" {...field} />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+
+      <FormField
+        control={form.control}
+        name="phone"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>Phone</FormLabel>
+            <FormControl>
+              <Input placeholder="+84 912 345 678" {...field} />
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -127,19 +141,6 @@ export default function EmployeeInfoForm({
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
-      <FormField
-        control={form.control}
-        name="phone"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel>Phone</FormLabel>
-            <FormControl>
-              <Input placeholder="+84 912 345 678" {...field} />
             </FormControl>
             <FormMessage />
           </FormItem>
