@@ -8,6 +8,17 @@ export interface BaseResponse<T> {
   path: string;
 }
 
+export interface StatusStat {
+  status: string;
+  count: number;
+  percentage: number;
+}
+
+export interface StatusStatResponse {
+  data: StatusStat[];
+  total: number;
+}
+
 export interface PaginationResponse<T> {
   data: T[];
   page: number;

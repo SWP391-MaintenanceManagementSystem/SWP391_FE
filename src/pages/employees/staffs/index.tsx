@@ -58,12 +58,12 @@ export default function StaffsManagementPage() {
         hasPage={false}
       />
       <MainContentLayout className="grid grid-cols-1 lg:grid-cols-[auto_1fr] gap-8">
-        <TotalBox
+        {/*<TotalBox
           title="Staffs"
           iconDark={StaffBlackIcon}
           iconLight={StaffWhiteIcon}
-          total={data?.total ?? 0}
-        />
+          role={"STAFF"}
+        />*/}
 
         <div className=" w-full h-full flex flex-col bg-slate-100 rounded-3xl px-6 py-8 shadow-sm min-h-[600px]">
           <h3 className="text-2xl font-semibold mb-4 text-gray-text-header">

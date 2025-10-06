@@ -56,4 +56,7 @@ export const queryKeys = {
 
   // technicians by ID
   techniciansById: (id: string) => ["techniciansById", id] as const,
+
+  // status status
+  statusStat: (type: "STAFF" | "TECHNICIAN") => ["statusStat", type] as const,
 };

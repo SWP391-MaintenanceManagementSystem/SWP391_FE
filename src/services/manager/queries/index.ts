@@ -8,8 +8,15 @@ import {
 import { getVehicleByCustomerId, getVehicleById } from "../apis/vehicle.api";
 import { getVehicleBrands } from "@/services/vehicle/apis/vehicle.api";
 import { getVehicleModelsByBrandId } from "@/services/manager/apis/vehicle.api";
-import { getStaffs } from "@/services/manager/apis/staff.api";
-import { getTechnicians, getTechnicianById } from "../apis/technician.api";
+import {
+  getStaffs,
+  getStatusStatStaff,
+} from "@/services/manager/apis/staff.api";
+import {
+  getTechnicians,
+  getTechnicianById,
+  getStatusStatTechnician,
+} from "../apis/technician.api";
 
 /**
  * Hook lấy danh sách customers (search + sort + filter + pagination)
@@ -222,5 +229,23 @@ export const useGetTechnicianById = (id: string) => {
     enabled: !!id,
     placeholderData: (prev) => prev,
     staleTime: 5 * 60 * 1000,
+  });
+};
+
+export const useGetStatusStat = (type: "STAFF" | "TECHNICIAN") => {
+  return useQuery({
+    queryKey: queryKeys.statusStat(type),
+    queryFn: async () => {
+      try {
+        const api =
+          type === "STAFF" ? getStatusStatStaff : getStatusStatTechnician;
+        const response = await api();
+        // console.log("Response:", response.data);
+        return response.data.data;
+      } catch {
+        toast.error(`Failed to fetch ${type} status stats`);
+        throw new Error("Fetch stats failed");
+      }
+    },
   });
 };

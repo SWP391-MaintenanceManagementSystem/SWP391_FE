@@ -67,7 +67,7 @@ export default function TechniciansManagementPage() {
           title="Technicians"
           iconDark={TechnicianBlack}
           iconLight={TechnicianWhite}
-          total={data?.total ?? 0}
+          role={"TECHNICIAN"}
         />
 
         <div className=" w-full h-full flex flex-col bg-slate-100 rounded-3xl px-6 py-8 shadow-sm min-h-[600px]">
