@@ -39,6 +39,10 @@ export const useUpdateCustomerInfo = () => {
         queryClient.invalidateQueries({
           queryKey: queryKeys.customerById(variables.id),
         }),
+
+        queryClient.invalidateQueries({
+          queryKey: queryKeys.statusStat("CUSTOMER"),
+        }),
       ]);
       toast.success("Profile updated successfully");
     },
@@ -64,13 +68,18 @@ export const useDeleteCustomer = () => {
       const deletedCustomer = await deleteCustomer(id);
       return deletedCustomer.data;
     },
-    onSuccess: (_data, variables) => {
-      queryClient.invalidateQueries({
-        queryKey: queryKeys.accounts({
-          page: variables.currentPage,
-          pageSize: variables.currentPageSize,
+    onSuccess: async (_data, variables) => {
+      await Promise.all([
+        queryClient.invalidateQueries({
+          queryKey: queryKeys.accounts({
+            page: variables.currentPage,
+            pageSize: variables.currentPageSize,
+          }),
         }),
-      });
+        queryClient.invalidateQueries({
+          queryKey: queryKeys.statusStat("CUSTOMER"),
+        }),
+      ]);
       toast.success("Customer deleted successfully");
     },
     onError: () => {
