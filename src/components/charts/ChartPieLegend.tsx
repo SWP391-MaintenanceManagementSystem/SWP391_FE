@@ -1,15 +1,17 @@
-import { Pie, PieChart, LabelList } from "recharts";
+import { Pie, PieChart } from "recharts";
 import {
   type ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
+  ChartLegend,
+  ChartLegendContent,
 } from "@/components/ui/chart";
 import { cn } from "@/lib/utils";
 
-export const description = "A pie chart with a label";
+export const description = "A pie chart with a legend";
 
-type ChartPieLabelProps = {
+type ChartPieLegendProps = {
   chartData: Record<string, string | number>[];
   chartConfig: ChartConfig;
   nameKey?: string;
@@ -17,13 +19,13 @@ type ChartPieLabelProps = {
   maxHeight?: string;
 };
 
-export function ChartPieLabel({
+export function ChartPieLegend({
   chartData,
   chartConfig,
   nameKey = "name",
   dataKey = "value",
   maxHeight,
-}: ChartPieLabelProps) {
+}: ChartPieLegendProps) {
   return (
     <ChartContainer
       config={chartConfig}
@@ -34,19 +36,11 @@ export function ChartPieLabel({
     >
       <PieChart>
         <ChartTooltip content={<ChartTooltipContent hideLabel />} />
-
-        <Pie data={chartData} dataKey={dataKey}>
-          <LabelList
-            dataKey={nameKey}
-            position="inside"
-            className="fill-white  font-semibold"
-            stroke="none"
-            fontSize={12}
-            formatter={(value: keyof typeof chartConfig) =>
-              chartConfig[value]?.label
-            }
-          />
-        </Pie>
+        <Pie data={chartData} dataKey={dataKey} label nameKey={nameKey} />
+        <ChartLegend
+          content={<ChartLegendContent nameKey={nameKey} />}
+          className="-translate-y-1 flex-wrap gap-2 *:h-1/8 *:justify-center"
+        />
       </PieChart>
     </ChartContainer>
   );

@@ -10,7 +10,6 @@ export default function StatCustomerBox() {
   const { data, isLoading } = useGetStatusStat("CUSTOMER");
   const total = data?.total;
   const premium = data?.premium;
-  console.log("Premium", premium);
   const chartStatus = useMemo(() => {
     const stats = data?.data || [];
     const mapStatus: Record<string, string> = {
@@ -88,7 +87,6 @@ export default function StatCustomerBox() {
               nameKey="name"
               dataKey="value"
               maxHeight="max-h-[220px]"
-              isLabelList={true}
             />
             <p className="text-sm text-gray-500 dark:text-gray-300">
               {premium?.percentage}% customers subscribed to Premium

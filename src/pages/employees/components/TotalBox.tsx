@@ -1,5 +1,5 @@
 import { useTheme } from "@/components/theme/ThemeProvider";
-import { ChartPieLabel } from "@/components/charts/ChartPieLabel";
+import { ChartPieLegend } from "@/components/charts/ChartPieLegend";
 import { Button } from "@/components/ui/button";
 import { PlusCircleIcon, Loader } from "lucide-react";
 import { useWindowSize } from "@uidotdev/usehooks";
@@ -82,7 +82,7 @@ export default function TotalBox({ iconDark, iconLight, title, role }: Props) {
       </div>
 
       {!isLoading ? (
-        <ChartPieLabel
+        <ChartPieLegend
           chartData={chartData}
           chartConfig={chartConfig}
           nameKey="status"
