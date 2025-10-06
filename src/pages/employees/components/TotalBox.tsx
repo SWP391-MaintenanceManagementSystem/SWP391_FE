@@ -1,12 +1,12 @@
 import { useTheme } from "@/components/theme/ThemeProvider";
 import { ChartPieLabel } from "@/components/charts/ChartPieLabel";
 import { Button } from "@/components/ui/button";
-import { PlusCircleIcon } from "lucide-react";
+import { PlusCircleIcon, Loader } from "lucide-react";
 import { useWindowSize } from "@uidotdev/usehooks";
 import { useMemo } from "react";
 import { useGetStatusStat } from "@/services/manager/queries";
 import type { ChartConfig } from "@/components/ui/chart";
-
+import "animate.css";
 type Props = {
   iconDark: string;
   iconLight: string;
@@ -18,7 +18,7 @@ export default function TotalBox({ iconDark, iconLight, title, role }: Props) {
   const { resolvedTheme } = useTheme();
   const { width = 0 } = useWindowSize();
   const isMobile = (width ?? 0) < 1024;
-  const { data } = useGetStatusStat(role);
+  const { data, isLoading } = useGetStatusStat(role);
   const total = data?.total;
   const chartData = useMemo(() => {
     const stats = data?.data || [];
@@ -81,12 +81,19 @@ export default function TotalBox({ iconDark, iconLight, title, role }: Props) {
         {isMobile && <AddNewButton />}
       </div>
 
-      <ChartPieLabel
-        chartData={chartData}
-        chartConfig={chartConfig}
-        nameKey="status"
-        dataKey="count"
-      />
+      {!isLoading ? (
+        <ChartPieLabel
+          chartData={chartData}
+          chartConfig={chartConfig}
+          nameKey="status"
+          dataKey="count"
+          maxHeight="max-h-[250px]"
+        />
+      ) : (
+        <div className="animate__animated animate__fadeIn">
+          <Loader className="animate-spin" />
+        </div>
+      )}
 
       {!isMobile && <AddNewButton />}
     </div>

@@ -61,9 +61,9 @@ export default function AdminVehiclesManagement() {
   const columns = getColumns(handleFilterChange, filters);
 
   return (
-    <div className="w-full h-[calc(100vh-32px)]">
+    <div className="w-full h-[calc(100vh-32px)] ">
       <DynamicBreadcrumbs
-        pathTitles={{ vehicles: "Customers & Vehicles Management" }}
+        pathTitles={{ vehicles: "Customers & Vehicle Management" }}
       />
       <MainContentLayout className="grid grid-cols-1 lg:grid-cols-[auto_1fr] gap-8">
         <ChartCustomerStat />

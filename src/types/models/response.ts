@@ -14,9 +14,15 @@ export interface StatusStat {
   percentage: number;
 }
 
+export interface PremiumStat {
+  count: number;
+  percentage: number;
+}
+
 export interface StatusStatResponse {
   data: StatusStat[];
   total: number;
+  premium?: PremiumStat;
 }
 
 export interface PaginationResponse<T> {

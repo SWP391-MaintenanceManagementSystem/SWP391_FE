@@ -1,5 +1,9 @@
 import { httpPrivate } from "@/lib/http";
-import type { PaginationResponse, BaseResponse } from "@/types/models/response";
+import type {
+  PaginationResponse,
+  BaseResponse,
+  StatusStatResponse,
+} from "@/types/models/response";
 import type { AccountWithProfile } from "@/types/models/account";
 import type { ChangeProfileFormData } from "@/pages/profile/components/profile/libs/schema";
 
@@ -39,5 +43,11 @@ export const deleteCustomer = (id: string) => {
 export const getCustomerById = (customerId: string) => {
   return httpPrivate.get<BaseResponse<{ account: AccountWithProfile }>>(
     `/customers/{id}?id=${customerId}`,
+  );
+};
+
+export const getCustomerStatusStat = () => {
+  return httpPrivate.get<BaseResponse<StatusStatResponse>>(
+    `/customers/statistics`,
   );
 };
