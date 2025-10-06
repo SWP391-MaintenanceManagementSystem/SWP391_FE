@@ -3,13 +3,13 @@ import MainContentLayout from "@/components/MainContentLayout";
 import type { EmployeeTable } from "../libs/table-types";
 import { DataTable } from "@/components/table/DataTable";
 import TotalBox from "../components/TotalBox";
-import { useGetTechnicians } from "@/services/manager/queries";
 import { useState } from "react";
 import type { SortingState, ColumnDef } from "@tanstack/react-table";
 import { getColumns } from "./table/comlums";
 import TechnicianBlack from "@/assets/technician-black.png";
 import TechnicianWhite from "@/assets/technician-white.png";
 import { useMemo } from "react";
+import { useGetAccountList } from "@/services/manager/queries";
 
 export default function TechniciansManagementPage() {
   const [page, setPage] = useState(1);
@@ -17,13 +17,14 @@ export default function TechniciansManagementPage() {
   const [searchValue, setSearchValue] = useState("");
   const [sorting, setSorting] = useState<SortingState>([]);
   const [filters, setFilters] = useState({ status: "" });
-  const { data, isLoading, isFetching } = useGetTechnicians({
+  const { data, isLoading, isFetching } = useGetAccountList({
     page,
     pageSize,
     email: searchValue || undefined,
     status: filters.status || undefined,
     sortBy: sorting[0]?.id ?? "createdAt",
     orderBy: sorting[0]?.desc ? "desc" : "asc",
+    type: "TECHNICIAN",
   });
 
   const technicians = useMemo(() => {

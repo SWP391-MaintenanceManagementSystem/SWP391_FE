@@ -70,7 +70,7 @@ export default function TotalBox({ iconDark, iconLight, title, role }: Props) {
   );
 
   return (
-    <div className="flex flex-col sm:flex-row lg:flex-col items-center gap-12 md:min-w-[298px] font-inter bg-slate-100 dark:bg-slate-800 p-8 rounded-2xl shadow-md">
+    <div className="flex flex-col sm:flex-row lg:flex-col items-center gap-12 md:min-w-[298px] font-inter bg-slate-100  p-8 rounded-2xl shadow-md">
       <div className="flex flex-col gap-3 w-full items-center">
         <div className="flex relative items-center justify-center w-26 h-26 p-4 rounded-full bg-purple-primary dark:bg-purple-light">
           <img src={iconSrc} alt={`${title} Icon`} className="w-16 h-16" />

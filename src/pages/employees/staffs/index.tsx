@@ -2,7 +2,7 @@ import DynamicBreadcrumbs from "@/components/DynamicBreadcrumb";
 import MainContentLayout from "@/components/MainContentLayout";
 import { useMemo, useState } from "react";
 import type { SortingState, ColumnDef } from "@tanstack/react-table";
-import { useGetStaffs } from "@/services/manager/queries";
+import { useGetAccountList } from "@/services/manager/queries";
 import { DataTable } from "@/components/table/DataTable";
 import { getColumns } from "./table/columns";
 import type { EmployeeTable } from "@/pages/employees/libs/table-types";
@@ -16,13 +16,14 @@ export default function StaffsManagementPage() {
   const [searchValue, setSearchValue] = useState("");
   const [sorting, setSorting] = useState<SortingState>([]);
   const [filters, setFilters] = useState({ status: "" });
-  const { data, isLoading, isFetching } = useGetStaffs({
+  const { data, isLoading, isFetching } = useGetAccountList({
     page,
     pageSize,
     email: searchValue || undefined,
     status: filters.status || undefined,
     sortBy: sorting[0]?.id ?? "createdAt",
     orderBy: sorting[0]?.desc ? "desc" : "asc",
+    type: "STAFF",
   });
 
   const staffs = useMemo(() => {
@@ -58,12 +59,12 @@ export default function StaffsManagementPage() {
         hasPage={false}
       />
       <MainContentLayout className="grid grid-cols-1 lg:grid-cols-[auto_1fr] gap-8">
-        {/*<TotalBox
+        <TotalBox
           title="Staffs"
           iconDark={StaffBlackIcon}
           iconLight={StaffWhiteIcon}
           role={"STAFF"}
-        />*/}
+        />
 
         <div className=" w-full h-full flex flex-col bg-slate-100 rounded-3xl px-6 py-8 shadow-sm min-h-[600px]">
           <h3 className="text-2xl font-semibold mb-4 text-gray-text-header">

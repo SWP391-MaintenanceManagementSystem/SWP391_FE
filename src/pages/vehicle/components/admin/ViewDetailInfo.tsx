@@ -21,6 +21,7 @@ export default function ViewDetailInfo() {
   const { id } = useParams<{ id: string }>();
   const userId = id ? b64DecodeUnicode(id) : null;
   const { data: user } = useGetCustomerById(userId ?? "");
+
   const [sorting, setSorting] = useState<SortingState>([]);
   // const [filters, setFilters] = useState({
   //   status: "ACTIVE" | "INACTIVE",

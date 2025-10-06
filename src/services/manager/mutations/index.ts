@@ -27,17 +27,19 @@ export const useUpdateCustomerInfo = () => {
       const updatedCustomerInfo = await updateCustomerInfo(id, rest);
       return updatedCustomerInfo.data;
     },
-    onSuccess: (_data, variables) => {
-      queryClient.invalidateQueries({
-        queryKey: queryKeys.customers({
-          page: variables.currentPage,
-          pageSize: variables.currentPageSize,
+    onSuccess: async (_data, variables) => {
+      await Promise.all([
+        queryClient.invalidateQueries({
+          queryKey: queryKeys.accounts({
+            page: variables.currentPage,
+            pageSize: variables.currentPageSize,
+          }),
         }),
-      });
 
-      queryClient.invalidateQueries({
-        queryKey: queryKeys.customerById(variables.id),
-      });
+        queryClient.invalidateQueries({
+          queryKey: queryKeys.customerById(variables.id),
+        }),
+      ]);
       toast.success("Profile updated successfully");
     },
     onError: () => {
@@ -64,7 +66,7 @@ export const useDeleteCustomer = () => {
     },
     onSuccess: (_data, variables) => {
       queryClient.invalidateQueries({
-        queryKey: queryKeys.customers({
+        queryKey: queryKeys.accounts({
           page: variables.currentPage,
           pageSize: variables.currentPageSize,
         }),
@@ -120,13 +122,15 @@ export const useEditVehicle = () => {
       const updatedVehicle = await editVehicle(vehicleId, data);
       return updatedVehicle.data;
     },
-    onSuccess: (_data, variables) => {
-      queryClient.invalidateQueries({
-        queryKey: queryKeys.vehiclesList(variables.customerId),
-      });
-      queryClient.invalidateQueries({
-        queryKey: queryKeys.vehicleById(variables.vehicleId),
-      });
+    onSuccess: async (_data, variables) => {
+      await Promise.all([
+        queryClient.invalidateQueries({
+          queryKey: queryKeys.vehiclesList(variables.customerId),
+        }),
+        queryClient.invalidateQueries({
+          queryKey: queryKeys.vehicleById(variables.vehicleId),
+        }),
+      ]);
       toast.success("Vehicle information updated successfully");
     },
     onError: (error) => {
@@ -163,24 +167,23 @@ export const useDeleteEmployee = () => {
         throw new Error("Invalid role. Only STAFF or TECHNICIAN allowed.");
       }
     },
-    onSuccess: (_data, variables) => {
+    onSuccess: async (_data, variables) => {
       if (variables.role === "STAFF") {
-        queryClient.invalidateQueries({
-          queryKey: queryKeys.staffs({
-            page: variables.currentPage,
-            pageSize: variables.currentPageSize,
-          }),
-        });
         toast.success("Staff deleted successfully");
       } else if (variables.role === "TECHNICIAN") {
+        toast.success("Technician deleted successfully");
+      }
+      await Promise.all([
         queryClient.invalidateQueries({
-          queryKey: queryKeys.technicians({
+          queryKey: queryKeys.accounts({
             page: variables.currentPage,
             pageSize: variables.currentPageSize,
           }),
-        });
-        toast.success("Technician deleted successfully");
-      }
+        }),
+        queryClient.invalidateQueries({
+          queryKey: queryKeys.statusStat(variables.role),
+        }),
+      ]);
     },
     onError: () => {
       toast.error("Failed to delete employee");
@@ -217,24 +220,24 @@ export const useUpdateEmployeeInfo = () => {
       }
     },
 
-    onSuccess: (_data, variables) => {
+    onSuccess: async (_data, variables) => {
       if (variables.role === "STAFF") {
-        queryClient.invalidateQueries({
-          queryKey: queryKeys.staffs({
-            page: variables.currentPage,
-            pageSize: variables.currentPageSize,
-          }),
-        });
         toast.success("Staff updated successfully");
       } else if (variables.role === "TECHNICIAN") {
+        toast.success(`Technician updated successfully`);
+      }
+      await Promise.all([
         queryClient.invalidateQueries({
-          queryKey: queryKeys.technicians({
+          queryKey: queryKeys.accounts({
             page: variables.currentPage,
             pageSize: variables.currentPageSize,
           }),
-        });
-        toast.success(`Technician updated successfully`);
-      }
+        }),
+
+        queryClient.invalidateQueries({
+          queryKey: queryKeys.statusStat(variables.role),
+        }),
+      ]);
     },
 
     onError: () => {

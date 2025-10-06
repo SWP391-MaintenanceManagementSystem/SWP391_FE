@@ -2,11 +2,10 @@ import { useState } from "react";
 import DynamicBreadcrumbs from "@/components/DynamicBreadcrumb";
 import MainContentLayout from "@/components/MainContentLayout";
 import { getColumns } from "./customerManagement/table/columns";
-
 import { DataTable } from "@/components/table/DataTable";
-import { useGetCustomers } from "@/services/manager/queries";
 import type { SortingState, ColumnDef } from "@tanstack/react-table";
 import type { CustomerTable } from "../libs/table-types";
+import { useGetAccountList } from "@/services/manager/queries";
 
 export default function AdminVehiclesManagement() {
   // pagination + search + sort
@@ -20,13 +19,14 @@ export default function AdminVehiclesManagement() {
   });
 
   // gọi 1 hook duy nhất
-  const { data, isLoading } = useGetCustomers({
+  const { data, isLoading } = useGetAccountList({
     page,
     pageSize,
     email: searchValue || undefined,
     status: filters.status || undefined,
     sortBy: sorting[0]?.id ?? "createdAt",
     orderBy: sorting[0]?.desc ? "desc" : "asc",
+    type: "CUSTOMER",
   });
 
   const accounts = data?.data ?? [];

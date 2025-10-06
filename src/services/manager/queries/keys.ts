@@ -1,17 +1,4 @@
 export const queryKeys = {
-  // customers (list, search, sort, filter)
-  customers: (params: {
-    page: number;
-    pageSize: number;
-    firstName?: string;
-    lastName?: string;
-    status?: string;
-    email?: string;
-    phone?: string;
-    sortBy?: string;
-    orderBy?: "asc" | "desc";
-  }) => ["customers", params] as const,
-
   // Customer theo ID
   customerById: (customerId: string) => ["customerById", customerId] as const,
 
@@ -28,35 +15,26 @@ export const queryKeys = {
   vehicleModel: (brandId: number | string) =>
     ["vehicleModel", brandId] as const,
 
-  // staffs (list, search, sort, filter)
-  staffs: (params: {
-    page: number;
-    pageSize: number;
-    firstName?: string;
-    lastName?: string;
-    status?: string;
-    email?: string;
-    phone?: string;
-    sortBy?: string;
-    orderBy?: "asc" | "desc";
-  }) => ["staffs", params] as const,
+  // Employees by ID
+  employeeById: (params: {
+    id: string;
+    type: "CUSTOMER" | "STAFF" | "TECHNICIAN";
+  }) => ["accountById", params] as const,
 
-  // technicians (list, search, sort, filter)
-  technicians: (params: {
-    page: number;
-    pageSize: number;
-    firstName?: string;
-    lastName?: string;
-    status?: string;
-    email?: string;
-    phone?: string;
-    sortBy?: string;
-    orderBy?: "asc" | "desc";
-  }) => ["technicians", params] as const,
-
-  // technicians by ID
-  techniciansById: (id: string) => ["techniciansById", id] as const,
-
-  // status status
+  // Status status
   statusStat: (type: "STAFF" | "TECHNICIAN") => ["statusStat", type] as const,
+
+  // Sccounts (list, search, sort, filter)
+  accounts: (params: {
+    page: number;
+    pageSize: number;
+    firstName?: string;
+    lastName?: string;
+    status?: string;
+    email?: string;
+    phone?: string;
+    sortBy?: string;
+    orderBy?: "asc" | "desc";
+    type?: "CUSTOMER" | "STAFF" | "TECHNICIAN";
+  }) => ["accountss", params] as const,
 };
