@@ -2,14 +2,19 @@ import { useState } from "react";
 import MainContentLayout from "@/components/MainContentLayout";
 import DynamicBreadcrumbs from "@/components/DynamicBreadcrumb";
 import MembershipOptions from "./MembershipOptions";
+import MyMembership from "./MyMembership";
+import clsx from "clsx";
 
 export default function Membership() {
   const [activeTab, setActiveTab] = useState<"options" | "my">("options");
 
   return (
-    <div>
+    <div className="w-full h-[calc(100vh-32px)]">
       <DynamicBreadcrumbs pathTitles={{ membership: "Membership" }} />
-      <MainContentLayout className="flex flex-col">
+      <MainContentLayout className={clsx(
+        "flex flex-col ",
+        activeTab === "my" && "items-start "
+      )}>
         <div className="flex border-b border-gray-200 dark:border-gray-700 mb-6">
           <button
             onClick={() => setActiveTab("options")}
@@ -34,6 +39,15 @@ export default function Membership() {
         </div>
 
         {activeTab === "options" && <MembershipOptions />}
+
+        {activeTab === "my" && (
+          <MyMembership 
+            planName="Basic Plan"
+            startDate="2025-01-01"
+            endDate="2025-12-31"
+            status="active"
+          />
+        )}
       </MainContentLayout>
     </div>
   );

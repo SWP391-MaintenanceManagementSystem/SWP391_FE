@@ -1,3 +1,4 @@
 export const queryKeys = { 
-    memberships: ["memberships"]
+    memberships: ["memberships"],
+    subscription: ["subscription"],
 };
