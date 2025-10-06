@@ -22,7 +22,8 @@ export const queryKeys = {
   }) => ["accountById", params] as const,
 
   // Status status
-  statusStat: (type: "STAFF" | "TECHNICIAN") => ["statusStat", type] as const,
+  statusStat: (type: "STAFF" | "TECHNICIAN" | "CUSTOMER") =>
+    ["statusStat", type] as const,
 
   // Sccounts (list, search, sort, filter)
   accounts: (params: {

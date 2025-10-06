@@ -40,7 +40,7 @@ export const updateTechnician = (id: string, data: ChangeProfileFormData) => {
 };
 
 export const getStatusStatTechnician = () => {
-  return httpPrivate.get<BaseResponse<{ data: StatusStatResponse }>>(
+  return httpPrivate.get<BaseResponse<StatusStatResponse>>(
     `/technician/statistics`,
   );
 };

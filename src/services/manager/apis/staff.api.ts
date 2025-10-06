@@ -40,7 +40,5 @@ export const updateStaff = (id: string, data: ChangeProfileFormData) => {
 };
 
 export const getStatusStatStaff = () => {
-  return httpPrivate.get<BaseResponse<{ data: StatusStatResponse }>>(
-    `/staff/status-stats`,
-  );
+  return httpPrivate.get<BaseResponse<StatusStatResponse>>(`/staff/statistics`);
 };

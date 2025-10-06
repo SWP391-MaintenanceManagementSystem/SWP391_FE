@@ -1,5 +1,5 @@
 import { useTheme } from "@/components/theme/ThemeProvider";
-import { ChartPieLabel } from "@/components/charts/PieChart";
+import { ChartPieLabel } from "@/components/charts/ChartPieLabel";
 import { Button } from "@/components/ui/button";
 import { PlusCircleIcon } from "lucide-react";
 import { useWindowSize } from "@uidotdev/usehooks";

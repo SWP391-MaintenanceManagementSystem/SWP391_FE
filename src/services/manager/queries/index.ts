@@ -4,6 +4,7 @@ import { queryKeys } from "./keys";
 import {
   getCustomers,
   getCustomerById,
+  getCustomerStatusStat,
 } from "@/services/manager/apis/customer.api";
 import { getVehicleByCustomerId, getVehicleById } from "../apis/vehicle.api";
 import { getVehicleBrands } from "@/services/vehicle/apis/vehicle.api";
@@ -189,16 +190,19 @@ export const useGetVehicleModel = (brandId: number | string) => {
   });
 };
 
-export const useGetStatusStat = (type: "STAFF" | "TECHNICIAN") => {
+export const useGetStatusStat = (type: "STAFF" | "TECHNICIAN" | "CUSTOMER") => {
   return useQuery({
     queryKey: queryKeys.statusStat(type),
     queryFn: async () => {
       try {
         const api =
-          type === "STAFF" ? getStatusStatStaff : getStatusStatTechnician;
+          type === "STAFF"
+            ? getStatusStatStaff
+            : type === "TECHNICIAN"
+              ? getStatusStatTechnician
+              : getCustomerStatusStat;
         const response = await api();
-        // console.log("Response:", response.data);
-        return response.data.data;
+        return response.data;
       } catch {
         toast.error(`Failed to fetch ${type} status stats`);
         throw new Error("Fetch stats failed");
