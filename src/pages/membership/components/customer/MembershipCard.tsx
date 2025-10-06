@@ -4,6 +4,7 @@ type MembershipCardProps = {
   title: string;
   description: string;
   price: number;
+  onClick: () => void;
 };
 const features = ["1 Vehicle", "Basic Support", "Maintenance Reminders"]
 
@@ -11,6 +12,7 @@ export default function MembershipCard({
   title,
   price,
   description,
+  onClick
 }: MembershipCardProps) {
   return (
     <div
@@ -46,7 +48,8 @@ export default function MembershipCard({
         bg-gradient-to-r from-purple-300 to-pink-400
         hover:from-pink-500 hover:to-purple-600
         transition-colors duration-300 shadow-md  dark:from-purple-700 dark:to-pink-700
-  dark:hover:from-pink-600 dark:hover:to-purple-800"
+  dark:hover:from-pink-600 dark:hover:to-purple-800 " 
+  onClick={onClick}
       >
         Get Started
       </button>
