@@ -64,7 +64,7 @@ export const useEmployee = (
     } catch (err: unknown) {
       const error = err as AxiosError<{ message?: string }>;
       console.log(error.response?.data?.message);
-      if (error.response?.data?.message?.includes("Email")) {
+      if (error.response?.data?.message?.toLowerCase().includes("email")) {
         form.setError("email", {
           type: "server",
           message: error.response.data.message,

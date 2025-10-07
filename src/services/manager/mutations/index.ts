@@ -303,7 +303,7 @@ export const useAddEmployee = () => {
     },
 
     onError: () => {
-      toast.error("Failed to create employee information");
+      toast.error("Failed to create new employee");
     },
   });
 };
