@@ -44,3 +44,10 @@ export const getStatusStatTechnician = () => {
     `/technician/statistics`,
   );
 };
+
+export const addTechnicican = async (formData: ChangeProfileFormData) => {
+  return httpPrivate.post<BaseResponse<AccountWithProfile>>(
+    `/technician`,
+    formData,
+  );
+};

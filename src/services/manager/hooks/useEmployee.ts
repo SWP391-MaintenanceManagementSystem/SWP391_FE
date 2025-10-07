@@ -1,4 +1,8 @@
-import { useDeleteEmployee, useUpdateEmployeeInfo } from "../mutations";
+import {
+  useDeleteEmployee,
+  useUpdateEmployeeInfo,
+  useAddEmployee,
+} from "../mutations";
 import type { EmployeeTable } from "@/pages/employees/libs/table-types";
 import {
   ChangeProfileSchema,
@@ -6,6 +10,7 @@ import {
 } from "@/pages/profile/components/profile/libs/schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import type { AxiosError } from "axios";
 
 export const useEmployee = (
   employee: EmployeeTable,
@@ -15,6 +20,7 @@ export const useEmployee = (
 ) => {
   const deleteEmployeeMutation = useDeleteEmployee();
   const updateEmployeeInfoMutation = useUpdateEmployeeInfo();
+  const addEmployeeMutation = useAddEmployee();
 
   const form = useForm<ChangeProfileFormData>({
     resolver: zodResolver(ChangeProfileSchema),
@@ -46,9 +52,27 @@ export const useEmployee = (
     });
   };
 
+  const handleAddEmployee = async () => {
+    try {
+      await addEmployeeMutation.mutateAsync({
+        role,
+        data: form.getValues(),
+        currentPage,
+        currentPageSize,
+      });
+      return true;
+    } catch (err: unknown) {
+      const error = err as AxiosError<{ message?: string }>;
+      if (error.message.includes("email")) {
+        form.setError("email", { type: "server", message: error.message });
+      }
+      return false;
+    }
+  };
   return {
     form,
     handleDeleteEmployee,
     handleUpdateEmployeeInfo,
+    handleAddEmployee,
   };
 };

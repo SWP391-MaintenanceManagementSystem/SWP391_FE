@@ -6,7 +6,11 @@ import { queryKeys } from "../queries/keys";
 import { deleteVehicle, editVehicle } from "../apis/vehicle.api";
 import type { AddVehicleFormData } from "@/pages/vehicle/components/libs/schema";
 import { deleteStaff, updateStaff } from "../apis/staff.api";
-import { deleteTechnician, updateTechnician } from "../apis/technician.api";
+import {
+  deleteTechnician,
+  updateTechnician,
+  addTechnicican,
+} from "../apis/technician.api";
 
 export const useUpdateCustomerInfo = () => {
   const queryClient = useQueryClient();
@@ -251,6 +255,54 @@ export const useUpdateEmployeeInfo = () => {
 
     onError: () => {
       toast.error("Failed to update employee information");
+    },
+  });
+};
+
+export const useAddEmployee = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async ({
+      role,
+      data,
+      currentPage,
+      currentPageSize,
+    }: {
+      role: "STAFF" | "TECHNICIAN";
+      data: ChangeProfileFormData;
+      currentPage: number;
+      currentPageSize: number;
+    }) => {
+      if (role === "TECHNICIAN") {
+        return (await addTechnicican(data)).data;
+      }
+      throw new Error("Invalid role. Only STAFF or TECHNICIAN allowed.");
+    },
+
+    onSuccess: async (res, variables) => {
+      if ("error" in res) return;
+
+      if (variables.role === "STAFF") {
+        toast.success("Staff created successfully");
+      } else {
+        toast.success("Technician created successfully");
+      }
+
+      await Promise.all([
+        queryClient.invalidateQueries({
+          queryKey: queryKeys.accounts({
+            page: variables.currentPage,
+            pageSize: variables.currentPageSize,
+          }),
+        }),
+        queryClient.invalidateQueries({
+          queryKey: queryKeys.statusStat(variables.role),
+        }),
+      ]);
+    },
+
+    onError: () => {
+      toast.error("Failed to create employee information");
     },
   });
 };

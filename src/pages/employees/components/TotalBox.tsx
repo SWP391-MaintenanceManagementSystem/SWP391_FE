@@ -3,23 +3,43 @@ import { ChartPieLegend } from "@/components/charts/ChartPieLegend";
 import { Button } from "@/components/ui/button";
 import { PlusCircleIcon, Loader } from "lucide-react";
 import { useWindowSize } from "@uidotdev/usehooks";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useGetStatusStat } from "@/services/manager/queries";
 import type { ChartConfig } from "@/components/ui/chart";
 import "animate.css";
+import AddEmployeeForm from "./AddEmployeeForm";
+import { useEmployee } from "@/services/manager/hooks/useEmployee";
+import type { EmployeeTable } from "../libs/table-types";
+
 type Props = {
   iconDark: string;
   iconLight: string;
   title: string;
   role: "STAFF" | "TECHNICIAN";
+  page: number;
+  pageSize: number;
 };
 
-export default function TotalBox({ iconDark, iconLight, title, role }: Props) {
+export default function TotalBox({
+  iconDark,
+  iconLight,
+  title,
+  role,
+  page,
+  pageSize,
+}: Props) {
   const { resolvedTheme } = useTheme();
   const { width = 0 } = useWindowSize();
   const isMobile = (width ?? 0) < 1024;
   const { data, isLoading } = useGetStatusStat(role);
   const total = data?.total;
+  const [openAddForm, setOpenAddForm] = useState(false);
+  const { form, handleAddEmployee } = useEmployee(
+    {} as EmployeeTable,
+    role,
+    page,
+    pageSize,
+  );
   const chartData = useMemo(() => {
     const stats = data?.data || [];
     const mapStatus: Record<string, string> = {
@@ -64,7 +84,18 @@ export default function TotalBox({ iconDark, iconLight, title, role }: Props) {
   );
 
   const AddNewButton = () => (
-    <Button className="bg-purple-primary text-accent dark:bg-purple-primary-dark dark:text-amber-primary hover:scale-110 transition-transform duration-300">
+    <Button
+      onClick={() => {
+        form.reset({
+          firstName: "",
+          lastName: "",
+          email: "",
+          phone: "",
+        });
+        setOpenAddForm(true);
+      }}
+      className="bg-purple-primary text-accent dark:bg-purple-primary-dark dark:text-amber-primary hover:scale-110 transition-transform duration-300"
+    >
       Add new <PlusCircleIcon />
     </Button>
   );
@@ -96,6 +127,18 @@ export default function TotalBox({ iconDark, iconLight, title, role }: Props) {
       )}
 
       {!isMobile && <AddNewButton />}
+      <AddEmployeeForm
+        open={openAddForm}
+        onOpenChange={(open) => setOpenAddForm(open)}
+        form={form}
+        onConfirm={async () => {
+          const success = await handleAddEmployee();
+          if (success) {
+            setOpenAddForm(false);
+          }
+        }}
+        title="Employee"
+      />
     </div>
   );
 }

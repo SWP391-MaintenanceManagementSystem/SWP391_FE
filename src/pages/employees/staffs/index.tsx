@@ -64,6 +64,8 @@ export default function StaffsManagementPage() {
           iconDark={StaffBlackIcon}
           iconLight={StaffWhiteIcon}
           role={"STAFF"}
+          page={page}
+          pageSize={pageSize}
         />
 
         <div className=" w-full h-full flex flex-col bg-slate-100 rounded-3xl px-6 py-8 shadow-sm min-h-[600px]">
