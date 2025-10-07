@@ -17,6 +17,9 @@ import ProfilePage from "@/pages/profile";
 import Unauthorized from "@/pages/unauthorized";
 import ViewDetailInfo from "@/pages/vehicle/components/admin/ViewDetailInfo";
 import MembershipPage from "@/pages/membership";
+import StaffsManagementPage from "@/pages/employees/staffs";
+import TechniciansManagementPage from "@/pages/employees/technicians";
+import WorkShiftsManagementPage from "@/pages/employees/shifts";
 import Booking from "@/pages/booking/customer/Booking";
 import AuthFailed from "@/pages/auth/components/AuthFailed";
 
@@ -78,15 +81,40 @@ const RouterComponent = () => {
                   element: <ViewDetailInfo />,
                   hydrateFallbackElement: <CircularIndeterminate />,
                 },
-                 {
-                  element: <RequireAuth  allowedRoles={[AccountRole.ADMIN, AccountRole.CUSTOMER]}/>,
+                {
+                  element: (
+                    <RequireAuth
+                      allowedRoles={[AccountRole.ADMIN, AccountRole.CUSTOMER]}
+                    />
+                  ),
                   children: [
                     {
                       path: "/membership",
-                      element: <MembershipPage/>
-                    }
-                  ]
-                 },
+                      element: <MembershipPage />,
+                    },
+                  ],
+                },
+                {
+                  element: <RequireAuth allowedRoles={[AccountRole.ADMIN]} />,
+                  children: [
+                    {
+                      path: "/employees/technicians",
+                      element: <TechniciansManagementPage />,
+                      hydrateFallbackElement: <CircularIndeterminate />,
+                    },
+                    {
+                      path: "/employees/staffs",
+                      element: <StaffsManagementPage />,
+                      hydrateFallbackElement: <CircularIndeterminate />,
+                    },
+                    {
+                      path: "/employees/shifts",
+                      element: <WorkShiftsManagementPage />,
+                      hydrateFallbackElement: <CircularIndeterminate />,
+                    },
+                  ],
+                },
+
                  {
                   element: <RequireAuth  allowedRoles={[AccountRole.ADMIN, AccountRole.CUSTOMER]}/>,
                   children: [

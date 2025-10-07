@@ -4,7 +4,7 @@ import MainContentLayout from "@/components/MainContentLayout";
 import { getColumns } from "./customerManagement/table/columns";
 
 import { DataTable } from "@/components/table/DataTable";
-import { useGetCustomers } from "@/services/manager/queries"; // dùng hook gộp
+import { useGetCustomers } from "@/services/manager/queries";
 import type { SortingState, ColumnDef } from "@tanstack/react-table";
 import type { CustomerTable } from "../libs/table-types";
 

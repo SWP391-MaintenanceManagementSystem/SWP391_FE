@@ -46,6 +46,7 @@ interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   isLoading?: boolean;
+  isFetching?: boolean;
   // PAGINATION
   pageIndex?: number;
   pageSize?: number;
@@ -69,6 +70,7 @@ export function DataTable<TData, TValue>({
   columns,
   data,
   isLoading,
+  isFetching,
   //PAGINATION
   pageIndex,
   pageSize,
@@ -321,7 +323,7 @@ export function DataTable<TData, TValue>({
                   ))}
                 </TableRow>
               ))
-            ) : isLoading ? (
+            ) : isLoading || isFetching ? (
               <TableRow>
                 <TableCell colSpan={columns.length} className="h-24">
                   <Loader className="animate-spin text-gray-500 mx-auto" />
