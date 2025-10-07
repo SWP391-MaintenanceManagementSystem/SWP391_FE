@@ -1,25 +1,73 @@
+import { PeriodType } from "@/types/enums/periodType";
 import { Goal, CircleCheck } from "lucide-react";
 
 type MembershipCardProps = {
   title: string;
   description: string;
   price: number;
+  duration: number;
+  periodType: PeriodType;
   onClick: () => void;
 };
-const features = ["1 Vehicle", "Basic Support", "Maintenance Reminders"]
 
 export default function MembershipCard({
   title,
   price,
   description,
-  onClick
+  duration,
+  periodType,
+  onClick,
 }: MembershipCardProps) {
+  let periodLabel = "";
+  let monthlyEquivalent = 0;
+
+  switch (periodType) {
+    case PeriodType.DAY:
+      periodLabel = `${duration} day${duration > 1 ? "s" : ""}`;
+      monthlyEquivalent = (price / duration) * 30;
+      break;
+
+    case PeriodType.MONTH:
+      periodLabel = `${duration} month${duration > 1 ? "s" : ""}`;
+      monthlyEquivalent = price / duration;
+      break;
+
+    case PeriodType.YEAR:
+      periodLabel = `${duration} year${duration > 1 ? "s" : ""}`;
+      monthlyEquivalent = price / (duration * 12);
+      break;
+
+    default:
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      periodLabel = "Unknown period";
+      monthlyEquivalent = price;
+  }
+
+  const durationText = (() => {
+    switch (periodType) {
+      case PeriodType.DAY:
+        return `Valid for ${duration} days`;
+      case PeriodType.MONTH:
+        return `Valid for ${duration} month${duration > 1 ? "s" : ""}`;
+      case PeriodType.YEAR:
+        return `Valid for ${duration} year${duration > 1 ? "s" : ""}`;
+      default:
+        return "";
+    }
+  })();
+
+  const features = [
+    durationText,
+    "Electric Vehicle Insurance",
+    "Accident and Repair Coverage",
+  ];
+
   return (
     <div
       className="rounded-2xl p-6 overflow-x-auto
       bg-gradient-to-br from-purple-500 via-purple-400 to-pink-500
       dark:from-purple-800 dark:to-pink-600
-      text-white flex flex-col w-72 h-[450px] font-inter 
+      text-white flex flex-col w-80 h-[450px] font-inter 
       transition-transform duration-300 hover:scale-105 hover:shadow-md dark:from-purple-200 dark:via-purple-300 dark:to-pink-200  "
     >
       <div
@@ -32,7 +80,9 @@ export default function MembershipCard({
       <p className="text-white/80 text-sm mt-1">{description}</p>
 
       <div className="mt-4">
-        <span className="text-3xl font-bold text-white">{price}$</span>
+        <span className="text-3xl font-bold text-white">
+          {monthlyEquivalent.toFixed(2)}$
+        </span>
         <span className="text-gray-50 text-sm ml-1">/month</span>
       </div>
       <ul className="mt-5 space-y-3 flex-1">
@@ -48,10 +98,10 @@ export default function MembershipCard({
         bg-gradient-to-r from-purple-300 to-pink-400
         hover:from-pink-500 hover:to-purple-600
         transition-colors duration-300 shadow-md  dark:from-purple-700 dark:to-pink-700
-  dark:hover:from-pink-600 dark:hover:to-purple-800 " 
-  onClick={onClick}
+  dark:hover:from-pink-600 dark:hover:to-purple-800 "
+        onClick={onClick}
       >
-        Get Started
+        Buy Now
       </button>
     </div>
   );
