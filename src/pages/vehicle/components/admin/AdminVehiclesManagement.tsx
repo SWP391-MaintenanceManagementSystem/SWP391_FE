@@ -2,11 +2,11 @@ import { useState } from "react";
 import DynamicBreadcrumbs from "@/components/DynamicBreadcrumb";
 import MainContentLayout from "@/components/MainContentLayout";
 import { getColumns } from "./customerManagement/table/columns";
-
 import { DataTable } from "@/components/table/DataTable";
-import { useGetCustomers } from "@/services/manager/queries";
 import type { SortingState, ColumnDef } from "@tanstack/react-table";
 import type { CustomerTable } from "../libs/table-types";
+import { useGetAccountList } from "@/services/manager/queries";
+import ChartCustomerStat from ".././admin/customerManagement/ChartCustomerStat";
 
 export default function AdminVehiclesManagement() {
   // pagination + search + sort
@@ -16,17 +16,19 @@ export default function AdminVehiclesManagement() {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [filters, setFilters] = useState({
     status: "",
-    isPremium: "",
+    isPremium: undefined as boolean | undefined,
   });
 
   // gọi 1 hook duy nhất
-  const { data, isLoading } = useGetCustomers({
+  const { data, isLoading, isFetching } = useGetAccountList({
     page,
     pageSize,
     email: searchValue || undefined,
     status: filters.status || undefined,
+    isPremium: filters.isPremium,
     sortBy: sorting[0]?.id ?? "createdAt",
     orderBy: sorting[0]?.desc ? "desc" : "asc",
+    type: "CUSTOMER",
   });
 
   const accounts = data?.data ?? [];
@@ -50,39 +52,48 @@ export default function AdminVehiclesManagement() {
     };
   });
 
-  const handleFilterChange = (field: string, value: string | undefined) => {
+  const handleFilterChange = (
+    field: string,
+    value: string | boolean | undefined,
+  ) => {
     setFilters((prevFilters) => ({
       ...prevFilters,
       [field]: value,
     }));
   };
-
   const columns = getColumns(handleFilterChange, filters);
 
   return (
-    <div className="w-full h-[calc(100vh-32px)]">
+    <div className="w-full h-[calc(100vh-32px)] ">
       <DynamicBreadcrumbs
-        pathTitles={{ vehicles: "Customers & Vehicles Management" }}
+        pathTitles={{ vehicles: "Customers & Vehicle Management" }}
       />
-      <MainContentLayout className="grid w-full">
-        <DataTable<CustomerTable, unknown>
-          columns={columns as ColumnDef<CustomerTable, unknown>[]}
-          data={customers}
-          pageIndex={(data?.page ?? 1) - 1}
-          pageSize={data?.pageSize ?? 10}
-          totalPage={data?.totalPages ?? 1}
-          isLoading={isLoading}
-          onPageChange={(newPage) => setPage(newPage + 1)}
-          onPageSizeChange={setPageSize}
-          onSearchChange={setSearchValue}
-          searchPlaceholder="email"
-          sorting={sorting}
-          onSortingChange={setSorting}
-          manualPagination
-          manualSorting
-          manualSearch
-          isSearch
-        />
+      <MainContentLayout className="grid grid-cols-1 lg:grid-cols-[auto_1fr] gap-8">
+        <ChartCustomerStat />
+        <div className=" w-full h-full flex flex-col bg-slate-100 rounded-3xl px-6 py-8 shadow-sm min-h-[600px]">
+          <h3 className="text-2xl font-semibold font-inter mb-4 text-gray-text-header">
+            Customers List
+          </h3>
+          <DataTable<CustomerTable, unknown>
+            columns={columns as ColumnDef<CustomerTable, unknown>[]}
+            data={customers}
+            pageIndex={(data?.page ?? 1) - 1}
+            pageSize={data?.pageSize ?? 10}
+            totalPage={data?.totalPages ?? 1}
+            isLoading={isLoading}
+            isFetching={isFetching}
+            onPageChange={(newPage) => setPage(newPage + 1)}
+            onPageSizeChange={setPageSize}
+            onSearchChange={setSearchValue}
+            searchPlaceholder="email"
+            sorting={sorting}
+            onSortingChange={setSorting}
+            manualPagination
+            manualSorting
+            manualSearch
+            isSearch
+          />
+        </div>
       </MainContentLayout>
     </div>
   );

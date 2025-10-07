@@ -12,7 +12,7 @@ import { type FieldValues, useForm } from "react-hook-form";
 import { cn } from "@/lib/utils";
 import { Form } from "@/components/ui/form";
 
-interface EditDialogProps<TFormValues extends FieldValues> {
+interface AddDialogProps<TFormValues extends FieldValues> {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onConfirm: (data: TFormValues) => void;
@@ -23,7 +23,7 @@ interface EditDialogProps<TFormValues extends FieldValues> {
   title: string;
 }
 
-export function EditDialog<TFormValues extends FieldValues>({
+export function AddDialog<TFormValues extends FieldValues>({
   open,
   onOpenChange,
   onConfirm,
@@ -32,23 +32,22 @@ export function EditDialog<TFormValues extends FieldValues>({
   styleFormLayout,
   styleLayoutFooter,
   title,
-}: EditDialogProps<TFormValues>) {
+}: AddDialogProps<TFormValues>) {
   const onSubmit = async (values: TFormValues) => {
     const isValid = await form.trigger();
 
     if (!isValid) return;
 
     onConfirm(values);
-    onOpenChange(false);
   };
 
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogContent className="font-inter md:min-h-40 md:max-w-[600px] space-y-6 min-w-[300px] overflow-y-auto">
         <AlertDialogHeader>
-          <AlertDialogTitle>Edit {title} Infomations</AlertDialogTitle>
+          <AlertDialogTitle>Add {title} Infomations</AlertDialogTitle>
           <AlertDialogDescription>
-            Make changes to {title} here. Click save when you're done.
+            Enter {title} details here. Click save when you're done.
           </AlertDialogDescription>
         </AlertDialogHeader>
 
@@ -77,7 +76,7 @@ export function EditDialog<TFormValues extends FieldValues>({
                 className="!outline-none bg-purple-primary"
                 disabled={!form.formState.isDirty}
               >
-                Save Changes
+                Save
               </Button>
             </AlertDialogFooter>
           </form>

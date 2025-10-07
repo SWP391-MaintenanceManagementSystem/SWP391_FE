@@ -20,28 +20,30 @@ import AccountStatusTag from "@/components/tag/AccountStatusTag";
 import type { AccountStatus } from "@/types/enums/accountStatus";
 import { EditDialog } from "@/components/dialog/EditDialog";
 
-interface CustomerInfoFormProps {
+interface EmployeeInfoFormProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onConfirm: (data: ChangeProfileFormData) => void;
   form: ReturnType<typeof useForm<ChangeProfileFormData>>;
+  title: string;
 }
 
-export default function CustomerInfoForm({
+export default function EmployeeInfoForm({
   open,
   onOpenChange,
   onConfirm,
   form,
-}: CustomerInfoFormProps) {
+  title,
+}: EmployeeInfoFormProps) {
   return (
     <EditDialog
       open={open}
       onOpenChange={onOpenChange}
       onConfirm={onConfirm}
       form={form}
-      title="Customer Information"
-      styleFormLayout="grid-rows-6 md:grid-cols-2 md:grid-rows-3 "
-      styleLayoutFooter="md:col-start-2"
+      title={title}
+      styleFormLayout="grid-rows-6 md:grid-cols-2 md:grid-rows-4 "
+      styleLayoutFooter="md:col-start-2 md:row-start-4"
     >
       <FormField
         control={form.control}
@@ -79,6 +81,20 @@ export default function CustomerInfoForm({
             <FormLabel className="text-gray-500">Email</FormLabel>
             <FormControl>
               <Input placeholder="email@example.com" {...field} />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+
+      <FormField
+        control={form.control}
+        name="phone"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>Phone</FormLabel>
+            <FormControl>
+              <Input placeholder="+84 912 345 678" {...field} />
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -125,33 +141,6 @@ export default function CustomerInfoForm({
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
-
-      <FormField
-        control={form.control}
-        name="phone"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel>Phone</FormLabel>
-            <FormControl>
-              <Input placeholder="+84 912 345 678" {...field} />
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
-      <FormField
-        control={form.control}
-        name="address"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel>Address</FormLabel>
-            <FormControl>
-              <Input placeholder="123 Main St" {...field} />
             </FormControl>
             <FormMessage />
           </FormItem>

@@ -5,8 +5,12 @@ import { toast } from "sonner";
 import { queryKeys } from "../queries/keys";
 import { deleteVehicle, editVehicle } from "../apis/vehicle.api";
 import type { AddVehicleFormData } from "@/pages/vehicle/components/libs/schema";
-import { deleteStaff, updateStaff } from "../apis/staff.api";
-import { deleteTechnician, updateTechnician } from "../apis/technician.api";
+import { deleteStaff, updateStaff, addStaff } from "../apis/staff.api";
+import {
+  deleteTechnician,
+  updateTechnician,
+  addTechnicican,
+} from "../apis/technician.api";
 
 export const useUpdateCustomerInfo = () => {
   const queryClient = useQueryClient();
@@ -27,17 +31,23 @@ export const useUpdateCustomerInfo = () => {
       const updatedCustomerInfo = await updateCustomerInfo(id, rest);
       return updatedCustomerInfo.data;
     },
-    onSuccess: (_data, variables) => {
-      queryClient.invalidateQueries({
-        queryKey: queryKeys.customers({
-          page: variables.currentPage,
-          pageSize: variables.currentPageSize,
+    onSuccess: async (_data, variables) => {
+      await Promise.all([
+        queryClient.invalidateQueries({
+          queryKey: queryKeys.accounts({
+            page: variables.currentPage,
+            pageSize: variables.currentPageSize,
+          }),
         }),
-      });
 
-      queryClient.invalidateQueries({
-        queryKey: queryKeys.customerById(variables.id),
-      });
+        queryClient.invalidateQueries({
+          queryKey: queryKeys.customerById(variables.id),
+        }),
+
+        queryClient.invalidateQueries({
+          queryKey: queryKeys.statusStat("CUSTOMER"),
+        }),
+      ]);
       toast.success("Profile updated successfully");
     },
     onError: () => {
@@ -62,13 +72,18 @@ export const useDeleteCustomer = () => {
       const deletedCustomer = await deleteCustomer(id);
       return deletedCustomer.data;
     },
-    onSuccess: (_data, variables) => {
-      queryClient.invalidateQueries({
-        queryKey: queryKeys.customers({
-          page: variables.currentPage,
-          pageSize: variables.currentPageSize,
+    onSuccess: async (_data, variables) => {
+      await Promise.all([
+        queryClient.invalidateQueries({
+          queryKey: queryKeys.accounts({
+            page: variables.currentPage,
+            pageSize: variables.currentPageSize,
+          }),
         }),
-      });
+        queryClient.invalidateQueries({
+          queryKey: queryKeys.statusStat("CUSTOMER"),
+        }),
+      ]);
       toast.success("Customer deleted successfully");
     },
     onError: () => {
@@ -120,13 +135,15 @@ export const useEditVehicle = () => {
       const updatedVehicle = await editVehicle(vehicleId, data);
       return updatedVehicle.data;
     },
-    onSuccess: (_data, variables) => {
-      queryClient.invalidateQueries({
-        queryKey: queryKeys.vehiclesList(variables.customerId),
-      });
-      queryClient.invalidateQueries({
-        queryKey: queryKeys.vehicleById(variables.vehicleId),
-      });
+    onSuccess: async (_data, variables) => {
+      await Promise.all([
+        queryClient.invalidateQueries({
+          queryKey: queryKeys.vehiclesList(variables.customerId),
+        }),
+        queryClient.invalidateQueries({
+          queryKey: queryKeys.vehicleById(variables.vehicleId),
+        }),
+      ]);
       toast.success("Vehicle information updated successfully");
     },
     onError: (error) => {
@@ -136,64 +153,157 @@ export const useEditVehicle = () => {
   });
 };
 
-export const useDeleteStaff = () => {
+export const useDeleteEmployee = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async ({
       id,
+      role,
       currentPage,
       currentPageSize,
     }: {
       id: string;
+      role: "STAFF" | "TECHNICIAN";
       currentPage: number;
       currentPageSize: number;
     }) => {
-      const deletedStaff = await deleteStaff(id);
-      return deletedStaff.data;
+      if (role === "STAFF") {
+        const deletedStaff = await deleteStaff(id);
+        return deletedStaff.data;
+      } else if (role === "TECHNICIAN") {
+        const deletedTechnician = await deleteTechnician(id);
+        return deletedTechnician.data;
+      }
+
+      if (role !== "STAFF" && role !== "TECHNICIAN") {
+        throw new Error("Invalid role. Only STAFF or TECHNICIAN allowed.");
+      }
     },
-    onSuccess: (_data, variables) => {
-      queryClient.invalidateQueries({
-        queryKey: queryKeys.staffs({
-          page: variables.currentPage,
-          pageSize: variables.currentPageSize,
+    onSuccess: async (_data, variables) => {
+      if (variables.role === "STAFF") {
+        toast.success("Staff deleted successfully");
+      } else if (variables.role === "TECHNICIAN") {
+        toast.success("Technician deleted successfully");
+      }
+      await Promise.all([
+        queryClient.invalidateQueries({
+          queryKey: queryKeys.accounts({
+            page: variables.currentPage,
+            pageSize: variables.currentPageSize,
+          }),
         }),
-      });
-      toast.success("Staff deleted successfully");
+        queryClient.invalidateQueries({
+          queryKey: queryKeys.statusStat(variables.role),
+        }),
+      ]);
     },
     onError: () => {
-      toast.error("Failed to delete staff");
+      toast.error("Failed to delete employee");
     },
   });
 };
 
-export const useDeleteTechnician = () => {
+export const useUpdateEmployeeInfo = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async ({
+      role,
+      data,
       id,
       currentPage,
       currentPageSize,
     }: {
+      role: "STAFF" | "TECHNICIAN";
+      data: ChangeProfileFormData;
       id: string;
       currentPage: number;
       currentPageSize: number;
     }) => {
-      const deletedTechnician = await deleteTechnician(id);
-      return deletedTechnician.data;
+      const { email, ...rest } = data;
+
+      if (role === "STAFF") {
+        return (await updateStaff(id, rest)).data;
+      } else if (role === "TECHNICIAN") {
+        return (await updateTechnician(id, rest)).data;
+      }
+      if (role !== "STAFF" && role !== "TECHNICIAN") {
+        throw new Error("Invalid role. Only STAFF or TECHNICIAN allowed.");
+      }
     },
-    onSuccess: (_data, variables) => {
-      queryClient.invalidateQueries({
-        queryKey: queryKeys.technicians({
-          page: variables.currentPage,
-          pageSize: variables.currentPageSize,
+
+    onSuccess: async (_data, variables) => {
+      if (variables.role === "STAFF") {
+        toast.success("Staff updated successfully");
+      } else if (variables.role === "TECHNICIAN") {
+        toast.success(`Technician updated successfully`);
+      }
+      await Promise.all([
+        queryClient.invalidateQueries({
+          queryKey: queryKeys.accounts({
+            page: variables.currentPage,
+            pageSize: variables.currentPageSize,
+          }),
         }),
-      });
-      toast.success("Technician deleted successfully");
+
+        queryClient.invalidateQueries({
+          queryKey: queryKeys.statusStat(variables.role),
+        }),
+      ]);
     },
+
     onError: () => {
-      toast.error("Failed to delete technician");
+      toast.error("Failed to update employee information");
+    },
+  });
+};
+
+export const useAddEmployee = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async ({
+      role,
+      data,
+      currentPage,
+      currentPageSize,
+    }: {
+      role: "STAFF" | "TECHNICIAN";
+      data: ChangeProfileFormData;
+      currentPage: number;
+      currentPageSize: number;
+    }) => {
+      if (role === "TECHNICIAN") {
+        return (await addTechnicican(data)).data;
+      }
+      if (role === "STAFF") {
+        return (await addStaff(data)).data;
+      }
+      throw new Error("Invalid role. Only STAFF or TECHNICIAN allowed.");
+    },
+
+    onSuccess: async (_data, variables) => {
+      if (variables.role === "STAFF") {
+        toast.success("Staff created successfully");
+      } else {
+        toast.success("Technician created successfully");
+      }
+
+      await Promise.all([
+        queryClient.invalidateQueries({
+          queryKey: queryKeys.accounts({
+            page: variables.currentPage,
+            pageSize: variables.currentPageSize,
+          }),
+        }),
+        queryClient.invalidateQueries({
+          queryKey: queryKeys.statusStat(variables.role),
+        }),
+      ]);
+    },
+
+    onError: () => {
+      toast.error("Failed to create new employee");
     },
   });
 };

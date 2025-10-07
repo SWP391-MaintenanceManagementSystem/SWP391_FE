@@ -4,39 +4,58 @@ import { queryKeys } from "./keys";
 import {
   getCustomers,
   getCustomerById,
+  getCustomerStatusStat,
 } from "@/services/manager/apis/customer.api";
 import { getVehicleByCustomerId, getVehicleById } from "../apis/vehicle.api";
 import { getVehicleBrands } from "@/services/vehicle/apis/vehicle.api";
 import { getVehicleModelsByBrandId } from "@/services/manager/apis/vehicle.api";
-import { getStaffs } from "@/services/manager/apis/staff.api";
-import { getTechnicians, getTechnicianById } from "../apis/technician.api";
-
+import {
+  getStaffById,
+  getStaffs,
+  getStatusStatStaff,
+} from "@/services/manager/apis/staff.api";
+import {
+  getTechnicians,
+  getTechnicianById,
+  getStatusStatTechnician,
+} from "../apis/technician.api";
 /**
- * Hook lấy danh sách customers (search + sort + filter + pagination)
+ * Hook lấy danh sách accounts theo type (STAFF, TECHNICIAN, CUSTOMER)
+ * (search + sort + filter + pagination)
  */
-export const useGetCustomers = (params: {
+export const useGetAccountList = (params: {
   page: number;
   pageSize: number;
   firstName?: string;
   lastName?: string;
   email?: string;
   status?: string;
+  isPremium?: boolean;
   phone?: string;
   sortBy?: string;
   orderBy?: "asc" | "desc";
+  type: "CUSTOMER" | "STAFF" | "TECHNICIAN";
 }) => {
   return useQuery({
-    queryKey: queryKeys.customers(params),
+    queryKey: queryKeys.accounts(params),
     queryFn: async () => {
+      const { type, ...rest } = params;
       try {
-        const response = await getCustomers(params);
-        return response.data;
+        const api =
+          type === "CUSTOMER"
+            ? getCustomers
+            : type === "STAFF"
+              ? getStaffs
+              : getTechnicians;
+
+        const res = await api(rest);
+        return res.data;
       } catch (error) {
-        toast.error("Failed to fetch customers");
+        toast.error("Failed to fetch account list");
         throw error;
       }
     },
-    enabled: !!params.page && !!params.pageSize,
+    enabled: !!params.page && !!params.pageSize && !!params.type,
     placeholderData: (prev) => prev,
     staleTime: 5 * 60 * 1000,
   });
@@ -63,6 +82,30 @@ export const useGetCustomerById = (customerId: string) => {
   });
 };
 
+/**
+ * Hook lấy thông tin employee (STAFF, TECHNICIAN) theo ID
+ */
+export const useGetEmployeeById = (params: {
+  id: string;
+  type: "STAFF" | "TECHNICIAN";
+}) => {
+  return useQuery({
+    queryKey: queryKeys.employeeById(params),
+    queryFn: async () => {
+      try {
+        const api = params.type === "STAFF" ? getStaffById : getTechnicianById;
+        const res = await api(params.id);
+        return res.data;
+      } catch {
+        toast.error("Failed to fetch employee by ID ");
+        throw new Error("Fetch customer employee by ID");
+      }
+    },
+    enabled: !!params,
+    placeholderData: (prev) => prev,
+    staleTime: 5 * 60 * 1000,
+  });
+};
 /**
  * Hook lấy danh sách vehicles theo customer ID
  */
@@ -148,79 +191,26 @@ export const useGetVehicleModel = (brandId: number | string) => {
   });
 };
 
-/**
- * Hook lấy danh sách staffs (search + sort + filter + pagination)
- */
-export const useGetStaffs = (params: {
-  page: number;
-  pageSize: number;
-  firstName?: string;
-  lastName?: string;
-  email?: string;
-  status?: string;
-  phone?: string;
-  sortBy?: string;
-  orderBy?: "asc" | "desc";
-}) => {
+export const useGetStatusStat = (type: "STAFF" | "TECHNICIAN" | "CUSTOMER") => {
   return useQuery({
-    queryKey: queryKeys.staffs(params),
+    queryKey: queryKeys.statusStat(type),
     queryFn: async () => {
       try {
-        const response = await getStaffs(params);
+        const api =
+          type === "STAFF"
+            ? getStatusStatStaff
+            : type === "TECHNICIAN"
+              ? getStatusStatTechnician
+              : getCustomerStatusStat;
+        const response = await api();
         return response.data;
-      } catch (error) {
-        toast.error("Failed to fetch customers");
-        throw error;
+      } catch {
+        toast.error(`Failed to fetch ${type} status stats`);
+        throw new Error("Fetch stats failed");
       }
     },
-    enabled: !!params.page && !!params.pageSize,
-    placeholderData: (prev) => prev,
-    staleTime: 5 * 60 * 1000,
-  });
-};
 
-export const useGetTechnicians = (params: {
-  page: number;
-  pageSize: number;
-  firstName?: string;
-  lastName?: string;
-  email?: string;
-  status?: string;
-  phone?: string;
-  sortBy?: string;
-  orderBy?: "asc" | "desc";
-}) => {
-  return useQuery({
-    queryKey: queryKeys.technicians(params),
-    queryFn: async () => {
-      try {
-        const response = await getTechnicians(params);
-        return response.data;
-      } catch (error) {
-        toast.error("Failed to fetch technicians");
-        throw error;
-      }
-    },
-    enabled: !!params.page && !!params.pageSize,
-    placeholderData: (prev) => prev,
-    staleTime: 5 * 60 * 1000,
-  });
-};
-
-export const useGetTechnicianById = (id: string) => {
-  return useQuery({
-    queryKey: queryKeys.techniciansById(id),
-    queryFn: async () => {
-      try {
-        const response = await getTechnicianById(id);
-        return response.data;
-      } catch (error) {
-        toast.error("Failed to fetch technician");
-        throw error;
-      }
-    },
-    enabled: !!id,
-    placeholderData: (prev) => prev,
+    enabled: !!type,
     staleTime: 5 * 60 * 1000,
   });
 };

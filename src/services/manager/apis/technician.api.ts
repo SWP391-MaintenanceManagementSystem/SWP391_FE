@@ -1,5 +1,9 @@
 import { httpPrivate } from "@/lib/http";
-import type { PaginationResponse, BaseResponse } from "@/types/models/response";
+import type {
+  PaginationResponse,
+  BaseResponse,
+  StatusStatResponse,
+} from "@/types/models/response";
 import type { AccountWithProfile } from "@/types/models/account";
 import type { ChangeProfileFormData } from "@/pages/profile/components/profile/libs/schema";
 
@@ -32,5 +36,18 @@ export const updateTechnician = (id: string, data: ChangeProfileFormData) => {
   return httpPrivate.patch<BaseResponse<AccountWithProfile>>(
     `/technician/${id}`,
     data,
+  );
+};
+
+export const getStatusStatTechnician = () => {
+  return httpPrivate.get<BaseResponse<StatusStatResponse>>(
+    `/technician/statistics`,
+  );
+};
+
+export const addTechnicican = async (formData: ChangeProfileFormData) => {
+  return httpPrivate.post<BaseResponse<AccountWithProfile>>(
+    `/technician`,
+    formData,
   );
 };
