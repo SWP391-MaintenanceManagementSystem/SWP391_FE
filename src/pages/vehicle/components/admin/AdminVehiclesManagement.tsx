@@ -16,15 +16,16 @@ export default function AdminVehiclesManagement() {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [filters, setFilters] = useState({
     status: "",
-    isPremium: "",
+    isPremium: undefined as boolean | undefined,
   });
 
   // gọi 1 hook duy nhất
-  const { data, isLoading } = useGetAccountList({
+  const { data, isLoading, isFetching } = useGetAccountList({
     page,
     pageSize,
     email: searchValue || undefined,
     status: filters.status || undefined,
+    isPremium: filters.isPremium,
     sortBy: sorting[0]?.id ?? "createdAt",
     orderBy: sorting[0]?.desc ? "desc" : "asc",
     type: "CUSTOMER",
@@ -51,13 +52,15 @@ export default function AdminVehiclesManagement() {
     };
   });
 
-  const handleFilterChange = (field: string, value: string | undefined) => {
+  const handleFilterChange = (
+    field: string,
+    value: string | boolean | undefined,
+  ) => {
     setFilters((prevFilters) => ({
       ...prevFilters,
       [field]: value,
     }));
   };
-
   const columns = getColumns(handleFilterChange, filters);
 
   return (
@@ -78,6 +81,7 @@ export default function AdminVehiclesManagement() {
             pageSize={data?.pageSize ?? 10}
             totalPage={data?.totalPages ?? 1}
             isLoading={isLoading}
+            isFetching={isFetching}
             onPageChange={(newPage) => setPage(newPage + 1)}
             onPageSizeChange={setPageSize}
             onSearchChange={setSearchValue}

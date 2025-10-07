@@ -30,6 +30,7 @@ export const useGetAccountList = (params: {
   lastName?: string;
   email?: string;
   status?: string;
+  isPremium?: boolean;
   phone?: string;
   sortBy?: string;
   orderBy?: "asc" | "desc";

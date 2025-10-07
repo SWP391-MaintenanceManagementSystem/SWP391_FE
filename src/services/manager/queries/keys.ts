@@ -32,6 +32,7 @@ export const queryKeys = {
     firstName?: string;
     lastName?: string;
     status?: string;
+    isPremium?: boolean;
     email?: string;
     phone?: string;
     sortBy?: string;

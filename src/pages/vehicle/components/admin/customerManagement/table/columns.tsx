@@ -7,8 +7,11 @@ import ColActions from "./ColActions";
 import type { CustomerTable } from "../../../libs/table-types";
 
 export const getColumns = (
-  handleFilterChange: (field: string, value: string) => void,
-  currentFilters: { status: string; isPremium: string },
+  handleFilterChange: (
+    field: string,
+    value: string | boolean | undefined,
+  ) => void,
+  currentFilters: { status: string; isPremium: boolean | undefined },
 ) => {
   const columnHelper = createColumnHelper<CustomerTable>();
   return [
@@ -101,8 +104,19 @@ export const getColumns = (
         <FilterHeader
           column={info.column}
           title="Premium"
-          selectedValue={currentFilters.isPremium}
-          onFilterChange={(value) => handleFilterChange("isPremium", value)}
+          selectedValue={
+            currentFilters.isPremium === undefined
+              ? ""
+              : currentFilters.isPremium
+                ? "true"
+                : "false"
+          }
+          onFilterChange={(value) =>
+            handleFilterChange(
+              "isPremium",
+              value === "" ? undefined : value === "true",
+            )
+          }
         />
       ),
       size: 50,
