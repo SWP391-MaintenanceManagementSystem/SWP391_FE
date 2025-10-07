@@ -63,8 +63,12 @@ export const useEmployee = (
       return true;
     } catch (err: unknown) {
       const error = err as AxiosError<{ message?: string }>;
-      if (error.message.includes("email")) {
-        form.setError("email", { type: "server", message: error.message });
+      console.log(error.response?.data?.message);
+      if (error.response?.data?.message?.includes("Email")) {
+        form.setError("email", {
+          type: "server",
+          message: error.response.data.message,
+        });
       }
       return false;
     }

@@ -39,7 +39,6 @@ export function AddDialog<TFormValues extends FieldValues>({
     if (!isValid) return;
 
     onConfirm(values);
-    onOpenChange(false);
   };
 
   return (

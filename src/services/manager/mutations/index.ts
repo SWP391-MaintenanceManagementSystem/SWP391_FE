@@ -5,7 +5,7 @@ import { toast } from "sonner";
 import { queryKeys } from "../queries/keys";
 import { deleteVehicle, editVehicle } from "../apis/vehicle.api";
 import type { AddVehicleFormData } from "@/pages/vehicle/components/libs/schema";
-import { deleteStaff, updateStaff } from "../apis/staff.api";
+import { deleteStaff, updateStaff, addStaff } from "../apis/staff.api";
 import {
   deleteTechnician,
   updateTechnician,
@@ -276,12 +276,13 @@ export const useAddEmployee = () => {
       if (role === "TECHNICIAN") {
         return (await addTechnicican(data)).data;
       }
+      if (role === "STAFF") {
+        return (await addStaff(data)).data;
+      }
       throw new Error("Invalid role. Only STAFF or TECHNICIAN allowed.");
     },
 
-    onSuccess: async (res, variables) => {
-      if ("error" in res) return;
-
+    onSuccess: async (_data, variables) => {
       if (variables.role === "STAFF") {
         toast.success("Staff created successfully");
       } else {

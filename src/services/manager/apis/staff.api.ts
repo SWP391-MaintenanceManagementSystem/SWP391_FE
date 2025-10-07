@@ -42,3 +42,7 @@ export const updateStaff = (id: string, data: ChangeProfileFormData) => {
 export const getStatusStatStaff = () => {
   return httpPrivate.get<BaseResponse<StatusStatResponse>>(`/staff/statistics`);
 };
+
+export const addStaff = async (formData: ChangeProfileFormData) => {
+  return httpPrivate.post<BaseResponse<AccountWithProfile>>(`/staff`, formData);
+};

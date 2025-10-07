@@ -133,6 +133,7 @@ export default function TotalBox({
         form={form}
         onConfirm={async () => {
           const success = await handleAddEmployee();
+          console.log(success);
           if (success) {
             setOpenAddForm(false);
           }
