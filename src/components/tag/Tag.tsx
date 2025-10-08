@@ -1,0 +1,22 @@
+type TagProps = {
+  text: string;
+  bg?: string;
+  textColor?: string;
+};
+
+function format(text?: string) {
+  if (!text) return "";
+  const lower = text.toLowerCase();
+  return lower.charAt(0).toUpperCase() + lower.slice(1);
+}
+
+export default function Tag({ text, bg, textColor }: TagProps) {
+  return (
+    <div
+      style={{ backgroundColor: bg, color: textColor }}
+      className="px-4 text-center py-1 rounded-3xl max-w-[100px] font-inter font-semibold text-[14px] bg-purple-primary text-white dark:text-amber-primary dark:bg-purple-primary-dark "
+    >
+      {format(text)}
+    </div>
+  );
+}

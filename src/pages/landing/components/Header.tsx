@@ -1,0 +1,111 @@
+import { ArrowUpRight } from "lucide-react";
+import logo from "/logo.svg";
+import logoDark from "/logo-light.svg";
+import MobileNavMenu from "./MobileNavMenu";
+import { NavLink, useLocation } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
+
+interface HeaderProps {
+  scrolled: boolean;
+}
+
+export default function Header({ scrolled }: HeaderProps) {
+  const { auth } = useAuth();
+  const location = useLocation();
+
+  const isHome = location.pathname === "/";
+
+  return (
+    <header
+      className={`
+        sticky z-50 flex items-center justify-between
+        p-2 sm:p-4 shadow-sm transition-all duration-500
+        ${
+          isHome
+            ? scrolled
+              ? "top-0 w-full rounded-none"
+              : "top-8 mx-4 sm:mx-8 lg:mx-16 rounded-lg" 
+            : "top-0 w-full rounded-none" 
+        }
+        bg-white text-black dark:bg-black dark:text-white
+      `}
+    >
+      {/* Logo */}
+      <img src={logo} className="w-20 sm:w-24 lg:w-28 dark:hidden" />
+      <img
+        src={logoDark}
+        alt="logo dark"
+        className="w-20 sm:w-24 lg:w-28 hidden dark:block"
+      />
+
+      {/* Mobile Menu */}
+      <div className="lg:hidden">
+        <MobileNavMenu />
+      </div>
+
+      {/* Desktop Nav */}
+      <nav className="hidden lg:flex justify-center gap-x-6 items-center font-medium">
+        <a
+          href="#home"
+          className="relative group hover:text-purple-primary transition"
+        >
+          Home
+          <span className="absolute left-0 -bottom-1 h-[2px] w-0 bg-current transition-all duration-300 group-hover:w-full"></span>
+        </a>
+        <a
+          href="#about"
+          className="relative group hover:text-purple-primary transition"
+        >
+          About us
+          <span className="absolute left-0 -bottom-1 h-[2px] w-0 bg-current transition-all duration-300 group-hover:w-full"></span>
+        </a>
+        <a
+          href="#services"
+          className="relative group hover:text-purple-primary transition"
+        >
+          Service
+          <span className="absolute left-0 -bottom-1 h-[2px] w-0 bg-current transition-all duration-300 group-hover:w-full"></span>
+        </a>
+        <a
+          href="#process"
+          className="relative group hover:text-purple-primary transition"
+        >
+          How it works
+          <span className="absolute left-0 -bottom-1 h-[2px] w-0 bg-current transition-all duration-300 group-hover:w-full"></span>
+        </a>
+        <a
+          href="#testimonials"
+          className="relative group hover:text-purple-primary transition"
+        >
+          Testimonials
+          <span className="absolute left-0 -bottom-1 h-[2px] w-0 bg-current transition-all duration-300 group-hover:w-full"></span>
+        </a>
+      </nav>
+
+      {/* Desktop Button */}
+      <div className="hidden lg:block">
+        {auth.isAuthenticated ? (
+          <NavLink
+            to="/dashboard"
+            className="flex items-center justify-center gap-x-1 
+             bg-purple-primary px-6 py-[18px] h-14 
+             rounded-md text-white hover:bg-purple-700 whitespace-nowrap"
+          >
+            Get Started
+            <ArrowUpRight />
+          </NavLink>
+        ) : (
+          <NavLink
+            to="/login"
+            className="flex gap-x-1 items-center justify-center 
+               bg-purple-primary px-6 py-[18px] w-[115px] h-14 
+               rounded-md text-white hover:bg-purple-700"
+          >
+            Login
+            <ArrowUpRight />
+          </NavLink>
+        )}
+      </div>
+    </header>
+  );
+}
