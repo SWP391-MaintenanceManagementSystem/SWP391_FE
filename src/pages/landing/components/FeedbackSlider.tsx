@@ -1,4 +1,3 @@
-import React from "react";
 import Slider, { type Settings } from "react-slick";
 import { MdOutlineStar } from "react-icons/md";
 import type { ContentFeedback } from "./Testimonials";

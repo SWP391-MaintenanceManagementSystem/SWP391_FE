@@ -19,8 +19,6 @@ export const useUpdateCustomerInfo = () => {
     mutationFn: async ({
       data,
       id,
-      currentPage,
-      currentPageSize,
     }: {
       data: ChangeProfileFormData;
       id: string;
@@ -62,8 +60,6 @@ export const useDeleteCustomer = () => {
   return useMutation({
     mutationFn: async ({
       id,
-      currentPage,
-      currentPageSize,
     }: {
       id: string;
       currentPage: number;
@@ -98,7 +94,6 @@ export const useDeleteVehicle = () => {
   return useMutation({
     mutationFn: async ({
       id,
-      customerId,
     }: {
       id: string;
       customerId: string;
@@ -125,7 +120,6 @@ export const useEditVehicle = () => {
   return useMutation({
     mutationFn: async ({
       vehicleId,
-      customerId,
       data,
     }: {
       vehicleId: string;
@@ -160,8 +154,6 @@ export const useDeleteEmployee = () => {
     mutationFn: async ({
       id,
       role,
-      currentPage,
-      currentPageSize,
     }: {
       id: string;
       role: "STAFF" | "TECHNICIAN";
@@ -212,8 +204,6 @@ export const useUpdateEmployeeInfo = () => {
       role,
       data,
       id,
-      currentPage,
-      currentPageSize,
     }: {
       role: "STAFF" | "TECHNICIAN";
       data: ChangeProfileFormData;
@@ -265,8 +255,6 @@ export const useAddEmployee = () => {
     mutationFn: async ({
       role,
       data,
-      currentPage,
-      currentPageSize,
     }: {
       role: "STAFF" | "TECHNICIAN";
       data: ChangeProfileFormData;

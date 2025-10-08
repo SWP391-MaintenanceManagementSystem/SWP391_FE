@@ -1,13 +1,13 @@
 import { useAuth } from "@/contexts/AuthContext";
-import React, { lazy, Suspense } from "react";
+import { lazy, Suspense } from "react";
 import { AccountRole } from "@/types/enums/role";
 import Loading from "@/components/Loading";
 
 const AdminVehiclesManagement = lazy(
-  () => import("./components/admin/AdminVehiclesManagement"),
+  () => import("./components/admin/AdminVehiclesManagement")
 );
 const CustomerVehiclesManagement = lazy(
-  () => import("./components/customer/CustomerVehiclesManagement"),
+  () => import("./components/customer/CustomerVehiclesManagement")
 );
 const roleComponents = {
   admin: AdminVehiclesManagement,
@@ -30,10 +30,5 @@ export default function Vehicle() {
     }
   };
 
-
-  return (
-    <Suspense fallback={<Loading />}>
-      {getComponent()}
-    </Suspense>
-  );
+  return <Suspense fallback={<Loading />}>{getComponent()}</Suspense>;
 }
