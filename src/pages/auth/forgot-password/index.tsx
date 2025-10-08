@@ -1,9 +1,8 @@
 import useResetPassword from "@/services/auth/hooks/useResetPassword";
 import { ForgotPasswordForm } from "../components/ForgotPasswordForm";
-import { useAuth } from "@/contexts/AuthContext";
 import { useWindowSize } from "@uidotdev/usehooks";
 import { useState } from "react";
-import { Navigate, NavLink } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import loginImg from "@/assets/login-img.png";
 import logo from "/logo.svg";
 import { useEffect } from "react";
@@ -21,7 +20,6 @@ export default function ForgotPasswordPage() {
     handleReset,
     handleResendCode,
   } = useResetPassword();
-  const { auth } = useAuth();
   const { height, width = 0 } = useWindowSize();
   const [isMobile, setIsMobile] = useState(false);
 
