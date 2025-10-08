@@ -1,3 +1,13 @@
+import DynamicBreadcrumbs from "@/components/DynamicBreadcrumb";
+import MainContentLayout from "@/components/MainContentLayout";
+
 export default function InventoryManagement() {
-  return <h1>Inventory Management</h1>;
+  return (
+    <div>
+      <DynamicBreadcrumbs />
+      <MainContentLayout>
+        <h3>Inventory Management</h3>
+      </MainContentLayout>
+    </div>
+  );
 }
