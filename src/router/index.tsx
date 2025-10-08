@@ -22,6 +22,7 @@ import TechniciansManagementPage from "@/pages/employees/technicians";
 import WorkShiftsManagementPage from "@/pages/employees/shifts";
 import Booking from "@/pages/booking/customer/Booking";
 import AuthFailed from "@/pages/auth/components/AuthFailed";
+import InventoryManagement from "@/pages/inventory";
 
 const RouterComponent = () => {
   const router = createBrowserRouter([
@@ -82,6 +83,11 @@ const RouterComponent = () => {
                   hydrateFallbackElement: <CircularIndeterminate />,
                 },
                 {
+                  path: "/inventory",
+                  element: <InventoryManagement />,
+                  hydrateFallbackElement: <CircularIndeterminate />,
+                },
+                {
                   element: (
                     <RequireAuth
                       allowedRoles={[AccountRole.ADMIN, AccountRole.CUSTOMER]}
@@ -115,15 +121,19 @@ const RouterComponent = () => {
                   ],
                 },
 
-                 {
-                  element: <RequireAuth  allowedRoles={[AccountRole.ADMIN, AccountRole.CUSTOMER]}/>,
+                {
+                  element: (
+                    <RequireAuth
+                      allowedRoles={[AccountRole.ADMIN, AccountRole.CUSTOMER]}
+                    />
+                  ),
                   children: [
                     {
                       path: "/booking",
-                      element: <Booking />
-                    }
-                  ]
-                 },
+                      element: <Booking />,
+                    },
+                  ],
+                },
                 {
                   path: "/profile",
                   element: <ProfilePage />,
