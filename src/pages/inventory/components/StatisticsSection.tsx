@@ -3,7 +3,7 @@ import { Package, DollarSign, AlertTriangle, TrendingUp } from "lucide-react";
 
 export default function StatisticsSection() {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 font-inter">
+    <div className="grid lg:grid-cols-4 grid-cols-2 lg:grid-rows-1 gap-3 md:gap-6 font-inter h-auto">
       <StatisticsCard
         icon={Package}
         title="Total Items"
