@@ -16,6 +16,7 @@ import { columns } from "./vehicleManagement/table/column";
 import type { ColumnDef } from "@tanstack/react-table";
 import { useState } from "react";
 import type { SortingState } from "@tanstack/react-table";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function ViewDetailInfo() {
   const { id } = useParams<{ id: string }>();
@@ -88,28 +89,32 @@ export default function ViewDetailInfo() {
           [id ?? ""]: "Detailed Information",
         }}
       />
-      <MainContentLayout className="grid grid-cols-1 lg:grid-cols-[auto_1fr] gap-8">
+      <MainContentLayout className="grid grid-cols-1 lg:grid-cols-[auto_1fr] gap-8 pt-4">
         <CustomerInfoBox
           customer={customer}
           currentPage={currentPage}
           currentPageSize={currentPageSize}
         />
-        <div className=" w-full h-full flex flex-col bg-slate-100 rounded-3xl px-6 py-8 shadow-sm min-h-[600px]">
-          <h3 className="text-2xl font-semibold mb-4 text-gray-text-header">
-            Customer Vehicle List
-          </h3>
-          <DataTable<Vehicle, unknown>
-            columns={columns as ColumnDef<Vehicle, unknown>[]}
-            data={vehiclesList}
-            searchPlaceholder="VIN, License Plate, Model"
-            searchValue={["vin", "brand", "model", "licensePlate"]}
-            isLoading={isLoading}
-            manualPagination={false}
-            isSearch={true}
-            sorting={sorting}
-            onSortingChange={setSorting}
-          />
-        </div>
+        <Card className=" w-full h-full grid grid-rows-[auto_1fr] min-h-[600px]">
+          <CardHeader>
+            <CardTitle className="text-2xl font-semibold font-inter text-gray-text-header">
+              Vehicles List
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <DataTable<Vehicle, unknown>
+              columns={columns as ColumnDef<Vehicle, unknown>[]}
+              data={vehiclesList}
+              searchPlaceholder="VIN, License Plate, Model"
+              searchValue={["vin", "brand", "model", "licensePlate"]}
+              isLoading={isLoading}
+              manualPagination={false}
+              isSearch={true}
+              sorting={sorting}
+              onSortingChange={setSorting}
+            />
+          </CardContent>
+        </Card>
       </MainContentLayout>
     </div>
   );

@@ -5,6 +5,7 @@ import { ChartPieDonutText } from "@/components/charts/ChartPieDonutText";
 import { ChartPieLabel } from "@/components/charts/ChartPieLabel";
 import "animate.css";
 import { Loader } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function StatCustomerBox() {
   const { data, isLoading } = useGetStatusStat("CUSTOMER");
@@ -57,10 +58,14 @@ export default function StatCustomerBox() {
   } satisfies ChartConfig;
 
   return (
-    <div className="flex flex-col sm:flex-row md:flex-col items-center gap-8 md:min-w-[298px] font-inter bg-slate-100  p-8 rounded-2xl shadow-md">
-      <h3 className="font-semibold text-2xl text-gray-text-header">Summary</h3>
+    <Card className="flex flex-col sm:flex-row md:flex-col items-center gap-8 md:min-w-[298px] font-inter">
+      <CardHeader className="w-full">
+        <CardTitle className="font-semibold text-gray-text-header text-2xl text-center">
+          Statistics
+        </CardTitle>
+      </CardHeader>
       {!isLoading ? (
-        <>
+        <CardContent className="flex flex-col sm:flex-row md:flex-col gap-10">
           <ChartPieDonutText
             chartData={chartStatus}
             chartConfig={chartConfig}
@@ -92,12 +97,12 @@ export default function StatCustomerBox() {
               {premium?.percentage}% customers subscribed to Premium
             </p>
           </div>
-        </>
+        </CardContent>
       ) : (
         <div className="animate__animated animate__fadeIn">
           <Loader className="animate-spin" />
         </div>
       )}
-    </div>
+    </Card>
   );
 }

@@ -32,7 +32,7 @@ export default function Profile() {
   return (
     <div className=" w-full h-[calc(100vh-32px)]">
       <DynamicBreadcrumbs />
-      <MainContentLayout className="grid grid-cols-1 md:grid-cols-[auto_1fr] gap-8 ">
+      <MainContentLayout className="grid grid-cols-1 lg:grid-cols-[auto_1fr] gap-8">
         {isMobile ? (
           <GeneralInfoBox user={profile} handleLogout={handleLogout} />
         ) : (

@@ -9,6 +9,7 @@ import type { EmployeeTable } from "@/pages/employees/libs/table-types";
 import TotalBox from "../components/TotalBox";
 import StaffBlackIcon from "@/assets/staff-black.png";
 import StaffWhiteIcon from "@/assets/staff-white.png";
+import { Card } from "@/components/ui/card";
 
 export default function StaffsManagementPage() {
   const [page, setPage] = useState(1);
@@ -58,7 +59,7 @@ export default function StaffsManagementPage() {
         pathTitles={{ employees: "Employees Management", staffs: "Staffs" }}
         hasPage={false}
       />
-      <MainContentLayout className="grid grid-cols-1 lg:grid-cols-[auto_1fr] gap-8">
+      <MainContentLayout className="grid grid-cols-1 lg:grid-cols-[auto_1fr] gap-8 pt-4">
         <TotalBox
           title="Staffs"
           iconDark={StaffBlackIcon}
@@ -68,7 +69,7 @@ export default function StaffsManagementPage() {
           pageSize={pageSize}
         />
 
-        <div className=" w-full h-full flex flex-col bg-slate-100 rounded-3xl px-6 py-8 shadow-sm min-h-[600px]">
+        <Card className=" w-full h-full flex flex-col px-6 py-8 min-h-[600px]">
           <h3 className="text-2xl font-semibold mb-4 text-gray-text-header">
             Staffs List
           </h3>
@@ -91,7 +92,7 @@ export default function StaffsManagementPage() {
             manualSearch
             isSearch
           />
-        </div>
+        </Card>
       </MainContentLayout>
     </div>
   );
