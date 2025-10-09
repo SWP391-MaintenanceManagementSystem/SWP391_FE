@@ -7,6 +7,7 @@ import type { SortingState, ColumnDef } from "@tanstack/react-table";
 import type { CustomerTable } from "../libs/table-types";
 import { useGetAccountList } from "@/services/manager/queries";
 import ChartCustomerStat from ".././admin/customerManagement/ChartCustomerStat";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function AdminVehiclesManagement() {
   // pagination + search + sort
@@ -68,32 +69,36 @@ export default function AdminVehiclesManagement() {
       <DynamicBreadcrumbs
         pathTitles={{ vehicles: "Customers & Vehicle Management" }}
       />
-      <MainContentLayout className="grid grid-cols-1 lg:grid-cols-[auto_1fr] gap-8">
+      <MainContentLayout className="grid grid-cols-1 lg:grid-cols-[auto_1fr] gap-8 pt-4">
         <ChartCustomerStat />
-        <div className=" w-full h-full flex flex-col bg-slate-100 rounded-3xl px-6 py-8 shadow-sm min-h-[600px]">
-          <h3 className="text-2xl font-semibold font-inter mb-4 text-gray-text-header">
-            Customers List
-          </h3>
-          <DataTable<CustomerTable, unknown>
-            columns={columns as ColumnDef<CustomerTable, unknown>[]}
-            data={customers}
-            pageIndex={(data?.page ?? 1) - 1}
-            pageSize={data?.pageSize ?? 10}
-            totalPage={data?.totalPages ?? 1}
-            isLoading={isLoading}
-            isFetching={isFetching}
-            onPageChange={(newPage) => setPage(newPage + 1)}
-            onPageSizeChange={setPageSize}
-            onSearchChange={setSearchValue}
-            searchPlaceholder="email"
-            sorting={sorting}
-            onSortingChange={setSorting}
-            manualPagination
-            manualSorting
-            manualSearch
-            isSearch
-          />
-        </div>
+        <Card className=" w-full h-full grid grid-rows-[auto_1fr] min-h-[600px]">
+          <CardHeader>
+            <CardTitle className="text-2xl font-semibold font-inter text-gray-text-header">
+              Customers List
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <DataTable<CustomerTable, unknown>
+              columns={columns as ColumnDef<CustomerTable, unknown>[]}
+              data={customers}
+              pageIndex={(data?.page ?? 1) - 1}
+              pageSize={data?.pageSize ?? 10}
+              totalPage={data?.totalPages ?? 1}
+              isLoading={isLoading}
+              isFetching={isFetching}
+              onPageChange={(newPage) => setPage(newPage + 1)}
+              onPageSizeChange={setPageSize}
+              onSearchChange={setSearchValue}
+              searchPlaceholder="email"
+              sorting={sorting}
+              onSortingChange={setSorting}
+              manualPagination
+              manualSorting
+              manualSearch
+              isSearch
+            />
+          </CardContent>
+        </Card>
       </MainContentLayout>
     </div>
   );

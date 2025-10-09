@@ -10,6 +10,7 @@ import TechnicianBlack from "@/assets/technician-black.png";
 import TechnicianWhite from "@/assets/technician-white.png";
 import { useMemo } from "react";
 import { useGetAccountList } from "@/services/manager/queries";
+import { Card } from "@/components/ui/card";
 
 export default function TechniciansManagementPage() {
   const [page, setPage] = useState(1);
@@ -63,7 +64,7 @@ export default function TechniciansManagementPage() {
         }}
       />
 
-      <MainContentLayout className="grid grid-cols-1 lg:grid-cols-[auto_1fr] gap-8">
+      <MainContentLayout className="grid grid-cols-1 lg:grid-cols-[auto_1fr] gap-8 pt-4">
         <TotalBox
           title="Technicians"
           iconDark={TechnicianBlack}
@@ -73,7 +74,7 @@ export default function TechniciansManagementPage() {
           pageSize={pageSize}
         />
 
-        <div className=" w-full h-full flex flex-col bg-slate-100 rounded-3xl px-6 py-8 shadow-sm min-h-[600px]">
+        <Card className=" w-full h-full flex flex-col  px-6 py-8 min-h-[600px]">
           <h3 className="text-2xl font-semibold mb-4 text-gray-text-header">
             Technicians List
           </h3>
@@ -96,7 +97,7 @@ export default function TechniciansManagementPage() {
             manualSearch
             isSearch
           />
-        </div>
+        </Card>
       </MainContentLayout>
     </div>
   );
