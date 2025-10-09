@@ -2,6 +2,9 @@ import { useState } from "react";
 import { Calendar, dayjsLocalizer, Views, type View } from "react-big-calendar";
 import dayjs from "dayjs";
 import "react-big-calendar/lib/css/react-big-calendar.css";
+import { Button } from "@/components/ui/button";
+import { Plus } from "lucide-react";
+import BookingModal from "./BookingModal";
 
 const localizer = dayjsLocalizer(dayjs);
 
@@ -19,7 +22,7 @@ const BookingCalendar = () => {
     end: Date;
   } | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [view, setView] = useState<View>(Views.WEEK); 
+  const [view, setView] = useState<View>(Views.WEEK);
   const [date, setDate] = useState(new Date());
 
   const handleSelectSlot = (slotInfo: any) => {
@@ -29,6 +32,12 @@ const BookingCalendar = () => {
 
   return (
     <div style={{ height: "90vh", padding: "10px" }} className="font-inter">
+      <div className="flex justify-end mb-2 ">
+        <Button className="bg-purple-primary" onClick={() => setIsModalOpen(true)}>
+          <Plus />
+          Booking
+        </Button>
+      </div>
       <Calendar
         localizer={localizer}
         events={events}
@@ -47,30 +56,11 @@ const BookingCalendar = () => {
       />
 
       {/* Modal đơn giản */}
-      {isModalOpen && selectedSlot && (
-        <div
-          style={{
-            position: "fixed",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            background: "white",
-            padding: "20px",
-            border: "1px solid #ccc",
-            borderRadius: "8px",
-            boxShadow: "0 2px 10px rgba(0,0,0,0.3)",
-            zIndex: 999,
-          }}
-        >
-          <h3>Xác nhận đặt lịch</h3>
-          <p>
-            <b>Bắt đầu:</b>{" "}
-            {dayjs(selectedSlot.start).format("HH:mm DD/MM/YYYY")} <br />
-            <b>Kết thúc:</b>{" "}
-            {dayjs(selectedSlot.end).format("HH:mm DD/MM/YYYY")}
-          </p>
-          <button onClick={() => setIsModalOpen(false)}>Đóng</button>
-        </div>
+      {isModalOpen && (
+        <BookingModal
+          open={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+        />
       )}
     </div>
   );
