@@ -1,6 +1,9 @@
+import Membership from "./components/customer/Membership";
 
 export default function MembershipPage() {
   return (
-    <div>MembershipPage</div>
+    <div>
+        <Membership/>
+    </div>
   )
 }

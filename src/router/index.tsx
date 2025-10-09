@@ -135,6 +135,21 @@ const RouterComponent = () => {
                   ],
                 },
                 {
+                  element: (
+                    <RequireAuth
+                      allowedRoles={[AccountRole.CUSTOMER, AccountRole.ADMIN]}
+                    />
+                  ),
+                  children: [
+                    {
+                      path: "/membership",
+                      element: <MembershipPage />,
+                      hydrateFallbackElement: <CircularIndeterminate />,
+                    },
+                  ],
+                },
+
+                {
                   path: "/profile",
                   element: <ProfilePage />,
                   hydrateFallbackElement: <CircularIndeterminate />,
