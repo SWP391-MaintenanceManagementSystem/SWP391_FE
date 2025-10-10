@@ -19,6 +19,7 @@ import {
   getTechnicianById,
   getStatusStatTechnician,
 } from "../apis/technician.api";
+import { getPartStat } from "../apis/inventory.api";
 /**
  * Hook lấy danh sách accounts theo type (STAFF, TECHNICIAN, CUSTOMER)
  * (search + sort + filter + pagination)
@@ -211,6 +212,22 @@ export const useGetStatusStat = (type: "STAFF" | "TECHNICIAN" | "CUSTOMER") => {
     },
 
     enabled: !!type,
+    staleTime: 5 * 60 * 1000,
+  });
+};
+
+export const useGetPartStat = () => {
+  return useQuery({
+    queryKey: queryKeys.partStat(),
+    queryFn: async () => {
+      try {
+        const response = await getPartStat();
+        return response.data.data;
+      } catch {
+        toast.error("Fail to fetch part statistics");
+        throw new Error("Fetch stats failed");
+      }
+    },
     staleTime: 5 * 60 * 1000,
   });
 };

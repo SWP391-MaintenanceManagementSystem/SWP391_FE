@@ -4,7 +4,8 @@ import type { LucideIcon } from "lucide-react";
 interface Props {
   title: string;
   icon: LucideIcon;
-  numberTotal: number;
+  numberTotal?: number;
+  numberValue?: number;
   description: string;
 }
 
@@ -12,6 +13,7 @@ export default function StatisticsCard({
   title,
   icon: Icon,
   numberTotal,
+  numberValue,
   description,
 }: Props) {
   return (
@@ -21,7 +23,18 @@ export default function StatisticsCard({
         <Icon className="h-4 w-4 text-muted-foreground" />
       </CardHeader>
       <CardContent>
-        <div className="text-2xl font-bold">{numberTotal}</div>
+        {numberValue !== undefined && (
+          <div className="text-2xl font-bold">
+            $
+            {numberValue.toLocaleString("en-US", {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            })}
+          </div>
+        )}
+        {numberTotal !== undefined && (
+          <div className="text-2xl font-bold">{numberTotal}</div>
+        )}
         <p className="text-xs text-muted-foreground">{description}</p>
       </CardContent>
     </Card>
