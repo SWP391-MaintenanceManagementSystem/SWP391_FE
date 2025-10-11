@@ -38,8 +38,8 @@ export default function ItemsListSection() {
   const columns = getColumns(hanldeFilterChange, filters, categoryList ?? []);
 
   return (
-    <Card className="h-full flex-1">
-      <CardContent className="font-inter flex flex-col gap-6 h-full">
+    <Card className="h-full flex-1 md:min-h-[500px] min-h-[600px]">
+      <CardContent className="font-inter flex flex-col gap-4 h-full">
         <h3 className="font-semibold text-gray-text-header h-fit">
           Inventory Items
         </h3>
@@ -64,7 +64,7 @@ export default function ItemsListSection() {
           headerActions={
             <Button
               onClick={() => console.log("ADD")}
-              className="flex items-center gap-2"
+              className=" w-full md:w-[150px]"
               variant="outline"
             >
               Add New Item

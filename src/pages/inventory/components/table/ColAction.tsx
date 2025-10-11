@@ -6,6 +6,8 @@ import type { Part } from "@/types/models/part";
 import { useState } from "react";
 import { DeleteDialog } from "@/components/dialog/DeleteDialog";
 import { useInventory } from "@/services/manager/hooks/useInvetory";
+import { ViewDetailDialog } from "@/components/dialog/ViewDetailDialog";
+import ViewDetailPart from "../ViewDetailPart";
 
 export interface ColActionsProps {
   row: Row<Part>;
@@ -19,7 +21,7 @@ export default function ColActions({
   currentPageSize,
 }: ColActionsProps) {
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
-  // const [openViewDialog, setOpenViewDialog] = useState(false);
+  const [openViewDialog, setOpenViewDialog] = useState(false);
   // const [openEditDialog, setOpenEditDialog] = useState(false);
   const part = row.original;
   const { handleDeletePart } = useInventory(currentPage, currentPageSize);
@@ -31,7 +33,7 @@ export default function ColActions({
           icon={<Maximize2 size={12} />}
           onClick={() => {
             console.log("View Details");
-            // setOpenViewDialog(true);
+            setOpenViewDialog(true);
           }}
         />
       </TooltipWrapper>
@@ -39,7 +41,7 @@ export default function ColActions({
         <ActionBtn
           icon={<Pencil size={12} />}
           onClick={() => {
-            console.log("Row data to edit:", row.original);
+            console.log("Row data to edit:", part);
             // setOpenEditDialog(true);
           }}
         />
@@ -49,7 +51,7 @@ export default function ColActions({
         <ActionBtn
           icon={<Trash size={12} />}
           onClick={() => {
-            console.log("Row data to delete:", row.original);
+            console.log("Row data to delete:", part);
             setOpenDeleteDialog(true);
           }}
         />
@@ -61,6 +63,14 @@ export default function ColActions({
         onConfirm={() => {
           handleDeletePart(part.id);
         }}
+      />
+
+      <ViewDetailDialog
+        open={openViewDialog}
+        onOpenChange={(open) => setOpenViewDialog(open)}
+        title="Part Item Information"
+        styleContent="md:max-w-[580px]"
+        children={<ViewDetailPart partItem={part} />}
       />
     </div>
   );

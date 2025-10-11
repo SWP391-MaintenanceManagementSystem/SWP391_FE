@@ -223,7 +223,9 @@ export function DataTable<TData, TValue>({
           </div>
         )}
 
-        <div className="flex items-center gap-2">{headerActions}</div>
+        <div className="flex items-end justify-end gap-2 w-full">
+          {headerActions}
+        </div>
 
         {/* Visible Column */}
         <DropdownMenu>
