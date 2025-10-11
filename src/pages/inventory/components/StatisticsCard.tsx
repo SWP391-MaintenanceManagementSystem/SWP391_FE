@@ -1,5 +1,6 @@
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import type { LucideIcon } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface Props {
   title: string;
@@ -7,6 +8,7 @@ interface Props {
   numberTotal?: number;
   numberValue?: number;
   description: string;
+  textStyle?: string;
 }
 
 export default function StatisticsCard({
@@ -15,6 +17,7 @@ export default function StatisticsCard({
   numberTotal,
   numberValue,
   description,
+  textStyle,
 }: Props) {
   return (
     <Card className="h-auto flex flex-col gap-2.5">
@@ -33,7 +36,9 @@ export default function StatisticsCard({
           </div>
         )}
         {numberTotal !== undefined && (
-          <div className="text-2xl font-bold">{numberTotal}</div>
+          <div className={cn(`text-2xl font-bold`, textStyle)}>
+            {numberTotal}
+          </div>
         )}
         <p className="text-xs text-muted-foreground">{description}</p>
       </CardContent>

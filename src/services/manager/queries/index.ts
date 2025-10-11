@@ -19,7 +19,11 @@ import {
   getTechnicianById,
   getStatusStatTechnician,
 } from "../apis/technician.api";
-import { getPartStat, getPartList } from "../apis/inventory.api";
+import {
+  getPartStat,
+  getPartList,
+  getCategoryList,
+} from "../apis/inventory.api";
 /**
  * Hook lấy danh sách accounts theo type (STAFF, TECHNICIAN, CUSTOMER)
  * (search + sort + filter + pagination)
@@ -62,6 +66,11 @@ export const useGetAccountList = (params: {
   });
 };
 
+/**
+ * Hook lấy part list (search + sort + filter + pagination)
+ * @param params
+ * @returns
+ */
 export const useGetPartList = (params: {
   page: number;
   pageSize: number;
@@ -76,13 +85,15 @@ export const useGetPartList = (params: {
     queryFn: async () => {
       try {
         const res = await getPartList(params);
-        console.log("Response", res.data);
         return res.data;
       } catch (error) {
         toast.error("Failed to fetch parts list");
         throw error;
       }
     },
+    enabled: !!params.page && !!params.pageSize,
+    placeholderData: (prev) => prev,
+    staleTime: 5 * 60 * 1000,
   });
 };
 /**
@@ -245,6 +256,22 @@ export const useGetPartStat = () => {
     queryFn: async () => {
       try {
         const response = await getPartStat();
+        return response.data.data;
+      } catch {
+        toast.error("Fail to fetch part statistics");
+        throw new Error("Fetch stats failed");
+      }
+    },
+    staleTime: 5 * 60 * 1000,
+  });
+};
+
+export const useGetCategoryList = () => {
+  return useQuery({
+    queryKey: queryKeys.category(),
+    queryFn: async () => {
+      try {
+        const response = await getCategoryList();
         return response.data.data;
       } catch {
         toast.error("Fail to fetch part statistics");

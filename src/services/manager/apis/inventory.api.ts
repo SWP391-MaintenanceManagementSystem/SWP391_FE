@@ -1,6 +1,6 @@
 import { httpPrivate } from "@/lib/http";
 import type { BaseResponse, PaginationResponse } from "@/types/models/response";
-import type { PartStat, Part } from "@/types/models/part";
+import type { PartStat, Part, Category } from "@/types/models/part";
 
 export const getPartStat = () => {
   return httpPrivate.get<BaseResponse<{ data: PartStat }>>(`/part/statistics`);
@@ -18,4 +18,8 @@ export const getPartList = (params: {
   return httpPrivate.get<BaseResponse<PaginationResponse<Part>>>("/part", {
     params,
   });
+};
+
+export const getCategoryList = () => {
+  return httpPrivate.get<BaseResponse<Category>>("/category");
 };

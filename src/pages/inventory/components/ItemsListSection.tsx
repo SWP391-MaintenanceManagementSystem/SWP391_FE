@@ -3,7 +3,7 @@ import { DataTable } from "@/components/table/DataTable";
 import { getColumns } from "./table/columns";
 import type { Part } from "@/types/models/part";
 import type { ColumnDef, SortingState } from "@tanstack/react-table";
-import { useGetPartList } from "@/services/manager/queries";
+import { useGetPartList, useGetCategoryList } from "@/services/manager/queries";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
@@ -16,6 +16,8 @@ export default function ItemsListSection() {
     status: "",
     categoryName: "",
   });
+
+  const { data: categoryList } = useGetCategoryList();
 
   const { data, isLoading, isFetching } = useGetPartList({
     page,
@@ -33,18 +35,7 @@ export default function ItemsListSection() {
     setFilters((prev) => ({ ...prev, [field]: value }));
   };
 
-  const columns = getColumns(hanldeFilterChange, filters);
-
-  // const partsList: Part[] = rawList.map((item) => {
-  //   const category = item.category;
-  //   return {
-  //     id: item.id,
-  //     name: item.description,
-  //     description: item.description,
-  //     status: item.status,
-
-  //   };
-  // });
+  const columns = getColumns(hanldeFilterChange, filters, categoryList ?? []);
 
   return (
     <Card className="h-full flex-1">

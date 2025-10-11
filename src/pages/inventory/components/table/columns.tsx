@@ -1,14 +1,16 @@
 import { createColumnHelper } from "@tanstack/react-table";
-import { type Part } from "@/types/models/part";
+import { type Category, type Part } from "@/types/models/part";
 import StockStatusTag from "@/components/tag/StockTag";
 import { AlertTriangle } from "lucide-react";
 import ColActions from "./ColAction";
 import { Badge } from "@/components/ui/badge";
 import SortHeader from "@/components/table/SortHeader";
 import FilterHeader from "@/components/table/FilterHeader";
+
 export const getColumns = (
   handleFilterChange: (field: string, value: string) => void,
   currentFilter: { status: string; categoryName: string },
+  categoryList: Category[],
 ) => {
   const columnHelper = createColumnHelper<Part>();
 
@@ -36,10 +38,19 @@ export const getColumns = (
 
     columnHelper.accessor("category.name", {
       id: "categoryName",
-      header: "Category",
+      header: (info) => (
+        <FilterHeader
+          column={info.column}
+          title="Category"
+          selectedValue={currentFilter.categoryName}
+          onFilterChange={(value) => handleFilterChange("categoryName", value)}
+        />
+      ),
       cell: (info) => <Badge variant="outline">{info.getValue()}</Badge>,
       meta: {
         title: "Category Name",
+        filterVariant: "filterCategory",
+        filterOptions: categoryList.map((c) => c.name),
       },
     }),
 

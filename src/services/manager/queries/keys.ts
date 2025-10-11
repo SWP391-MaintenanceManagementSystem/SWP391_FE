@@ -51,4 +51,6 @@ export const queryKeys = {
     sortBy?: string;
     orderBy?: "asc" | "desc";
   }) => ["parts", params] as const,
+
+  category: () => ["category"] as const,
 };

@@ -5,7 +5,14 @@ type Props = {
   status: Part["status"];
 };
 
-const getColor = (status: Part["status"]) => {
+type BadgeVariant = "default" | "destructive" | "outline" | "secondary";
+
+const getColor = (
+  status: Part["status"],
+): {
+  label: string;
+  variant: BadgeVariant;
+} => {
   if (status === "LOWSTOCK") {
     return {
       label: "Low Stock",
@@ -21,6 +28,5 @@ const getColor = (status: Part["status"]) => {
 
 export default function StockStatusTag({ status }: Props) {
   const { label, variant } = getColor(status);
-
   return <Badge variant={variant}>{label}</Badge>;
 }
