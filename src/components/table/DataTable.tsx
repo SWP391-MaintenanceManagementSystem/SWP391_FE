@@ -28,7 +28,6 @@ import { Input } from "@/components/ui/input";
 import {
   Search,
   ChevronDown,
-  // Trash,
   ChevronLeft,
   ChevronRight,
   Loader,
@@ -64,6 +63,8 @@ interface DataTableProps<TData, TValue> {
   sorting?: SortingState;
   onSortingChange?: (sorting: SortingState) => void;
   manualSorting?: boolean;
+  // ACTION
+  headerActions?: React.ReactNode;
 }
 
 export function DataTable<TData, TValue>({
@@ -88,6 +89,8 @@ export function DataTable<TData, TValue>({
   sorting,
   onSortingChange,
   manualSorting = false,
+  // ACTION
+  headerActions,
 }: DataTableProps<TData, TValue>) {
   /** ------------------ SEARCH DATA ------------------ */
   const [searchText, setSearchText] = useState("");
@@ -193,14 +196,6 @@ export function DataTable<TData, TValue>({
     },
   });
 
-  //const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
-  // const handleDeleteAll = () => {
-  //   console.log("Deleting rows: ", table.getSelectedRowModel().rows);
-  //   if (onDeleteAll) {
-  //     onDeleteAll();
-  //   }
-  // };
-
   // Search handler: update, reset page
   const handleSearchInput = (value: string) => {
     setSearchText(value);
@@ -228,16 +223,7 @@ export function DataTable<TData, TValue>({
           </div>
         )}
 
-        {/* Delete all button */}
-        {/*{table.getSelectedRowModel().rows.length > 1 && (
-          <Button
-            variant="destructive"
-            className="mr-auto"
-            onClick={() => setOpenDeleteDialog(true)}
-          >
-            Delete All <Trash />
-          </Button>
-        )}*/}
+        <div className="flex items-center gap-2">{headerActions}</div>
 
         {/* Visible Column */}
         <DropdownMenu>
@@ -390,13 +376,6 @@ export function DataTable<TData, TValue>({
           <span className="text-sm text-accent-foreground">/ Page</span>
         </div>
       </div>
-
-      {/* --- MODALS DELETE ALL --- */}
-      {/*<DeleteDialog
-        open={openDeleteDialog}
-        onOpenChange={setOpenDeleteDialog}
-        onConfirm={handleDeleteAll}
-      />*/}
     </div>
   );
 }

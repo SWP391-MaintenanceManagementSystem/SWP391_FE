@@ -5,6 +5,8 @@ import type { Part } from "@/types/models/part";
 import type { ColumnDef, SortingState } from "@tanstack/react-table";
 import { useGetPartList } from "@/services/manager/queries";
 import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Plus } from "lucide-react";
 export default function ItemsListSection() {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
@@ -68,6 +70,16 @@ export default function ItemsListSection() {
           sorting={sorting}
           onSortingChange={setSorting}
           manualSorting
+          headerActions={
+            <Button
+              onClick={() => console.log("ADD")}
+              className="flex items-center gap-2"
+              variant="outline"
+            >
+              Add New Item
+              <Plus className="h-4 w-4" />
+            </Button>
+          }
         />
       </CardContent>
     </Card>
