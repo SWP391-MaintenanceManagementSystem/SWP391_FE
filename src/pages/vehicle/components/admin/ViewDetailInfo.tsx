@@ -3,6 +3,7 @@ import { b64DecodeUnicode } from "@/utils/base64";
 import {
   useGetCustomerById,
   useGetVehicleList,
+  useGetVehicleBrand,
 } from "@/services/manager/queries";
 import DynamicBreadcrumbs from "@/components/DynamicBreadcrumb";
 import MainContentLayout from "@/components/MainContentLayout";
@@ -47,6 +48,7 @@ export default function ViewDetailInfo() {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [filters, setFilters] = useState({
     status: "",
+    brandId: "",
   });
 
   const {
@@ -59,20 +61,20 @@ export default function ViewDetailInfo() {
     pageSize,
     licensePlate: searchValue || undefined,
     status: filters.status || undefined,
+    brandId: filters.brandId ? Number(filters.brandId) : undefined,
     sortBy: sorting[0]?.id ?? "createdAt",
     orderBy: sorting[0]?.desc ? "desc" : "asc",
   });
 
-  const handleFilterChange = (
-    field: string,
-    value: string | boolean | undefined,
-  ) => {
+  const { data: brandList } = useGetVehicleBrand();
+
+  const handleFilterChange = (field: string, value: string) => {
     setFilters((prevFilters) => ({
       ...prevFilters,
       [field]: value,
     }));
   };
-  const columns = getColumns(handleFilterChange, filters);
+  const columns = getColumns(handleFilterChange, filters, brandList ?? []);
 
   if (!user) return <Loading />;
   return (

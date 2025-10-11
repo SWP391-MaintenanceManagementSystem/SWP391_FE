@@ -151,8 +151,8 @@ export const useGetVehicleList = (params: {
   vin?: string;
   licensePlate?: string;
   status?: string;
-  model?: string;
-  brand?: string;
+  modelId?: number;
+  brandId?: number;
   sortBy?: string;
   orderBy?: "asc" | "desc";
 }) => {
@@ -169,7 +169,7 @@ export const useGetVehicleList = (params: {
     },
     enabled: !!params.customerId && !!params.page && !!params.pageSize,
     placeholderData: (prev) => prev,
-    staleTime: 5 * 60 * 1000, // 5 phút
+    staleTime: 5 * 60 * 1000,
   });
 };
 
@@ -197,7 +197,6 @@ export const useGetVehicleById = (vehicleId: string) => {
 /**
  * Hook lấy brand theo Vehicle ID
  */
-
 export const useGetVehicleBrand = () => {
   return useQuery({
     queryKey: queryKeys.vehicleBrand(),

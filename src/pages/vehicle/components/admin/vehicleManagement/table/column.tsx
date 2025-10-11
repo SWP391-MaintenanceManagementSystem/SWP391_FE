@@ -1,5 +1,5 @@
 import { createColumnHelper } from "@tanstack/react-table";
-import type { Vehicle } from "@/types/models/vehicle";
+import type { Vehicle, VehicleBrand } from "@/types/models/vehicle";
 import VehicleStatusTag from "@/components/tag/VehicleStatusTag";
 import ColActions from "./ColActions";
 import SortHeader from "@/components/table/SortHeader";
@@ -7,7 +7,8 @@ import FilterHeader from "@/components/table/FilterHeader";
 
 export const getColumns = (
   handleFilterChange: (field: string, value: string) => void,
-  currentFilters: { status: string },
+  currentFilters: { status: string; brandId: string },
+  brandList: VehicleBrand[],
 ) => {
   const columnHelper = createColumnHelper<Vehicle>();
 
@@ -34,12 +35,23 @@ export const getColumns = (
     }),
     columnHelper.accessor("brand", {
       id: "brand",
-      header: (info) => <SortHeader title="Brand" info={info} />,
+      header: (info) => (
+        <FilterHeader
+          title="Brand"
+          column={info.column}
+          selectedValue={currentFilters.brandId}
+          onFilterChange={(value) => handleFilterChange("brandId", value)}
+        />
+      ),
       cell: (info) => info.getValue(),
       meta: {
         title: "Brand",
+        filterVariant: "filterBrand",
+        filterOptions: brandList.map((c) => c.id),
+        labelOptions: Object.fromEntries(brandList.map((b) => [b.id, b.name])),
       },
     }),
+
     columnHelper.accessor("licensePlate", {
       id: "licensePlate",
       header: (info) => <SortHeader title="License Plate" info={info} />,

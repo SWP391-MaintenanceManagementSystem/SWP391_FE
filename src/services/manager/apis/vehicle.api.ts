@@ -10,8 +10,8 @@ export const getVehicleByCustomerId = (params: {
   vin?: string;
   licensePlate?: string;
   status?: string;
-  model?: string;
-  brand?: string;
+  modelId?: number;
+  brandId?: number;
   sortBy?: string;
   orderBy?: "asc" | "desc";
 }) => {
