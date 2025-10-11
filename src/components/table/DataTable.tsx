@@ -126,15 +126,15 @@ export function DataTable<TData, TValue>({
       const containerHeight = el.clientHeight;
       const usableHeight = containerHeight - headerHeight;
       const newSize = Math.max(
-        1, // minimum number of rows (can not be less than 1)
-        Math.floor(usableHeight / rowHeight), // number of rows that fit in the container
-        MIN_ROWS, // newSize >= MIN_ROWS, even container too small
+        1,
+        Math.floor(usableHeight / rowHeight),
+        MIN_ROWS,
       );
       // Update pagination state with new page size
       setPagination((prev) => ({ ...prev, pageSize: newSize }));
       if (onPageSizeChange) onPageSizeChange(newSize);
     });
-    // Start observing the container element
+
     observer.observe(el);
     // Cleanup: stop observing when the component unmounts to prevent memory leaks
     return () => observer.disconnect();

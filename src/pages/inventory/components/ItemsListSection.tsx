@@ -1,50 +1,48 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { DataTable } from "@/components/table/DataTable";
-import { columns } from "./table/columns";
-import type { Part, PartStatus, Category } from "@/types/models/part";
-import type { ColumnDef } from "@tanstack/react-table";
-import { faker } from "@faker-js/faker";
+import { getColumns } from "./table/columns";
+import type { Part } from "@/types/models/part";
+import type { ColumnDef, SortingState } from "@tanstack/react-table";
+import { useGetPartList } from "@/services/manager/queries";
+import { useState } from "react";
 export default function ItemsListSection() {
-  // DUMBMY DATA
-  const fakeParts = (count = 20, categories: Category[]): Part[] => {
-    return Array.from({ length: count }, () => {
-      const category = faker.helpers.arrayElement(categories);
-      const quantity = faker.number.int({ min: 0, max: 200 });
-      const minStock = faker.number.int({ min: 10, max: 50 });
-      const status: PartStatus = quantity <= minStock ? "INSTOCK" : "LOWSTOCK";
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+  const [searchValue, setSearchValue] = useState("");
+  const [sorting, setSorting] = useState<SortingState>([]);
+  const [filters, setFilters] = useState({
+    status: "",
+    categoryName: "",
+  });
 
-      return {
-        id: faker.string.uuid(),
-        partName: faker.commerce.productName(),
-        categoryId: category.id,
-        quantity,
-        minStock,
-        status,
-        price: Number(faker.commerce.price({ min: 10, max: 500, dec: 2 })),
-        description: faker.commerce.productDescription(),
-        createdAt: faker.date.past().toISOString(),
-        updatedAt: faker.date.recent().toISOString(),
-      };
-    });
+  const { data, isLoading, isFetching } = useGetPartList({
+    page,
+    pageSize,
+    name: searchValue || undefined,
+    status: filters.status || undefined,
+    categoryName: filters.categoryName || undefined,
+    sortBy: sorting[0]?.id ?? "createdAt",
+    orderBy: sorting[0]?.desc ? "desc" : "asc",
+  });
+
+  const rawList = data?.data ?? [];
+
+  const hanldeFilterChange = (field: string, value: string) => {
+    setFilters((prev) => ({ ...prev, [field]: value }));
   };
 
-  const fakeCategories: Category[] = Array.from({ length: 5 }, () => ({
-    id: faker.string.uuid(),
-    categoryName: faker.commerce.department(),
-    createdAt: faker.date.past().toISOString(),
-    updatedAt: faker.date.recent().toISOString(),
-  }));
+  const columns = getColumns(hanldeFilterChange, filters);
 
-  // Generate data
-  const partsRaw = fakeParts(20, fakeCategories);
+  // const partsList: Part[] = rawList.map((item) => {
+  //   const category = item.category;
+  //   return {
+  //     id: item.id,
+  //     name: item.description,
+  //     description: item.description,
+  //     status: item.status,
 
-  // Map categoryName vào để hiển thị (không thay đổi type Part)
-  const parts = partsRaw.map((part) => ({
-    ...part,
-    categoryName:
-      fakeCategories.find((c) => c.id === part.categoryId)?.categoryName ??
-      "Unknown",
-  }));
+  //   };
+  // });
 
   return (
     <Card className="h-full flex-1">
@@ -53,10 +51,23 @@ export default function ItemsListSection() {
           Inventory Items
         </h3>
         <DataTable<Part, unknown>
-          data={parts}
+          data={rawList}
           columns={columns as ColumnDef<Part, unknown>[]}
+          pageIndex={(data?.page ?? 1) - 1}
+          pageSize={data?.pageSize ?? 10}
+          totalPage={data?.totalPages ?? 1}
+          isLoading={isLoading}
+          isFetching={isFetching}
+          onPageChange={(newPage) => setPage(newPage + 1)}
+          onPageSizeChange={setPageSize}
+          manualPagination
           isSearch={true}
           searchPlaceholder="Name, Category"
+          onSearchChange={setSearchValue}
+          manualSearch
+          sorting={sorting}
+          onSortingChange={setSorting}
+          manualSorting
         />
       </CardContent>
     </Card>

@@ -7,11 +7,11 @@ export type PartStatus = (typeof PartStatus)[keyof typeof PartStatus];
 
 export type Part = {
   id: string;
-  partName: string;
-  categoryId: string;
+  name: string;
   quantity: number;
   minStock: number;
   status: PartStatus;
+  category: Category;
   price: number;
   description?: string;
   createdAt: string;
@@ -20,7 +20,15 @@ export type Part = {
 
 export type Category = {
   id: string;
-  categoryName: string;
+  name: string;
   createdAt: string;
   updatedAt: string;
 };
+
+export interface PartStat {
+  totalItems: number;
+  totalValue: number;
+  totalQuantity: number;
+  lowStockItems: number;
+  categories: number;
+}

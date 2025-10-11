@@ -25,14 +25,6 @@ export interface StatusStatResponse {
   premium?: PremiumStat;
 }
 
-export interface PartStat {
-  totalItems: number;
-  totalValue: number;
-  totalQuantity: number;
-  lowStockItem: number;
-  categories: number;
-}
-
 export interface PaginationResponse<T> {
   data: T[];
   page: number;

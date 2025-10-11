@@ -20,7 +20,6 @@ export default function AdminVehiclesManagement() {
     isPremium: undefined as boolean | undefined,
   });
 
-  // gọi 1 hook duy nhất
   const { data, isLoading, isFetching } = useGetAccountList({
     page,
     pageSize,

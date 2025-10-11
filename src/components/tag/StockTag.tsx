@@ -6,7 +6,7 @@ type Props = {
 };
 
 const getColor = (status: Part["status"]) => {
-  if (status === "INSTOCK") {
+  if (status === "LOWSTOCK") {
     return {
       label: "Low Stock",
       variant: "destructive",

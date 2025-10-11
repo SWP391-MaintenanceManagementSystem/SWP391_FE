@@ -19,7 +19,7 @@ import {
   getTechnicianById,
   getStatusStatTechnician,
 } from "../apis/technician.api";
-import { getPartStat } from "../apis/inventory.api";
+import { getPartStat, getPartList } from "../apis/inventory.api";
 /**
  * Hook lấy danh sách accounts theo type (STAFF, TECHNICIAN, CUSTOMER)
  * (search + sort + filter + pagination)
@@ -62,6 +62,29 @@ export const useGetAccountList = (params: {
   });
 };
 
+export const useGetPartList = (params: {
+  page: number;
+  pageSize: number;
+  name?: string;
+  categoryName?: string;
+  status?: string;
+  sortBy?: string;
+  orderBy?: "asc" | "desc";
+}) => {
+  return useQuery({
+    queryKey: queryKeys.parts(params),
+    queryFn: async () => {
+      try {
+        const res = await getPartList(params);
+        console.log("Response", res.data);
+        return res.data;
+      } catch (error) {
+        toast.error("Failed to fetch parts list");
+        throw error;
+      }
+    },
+  });
+};
 /**
  * Hook lấy thông tin customer theo ID
  */

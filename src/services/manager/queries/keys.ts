@@ -38,7 +38,17 @@ export const queryKeys = {
     sortBy?: string;
     orderBy?: "asc" | "desc";
     type?: "CUSTOMER" | "STAFF" | "TECHNICIAN";
-  }) => ["accountss", params] as const,
+  }) => ["accounts", params] as const,
 
   partStat: () => ["partStat"] as const,
+
+  parts: (params: {
+    page: number;
+    pageSize: number;
+    name?: string;
+    categoryName?: string;
+    status?: string;
+    sortBy?: string;
+    orderBy?: "asc" | "desc";
+  }) => ["parts", params] as const,
 };

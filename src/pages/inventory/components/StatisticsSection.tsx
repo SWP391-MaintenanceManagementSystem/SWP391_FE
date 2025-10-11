@@ -22,7 +22,7 @@ export default function StatisticsSection() {
       <StatisticsCard
         icon={AlertTriangle}
         title="Low Stock Items"
-        numberTotal={data?.lowStockItem || 0}
+        numberTotal={data?.lowStockItems || 0}
         description="Need restocking"
       />
       <StatisticsCard
