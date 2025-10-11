@@ -144,21 +144,32 @@ export const useGetEmployeeById = (params: {
 /**
  * Hook lấy danh sách vehicles theo customer ID
  */
-export const useGetVehicleList = (customerId: string) => {
+export const useGetVehicleList = (params: {
+  customerId: string;
+  page: number;
+  pageSize: number;
+  vin?: string;
+  licensePlate?: string;
+  status?: string;
+  model?: string;
+  brand?: string;
+  sortBy?: string;
+  orderBy?: "asc" | "desc";
+}) => {
   return useQuery({
-    queryKey: queryKeys.vehiclesList(customerId),
+    queryKey: queryKeys.vehiclesList(params),
     queryFn: async () => {
       try {
-        const response = await getVehicleByCustomerId(customerId);
-        return response.data.data;
-      } catch {
-        toast.error("Failed to fetch vehicles");
-        throw new Error("Fetch vehicles failed");
+        const res = await getVehicleByCustomerId(params);
+        return res.data;
+      } catch (error) {
+        toast.error("Failed to fetch vehicles list");
+        throw error;
       }
     },
-    enabled: !!customerId,
+    enabled: !!params.customerId && !!params.page && !!params.pageSize,
     placeholderData: (prev) => prev,
-    staleTime: 5 * 60 * 1000,
+    staleTime: 5 * 60 * 1000, // 5 phút
   });
 };
 

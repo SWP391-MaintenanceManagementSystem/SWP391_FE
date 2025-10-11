@@ -93,13 +93,24 @@ export const useDeleteVehicle = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ id }: { id: string; customerId: string }) => {
+    mutationFn: async ({
+      id,
+    }: {
+      id: string;
+      customerId: string;
+      currentPage: number;
+      currentPageSize: number;
+    }) => {
       const deletedVehicle = await deleteVehicle(id);
       return deletedVehicle.data;
     },
     onSuccess: (_data, variables) => {
       queryClient.invalidateQueries({
-        queryKey: queryKeys.vehiclesList(variables.customerId),
+        queryKey: queryKeys.vehiclesList({
+          customerId: variables.customerId,
+          page: variables.currentPage,
+          pageSize: variables.currentPageSize,
+        }),
       });
       toast.success("Vehicle deleted successfully");
     },
@@ -120,6 +131,8 @@ export const useEditVehicle = () => {
     }: {
       vehicleId: string;
       customerId: string;
+      currentPage: number;
+      currentPageSize: number;
       data: AddVehicleFormData;
     }) => {
       const updatedVehicle = await editVehicle(vehicleId, data);
@@ -128,7 +141,11 @@ export const useEditVehicle = () => {
     onSuccess: async (_data, variables) => {
       await Promise.all([
         queryClient.invalidateQueries({
-          queryKey: queryKeys.vehiclesList(variables.customerId),
+          queryKey: queryKeys.vehiclesList({
+            customerId: variables.customerId,
+            page: variables.currentPage,
+            pageSize: variables.currentPageSize,
+          }),
         }),
         queryClient.invalidateQueries({
           queryKey: queryKeys.vehicleById(variables.vehicleId),

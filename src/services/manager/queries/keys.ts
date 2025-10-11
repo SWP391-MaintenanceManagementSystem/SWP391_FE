@@ -3,7 +3,18 @@ export const queryKeys = {
   customerById: (customerId: string) => ["customerById", customerId] as const,
 
   // Vehicles theo customer
-  vehiclesList: (customerId: string) => ["vehicles", customerId] as const,
+  vehiclesList: (params: {
+    customerId: string;
+    page: number;
+    pageSize: number;
+    vin?: string;
+    licensePlate?: string;
+    status?: string;
+    model?: string;
+    brand?: string;
+    sortBy?: string;
+    orderBy?: "asc" | "desc";
+  }) => ["vehicles", params] as const,
 
   // Vehicle theo ID
   vehicleById: (vehicleId: string) => ["vehicleById", vehicleId] as const,
