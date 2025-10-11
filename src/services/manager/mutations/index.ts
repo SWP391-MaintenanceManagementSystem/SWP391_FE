@@ -11,6 +11,7 @@ import {
   updateTechnician,
   addTechnicican,
 } from "../apis/technician.api";
+import { detletePartItem } from "../apis/inventory.api";
 
 export const useUpdateCustomerInfo = () => {
   const queryClient = useQueryClient();
@@ -92,12 +93,7 @@ export const useDeleteVehicle = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({
-      id,
-    }: {
-      id: string;
-      customerId: string;
-    }) => {
+    mutationFn: async ({ id }: { id: string; customerId: string }) => {
       const deletedVehicle = await deleteVehicle(id);
       return deletedVehicle.data;
     },
@@ -143,6 +139,41 @@ export const useEditVehicle = () => {
     onError: (error) => {
       console.error(error);
       toast.error("Failed to update vehicle information");
+    },
+  });
+};
+
+export const useDeletePartItem = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({
+      id,
+    }: {
+      id: string;
+      currentPage: number;
+      currentPageSize: number;
+    }) => {
+      const del = await detletePartItem(id);
+      return del.data;
+    },
+    onSuccess: async (_data, variables) => {
+      await Promise.all([
+        queryClient.invalidateQueries({
+          queryKey: queryKeys.parts({
+            page: variables.currentPage,
+            pageSize: variables.currentPageSize,
+          }),
+        }),
+
+        queryClient.invalidateQueries({
+          queryKey: queryKeys.partStat(),
+        }),
+      ]);
+      toast.success("Deleted part item successfully");
+    },
+    onError: () => {
+      toast.error("Failed to delete part item");
     },
   });
 };

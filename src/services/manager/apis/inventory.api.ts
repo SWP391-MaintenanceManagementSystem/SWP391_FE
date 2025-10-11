@@ -23,3 +23,7 @@ export const getPartList = (params: {
 export const getCategoryList = () => {
   return httpPrivate.get<BaseResponse<Category>>("/category");
 };
+
+export const detletePartItem = (id: string) => {
+  return httpPrivate.del<BaseResponse<void>>(`/part/${id}`);
+};

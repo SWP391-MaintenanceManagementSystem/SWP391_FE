@@ -3,19 +3,26 @@ import { Maximize2, Pencil, Trash } from "lucide-react";
 import ActionBtn from "@/components/table/ActionBtn";
 import { TooltipWrapper } from "@/components/TooltipWrapper";
 import type { Part } from "@/types/models/part";
-// import { useState } from "react";
-// import { DeleteDialog } from "@/components/dialog/DeleteDialog";
-// import { toast } from "sonner";
+import { useState } from "react";
+import { DeleteDialog } from "@/components/dialog/DeleteDialog";
+import { useInventory } from "@/services/manager/hooks/useInvetory";
 
 export interface ColActionsProps {
   row: Row<Part>;
+  currentPage: number;
+  currentPageSize: number;
 }
 
-export default function ColActions({ row }: ColActionsProps) {
-  // const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+export default function ColActions({
+  row,
+  currentPage,
+  currentPageSize,
+}: ColActionsProps) {
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   // const [openViewDialog, setOpenViewDialog] = useState(false);
   // const [openEditDialog, setOpenEditDialog] = useState(false);
-  // const part = row.original;
+  const part = row.original;
+  const { handleDeletePart } = useInventory(currentPage, currentPageSize);
 
   return (
     <div className="flex gap-1">
@@ -43,10 +50,18 @@ export default function ColActions({ row }: ColActionsProps) {
           icon={<Trash size={12} />}
           onClick={() => {
             console.log("Row data to delete:", row.original);
-            // setOpenDeleteDialog(true);
+            setOpenDeleteDialog(true);
           }}
         />
       </TooltipWrapper>
+
+      <DeleteDialog
+        open={openDeleteDialog}
+        onOpenChange={(open) => setOpenDeleteDialog(open)}
+        onConfirm={() => {
+          handleDeletePart(part.id);
+        }}
+      />
     </div>
   );
 }
