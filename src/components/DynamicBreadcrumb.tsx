@@ -40,14 +40,14 @@ export default function DynamicBreadcrumbs({
               {index > 0 && <BreadcrumbSeparator />}
               <BreadcrumbItem>
                 {isLast || !hasPage ? (
-                  <BreadcrumbPage className="capitalize font-medium text-xs lg:text-2xl md:text-sm font-inter">
+                  <BreadcrumbPage className="capitalize font-medium ml-4 text-xs lg:text-2xl md:text-sm font-inter">
                     {title}
                   </BreadcrumbPage>
                 ) : (
                   <BreadcrumbLink asChild>
                     <Link
                       to={href}
-                      className="capitalize font-medium text-xs lg:text-2xl md:text-sm font-inter"
+                      className="capitalize font-medium text-xs ml-4 lg:text-2xl md:text-sm font-inter"
                     >
                       {title}
                     </Link>
