@@ -54,13 +54,13 @@ export const queryKeys = {
   partStat: () => ["partStat"] as const,
 
   parts: (params: {
-    page: number;
-    pageSize: number;
     name?: string;
     categoryName?: string;
     status?: string;
     sortBy?: string;
     orderBy?: "asc" | "desc";
+    page: number;
+    pageSize: number;
   }) => ["parts", params] as const,
 
   category: () => ["category"] as const,

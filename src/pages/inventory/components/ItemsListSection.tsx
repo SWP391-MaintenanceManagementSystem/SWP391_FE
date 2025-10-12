@@ -1,7 +1,7 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { DataTable } from "@/components/table/DataTable";
 import { getColumns } from "./table/columns";
-import type { Part } from "@/types/models/part";
+import type { Part, Category } from "@/types/models/part";
 import type { ColumnDef, SortingState } from "@tanstack/react-table";
 import { useGetPartList, useGetCategoryList } from "@/services/manager/queries";
 import { useState } from "react";
@@ -17,16 +17,19 @@ export default function ItemsListSection() {
     categoryName: "",
   });
 
-  const { data: categoryList } = useGetCategoryList();
+  const { data: apiGetCategory } = useGetCategoryList();
+  const categoryList: Category[] = Array.isArray(apiGetCategory)
+    ? apiGetCategory
+    : [];
 
   const { data, isLoading, isFetching } = useGetPartList({
-    page,
-    pageSize,
     name: searchValue || undefined,
     status: filters.status || undefined,
     categoryName: filters.categoryName || undefined,
     sortBy: sorting[0]?.id ?? "createdAt",
-    orderBy: sorting[0]?.desc ? "desc" : "asc",
+    orderBy: sorting[0]?.desc ? "asc" : "desc",
+    page,
+    pageSize,
   });
 
   const rawList = data?.data ?? [];
@@ -36,7 +39,7 @@ export default function ItemsListSection() {
     setFilters((prev) => ({ ...prev, [field]: value }));
   };
 
-  const columns = getColumns(hanldeFilterChange, filters, categoryList ?? []);
+  const columns = getColumns(hanldeFilterChange, filters, categoryList);
 
   return (
     <Card className="h-full flex-1 md:min-h-[500px] min-h-[600px]">

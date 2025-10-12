@@ -72,13 +72,13 @@ export const useGetAccountList = (params: {
  * @returns
  */
 export const useGetPartList = (params: {
-  page: number;
-  pageSize: number;
   name?: string;
   categoryName?: string;
   status?: string;
   sortBy?: string;
   orderBy?: "asc" | "desc";
+  page: number;
+  pageSize: number;
 }) => {
   return useQuery({
     queryKey: queryKeys.parts(params),

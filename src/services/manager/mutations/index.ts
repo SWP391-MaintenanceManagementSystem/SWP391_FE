@@ -11,7 +11,15 @@ import {
   updateTechnician,
   addTechnicican,
 } from "../apis/technician.api";
-import { detletePartItem } from "../apis/inventory.api";
+import {
+  addCategory,
+  detletePartItem,
+  updatePartItem,
+} from "../apis/inventory.api";
+import type {
+  CategoryFormData,
+  PartItemFormData,
+} from "@/pages/inventory/libs/schema";
 
 export const useUpdateCustomerInfo = () => {
   const queryClient = useQueryClient();
@@ -340,6 +348,62 @@ export const useAddEmployee = () => {
 
     onError: () => {
       toast.error("Failed to create new employee");
+    },
+  });
+};
+
+export const useAddCategory = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (data: CategoryFormData) => {
+      return (await addCategory(data)).data;
+    },
+
+    onSuccess: () => {
+      toast.success("Category created successfully");
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.category(),
+      });
+    },
+
+    onError: () => {
+      toast.error("Failed to create category");
+    },
+  });
+};
+
+export const useEditPartItem = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async ({
+      partId,
+      data,
+    }: {
+      partId: string;
+      currentPage: number;
+      currentPageSize: number;
+      data: PartItemFormData;
+    }) => {
+      const update = await updatePartItem(partId, data);
+      return update.data;
+    },
+    onSuccess: async (_data, variables) => {
+      await Promise.all([
+        queryClient.invalidateQueries({
+          queryKey: queryKeys.parts({
+            page: variables.currentPage,
+            pageSize: variables.currentPageSize,
+          }),
+        }),
+        queryClient.invalidateQueries({
+          queryKey: queryKeys.partStat(),
+        }),
+      ]);
+      toast.success("Part item information updated successfully");
+    },
+    onError: (error) => {
+      console.error(error);
+      toast.error("Failed to update part item information");
     },
   });
 };
