@@ -1,6 +1,5 @@
 import { PeriodType } from "@/types/enums/periodType";
 import { Goal, CircleCheck } from "lucide-react";
-
 type MembershipCardProps = {
   title: string;
   description: string;
