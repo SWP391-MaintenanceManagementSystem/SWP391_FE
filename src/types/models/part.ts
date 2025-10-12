@@ -1,6 +1,7 @@
 const PartStatus = {
-  INSTOCK: "INSTOCK",
-  LOWSTOCK: "LOWSTOCK",
+  AVAILABLE: "AVAILABLE",
+  OUT_OF_STOCK: "OUT_OF_STOCK",
+  DISCONTINUED: "DISCONTINUED",
 } as const;
 
 export type PartStatus = (typeof PartStatus)[keyof typeof PartStatus];

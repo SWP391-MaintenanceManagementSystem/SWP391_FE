@@ -13,15 +13,20 @@ const getColor = (
   label: string;
   variant: BadgeVariant;
 } => {
-  if (status === "LOWSTOCK") {
+  if (status === "OUT_OF_STOCK") {
     return {
       label: "Low Stock",
       variant: "destructive",
     };
-  } else {
+  } else if (status === "AVAILABLE") {
     return {
       label: "In Stock",
       variant: "default",
+    };
+  } else {
+    return {
+      label: "Discontinue",
+      variant: "secondary",
     };
   }
 };

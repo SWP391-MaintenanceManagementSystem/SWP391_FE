@@ -30,6 +30,7 @@ export default function ItemsListSection() {
   });
 
   const rawList = data?.data ?? [];
+  console.log("Filter status", filters.status);
 
   const hanldeFilterChange = (field: string, value: string) => {
     setFilters((prev) => ({ ...prev, [field]: value }));

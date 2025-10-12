@@ -88,8 +88,8 @@ export const getColumns = (
       meta: {
         title: "Status",
         filterVariant: "filterStatus",
-        filterOptions: ["INSTOCK", "LOWSTOCK"],
-        labelOptions: { INSTOCK: "In Stock", LOWSTOCK: "Low Stock" },
+        filterOptions: ["AVAILABLE", "OUT_OF_STOCK"],
+        labelOptions: { AVAILABLE: "In Stock", OUT_OF_STOCK: "Low Stock" },
       },
     }),
     columnHelper.accessor("price", {

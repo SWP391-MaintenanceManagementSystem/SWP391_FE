@@ -21,7 +21,7 @@ export const getPartList = (params: {
 };
 
 export const getCategoryList = () => {
-  return httpPrivate.get<BaseResponse<Category>>("/category");
+  return httpPrivate.get<BaseResponse<{ data: Category }>>("/category");
 };
 
 export const detletePartItem = (id: string) => {
