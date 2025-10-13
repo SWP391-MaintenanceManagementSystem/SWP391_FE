@@ -54,14 +54,12 @@ export function AddEditGoodsDialog({
 }: AddEditGoodsDialogProps) {
   const [isAddingCategory, setIsAddingCategory] = useState(false);
   const [newCategory, setNewCategory] = useState("");
-
-  const { control, watch, setValue, handleSubmit } = form;
+  const { setValue, watch } = form;
 
   const onSubmit = async (values: PartItemFormData) => {
     const isValid = await form.trigger();
     if (!isValid) return;
     onConfirm(values);
-    console.log(values);
   };
 
   return (
@@ -69,6 +67,7 @@ export function AddEditGoodsDialog({
       <DialogContent
         className="sm:max-w-[500px] font-inter"
         onOpenAutoFocus={(e) => e.preventDefault()}
+        onCloseAutoFocus={(e) => e.preventDefault()}
       >
         <DialogHeader>
           <DialogTitle>{item ? "Edit Item" : "Add New Item"}</DialogTitle>
@@ -80,11 +79,11 @@ export function AddEditGoodsDialog({
         </DialogHeader>
 
         <Form {...form}>
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             {/* Item Name + Unit Price */}
             <div className="grid grid-cols-2 gap-4">
               <FormField
-                control={control}
+                control={form.control}
                 name="name"
                 render={({ field }) => (
                   <FormItem>
@@ -98,7 +97,7 @@ export function AddEditGoodsDialog({
               />
 
               <FormField
-                control={control}
+                control={form.control}
                 name="price"
                 render={({ field }) => (
                   <FormItem>
@@ -126,7 +125,7 @@ export function AddEditGoodsDialog({
             {/* Quantity + Minimum Stock */}
             <div className="grid grid-cols-2 gap-4">
               <FormField
-                control={control}
+                control={form.control}
                 name="stock"
                 render={({ field }) => (
                   <FormItem>
@@ -150,7 +149,7 @@ export function AddEditGoodsDialog({
               />
 
               <FormField
-                control={control}
+                control={form.control}
                 name="minStock"
                 render={({ field }) => (
                   <FormItem>
@@ -178,68 +177,94 @@ export function AddEditGoodsDialog({
             <div className="space-y-2 w-full">
               <Label>Category *</Label>
               {isAddingCategory ? (
-                <div className="flex gap-2">
-                  <Input
-                    value={newCategory}
-                    onChange={(e) => setNewCategory(e.target.value)}
-                    placeholder="New category name"
-                    className="flex-1"
-                    required
-                  />
-                  <Button
-                    type="button"
-                    size="sm"
-                    disabled={!newCategory.trim()}
-                    onClick={() => {
-                      handleAddCategory(newCategory, (newCat) => {
-                        setValue("categoryId", newCat.id, {
-                          shouldDirty: true,
+                <>
+                  <div className="flex gap-2">
+                    <Input
+                      value={newCategory}
+                      onChange={(e) => setNewCategory(e.target.value)}
+                      placeholder="New category name"
+                      className="flex-1"
+                      required
+                      aria-invalid={!!form.formState.errors.categoryId}
+                    />
+
+                    <Button
+                      type="button"
+                      size="sm"
+                      disabled={!newCategory.trim()}
+                      onClick={async () => {
+                        handleAddCategory(newCategory, (newCat) => {
+                          // categories.push(newCat);
+                          setValue("categoryId", newCat.id, {
+                            shouldDirty: true,
+                          });
+                          setIsAddingCategory(false);
+                          setNewCategory("");
                         });
-                        setIsAddingCategory(false);
-                        setNewCategory("");
-                      });
-                    }}
-                  >
-                    Add
-                  </Button>
-                  <Button
-                    type="button"
-                    variant="outline"
-                    size="sm"
-                    onClick={() => setIsAddingCategory(false)}
-                  >
-                    Cancel
-                  </Button>
-                </div>
+                      }}
+                    >
+                      Add
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setIsAddingCategory(false)}
+                    >
+                      Cancel
+                    </Button>
+                  </div>
+                  {form.formState.errors.categoryId && (
+                    <p className="text-sm text-destructive">
+                      {form.formState.errors.categoryId.message}
+                    </p>
+                  )}
+                </>
               ) : (
-                <Select
-                  onValueChange={(value) => {
-                    if (value === "add-new") {
-                      setIsAddingCategory(true);
-                    } else {
-                      setValue("categoryId", value, { shouldDirty: true });
-                    }
-                  }}
-                  value={watch("categoryId")}
-                >
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Select category" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {categories.map((cat) => (
-                      <SelectItem key={cat.id} value={cat.id}>
-                        {cat.name}
+                <>
+                  <Select
+                    onValueChange={(value) => {
+                      if (value === "add-new") {
+                        setIsAddingCategory(true);
+                      } else {
+                        setValue("categoryId", value, { shouldDirty: true });
+                      }
+                    }}
+                    value={watch("categoryId")}
+                    aria-invalid={!!form.formState.errors.categoryId}
+                  >
+                    <SelectTrigger
+                      className={`w-full border ${
+                        form.formState.errors.categoryId
+                          ? "border-destructive focus:ring-destructive"
+                          : "border-input focus:ring-primary"
+                      }`}
+                    >
+                      <SelectValue placeholder="Select category" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {categories.map((cat) => (
+                        <SelectItem key={cat.id} value={cat.id}>
+                          {cat.name}
+                        </SelectItem>
+                      ))}
+                      <SelectItem value="add-new">
+                        + Add New Category
                       </SelectItem>
-                    ))}
-                    <SelectItem value="add-new">+ Add New Category</SelectItem>
-                  </SelectContent>
-                </Select>
+                    </SelectContent>
+                  </Select>
+                  {form.formState.errors.categoryId && (
+                    <p className="text-sm text-destructive">
+                      {form.formState.errors.categoryId.message}
+                    </p>
+                  )}
+                </>
               )}
             </div>
 
             {/* Description */}
             <FormField
-              control={control}
+              control={form.control}
               name="description"
               render={({ field }) => (
                 <FormItem>

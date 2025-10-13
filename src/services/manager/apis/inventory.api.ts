@@ -7,7 +7,7 @@ import type {
 } from "@/pages/inventory/libs/schema";
 
 export const getPartStat = () => {
-  return httpPrivate.get<BaseResponse<{ data: PartStat }>>(`/part/statistics`);
+  return httpPrivate.get<BaseResponse<{ data: PartStat }>>(`/parts/statistics`);
 };
 
 export const getPartList = (params: {
@@ -19,23 +19,27 @@ export const getPartList = (params: {
   page: number;
   pageSize: number;
 }) => {
-  return httpPrivate.get<BaseResponse<PaginationResponse<Part>>>("/part", {
+  return httpPrivate.get<BaseResponse<PaginationResponse<Part>>>("/parts", {
     params,
   });
 };
 
 export const getCategoryList = () => {
-  return httpPrivate.get<BaseResponse<{ data: Category }>>("/category");
+  return httpPrivate.get<BaseResponse<{ data: Category }>>("/categories");
 };
 
 export const detletePartItem = (id: string) => {
-  return httpPrivate.del<BaseResponse<void>>(`/part/${id}`);
+  return httpPrivate.del<BaseResponse<void>>(`/parts/${id}`);
 };
 
 export const updatePartItem = (id: string, data: PartItemFormData) => {
-  return httpPrivate.patch<BaseResponse<Part>>(`/part/${id}`, data);
+  return httpPrivate.patch<BaseResponse<Part>>(`/parts/${id}`, data);
 };
 
 export const addCategory = (data: CategoryFormData) => {
-  return httpPrivate.post<BaseResponse<Category>>(`/category`, data);
+  return httpPrivate.post<BaseResponse<Category>>(`/categories`, data);
+};
+
+export const addPartItem = (data: PartItemFormData) => {
+  return httpPrivate.post<BaseResponse<Part>>(`/parts`, data);
 };

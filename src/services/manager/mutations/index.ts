@@ -13,6 +13,7 @@ import {
 } from "../apis/technician.api";
 import {
   addCategory,
+  addPartItem,
   detletePartItem,
   updatePartItem,
 } from "../apis/inventory.api";
@@ -368,6 +369,37 @@ export const useAddCategory = () => {
 
     onError: () => {
       toast.error("Failed to create category");
+    },
+  });
+};
+
+export const useAddPartItem = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async ({
+      data,
+    }: {
+      data: PartItemFormData;
+      currentPage: number;
+      currentPageSize: number;
+    }) => {
+      const add = await addPartItem(data);
+      return add.data;
+    },
+
+    onSuccess: async (_data, variables) => {
+      await Promise.all([
+        queryClient.invalidateQueries({
+          queryKey: queryKeys.parts({
+            page: variables.currentPage,
+            pageSize: variables.currentPageSize,
+          }),
+        }),
+        queryClient.invalidateQueries({
+          queryKey: queryKeys.partStat(),
+        }),
+      ]);
+      toast.success("Part item information created successfully");
     },
   });
 };

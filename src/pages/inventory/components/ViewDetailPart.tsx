@@ -20,12 +20,6 @@ export default function ViewDetailPart({ partItem }: ViewDetailPartProps) {
           value={partItem.category.name}
         />
         <InputDisableWithLabel
-          label="Description"
-          id="description"
-          value={partItem.description}
-          styleFormat="md:col-span-2"
-        />
-        <InputDisableWithLabel
           label="Price"
           id="price"
           value={`$ ${partItem.price.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
@@ -44,6 +38,13 @@ export default function ViewDetailPart({ partItem }: ViewDetailPartProps) {
           label="Status"
           id="status"
           value={<StockStatusTag status={partItem.status} />}
+        />
+
+        <InputDisableWithLabel
+          label="Description"
+          id="description"
+          value={partItem.description}
+          styleFormat="md:col-span-2"
         />
       </InfoSection>
     </div>

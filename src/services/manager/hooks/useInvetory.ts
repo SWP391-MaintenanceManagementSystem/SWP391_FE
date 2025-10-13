@@ -2,6 +2,7 @@ import {
   useDeletePartItem,
   useAddCategory,
   useEditPartItem,
+  useAddPartItem,
 } from "../mutations";
 import type { Category, Part } from "@/types/models/part";
 import {
@@ -10,35 +11,51 @@ import {
 } from "@/pages/inventory/libs/schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { AxiosError } from "axios";
 
 export const useInventory = (
   currentPage: number,
   currentPageSize: number,
-  part: Part,
+  part?: Part,
 ) => {
   const deletePartMutaion = useDeletePartItem();
   const addCategoryMutation = useAddCategory();
-  const editPartItemMatation = useEditPartItem();
+  const editPartItemMutation = useEditPartItem();
+  const addPartItemMutation = useAddPartItem();
 
   const form = useForm<PartItemFormData>({
     resolver: zodResolver(PartItemSchema),
     defaultValues: {
-      name: part.name,
-      categoryId: part.category.id || "",
-      stock: Number(part.quantity) || 0,
-      minStock: Number(part.minStock) || 0,
-      price: Number(part.price) || 0,
-      description: part.description || "",
+      name: part?.name ?? "",
+      categoryId: part?.category?.id ?? "",
+      stock: part ? Number(part.quantity) : 0,
+      minStock: part ? Number(part.minStock) : 0,
+      price: part ? Number(part.price) : 0,
+      description: part?.description ?? "",
     },
   });
 
-  const handleEditPartItem = (id: string) => {
-    editPartItemMatation.mutate({
-      partId: id,
-      data: form.getValues(),
-      currentPage,
-      currentPageSize,
-    });
+  const handleEditPartItem = async (id: string, data: PartItemFormData) => {
+    try {
+      await editPartItemMutation.mutateAsync({
+        partId: id,
+        data,
+        currentPage,
+        currentPageSize,
+      });
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        const apiErrors = error.response?.data?.errors;
+        if (apiErrors && typeof apiErrors === "object") {
+          Object.entries(apiErrors).forEach(([field, msg]) => {
+            form.setError(field as keyof PartItemFormData, {
+              type: "server",
+              message: msg as string,
+            });
+          });
+        }
+      }
+    }
   };
 
   const handleDeletePart = (id: string) => {
@@ -57,7 +74,43 @@ export const useInventory = (
       { name },
       {
         onSuccess: (newCategory) => {
-          if (onSuccess) onSuccess(newCategory);
+          onSuccess?.(newCategory);
+        },
+        onError: (error) => {
+          if (error instanceof AxiosError) {
+            const msg = error.response?.data?.message;
+
+            form.setError("categoryId", {
+              type: "server",
+              message: msg,
+            });
+          }
+        },
+      },
+    );
+  };
+
+  const handleAddPartItem = async (data: PartItemFormData) => {
+    addPartItemMutation.mutate(
+      {
+        data,
+        currentPage,
+        currentPageSize,
+      },
+      {
+        onError: (error) => {
+          if (error instanceof AxiosError) {
+            const apiErrors = error.response?.data?.errors;
+
+            if (apiErrors && typeof apiErrors === "object") {
+              Object.entries(apiErrors).forEach(([field, msg]) => {
+                form.setError(field as keyof PartItemFormData, {
+                  type: "server",
+                  message: msg as string,
+                });
+              });
+            }
+          }
         },
       },
     );
@@ -68,5 +121,6 @@ export const useInventory = (
     handleAddCategory,
     form,
     handleEditPartItem,
+    handleAddPartItem,
   };
 };

@@ -89,7 +89,11 @@ export default function ColActions({
         categories={categoryList}
         handleAddCategory={handleAddCategory}
         form={form}
-        onConfirm={() => handleEditPartItem(part.id)}
+        onConfirm={async (data) => {
+          await handleEditPartItem(part.id, data);
+          setOpenEditDialog(false);
+          form.reset();
+        }}
       />
     </div>
   );

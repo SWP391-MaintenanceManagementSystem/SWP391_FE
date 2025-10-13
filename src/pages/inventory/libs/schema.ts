@@ -3,10 +3,9 @@ import { z } from "zod";
 export const PartItemSchema = z.object({
   name: z
     .string()
+    .nonempty("Item name is required")
     .min(2, "Item name must be between 2 and 50 characters long")
-    .max(50, "Item name must be between 2 and 50 characters long")
-    .nonempty("Item name is required"),
-
+    .max(50, "Item name must be between 2 and 50 characters long"),
   categoryId: z.string().nonempty("Category is required"),
 
   stock: z
