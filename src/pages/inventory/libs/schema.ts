@@ -34,6 +34,7 @@ export const PartItemSchema = z.object({
     .string()
     .max(300, "Description must be at most 300 characters")
     .optional(),
+  status: z.enum(["AVAILABLE", "OUT_OF_STOCK", "DISCONTINUED"]).optional(),
 });
 
 export type PartItemFormData = z.infer<typeof PartItemSchema>;
@@ -45,4 +46,5 @@ export const PartItemFormDefaultValues: PartItemFormData = {
   minStock: 0,
   price: 0,
   description: "",
+  status: undefined,
 };

@@ -409,9 +409,5 @@ export const useEditPartItem = () => {
       ]);
       toast.success("Part item information updated successfully");
     },
-    onError: (error) => {
-      console.error(error);
-      toast.error("Failed to update part item information");
-    },
   });
 };

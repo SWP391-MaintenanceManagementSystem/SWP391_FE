@@ -55,6 +55,8 @@ export function AddEditGoodsDialog({
     onConfirm(values);
   };
 
+  const isDiscontinued = item?.status === "DISCONTINUED";
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
@@ -196,6 +198,44 @@ export function AddEditGoodsDialog({
               {form.formState.errors.categoryId && (
                 <p className="text-sm text-destructive">
                   {form.formState.errors.categoryId.message}
+                </p>
+              )}
+
+              {isDiscontinued && (
+                <>
+                  <Label>Status</Label>
+                  <Select
+                    onValueChange={(value) => {
+                      setValue(
+                        "status",
+                        value as "AVAILABLE" | "DISCONTINUED",
+                        {
+                          shouldDirty: true,
+                        },
+                      );
+                    }}
+                    value={watch("status")}
+                    aria-invalid={!!form.formState.errors.status}
+                  >
+                    <SelectTrigger
+                      className={`w-full border ${
+                        form.formState.errors.status
+                          ? "border-destructive focus:ring-destructive"
+                          : "border-input focus:ring-primary"
+                      }`}
+                    >
+                      <SelectValue placeholder="Select status" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="AVAILABLE">Available</SelectItem>
+                      <SelectItem value="DISCONTINUED">Discontinued</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </>
+              )}
+              {form.formState.errors.status && (
+                <p className="text-sm text-destructive">
+                  {form.formState.errors.status.message}
                 </p>
               )}
             </div>

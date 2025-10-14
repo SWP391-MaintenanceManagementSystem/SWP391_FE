@@ -11,6 +11,7 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { AxiosError } from "axios";
+import { toast } from "sonner";
 
 export const useInventory = (
   currentPage: number,
@@ -30,6 +31,7 @@ export const useInventory = (
       minStock: part ? Number(part.minStock) : 0,
       price: part ? Number(part.price) : 0,
       description: part?.description ?? "",
+      status: part?.status,
     },
   });
 
@@ -44,6 +46,7 @@ export const useInventory = (
     } catch (error) {
       if (error instanceof AxiosError) {
         const apiErrors = error.response?.data?.errors;
+        const msg = error.response?.data.message;
         if (apiErrors && typeof apiErrors === "object") {
           Object.entries(apiErrors).forEach(([field, msg]) => {
             form.setError(field as keyof PartItemFormData, {
@@ -51,6 +54,10 @@ export const useInventory = (
               message: msg as string,
             });
           });
+        } else if (msg) {
+          toast.error(msg);
+        } else {
+          toast.error("Something went wrong. Please try again.");
         }
       }
     }
@@ -75,6 +82,7 @@ export const useInventory = (
         onError: (error) => {
           if (error instanceof AxiosError) {
             const apiErrors = error.response?.data?.errors;
+            const msg = error.response?.data.message;
             if (apiErrors && typeof apiErrors === "object") {
               Object.entries(apiErrors).forEach(([field, msg]) => {
                 form.setError(field as keyof PartItemFormData, {
@@ -82,6 +90,10 @@ export const useInventory = (
                   message: msg as string,
                 });
               });
+            } else if (msg) {
+              toast.error(msg);
+            } else {
+              toast.error("Something went wrong. Please try again.");
             }
           }
         },
