@@ -48,7 +48,7 @@ export default function AdminVehiclesManagement() {
         firstName: profile && "firstName" in profile ? profile.firstName : "",
         lastName: profile && "lastName" in profile ? profile.lastName : "",
         isPremium: isCustomerProfile ? profile.isPremium === true : false,
-        address: profile && "address" in profile ? (profile.address ?? "") : "",
+        address: profile && "address" in profile ? (profile.address ?? "") : " ",
       },
     };
   });
