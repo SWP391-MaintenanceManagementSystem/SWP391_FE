@@ -3,7 +3,18 @@ export const queryKeys = {
   customerById: (customerId: string) => ["customerById", customerId] as const,
 
   // Vehicles theo customer
-  vehiclesList: (customerId: string) => ["vehicles", customerId] as const,
+  vehiclesList: (params: {
+    customerId: string;
+    page: number;
+    pageSize: number;
+    vin?: string;
+    licensePlate?: string;
+    status?: string;
+    modelId?: number;
+    brandId?: number;
+    sortBy?: string;
+    orderBy?: "asc" | "desc";
+  }) => ["vehicles", params] as const,
 
   // Vehicle theo ID
   vehicleById: (vehicleId: string) => ["vehicleById", vehicleId] as const,
@@ -38,5 +49,19 @@ export const queryKeys = {
     sortBy?: string;
     orderBy?: "asc" | "desc";
     type?: "CUSTOMER" | "STAFF" | "TECHNICIAN";
-  }) => ["accountss", params] as const,
+  }) => ["accounts", params] as const,
+
+  partStat: () => ["partStat"] as const,
+
+  parts: (params: {
+    name?: string;
+    categoryName?: string;
+    status?: string;
+    sortBy?: string;
+    orderBy?: "asc" | "desc";
+    page: number;
+    pageSize: number;
+  }) => ["parts", params] as const,
+
+  category: () => ["category"] as const,
 };

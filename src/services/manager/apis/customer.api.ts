@@ -18,7 +18,6 @@ export const getCustomers = (params: {
   phone?: string;
   sortBy?: string;
   orderBy?: "asc" | "desc";
-  // isPremium?: boolean;
 }) => {
   return httpPrivate.get<BaseResponse<PaginationResponse<AccountWithProfile>>>(
     "/customers",

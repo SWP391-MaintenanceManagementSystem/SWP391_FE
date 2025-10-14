@@ -11,6 +11,12 @@ import {
   updateTechnician,
   addTechnicican,
 } from "../apis/technician.api";
+import {
+  addPartItem,
+  detletePartItem,
+  updatePartItem,
+} from "../apis/inventory.api";
+import type { PartItemFormData } from "@/pages/inventory/libs/schema";
 
 export const useUpdateCustomerInfo = () => {
   const queryClient = useQueryClient();
@@ -97,13 +103,19 @@ export const useDeleteVehicle = () => {
     }: {
       id: string;
       customerId: string;
+      currentPage: number;
+      currentPageSize: number;
     }) => {
       const deletedVehicle = await deleteVehicle(id);
       return deletedVehicle.data;
     },
     onSuccess: (_data, variables) => {
       queryClient.invalidateQueries({
-        queryKey: queryKeys.vehiclesList(variables.customerId),
+        queryKey: queryKeys.vehiclesList({
+          customerId: variables.customerId,
+          page: variables.currentPage,
+          pageSize: variables.currentPageSize,
+        }),
       });
       toast.success("Vehicle deleted successfully");
     },
@@ -124,6 +136,8 @@ export const useEditVehicle = () => {
     }: {
       vehicleId: string;
       customerId: string;
+      currentPage: number;
+      currentPageSize: number;
       data: AddVehicleFormData;
     }) => {
       const updatedVehicle = await editVehicle(vehicleId, data);
@@ -132,7 +146,11 @@ export const useEditVehicle = () => {
     onSuccess: async (_data, variables) => {
       await Promise.all([
         queryClient.invalidateQueries({
-          queryKey: queryKeys.vehiclesList(variables.customerId),
+          queryKey: queryKeys.vehiclesList({
+            customerId: variables.customerId,
+            page: variables.currentPage,
+            pageSize: variables.currentPageSize,
+          }),
         }),
         queryClient.invalidateQueries({
           queryKey: queryKeys.vehicleById(variables.vehicleId),
@@ -143,6 +161,41 @@ export const useEditVehicle = () => {
     onError: (error) => {
       console.error(error);
       toast.error("Failed to update vehicle information");
+    },
+  });
+};
+
+export const useDeletePartItem = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({
+      id,
+    }: {
+      id: string;
+      currentPage: number;
+      currentPageSize: number;
+    }) => {
+      const del = await detletePartItem(id);
+      return del.data;
+    },
+    onSuccess: async (_data, variables) => {
+      await Promise.all([
+        queryClient.invalidateQueries({
+          queryKey: queryKeys.parts({
+            page: variables.currentPage,
+            pageSize: variables.currentPageSize,
+          }),
+        }),
+
+        queryClient.invalidateQueries({
+          queryKey: queryKeys.partStat(),
+        }),
+      ]);
+      toast.success("Deleted part item successfully");
+    },
+    onError: () => {
+      toast.error("Failed to delete part item");
     },
   });
 };
@@ -292,6 +345,69 @@ export const useAddEmployee = () => {
 
     onError: () => {
       toast.error("Failed to create new employee");
+    },
+  });
+};
+
+export const useAddPartItem = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async ({
+      data,
+    }: {
+      data: PartItemFormData;
+      currentPage: number;
+      currentPageSize: number;
+    }) => {
+      const add = await addPartItem(data);
+      return add.data;
+    },
+
+    onSuccess: async (_data, variables) => {
+      await Promise.all([
+        queryClient.invalidateQueries({
+          queryKey: queryKeys.parts({
+            page: variables.currentPage,
+            pageSize: variables.currentPageSize,
+          }),
+        }),
+        queryClient.invalidateQueries({
+          queryKey: queryKeys.partStat(),
+        }),
+      ]);
+      toast.success("Part item information created successfully");
+    },
+  });
+};
+
+export const useEditPartItem = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async ({
+      partId,
+      data,
+    }: {
+      partId: string;
+      currentPage: number;
+      currentPageSize: number;
+      data: PartItemFormData;
+    }) => {
+      const update = await updatePartItem(partId, data);
+      return update.data;
+    },
+    onSuccess: async (_data, variables) => {
+      await Promise.all([
+        queryClient.invalidateQueries({
+          queryKey: queryKeys.parts({
+            page: variables.currentPage,
+            pageSize: variables.currentPageSize,
+          }),
+        }),
+        queryClient.invalidateQueries({
+          queryKey: queryKeys.partStat(),
+        }),
+      ]);
+      toast.success("Part item information updated successfully");
     },
   });
 };
