@@ -169,40 +169,41 @@ export function AddEditGoodsDialog({
             </div>
 
             {/* Category Select / Add New */}
-            <div className="space-y-2 w-full">
-              <Label>Category *</Label>
-              <Select
-                onValueChange={(value) => {
-                  setValue("categoryId", value, { shouldDirty: true });
-                }}
-                value={watch("categoryId")}
-                aria-invalid={!!form.formState.errors.categoryId}
-              >
-                <SelectTrigger
-                  className={`w-full border ${
-                    form.formState.errors.categoryId
-                      ? "border-destructive focus:ring-destructive"
-                      : "border-input focus:ring-primary"
-                  }`}
+            <div className="flex gap-4">
+              <div className="space-y-2 w-full">
+                <Label>Category *</Label>
+                <Select
+                  onValueChange={(value) => {
+                    setValue("categoryId", value, { shouldDirty: true });
+                  }}
+                  value={watch("categoryId")}
+                  aria-invalid={!!form.formState.errors.categoryId}
                 >
-                  <SelectValue placeholder="Select category" />
-                </SelectTrigger>
-                <SelectContent>
-                  {categories.map((cat) => (
-                    <SelectItem key={cat.id} value={cat.id}>
-                      {cat.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              {form.formState.errors.categoryId && (
-                <p className="text-sm text-destructive">
-                  {form.formState.errors.categoryId.message}
-                </p>
-              )}
-
+                  <SelectTrigger
+                    className={`w-full border ${
+                      form.formState.errors.categoryId
+                        ? "border-destructive focus:ring-destructive"
+                        : "border-input focus:ring-primary"
+                    }`}
+                  >
+                    <SelectValue placeholder="Select category" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {categories.map((cat) => (
+                      <SelectItem key={cat.id} value={cat.id}>
+                        {cat.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                {form.formState.errors.categoryId && (
+                  <p className="text-sm text-destructive">
+                    {form.formState.errors.categoryId.message}
+                  </p>
+                )}
+              </div>
               {isDiscontinued && (
-                <>
+                <div className="space-y-2 w-full">
                   <Label>Status</Label>
                   <Select
                     onValueChange={(value) => {
@@ -231,7 +232,7 @@ export function AddEditGoodsDialog({
                       <SelectItem value="DISCONTINUED">Discontinued</SelectItem>
                     </SelectContent>
                   </Select>
-                </>
+                </div>
               )}
               {form.formState.errors.status && (
                 <p className="text-sm text-destructive">

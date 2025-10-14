@@ -6,7 +6,7 @@ export default function StatisticsSection() {
   const { data } = useGetPartStat();
 
   return (
-    <div className="grid lg:grid-cols-4 grid-cols-2 lg:grid-rows-1 gap-3 md:gap-6 font-inter h-auto ">
+    <div className="grid lg:grid-cols-4 grid-cols-2 gap-3 md:gap-4 font-inter h-auto ">
       <StatisticsCard
         icon={Package}
         title="Total Items"
