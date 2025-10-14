@@ -1,4 +1,4 @@
-import { useState } from "react";
+// import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -36,10 +36,6 @@ interface AddEditGoodsDialogProps {
   onConfirm: (data: PartItemFormData) => void;
   item?: Part | null;
   categories: Category[];
-  handleAddCategory: (
-    name: string,
-    onSuccess: (newCat: Category) => void,
-  ) => void;
   form: ReturnType<typeof useForm<PartItemFormData>>;
 }
 
@@ -49,11 +45,8 @@ export function AddEditGoodsDialog({
   onConfirm,
   item,
   categories,
-  handleAddCategory,
   form,
 }: AddEditGoodsDialogProps) {
-  const [isAddingCategory, setIsAddingCategory] = useState(false);
-  const [newCategory, setNewCategory] = useState("");
   const { setValue, watch } = form;
 
   const onSubmit = async (values: PartItemFormData) => {
@@ -176,89 +169,34 @@ export function AddEditGoodsDialog({
             {/* Category Select / Add New */}
             <div className="space-y-2 w-full">
               <Label>Category *</Label>
-              {isAddingCategory ? (
-                <>
-                  <div className="flex gap-2">
-                    <Input
-                      value={newCategory}
-                      onChange={(e) => setNewCategory(e.target.value)}
-                      placeholder="New category name"
-                      className="flex-1"
-                      required
-                      aria-invalid={!!form.formState.errors.categoryId}
-                    />
-
-                    <Button
-                      type="button"
-                      size="sm"
-                      disabled={!newCategory.trim()}
-                      onClick={async () => {
-                        handleAddCategory(newCategory, (newCat) => {
-                          // categories.push(newCat);
-                          setValue("categoryId", newCat.id, {
-                            shouldDirty: true,
-                          });
-                          setIsAddingCategory(false);
-                          setNewCategory("");
-                        });
-                      }}
-                    >
-                      Add
-                    </Button>
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="sm"
-                      onClick={() => setIsAddingCategory(false)}
-                    >
-                      Cancel
-                    </Button>
-                  </div>
-                  {form.formState.errors.categoryId && (
-                    <p className="text-sm text-destructive">
-                      {form.formState.errors.categoryId.message}
-                    </p>
-                  )}
-                </>
-              ) : (
-                <>
-                  <Select
-                    onValueChange={(value) => {
-                      if (value === "add-new") {
-                        setIsAddingCategory(true);
-                      } else {
-                        setValue("categoryId", value, { shouldDirty: true });
-                      }
-                    }}
-                    value={watch("categoryId")}
-                    aria-invalid={!!form.formState.errors.categoryId}
-                  >
-                    <SelectTrigger
-                      className={`w-full border ${
-                        form.formState.errors.categoryId
-                          ? "border-destructive focus:ring-destructive"
-                          : "border-input focus:ring-primary"
-                      }`}
-                    >
-                      <SelectValue placeholder="Select category" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {categories.map((cat) => (
-                        <SelectItem key={cat.id} value={cat.id}>
-                          {cat.name}
-                        </SelectItem>
-                      ))}
-                      <SelectItem value="add-new">
-                        + Add New Category
-                      </SelectItem>
-                    </SelectContent>
-                  </Select>
-                  {form.formState.errors.categoryId && (
-                    <p className="text-sm text-destructive">
-                      {form.formState.errors.categoryId.message}
-                    </p>
-                  )}
-                </>
+              <Select
+                onValueChange={(value) => {
+                  setValue("categoryId", value, { shouldDirty: true });
+                }}
+                value={watch("categoryId")}
+                aria-invalid={!!form.formState.errors.categoryId}
+              >
+                <SelectTrigger
+                  className={`w-full border ${
+                    form.formState.errors.categoryId
+                      ? "border-destructive focus:ring-destructive"
+                      : "border-input focus:ring-primary"
+                  }`}
+                >
+                  <SelectValue placeholder="Select category" />
+                </SelectTrigger>
+                <SelectContent>
+                  {categories.map((cat) => (
+                    <SelectItem key={cat.id} value={cat.id}>
+                      {cat.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              {form.formState.errors.categoryId && (
+                <p className="text-sm text-destructive">
+                  {form.formState.errors.categoryId.message}
+                </p>
               )}
             </div>
 

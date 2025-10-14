@@ -1,10 +1,9 @@
 import {
   useDeletePartItem,
-  useAddCategory,
   useEditPartItem,
   useAddPartItem,
 } from "../mutations";
-import type { Category, Part } from "@/types/models/part";
+import type { Part } from "@/types/models/part";
 import {
   type PartItemFormData,
   PartItemSchema,
@@ -19,7 +18,6 @@ export const useInventory = (
   part?: Part,
 ) => {
   const deletePartMutaion = useDeletePartItem();
-  const addCategoryMutation = useAddCategory();
   const editPartItemMutation = useEditPartItem();
   const addPartItemMutation = useAddPartItem();
 
@@ -66,30 +64,6 @@ export const useInventory = (
     });
   };
 
-  const handleAddCategory = async (
-    name: string,
-    onSuccess?: (newCategory: Category) => void,
-  ) => {
-    addCategoryMutation.mutate(
-      { name },
-      {
-        onSuccess: (newCategory) => {
-          onSuccess?.(newCategory);
-        },
-        onError: (error) => {
-          if (error instanceof AxiosError) {
-            const msg = error.response?.data?.message;
-
-            form.setError("categoryId", {
-              type: "server",
-              message: msg,
-            });
-          }
-        },
-      },
-    );
-  };
-
   const handleAddPartItem = async (data: PartItemFormData) => {
     addPartItemMutation.mutate(
       {
@@ -101,7 +75,6 @@ export const useInventory = (
         onError: (error) => {
           if (error instanceof AxiosError) {
             const apiErrors = error.response?.data?.errors;
-
             if (apiErrors && typeof apiErrors === "object") {
               Object.entries(apiErrors).forEach(([field, msg]) => {
                 form.setError(field as keyof PartItemFormData, {
@@ -118,7 +91,6 @@ export const useInventory = (
 
   return {
     handleDeletePart,
-    handleAddCategory,
     form,
     handleEditPartItem,
     handleAddPartItem,

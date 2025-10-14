@@ -1,10 +1,7 @@
 import { httpPrivate } from "@/lib/http";
 import type { BaseResponse, PaginationResponse } from "@/types/models/response";
 import type { PartStat, Part, Category } from "@/types/models/part";
-import type {
-  PartItemFormData,
-  CategoryFormData,
-} from "@/pages/inventory/libs/schema";
+import type { PartItemFormData } from "@/pages/inventory/libs/schema";
 
 export const getPartStat = () => {
   return httpPrivate.get<BaseResponse<{ data: PartStat }>>(`/parts/statistics`);
@@ -34,10 +31,6 @@ export const detletePartItem = (id: string) => {
 
 export const updatePartItem = (id: string, data: PartItemFormData) => {
   return httpPrivate.patch<BaseResponse<Part>>(`/parts/${id}`, data);
-};
-
-export const addCategory = (data: CategoryFormData) => {
-  return httpPrivate.post<BaseResponse<Category>>(`/categories`, data);
 };
 
 export const addPartItem = (data: PartItemFormData) => {

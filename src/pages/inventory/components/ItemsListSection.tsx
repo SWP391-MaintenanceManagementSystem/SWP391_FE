@@ -44,14 +44,10 @@ export default function ItemsListSection() {
 
   const columns = getColumns(hanldeFilterChange, filters, categoryList);
 
-  const { handleAddPartItem, handleAddCategory, form } = useInventory(
-    page,
-    pageSize,
-  );
+  const { handleAddPartItem, form } = useInventory(page, pageSize);
 
   return (
     <>
-      {" "}
       <Card className="h-full flex-1 md:min-h-[500px] min-h-[600px]">
         <CardContent className="font-inter flex flex-col gap-4 h-full">
           <h3 className="font-semibold text-gray-text-header h-fit">
@@ -99,10 +95,7 @@ export default function ItemsListSection() {
         }}
         onConfirm={async (data) => {
           await handleAddPartItem(data);
-          setOpenAddModal(false);
-          form.reset();
         }}
-        handleAddCategory={handleAddCategory}
         form={form}
         categories={categoryList}
       />

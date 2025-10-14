@@ -27,8 +27,11 @@ export default function ColActions({
   const [openViewDialog, setOpenViewDialog] = useState(false);
   const [openEditDialog, setOpenEditDialog] = useState(false);
   const part = row.original;
-  const { handleDeletePart, handleAddCategory, form, handleEditPartItem } =
-    useInventory(currentPage, currentPageSize, part);
+  const { handleDeletePart, form, handleEditPartItem } = useInventory(
+    currentPage,
+    currentPageSize,
+    part,
+  );
 
   return (
     <div className="flex gap-1">
@@ -87,12 +90,9 @@ export default function ColActions({
         }}
         item={part}
         categories={categoryList}
-        handleAddCategory={handleAddCategory}
         form={form}
         onConfirm={async (data) => {
           await handleEditPartItem(part.id, data);
-          setOpenEditDialog(false);
-          form.reset();
         }}
       />
     </div>

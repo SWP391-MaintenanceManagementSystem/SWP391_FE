@@ -13,7 +13,7 @@ export const PartItemSchema = z.object({
     .refine((val) => Number.isInteger(val), {
       message: "Current Quantity must be an integer",
     })
-    .refine((val) => val >= 0, {
+    .refine((val) => val >= 1, {
       message: "Current Quantity cannot be negative",
     }),
 
@@ -22,11 +22,11 @@ export const PartItemSchema = z.object({
     .refine((val) => Number.isInteger(val), {
       message: "Minimum Stock must be an integer",
     })
-    .refine((val) => val >= 0, {
+    .refine((val) => val >= 1, {
       message: "Minimum Stock cannot be negative",
     }),
 
-  price: z.number().refine((val) => val >= 0, {
+  price: z.number().refine((val) => val >= 1, {
     message: "Unit Price cannot be negative",
   }),
 
@@ -45,18 +45,4 @@ export const PartItemFormDefaultValues: PartItemFormData = {
   minStock: 0,
   price: 0,
   description: "",
-};
-
-export const CategorySchema = z.object({
-  name: z
-    .string()
-    .min(2, "Category name must be at least 2 characters long")
-    .max(50, "Category name must be at most 50 characters long")
-    .nonempty("Category name is required"),
-});
-
-export type CategoryFormData = z.infer<typeof CategorySchema>;
-
-export const CategoryFormDefaultValues: CategoryFormData = {
-  name: "",
 };

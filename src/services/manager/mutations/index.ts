@@ -12,15 +12,11 @@ import {
   addTechnicican,
 } from "../apis/technician.api";
 import {
-  addCategory,
   addPartItem,
   detletePartItem,
   updatePartItem,
 } from "../apis/inventory.api";
-import type {
-  CategoryFormData,
-  PartItemFormData,
-} from "@/pages/inventory/libs/schema";
+import type { PartItemFormData } from "@/pages/inventory/libs/schema";
 
 export const useUpdateCustomerInfo = () => {
   const queryClient = useQueryClient();
@@ -349,26 +345,6 @@ export const useAddEmployee = () => {
 
     onError: () => {
       toast.error("Failed to create new employee");
-    },
-  });
-};
-
-export const useAddCategory = () => {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: async (data: CategoryFormData) => {
-      return (await addCategory(data)).data;
-    },
-
-    onSuccess: () => {
-      toast.success("Category created successfully");
-      queryClient.invalidateQueries({
-        queryKey: queryKeys.category(),
-      });
-    },
-
-    onError: () => {
-      toast.error("Failed to create category");
     },
   });
 };
