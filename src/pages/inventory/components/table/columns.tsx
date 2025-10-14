@@ -28,7 +28,7 @@ export const getColumns = (
       enableHiding: false,
     }),
     columnHelper.accessor("name", {
-      id: "partName",
+      id: "name",
       header: (info) => <SortHeader title="Name" info={info} />,
       cell: (info) => info.getValue(),
       meta: {
