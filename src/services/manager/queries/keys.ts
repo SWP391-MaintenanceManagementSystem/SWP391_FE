@@ -36,13 +36,14 @@ export const queryKeys = {
   statusStat: (type: "STAFF" | "TECHNICIAN" | "CUSTOMER") =>
     ["statusStat", type] as const,
 
-  // Sccounts (list, search, sort, filter)
+  // Accounts (list, search, sort, filter)
   accounts: (params: {
     page: number;
     pageSize: number;
     firstName?: string;
     lastName?: string;
     status?: string;
+    centerId?: string;
     isPremium?: boolean;
     email?: string;
     phone?: string;
@@ -64,4 +65,6 @@ export const queryKeys = {
   }) => ["parts", params] as const,
 
   category: () => ["category"] as const,
+
+  serviceCenter: () => ["serviceCenter"] as const,
 };

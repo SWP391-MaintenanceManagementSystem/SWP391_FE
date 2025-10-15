@@ -24,6 +24,9 @@ import {
   getPartList,
   getCategoryList,
 } from "../apis/inventory.api";
+
+import { getServiceCenterList } from "../apis/center.api";
+
 /**
  * Hook lấy danh sách accounts theo type (STAFF, TECHNICIAN, CUSTOMER)
  * (search + sort + filter + pagination)
@@ -35,6 +38,7 @@ export const useGetAccountList = (params: {
   lastName?: string;
   email?: string;
   status?: string;
+  centerId?: string;
   isPremium?: boolean;
   phone?: string;
   sortBy?: string;
@@ -284,7 +288,23 @@ export const useGetCategoryList = () => {
         const response = await getCategoryList();
         return response.data.data;
       } catch {
-        toast.error("Fail to fetch part statistics");
+        toast.error("Fail to fetch category list ");
+        throw new Error("Fetch stats failed");
+      }
+    },
+    staleTime: 5 * 60 * 1000,
+  });
+};
+
+export const useGetServiceCenterList = () => {
+  return useQuery({
+    queryKey: queryKeys.serviceCenter(),
+    queryFn: async () => {
+      try {
+        const response = await getServiceCenterList();
+        return response.data.data;
+      } catch {
+        toast.error("Fail to fetch service center");
         throw new Error("Fetch stats failed");
       }
     },

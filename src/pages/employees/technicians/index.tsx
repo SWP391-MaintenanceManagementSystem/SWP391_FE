@@ -11,22 +11,27 @@ import TechnicianWhite from "@/assets/technician-white.png";
 import { useMemo } from "react";
 import { useGetAccountList } from "@/services/manager/queries";
 import { Card } from "@/components/ui/card";
+import { useGetServiceCenterList } from "@/services/manager/queries";
 
 export default function TechniciansManagementPage() {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [searchValue, setSearchValue] = useState("");
   const [sorting, setSorting] = useState<SortingState>([]);
-  const [filters, setFilters] = useState({ status: "" });
+  const [filters, setFilters] = useState({ status: "", centerId: "" });
   const { data, isLoading, isFetching } = useGetAccountList({
     page,
     pageSize,
     email: searchValue || undefined,
     status: filters.status || undefined,
+    centerId: filters.centerId || undefined,
     sortBy: sorting[0]?.id ?? "createdAt",
     orderBy: sorting[0]?.desc ? "desc" : "asc",
     type: "TECHNICIAN",
   });
+
+  const { data: centerListData } = useGetServiceCenterList();
+  const centerList = centerListData ?? [];
 
   const technicians = useMemo(() => {
     const accounts = data?.data ?? [];
@@ -42,6 +47,8 @@ export default function TechniciansManagementPage() {
         profile: acc.profile
           ? { firstName: acc.profile.firstName, lastName: acc.profile.lastName }
           : undefined,
+        workCenter:
+          "workCenter" in acc && acc.workCenter ? acc.workCenter : undefined,
       }));
   }, [data, filters]);
 
@@ -52,7 +59,7 @@ export default function TechniciansManagementPage() {
     }));
   };
 
-  const columns = getColumns(handleStatusChange, filters);
+  const columns = getColumns(handleStatusChange, filters, centerList);
 
   return (
     <div className="w-full h-[calc(100vh-32px)] font-inter">
