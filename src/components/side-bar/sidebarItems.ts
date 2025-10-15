@@ -19,11 +19,6 @@ import {
 export const adminItems: SidebarItem[] = [
   { title: "Dashboard", url: "/dashboard", icon: Home },
   { title: "Customers & Vehicles", url: "/vehicles", icon: Car },
-  { title: "Appointments", url: "/appointments", icon: NotebookPen },
-  { title: "Memberships", url: "/membership", icon: UserStar },
-  { title: "Service Process", url: "/service-process", icon: Sparkles },
-  { title: "Inventory", url: "/inventory", icon: PackageOpen },
-  
   {
     title: "Employee Management",
     icon: IdCardLanyard,
@@ -42,8 +37,9 @@ export const adminItems: SidebarItem[] = [
     url: "/shifts",
   },
   { title: "Inventory", url: "/inventory", icon: PackageOpen },
-  { title: "Appointments", url: "/appointments", icon: NotebookPen },
+  { title: "Memberships", url: "/membership", icon: UserStar },
   { title: "Service Process", url: "/service-process", icon: Sparkles },
+  { title: "Appointments", url: "/appointments", icon: NotebookPen },
   { title: "Finance & Reports", url: "/finance", icon: CreditCard },
 ];
 
