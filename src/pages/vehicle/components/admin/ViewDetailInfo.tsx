@@ -3,6 +3,7 @@ import { b64DecodeUnicode } from "@/utils/base64";
 import {
   useGetCustomerById,
   useGetVehicleList,
+  useGetVehicleBrand,
 } from "@/services/manager/queries";
 import DynamicBreadcrumbs from "@/components/DynamicBreadcrumb";
 import MainContentLayout from "@/components/MainContentLayout";
@@ -12,7 +13,7 @@ import type { CustomerTable } from "../libs/table-types";
 import type { Customer } from "@/types/models/account";
 import type { Vehicle } from "@/types/models/vehicle";
 import { DataTable } from "@/components/table/DataTable";
-import { columns } from "./vehicleManagement/table/column";
+import { getColumns } from "./vehicleManagement/table/column";
 import type { ColumnDef } from "@tanstack/react-table";
 import { useState } from "react";
 import type { SortingState } from "@tanstack/react-table";
@@ -22,20 +23,6 @@ export default function ViewDetailInfo() {
   const { id } = useParams<{ id: string }>();
   const userId = id ? b64DecodeUnicode(id) : null;
   const { data: user } = useGetCustomerById(userId ?? "");
-
-  const [sorting, setSorting] = useState<SortingState>([]);
-  // const [filters, setFilters] = useState({
-  //   status: "ACTIVE" | "INACTIVE",
-  // });
-  // const handleFilterChange = (field: string, value: string | undefined) => {
-  //   setFilters((prevFilters) => ({
-  //     ...prevFilters,
-  //     [field]: value,
-  //   }));
-  // };
-
-  // const columns = getColumns(handleFilterChange, filters);
-
   const customer: CustomerTable = {
     id: user?.id ?? "",
     email: user?.email ?? "",
@@ -49,36 +36,45 @@ export default function ViewDetailInfo() {
       isPremium: (user?.profile as Customer)?.isPremium ?? false,
     },
   };
-
   const location = useLocation() as {
     state?: { currentPage?: number; currentPageSize?: number };
   };
-
   const currentPage = location.state?.currentPage ?? 1;
   const currentPageSize = location.state?.currentPageSize ?? 10;
 
-  const { data: apiResponse, isLoading } = useGetVehicleList(userId ?? "");
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+  const [searchValue, setSearchValue] = useState("");
+  const [sorting, setSorting] = useState<SortingState>([]);
+  const [filters, setFilters] = useState({
+    status: "",
+    brandId: "",
+  });
 
-  const vehiclesList: Vehicle[] =
-    apiResponse?.map((item: Vehicle) => ({
-      id: item.id ?? "",
-      vin: item.vin ?? "",
-      model: item.model ?? "",
-      brand: item.brand ?? "",
-      licensePlate: item.licensePlate ?? "",
-      customerId: item.customerId ?? "",
-      status: item.status ?? "INACTIVE",
-      deletedAt: item.deletedAt ?? null,
-      lastService: item.lastService ?? null,
-      createdAt: item.createdAt ?? "",
-      updatedAt: item.updatedAt ?? "",
-    })) ?? [];
+  const {
+    data: apiResponse,
+    isLoading,
+    isFetching,
+  } = useGetVehicleList({
+    customerId: userId || "",
+    page,
+    pageSize,
+    licensePlate: searchValue || undefined,
+    status: filters.status || undefined,
+    brandId: filters.brandId ? Number(filters.brandId) : undefined,
+    sortBy: sorting[0]?.id ?? "createdAt",
+    orderBy: sorting[0]?.desc ? "desc" : "asc",
+  });
 
-  // const filteredVehicles = vehiclesList.filter(
-  //   (v) => !filters.status || v.status === filters.status,
-  // );
+  const { data: brandList } = useGetVehicleBrand();
 
-  // console.log(filteredVehicles);
+  const handleFilterChange = (field: string, value: string) => {
+    setFilters((prevFilters) => ({
+      ...prevFilters,
+      [field]: value,
+    }));
+  };
+  const columns = getColumns(handleFilterChange, filters, brandList ?? []);
 
   if (!user) return <Loading />;
   return (
@@ -104,12 +100,20 @@ export default function ViewDetailInfo() {
           <CardContent>
             <DataTable<Vehicle, unknown>
               columns={columns as ColumnDef<Vehicle, unknown>[]}
-              data={vehiclesList}
-              searchPlaceholder="VIN, License Plate, Model"
-              searchValue={["vin", "brand", "model", "licensePlate"]}
+              data={apiResponse?.data ?? []}
+              pageIndex={(apiResponse?.page ?? 1) - 1}
+              pageSize={apiResponse?.pageSize ?? 10}
+              totalPage={apiResponse?.totalPages ?? 1}
               isLoading={isLoading}
-              manualPagination={false}
-              isSearch={true}
+              isFetching={isFetching}
+              onPageChange={(newPage) => setPage(newPage + 1)}
+              onPageSizeChange={setPageSize}
+              manualPagination
+              onSearchChange={setSearchValue}
+              searchPlaceholder="License Plate"
+              isSearch
+              manualSearch
+              manualSorting
               sorting={sorting}
               onSortingChange={setSorting}
             />

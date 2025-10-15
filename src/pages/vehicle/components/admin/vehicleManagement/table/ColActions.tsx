@@ -17,9 +17,15 @@ import {
 
 export interface ColActionsProps {
   row: Row<Vehicle>;
+  currentPage: number;
+  currentPageSize: number;
 }
 
-export default function ColActions({ row }: ColActionsProps) {
+export default function ColActions({
+  row,
+  currentPage,
+  currentPageSize,
+}: ColActionsProps) {
   const { data: fetchedBrands } = useGetVehicleBrand();
   const brandId = fetchedBrands?.find(
     (brand) => brand.name === row.original.brand,
@@ -34,6 +40,8 @@ export default function ColActions({ row }: ColActionsProps) {
   const { handleDelete, handleEdit, form } = useVehicle(
     row.original.customerId,
     row.original,
+    currentPage,
+    currentPageSize,
   );
 
   const vehicle = row.original;

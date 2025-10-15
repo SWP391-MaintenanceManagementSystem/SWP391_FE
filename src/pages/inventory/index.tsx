@@ -1,13 +1,15 @@
 import DynamicBreadcrumbs from "@/components/DynamicBreadcrumb";
 import MainContentLayout from "@/components/MainContentLayout";
 import StatisticsSection from "./components/StatisticsSection";
+import ItemsListSection from "./components/ItemsListSection";
 
 export default function InventoryManagement() {
   return (
-    <div>
+    <div className="w-full h-[calc(100vh-32px)] font-inter">
       <DynamicBreadcrumbs pathTitles={{ inventory: "Inventory Management" }} />
-      <MainContentLayout className="grid grid-cols-1 md:grid-rows-[auto, 1fr]">
+      <MainContentLayout className="flex flex-col md:gap-8 gap-6 pt-4 overflow-y-auto">
         <StatisticsSection />
+        <ItemsListSection />
       </MainContentLayout>
     </div>
   );

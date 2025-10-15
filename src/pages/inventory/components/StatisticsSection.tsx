@@ -1,31 +1,35 @@
 import StatisticsCard from "./StatisticsCard";
 import { Package, DollarSign, AlertTriangle, TrendingUp } from "lucide-react";
+import { useGetPartStat } from "@/services/manager/queries";
 
 export default function StatisticsSection() {
+  const { data } = useGetPartStat();
+
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 font-inter">
+    <div className="grid lg:grid-cols-4 grid-cols-2 gap-3 md:gap-4 font-inter h-auto ">
       <StatisticsCard
         icon={Package}
         title="Total Items"
-        numberTotal={100}
-        description="Across 4 products"
+        numberTotal={data?.totalQuantity || 0}
+        description={`Across ${data?.totalItems} products`}
       />
       <StatisticsCard
         icon={DollarSign}
         title="Total Value"
-        numberTotal={100}
+        numberValue={data?.totalValue || 0}
         description="Current inventory value"
       />
       <StatisticsCard
         icon={AlertTriangle}
         title="Low Stock Items"
-        numberTotal={100}
+        numberTotal={data?.lowStockItems || 0}
         description="Need restocking"
+        textStyle="text-red-600"
       />
       <StatisticsCard
         icon={TrendingUp}
         title="Categories"
-        numberTotal={4}
+        numberTotal={data?.categories || 0}
         description="Product categories"
       />
     </div>

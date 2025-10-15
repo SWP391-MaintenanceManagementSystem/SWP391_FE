@@ -36,7 +36,7 @@ export function InputDisableWithLabel({
       {typeof value === "string" ? (
         <Input className="w-full" id={id} disabled value={value} />
       ) : (
-        <div className="rounded-lg w-full border px-3 py-2 text-sm bg-muted">
+        <div className="rounded-md w-full border px-3 py-2 text-sm text-gray-400">
           {value}
         </div>
       )}
@@ -74,7 +74,10 @@ export function ViewDetailDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <form>
         <DialogContent
-          className={cn("sm:max-w-[425px]  font-inter", styleContent)}
+          className={cn(
+            "sm:max-w-[425px] font-inter overflow-y-auto",
+            styleContent,
+          )}
         >
           <DialogHeader className="mb-3">
             <DialogTitle className="text-center text-xl">{title}</DialogTitle>

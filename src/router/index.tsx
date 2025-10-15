@@ -82,11 +82,7 @@ const RouterComponent = () => {
                   element: <ViewDetailInfo />,
                   hydrateFallbackElement: <CircularIndeterminate />,
                 },
-                {
-                  path: "/inventory",
-                  element: <InventoryManagement />,
-                  hydrateFallbackElement: <CircularIndeterminate />,
-                },
+
                 {
                   element: (
                     <RequireAuth
@@ -116,6 +112,11 @@ const RouterComponent = () => {
                     {
                       path: "/employees/shifts",
                       element: <WorkShiftsManagementPage />,
+                      hydrateFallbackElement: <CircularIndeterminate />,
+                    },
+                    {
+                      path: "/inventory",
+                      element: <InventoryManagement />,
                       hydrateFallbackElement: <CircularIndeterminate />,
                     },
                   ],
