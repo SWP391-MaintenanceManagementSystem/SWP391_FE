@@ -103,8 +103,11 @@ export const getColumns = (
       meta: {
         title: "Phone",
         filterVariant: "filterWorkCenter",
-        filterOptions: centerList.map((c) => c.id),
-        labelOptions: Object.fromEntries(centerList.map((c) => [c.id, c.name])),
+        filterOptions: ["not_assigned", ...centerList.map((c) => c.id)],
+        labelOptions: {
+          not_assigned: "Not assigned",
+          ...Object.fromEntries(centerList.map((c) => [c.id, c.name])),
+        },
       },
     }),
 

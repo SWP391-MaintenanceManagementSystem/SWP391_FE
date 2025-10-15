@@ -23,7 +23,16 @@ export default function StaffsManagementPage() {
     pageSize,
     email: searchValue || undefined,
     status: filters.status || undefined,
-    centerId: filters.centerId || undefined,
+    centerId:
+      filters.centerId && filters.centerId !== "not_assigned"
+        ? filters.centerId
+        : undefined,
+    hasWorkCenter:
+      filters.centerId === "not_assigned"
+        ? false
+        : filters.centerId
+          ? true
+          : undefined,
     sortBy: sorting[0]?.id ?? "createdAt",
     orderBy: sorting[0]?.desc ? "desc" : "asc",
     type: "STAFF",

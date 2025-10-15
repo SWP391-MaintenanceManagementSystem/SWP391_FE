@@ -39,6 +39,7 @@ export const useGetAccountList = (params: {
   email?: string;
   status?: string;
   centerId?: string;
+  hasWorkCenter?: boolean;
   isPremium?: boolean;
   phone?: string;
   sortBy?: string;

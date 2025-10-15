@@ -15,6 +15,7 @@ export const getStaffs = (params: {
   lastName?: string;
   status?: string;
   centerId?: string;
+  hasWorkCenter?: boolean;
   email?: string;
   phone?: string;
   sortBy?: string;
