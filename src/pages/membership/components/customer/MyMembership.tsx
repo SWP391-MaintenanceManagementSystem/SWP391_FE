@@ -1,8 +1,9 @@
-import { useSubscription } from "@/services/membership/hooks/useMembership";
+import useMembership from "@/services/membership/hooks/useMembership"
+
 
 
 export default function MyMembership() {
-  const { data, isLoading } = useSubscription()
+  const { mySubscriptionData, isLoading } = useMembership()
 
   if (isLoading) {
     return (
@@ -12,7 +13,7 @@ export default function MyMembership() {
     )
   }
 
-  if (!data) {
+  if (!mySubscriptionData || mySubscriptionData.length === 0) {
     return (
       <div className="flex justify-center">
         <p className="text-gray-500 dark:text-gray-400">No active membership</p>
@@ -27,17 +28,17 @@ export default function MyMembership() {
         {/* Plan name */}
         <div className="flex justify-between items-start">
           <span className="text-white text-lg font-medium">
-            {data.membership.name}
+            {mySubscriptionData.membership.name}
           </span>
         </div>
 
         {/* Dates */}
         <div>
           <p className="text-white text-sm">
-            Start date: {new Date(data.startDate).toLocaleDateString()}
+            Start date: {new Date(mySubscriptionData.startDate).toLocaleDateString()}
           </p>
           <p className="text-white text-sm">
-            Expires: {new Date(data.endDate).toLocaleDateString()}
+            Expires: {new Date(mySubscriptionData.endDate).toLocaleDateString()}
           </p>
         </div>
 

@@ -1,0 +1,60 @@
+/* Pure black dark mode for react-big-calendar */
+.dark .rbc-calendar {
+  background-color: #0a0a0a; /* near-black background */
+  color: #e5e5e5; /* light gray text */
+}
+
+.dark .rbc-toolbar {
+  background-color: #000; /* full black toolbar */
+  color: #f5f5f5;
+  border-bottom: 1px solid #262626; /* subtle divider */
+}
+
+.dark .rbc-toolbar button {
+  color: #d4d4d4;
+  background-color: #171717; /* dark gray button */
+  border: none;
+}
+
+.dark .rbc-toolbar button:hover,
+.dark .rbc-toolbar button:focus {
+  background-color: #262626; /* lighter black hover */
+}
+
+.dark .rbc-off-range-bg {
+  background: #111; /* dark gray for off-range */
+}
+
+.dark .rbc-today {
+  background-color: rgba(147, 51, 234, 0.15); /* soft purple highlight */
+}
+
+.dark .rbc-event {
+  background-color: #9333ea; /* vibrant purple accent */
+  color: #fff;
+  border: none;
+}
+
+.dark .rbc-slot-selection {
+  background-color: rgba(147, 51, 234, 0.3); /* selection tint */
+}
+
+.dark .rbc-time-slot,
+.dark .rbc-header {
+  border-color: #262626; /* subtle grid lines */
+}
+
+.dark .rbc-month-view {
+  border-color: #262626;
+}
+
+.dark .rbc-time-view {
+  border-color: #262626;
+}
+
+.dark .rbc-agenda-view table,
+.dark .rbc-agenda-view td,
+.dark .rbc-agenda-view th {
+  border-color: #262626;
+  color: #e5e5e5;
+}

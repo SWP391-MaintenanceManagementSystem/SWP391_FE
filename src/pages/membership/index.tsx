@@ -7,6 +7,9 @@ const CustomerMembership = lazy(
   () => import("./components/customer/Membership")
 );
 // const AdminMembership
+const AdminMembership = lazy(
+  () => import("./components/admin/MembershipAdmin")
+);
 
 export default function MembershipPage() {
   const { auth } = useAuth();
@@ -18,8 +21,7 @@ export default function MembershipPage() {
         return <CustomerMembership />;
 
       case AccountRole.ADMIN:
-        // return <AdminMembership />;
-        return <div>Admin Membership Page (to be implemented)</div>;
+        return <AdminMembership />;
       default:
         return <div>Unauthorized</div>;
     }
