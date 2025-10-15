@@ -46,7 +46,6 @@ export default function TechniciansManagementPage() {
     const accounts = data?.data ?? [];
     return accounts
       .filter((acc) => acc.role === "TECHNICIAN")
-      .filter((acc) => (filters.status ? acc.status === filters.status : true))
       .map((acc) => ({
         id: acc.id,
         email: acc.email,
@@ -59,7 +58,7 @@ export default function TechniciansManagementPage() {
         workCenter:
           "workCenter" in acc && acc.workCenter ? acc.workCenter : undefined,
       }));
-  }, [data, filters]);
+  }, [data]);
 
   const handleStatusChange = (field: string, value: string) => {
     setFilters((prevFilters) => ({
