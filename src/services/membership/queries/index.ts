@@ -10,10 +10,10 @@ export const useGetAllMemberships = () => {
     queryFn: async () => {
       try {
         const response = await getAllMemberships();
-        toast.success("Fetched my vehicles successfully");
+        toast.success("Fetched my memberships successfully");
         return response.data.data;
       } catch (error) {
-        toast.error("Failed to fetch my vehicles");
+        toast.error("Failed to fetch my memberships");
         return [];
       }
     },
