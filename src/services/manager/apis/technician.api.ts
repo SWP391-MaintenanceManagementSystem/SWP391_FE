@@ -22,32 +22,35 @@ export const getTechnicians = (params: {
   orderBy?: "asc" | "desc";
 }) => {
   return httpPrivate.get<BaseResponse<PaginationResponse<EmployeeTable>>>(
-    "/technician",
+    "/technicians",
     { params },
   );
 };
 
 export const deleteTechnician = (id: string) => {
-  return httpPrivate.del<BaseResponse<void>>(`/technician/${id}`);
+  return httpPrivate.del<BaseResponse<void>>(`/technicians/${id}`);
 };
 
 export const getTechnicianById = (id: string) => {
-  return httpPrivate.get<BaseResponse<EmployeeTable>>(`/technician/${id}`);
+  return httpPrivate.get<BaseResponse<EmployeeTable>>(`/technicians/${id}`);
 };
 
 export const updateTechnician = (id: string, data: ChangeProfileFormData) => {
   return httpPrivate.patch<BaseResponse<EmployeeTable>>(
-    `/technician/${id}`,
+    `/technicians/${id}`,
     data,
   );
 };
 
 export const getStatusStatTechnician = () => {
   return httpPrivate.get<BaseResponse<StatusStatResponse>>(
-    `/technician/statistics`,
+    `/technicians/statistics`,
   );
 };
 
 export const addTechnicican = async (formData: ChangeProfileFormData) => {
-  return httpPrivate.post<BaseResponse<EmployeeTable>>(`/technician`, formData);
+  return httpPrivate.post<BaseResponse<EmployeeTable>>(
+    `/technicians`,
+    formData,
+  );
 };
