@@ -34,9 +34,16 @@ export const adminItems: SidebarItem[] = [
         url: "/employees/technicians",
         icon: UserRoundCog,
       },
-      { title: "Shifts", url: "/employees/shifts", icon: CalendarClock },
     ],
   },
+  {
+    title: "Work Shifts Management",
+    icon: CalendarClock,
+    url: "/shifts",
+  },
+  { title: "Inventory", url: "/inventory", icon: PackageOpen },
+  { title: "Appointments", url: "/appointments", icon: NotebookPen },
+  { title: "Service Process", url: "/service-process", icon: Sparkles },
   { title: "Finance & Reports", url: "/finance", icon: CreditCard },
 ];
 

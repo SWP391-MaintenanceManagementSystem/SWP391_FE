@@ -4,8 +4,9 @@ import type {
   BaseResponse,
   StatusStatResponse,
 } from "@/types/models/response";
-import type { AccountWithProfile } from "@/types/models/account";
+// import type { AccountWithProfile } from "@/types/models/account";
 import type { ChangeProfileFormData } from "@/pages/profile/components/profile/libs/schema";
+import type { EmployeeTable } from "@/pages/employees/libs/table-types";
 
 export const getTechnicians = (params: {
   page: number;
@@ -13,41 +14,43 @@ export const getTechnicians = (params: {
   firstName?: string;
   lastName?: string;
   status?: string;
+  centerId?: string;
+  hasWorkCenter?: boolean;
   email?: string;
   phone?: string;
   sortBy?: string;
   orderBy?: "asc" | "desc";
 }) => {
-  return httpPrivate.get<BaseResponse<PaginationResponse<AccountWithProfile>>>(
-    "/technician",
+  return httpPrivate.get<BaseResponse<PaginationResponse<EmployeeTable>>>(
+    "/technicians",
     { params },
   );
 };
 
 export const deleteTechnician = (id: string) => {
-  return httpPrivate.del<BaseResponse<void>>(`/technician/${id}`);
+  return httpPrivate.del<BaseResponse<void>>(`/technicians/${id}`);
 };
 
 export const getTechnicianById = (id: string) => {
-  return httpPrivate.get<BaseResponse<AccountWithProfile>>(`/technician/${id}`);
+  return httpPrivate.get<BaseResponse<EmployeeTable>>(`/technicians/${id}`);
 };
 
 export const updateTechnician = (id: string, data: ChangeProfileFormData) => {
-  return httpPrivate.patch<BaseResponse<AccountWithProfile>>(
-    `/technician/${id}`,
+  return httpPrivate.patch<BaseResponse<EmployeeTable>>(
+    `/technicians/${id}`,
     data,
   );
 };
 
 export const getStatusStatTechnician = () => {
   return httpPrivate.get<BaseResponse<StatusStatResponse>>(
-    `/technician/statistics`,
+    `/technicians/statistics`,
   );
 };
 
 export const addTechnicican = async (formData: ChangeProfileFormData) => {
-  return httpPrivate.post<BaseResponse<AccountWithProfile>>(
-    `/technician`,
+  return httpPrivate.post<BaseResponse<EmployeeTable>>(
+    `/technicians`,
     formData,
   );
 };

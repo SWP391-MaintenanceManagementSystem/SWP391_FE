@@ -5,10 +5,13 @@ import SortHeader from "@/components/table/SortHeader";
 import FilterHeader from "@/components/table/FilterHeader";
 import AccountStatusTag from "@/components/tag/AccountStatusTag";
 import ColActions from "../../components/ColActions";
+import { Badge } from "@/components/ui/badge";
+import type { ServiceCenter } from "@/types/models/center";
 
 export const getColumns = (
   handleFilterChange: (field: string, value: string) => void,
-  currentFilters: { status: string },
+  currentFilters: { status: string; centerId: string },
+  centerList: ServiceCenter[],
 ) => {
   const columnHelper = createColumnHelper<EmployeeTable>();
 
@@ -81,6 +84,30 @@ export const getColumns = (
       cell: (info) => info.getValue(),
       meta: {
         title: "Phone",
+      },
+    }),
+
+    // Work center
+    columnHelper.accessor((row) => row.workCenter?.name ?? "Not assigned", {
+      id: "name",
+      header: (info) => (
+        <FilterHeader
+          column={info.column}
+          title="Work Center"
+          selectedValue={currentFilters.centerId}
+          onFilterChange={(value) => handleFilterChange("centerId", value)}
+        />
+      ),
+      size: 50,
+      cell: (info) => <Badge variant="outline">{info.getValue()}</Badge>,
+      meta: {
+        title: "Work Center",
+        filterVariant: "filterWorkCenter",
+        filterOptions: ["not_assigned", ...centerList.map((c) => c.id)],
+        labelOptions: {
+          not_assigned: "Not assigned",
+          ...Object.fromEntries(centerList.map((c) => [c.id, c.name])),
+        },
       },
     }),
 

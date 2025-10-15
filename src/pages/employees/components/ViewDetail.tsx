@@ -38,6 +38,11 @@ export default function ViewDetailEmployeeInfo({ employee, title }: Props) {
           value={employee.phone}
         />
         <InputDisableWithLabel
+          label="Work center"
+          id="center"
+          value={employee.workCenter?.name ?? "Not assigned"}
+        />
+        <InputDisableWithLabel
           label="Status"
           id="status"
           value={

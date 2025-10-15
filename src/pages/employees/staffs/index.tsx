@@ -10,28 +10,41 @@ import TotalBox from "../components/TotalBox";
 import StaffBlackIcon from "@/assets/staff-black.png";
 import StaffWhiteIcon from "@/assets/staff-white.png";
 import { Card } from "@/components/ui/card";
+import { useGetServiceCenterList } from "@/services/manager/queries";
 
 export default function StaffsManagementPage() {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [searchValue, setSearchValue] = useState("");
   const [sorting, setSorting] = useState<SortingState>([]);
-  const [filters, setFilters] = useState({ status: "" });
+  const [filters, setFilters] = useState({ status: "", centerId: "" });
   const { data, isLoading, isFetching } = useGetAccountList({
     page,
     pageSize,
     email: searchValue || undefined,
     status: filters.status || undefined,
+    centerId:
+      filters.centerId && filters.centerId !== "not_assigned"
+        ? filters.centerId
+        : undefined,
+    hasWorkCenter:
+      filters.centerId === "not_assigned"
+        ? false
+        : filters.centerId
+          ? true
+          : undefined,
     sortBy: sorting[0]?.id ?? "createdAt",
     orderBy: sorting[0]?.desc ? "desc" : "asc",
     type: "STAFF",
   });
 
+  const { data: centerListData } = useGetServiceCenterList();
+  const centerList = centerListData ?? [];
+
   const staffs = useMemo(() => {
     const accounts = data?.data ?? [];
     return accounts
       .filter((acc) => acc.role === "STAFF")
-      .filter((acc) => (filters.status ? acc.status === filters.status : true))
       .map((acc) => ({
         id: acc.id,
         email: acc.email,
@@ -39,10 +52,15 @@ export default function StaffsManagementPage() {
         status: acc.status || undefined,
         role: acc.role,
         profile: acc.profile
-          ? { firstName: acc.profile.firstName, lastName: acc.profile.lastName }
+          ? {
+              firstName: acc.profile.firstName,
+              lastName: acc.profile.lastName,
+            }
           : undefined,
+        workCenter:
+          "workCenter" in acc && acc.workCenter ? acc.workCenter : undefined,
       }));
-  }, [data, filters]);
+  }, [data]);
 
   const handleStatusChange = (field: string, value: string) => {
     setFilters((prevFilters) => ({
@@ -51,7 +69,7 @@ export default function StaffsManagementPage() {
     }));
   };
 
-  const columns = getColumns(handleStatusChange, filters);
+  const columns = getColumns(handleStatusChange, filters, centerList);
 
   return (
     <div className="w-full h-[calc(100vh-32px)] font-inter">
