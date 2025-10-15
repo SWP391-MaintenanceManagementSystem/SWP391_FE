@@ -2,10 +2,10 @@ import { useState } from "react";
 import Slider, { type Settings } from "react-slick";
 import MembershipCard from "./MembershipCard";
 import Loading from "@/components/Loading";
-import { useMembership } from "@/services/membership/hooks/useMembership";
 import { usePayment } from "@/services/payment/hooks/usePayment";
 import { ReferenceType } from "@/types/enums/referenceType";
 import PurchaseConfirmDialog from "./PurchaseConfirmDialog";
+import useMembership from "@/services/membership/hooks/useMembership";
 
 export default function MembershipOptions() {
   const { data, isLoading } = useMembership();
