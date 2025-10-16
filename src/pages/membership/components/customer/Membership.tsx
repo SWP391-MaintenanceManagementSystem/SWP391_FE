@@ -19,7 +19,7 @@ export default function Membership() {
             onClick={() => setActiveTab("options")}
             className={`px-4 py-2 rounded-lg font-medium transition-colors w-44 h-9  ${
               activeTab === "options"
-                ? "bg-purple-primary text-white"
+                ? "bg-purple-primary text-white dark:text-amber-primary"
                 : "text-gray-600 hover:text-purple-500 dark:text-gray-300 dark:hover:text-purple-200"
             }`}
           >
@@ -29,7 +29,7 @@ export default function Membership() {
             onClick={() => setActiveTab("my")}
             className={`px-4 py-2 rounded-lg font-medium transition-colors w-44 h-9  ${
               activeTab === "my"
-                ? "bg-purple-primary text-white"
+                ? "bg-purple-primary text-white dark:text-amber-primary"
                 : "text-gray-600  hover:text-purple-500 dark:text-gray-300 dark:hover:text-purple-200"
             }`}
           >
