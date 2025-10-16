@@ -2,7 +2,7 @@ import { useState, useMemo } from "react";
 import { DataTable } from "@/components/table/DataTable";
 import { getColumns } from "./columns";
 import { Button } from "@/components/ui/button";
-import { Plus, Search } from "lucide-react";
+import { Plus } from "lucide-react";
 import { AddDialog } from "@/components/dialog/AddDialog";
 import useMembership from "@/services/membership/hooks/useMembership";
 import {
@@ -26,14 +26,8 @@ import type { PeriodType } from "@/types/enums/periodType";
 export default function MembershipAdminTable() {
   const { data, isLoading, form, onSubmit, onDeleteMembership } =
     useMembership();
-
   const [openAdd, setOpenAdd] = useState(false);
-  const [filters, setFilters] = useState({ status: "" });
   const [searchTerm, setSearchTerm] = useState("");
-
-  const handleFilterChange = (field: string, value: string | undefined) => {
-    setFilters((prev) => ({ ...prev, [field]: value }));
-  };
 
   const handleConfirmAdd = (formData: any) => {
     onSubmit(formData);
@@ -57,38 +51,25 @@ export default function MembershipAdminTable() {
 
   return (
     <div className="w-full mt-4">
-      {/* Search + Add */}
-      <div className="flex items-center justify-between mb-3">
-        <div className="relative w-1/3">
-          <Search
-            size={16}
-            className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500"
-          />
-          <Input
-            type="text"
-            placeholder="Search memberships..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="pl-9 h-9"
-          />
-        </div>
-
-        <Button
-          onClick={() => setOpenAdd(true)}
-          variant={"ghost"}
-          className="ml-3 h-9 text-white bg-purple-primary hover:bg-purple-primary-dark dark:bg-purple-primary-dark dark:hover:bg-purple-landing dark:text-amber-primary caret-transparent"
-        >
-          <Plus className="w-4 h-4 mr-2" />
-          Add Membership
-        </Button>
-      </div>
-
-      {/* Table */}
       <DataTable
         data={filteredData || []}
         columns={columns}
         isLoading={isLoading}
-        title="Membership List"
+        isSearch
+        searchPlaceholder="Search membership name..."
+        searchValue={["name"]}
+        onSearchChange={(value) => setSearchTerm(value)}
+        headerActions={
+          <Button
+            onClick={() => setOpenAdd(true)}
+            variant="ghost"
+            className="ml-3 h-9 text-white bg-purple-primary hover:bg-purple-primary-dark 
+              dark:bg-purple-primary-dark dark:hover:bg-purple-landing dark:text-amber-primary caret-transparent"
+          >
+            <Plus className="w-4 h-4 mr-2" />
+            Add Membership
+          </Button>
+        }
       />
 
       {/* Add Dialog */}
@@ -111,7 +92,10 @@ export default function MembershipAdminTable() {
                   <Input
                     {...field}
                     placeholder="Enter membership name"
-                    className="border p-2 rounded-md w-full text-sm text-white placeholder:text-gray-400 focus:ring-2 focus:ring-primary focus:outline-none"
+                    className="border p-2 rounded-md w-full text-sm 
+                      text-gray-900 dark:text-white 
+                      placeholder:text-gray-500 dark:placeholder:text-gray-400 
+                      focus:ring-2 focus:ring-primary focus:outline-none"
                   />
                 </FormControl>
                 <FormMessage />
@@ -132,9 +116,14 @@ export default function MembershipAdminTable() {
                     step="0.01"
                     {...field}
                     placeholder="Enter price"
-                    className="border p-2 rounded-md w-full text-sm text-white placeholder:text-gray-400 focus:ring-2 focus:ring-primary focus:outline-none"
+                    className="border p-2 rounded-md w-full text-sm 
+                      text-gray-900 dark:text-white 
+                      placeholder:text-gray-500 dark:placeholder:text-gray-400 
+                      focus:ring-2 focus:ring-primary focus:outline-none"
                     onChange={(e) =>
-                      field.onChange(parseFloat(e.target.value) || 0)
+                      field.onChange(
+                        e.target.value === "" ? "" : parseFloat(e.target.value)
+                      )
                     }
                   />
                 </FormControl>
@@ -155,9 +144,14 @@ export default function MembershipAdminTable() {
                     type="number"
                     {...field}
                     placeholder="Enter duration"
-                    className="border p-2 rounded-md w-full text-sm text-white placeholder:text-gray-400 focus:ring-2 focus:ring-primary focus:outline-none"
+                    className="border p-2 rounded-md w-full text-sm 
+                      text-gray-900 dark:text-white 
+                      placeholder:text-gray-500 dark:placeholder:text-gray-400 
+                      focus:ring-2 focus:ring-primary focus:outline-none"
                     onChange={(e) =>
-                      field.onChange(parseInt(e.target.value) || 0)
+                      field.onChange(
+                        e.target.value === "" ? "" : parseInt(e.target.value)
+                      )
                     }
                   />
                 </FormControl>
@@ -180,7 +174,12 @@ export default function MembershipAdminTable() {
                   value={field.value || ""}
                 >
                   <FormControl>
-                    <SelectTrigger className="border rounded-md w-full text-sm text-white placeholder:text-gray-400 focus:ring-2 focus:ring-primary focus:outline-none h-[38px] px-2">
+                    <SelectTrigger
+                      className="border rounded-md w-full text-sm 
+                        text-gray-900 dark:text-white 
+                        placeholder:text-gray-500 dark:placeholder:text-gray-400 
+                        focus:ring-2 focus:ring-primary focus:outline-none h-[38px] px-2"
+                    >
                       <SelectValue placeholder="Select Period Type" />
                     </SelectTrigger>
                   </FormControl>
@@ -206,7 +205,10 @@ export default function MembershipAdminTable() {
                   <Textarea
                     {...field}
                     placeholder="Enter description"
-                    className="border p-2 rounded-md w-full text-sm text-white placeholder:text-gray-400 focus:ring-2 focus:ring-primary focus:outline-none"
+                    className="border p-2 rounded-md w-full text-sm 
+                      text-black dark:text-white 
+                      placeholder:text-gray-500 dark:placeholder:text-gray-400 
+                      focus:ring-2 focus:ring-primary focus:outline-none"
                   />
                 </FormControl>
                 <FormMessage />

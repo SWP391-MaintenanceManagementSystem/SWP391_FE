@@ -64,14 +64,8 @@ export default function ColActions({ row }: ColActionsProps) {
   return (
     <div className="flex gap-1">
       <ActionBtn icon={<Eye size={12} />} onClick={() => setOpenView(true)} />
-      <ActionBtn
-        icon={<Pencil size={12} />}
-        onClick={() => setOpenEdit(true)}
-      />
-      <ActionBtn
-        icon={<Trash2 size={12} />}
-        onClick={() => setOpenDelete(true)}
-      />
+      <ActionBtn icon={<Pencil size={12} />} onClick={() => setOpenEdit(true)} />
+      <ActionBtn icon={<Trash2 size={12} />} onClick={() => setOpenDelete(true)} />
 
       {/* View */}
       <ViewDetailDialog
@@ -80,11 +74,7 @@ export default function ColActions({ row }: ColActionsProps) {
         title={`Membership - ${membership.name}`}
       >
         <div className="grid grid-cols-2 gap-4">
-          <InputDisableWithLabel
-            label="Name"
-            id="name"
-            value={membership.name}
-          />
+          <InputDisableWithLabel label="Name" id="name" value={membership.name} />
           <InputDisableWithLabel
             label="Price"
             id="price"
@@ -128,7 +118,7 @@ export default function ColActions({ row }: ColActionsProps) {
                   <Input
                     {...field}
                     placeholder="Enter membership name"
-                    className="border p-2 rounded-md w-full text-sm text-white placeholder:text-gray-400 focus:ring-2 focus:ring-primary focus:outline-none"
+                    className="border border-input bg-background text-foreground rounded-md w-full text-sm placeholder:text-muted-foreground focus:ring-2 focus:ring-primary focus:outline-none"
                   />
                 </FormControl>
                 <FormMessage />
@@ -149,7 +139,7 @@ export default function ColActions({ row }: ColActionsProps) {
                     step="0.01"
                     {...field}
                     placeholder="Enter price"
-                    className="border p-2 rounded-md w-full text-sm text-white placeholder:text-gray-400 focus:ring-2 focus:ring-primary focus:outline-none"
+                    className="border border-input bg-background text-foreground rounded-md w-full text-sm placeholder:text-muted-foreground focus:ring-2 focus:ring-primary focus:outline-none"
                     onChange={(e) =>
                       field.onChange(parseFloat(e.target.value) || 0)
                     }
@@ -172,7 +162,7 @@ export default function ColActions({ row }: ColActionsProps) {
                     type="number"
                     {...field}
                     placeholder="Enter duration"
-                    className="border p-2 rounded-md w-full text-sm text-white placeholder:text-gray-400 focus:ring-2 focus:ring-primary focus:outline-none"
+                    className="border border-input bg-background text-foreground rounded-md w-full text-sm placeholder:text-muted-foreground focus:ring-2 focus:ring-primary focus:outline-none"
                     onChange={(e) =>
                       field.onChange(parseInt(e.target.value) || 0)
                     }
@@ -197,7 +187,7 @@ export default function ColActions({ row }: ColActionsProps) {
                   value={field.value || ""}
                 >
                   <FormControl>
-                    <SelectTrigger className="border rounded-md w-full text-sm text-white placeholder:text-gray-400 focus:ring-2 focus:ring-primary focus:outline-none h-[38px] px-2">
+                    <SelectTrigger className="border border-input bg-background text-foreground rounded-md w-full text-sm placeholder:text-muted-foreground focus:ring-2 focus:ring-primary focus:outline-none h-[38px] px-2">
                       <SelectValue placeholder="Select Period Type" />
                     </SelectTrigger>
                   </FormControl>
@@ -226,7 +216,7 @@ export default function ColActions({ row }: ColActionsProps) {
                   value={field.value || ""}
                 >
                   <FormControl>
-                    <SelectTrigger className="border rounded-md w-full text-sm text-white placeholder:text-gray-400 focus:ring-2 focus:ring-primary focus:outline-none h-[38px] px-2">
+                    <SelectTrigger className="border border-input bg-background text-foreground rounded-md w-full text-sm placeholder:text-muted-foreground focus:ring-2 focus:ring-primary focus:outline-none h-[38px] px-2">
                       <SelectValue placeholder="Select Status" />
                     </SelectTrigger>
                   </FormControl>
