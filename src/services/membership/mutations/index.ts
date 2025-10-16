@@ -51,6 +51,7 @@ export const useDeleteMembershipMutation = () => {
 
 export const useUpdateMembershipMutation = () => {
   const queryClient = useQueryClient();
+
   return useMutation({
     mutationFn: async ({
       membershipId,
@@ -59,23 +60,15 @@ export const useUpdateMembershipMutation = () => {
       membershipId: string;
       formData: Partial<Membership>;
     }) => {
-      const { name, periodType, duration, status, description, price } =
-        formData;
-      const response = await updateMembership(membershipId, {
-        name,
-        periodType,
-        duration: Number(duration),
-        status,
-        description,
-        price: Number(price),
-      });
+      const { id, createdAt, updatedAt, ...cleanData } = formData; 
+      const response = await updateMembership(membershipId, cleanData);
+
       return response.data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.memberships });
       toast.success("Membership updated successfully");
     },
-
     onError: (err: any) => {
       toast.error(err.message || "Failed to update membership");
     },

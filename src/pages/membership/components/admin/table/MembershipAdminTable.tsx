@@ -6,12 +6,22 @@ import { Plus, Search } from "lucide-react";
 import { AddDialog } from "@/components/dialog/AddDialog";
 import useMembership from "@/services/membership/hooks/useMembership";
 import {
+  FormField,
+  FormItem,
+  FormLabel,
+  FormControl,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import type { PeriodType } from "@/types/enums/periodType";
 
 export default function MembershipAdminTable() {
   const { data, isLoading, form, onSubmit, onDeleteMembership } =
@@ -47,18 +57,19 @@ export default function MembershipAdminTable() {
 
   return (
     <div className="w-full mt-4">
+      {/* Search + Add */}
       <div className="flex items-center justify-between mb-3">
         <div className="relative w-1/3">
           <Search
             size={16}
             className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500"
           />
-          <input
+          <Input
             type="text"
             placeholder="Search memberships..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="pl-9 h-9 pr-3 py-2 border border-gray-300 rounded-md w-full !outline-none focus:ring-2 focus:ring-primary"
+            className="pl-9 h-9"
           />
         </div>
 
@@ -72,6 +83,7 @@ export default function MembershipAdminTable() {
         </Button>
       </div>
 
+      {/* Table */}
       <DataTable
         data={filteredData || []}
         columns={columns}
@@ -79,75 +91,130 @@ export default function MembershipAdminTable() {
         title="Membership List"
       />
 
+      {/* Add Dialog */}
       <AddDialog
-  open={openAdd}
-  onOpenChange={setOpenAdd}
-  onConfirm={form.handleSubmit(handleConfirmAdd)}
-  form={form}
-  title="Membership"
->
-  <div className="grid grid-cols-2 gap-4">
-    <div>
-      <label>Name</label>
-      <input
-        {...form.register("name")}
-        className="border p-2 rounded-md w-full text-sm text-white placeholder:text-gray-400 focus:ring-2 focus:ring-primary focus:outline-none"
-        placeholder="Enter membership name"
-      />
-    </div>
+        open={openAdd}
+        onOpenChange={setOpenAdd}
+        onConfirm={handleConfirmAdd}
+        form={form}
+        title="Membership"
+      >
+        <div className="grid grid-cols-2 gap-4">
+          {/* Name */}
+          <FormField
+            control={form.control}
+            name="name"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Name</FormLabel>
+                <FormControl>
+                  <Input
+                    {...field}
+                    placeholder="Enter membership name"
+                    className="border p-2 rounded-md w-full text-sm text-white placeholder:text-gray-400 focus:ring-2 focus:ring-primary focus:outline-none"
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-    <div>
-      <label>Price</label>
-      <input
-        type="number"
-        step="0.01"
-        {...form.register("price")}
-        className="border p-2 rounded-md w-full text-sm text-white placeholder:text-gray-400 focus:ring-2 focus:ring-primary focus:outline-none"
-        placeholder="Enter price"
-      />
-    </div>
+          {/* Price */}
+          <FormField
+            control={form.control}
+            name="price"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Price</FormLabel>
+                <FormControl>
+                  <Input
+                    type="number"
+                    step="0.01"
+                    {...field}
+                    placeholder="Enter price"
+                    className="border p-2 rounded-md w-full text-sm text-white placeholder:text-gray-400 focus:ring-2 focus:ring-primary focus:outline-none"
+                    onChange={(e) =>
+                      field.onChange(parseFloat(e.target.value) || 0)
+                    }
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-    <div>
-      <label>Duration</label>
-      <input
-        type="number"
-        {...form.register("duration")}
-        className="border p-2 rounded-md w-full text-sm text-white placeholder:text-gray-400 focus:ring-2 focus:ring-primary focus:outline-none"
-        placeholder="Enter duration"
-      />
-    </div>
+          {/* Duration */}
+          <FormField
+            control={form.control}
+            name="duration"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Duration</FormLabel>
+                <FormControl>
+                  <Input
+                    type="number"
+                    {...field}
+                    placeholder="Enter duration"
+                    className="border p-2 rounded-md w-full text-sm text-white placeholder:text-gray-400 focus:ring-2 focus:ring-primary focus:outline-none"
+                    onChange={(e) =>
+                      field.onChange(parseInt(e.target.value) || 0)
+                    }
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-    {/* Period Type */}
-    <div>
-      <label>Period Type</label>
-      <Select>
-        <SelectTrigger className="border rounded-md w-full text-sm text-white placeholder:text-gray-400 focus:ring-2 focus:ring-primary focus:outline-none h-[38px] px-2">
-          <SelectValue placeholder="Select Period Type" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="DAY">DAY</SelectItem>
-          <SelectItem value="MONTH">MONTH</SelectItem>
-          <SelectItem value="YEAR">YEAR</SelectItem>
-        </SelectContent>
-      </Select>
-    </div>
+          {/* Period Type */}
+          <FormField
+            control={form.control}
+            name="periodType"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Period Type</FormLabel>
+                <Select
+                  onValueChange={(value: PeriodType) =>
+                    form.setValue("periodType", value, { shouldDirty: true })
+                  }
+                  value={field.value || ""}
+                >
+                  <FormControl>
+                    <SelectTrigger className="border rounded-md w-full text-sm text-white placeholder:text-gray-400 focus:ring-2 focus:ring-primary focus:outline-none h-[38px] px-2">
+                      <SelectValue placeholder="Select Period Type" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectItem value="DAY">Day</SelectItem>
+                    <SelectItem value="MONTH">Month</SelectItem>
+                    <SelectItem value="YEAR">Year</SelectItem>
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-    {/* Status */}
-    <div>
-      <label>Status</label>
-      <Select>
-        <SelectTrigger className="border rounded-md w-full text-sm text-white placeholder:text-gray-400 focus:ring-2 focus:ring-primary focus:outline-none h-[38px] px-2">
-          <SelectValue placeholder="Select Status" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="ACTIVE">ACTIVE</SelectItem>
-          <SelectItem value="INACTIVE">INACTIVE</SelectItem>
-        </SelectContent>
-      </Select>
-    </div>
-  </div>
-</AddDialog>
-
+          {/* Description */}
+          <FormField
+            control={form.control}
+            name="description"
+            render={({ field }) => (
+              <FormItem className="col-span-2">
+                <FormLabel>Description</FormLabel>
+                <FormControl>
+                  <Textarea
+                    {...field}
+                    placeholder="Enter description"
+                    className="border p-2 rounded-md w-full text-sm text-white placeholder:text-gray-400 focus:ring-2 focus:ring-primary focus:outline-none"
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+      </AddDialog>
     </div>
   );
 }
