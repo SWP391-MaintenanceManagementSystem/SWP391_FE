@@ -203,7 +203,7 @@ export default function EmployeeInfoForm({
             <FormControl>
               <DatePickerInput
                 label="Start Date"
-                value={field.value}
+                value={field.value ?? undefined}
                 onChange={field.onChange}
                 disabled={!form.watch("workCenter.centerId")}
               />
@@ -222,7 +222,7 @@ export default function EmployeeInfoForm({
             <FormControl>
               <DatePickerInput
                 label="End Date"
-                value={field.value}
+                value={field.value ?? undefined}
                 onChange={field.onChange}
                 disabled={!form.watch("workCenter.centerId")}
               />

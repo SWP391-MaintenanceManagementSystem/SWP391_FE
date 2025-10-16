@@ -37,7 +37,6 @@ export function EditDialog<TFormValues extends FieldValues>({
     const isValid = await form.trigger();
     if (!isValid) return;
     onConfirm(values);
-    onOpenChange(false);
   };
 
   return (

@@ -50,16 +50,8 @@ export const EditEmployeeSchema = z.object({
 
   workCenter: z.object({
     centerId: z.string().nonempty("Work center ID is required"),
-    startDate: z.preprocess((val) => {
-      if (!val) return undefined;
-      const date = new Date(val as string);
-      return isNaN(date.getTime()) ? undefined : date;
-    }, z.date().optional()),
-    endDate: z.preprocess((val) => {
-      if (!val) return undefined;
-      const date = new Date(val as string);
-      return isNaN(date.getTime()) ? undefined : date;
-    }, z.date().optional()),
+    startDate: z.date().nullable().optional(),
+    endDate: z.date().nullable().optional(),
   }),
 });
 

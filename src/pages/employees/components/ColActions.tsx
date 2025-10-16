@@ -71,11 +71,7 @@ export default function ColActions({
         open={openDeleteDialog}
         onOpenChange={(open) => setOpenDeleteDialog(open)}
         onConfirm={() => {
-          if (row.original.role === "TECHNICIAN") {
-            handleDeleteEmployee(row.original.id);
-          } else if (row.original.role === "STAFF") {
-            handleDeleteEmployee(row.original.id);
-          }
+          handleDeleteEmployee(row.original.id);
           setOpenDeleteDialog(false);
         }}
         isDisabled={row.original.status === "DISABLED"}
