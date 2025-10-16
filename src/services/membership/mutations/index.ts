@@ -7,11 +7,12 @@ import {
 import type { Membership } from "@/types/models/membership";
 import { queryKeys } from "../queries/keys";
 import { toast } from "sonner";
+import type { CreateMembershipsFormData } from "@/pages/membership/lib/schema";
 
 export const useAddMembershipMutation = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async (data: Omit<Membership, "id">) => {
+    mutationFn: async (data: CreateMembershipsFormData) => {
       const { name, periodType, duration, description, price } = data;
       const response = await addMembership({
         name,
@@ -60,8 +61,16 @@ export const useUpdateMembershipMutation = () => {
       membershipId: string;
       formData: Partial<Membership>;
     }) => {
-      const { id, createdAt, updatedAt, ...cleanData } = formData; 
-      const response = await updateMembership(membershipId, cleanData);
+      const { name, duration, periodType, description, price, status } =
+        formData;
+      const response = await updateMembership(membershipId, {
+        name,
+        duration,
+        periodType,
+        description,
+        price,
+        status,
+      });
 
       return response.data;
     },

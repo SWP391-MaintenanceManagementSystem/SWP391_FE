@@ -64,8 +64,14 @@ export default function ColActions({ row }: ColActionsProps) {
   return (
     <div className="flex gap-1">
       <ActionBtn icon={<Eye size={12} />} onClick={() => setOpenView(true)} />
-      <ActionBtn icon={<Pencil size={12} />} onClick={() => setOpenEdit(true)} />
-      <ActionBtn icon={<Trash2 size={12} />} onClick={() => setOpenDelete(true)} />
+      <ActionBtn
+        icon={<Pencil size={12} />}
+        onClick={() => setOpenEdit(true)}
+      />
+      <ActionBtn
+        icon={<Trash2 size={12} />}
+        onClick={() => setOpenDelete(true)}
+      />
 
       {/* View */}
       <ViewDetailDialog
@@ -74,7 +80,11 @@ export default function ColActions({ row }: ColActionsProps) {
         title={`Membership - ${membership.name}`}
       >
         <div className="grid grid-cols-2 gap-4">
-          <InputDisableWithLabel label="Name" id="name" value={membership.name} />
+          <InputDisableWithLabel
+            label="Name"
+            id="name"
+            value={membership.name}
+          />
           <InputDisableWithLabel
             label="Price"
             id="price"
@@ -102,7 +112,7 @@ export default function ColActions({ row }: ColActionsProps) {
       <EditDialog
         open={openEdit}
         onOpenChange={setOpenEdit}
-        onConfirm={form.handleSubmit(handleConfirmEdit)}
+        onConfirm={() => form.handleSubmit(handleConfirmEdit)()}
         form={form}
         title="Membership"
       >
@@ -237,6 +247,7 @@ export default function ColActions({ row }: ColActionsProps) {
         open={openDelete}
         onOpenChange={setOpenDelete}
         onConfirm={handleConfirmDelete}
+        isDisabled={membership.status === "INACTIVE"}
       />
     </div>
   );

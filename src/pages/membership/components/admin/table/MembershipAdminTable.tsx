@@ -22,21 +22,19 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import type { PeriodType } from "@/types/enums/periodType";
+import type { CreateMembershipsFormData } from "@/pages/membership/lib/schema";
+import type { MembershipTable } from "@/pages/membership/lib/table-types";
+import type { ColumnDef } from "@tanstack/react-table";
 
 export default function MembershipAdminTable() {
-  const { data, isLoading, form, onSubmit, onDeleteMembership } =
-    useMembership();
+  const { data, isLoading, form, onSubmit } = useMembership();
   const [openAdd, setOpenAdd] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
 
-  const handleConfirmAdd = (formData: any) => {
+  const handleConfirmAdd = (formData: CreateMembershipsFormData) => {
     onSubmit(formData);
     setOpenAdd(false);
     form.reset();
-  };
-
-  const handleDelete = (id: string) => {
-    onDeleteMembership(id);
   };
 
   const filteredData = useMemo(() => {
@@ -53,7 +51,7 @@ export default function MembershipAdminTable() {
     <div className="w-full mt-4">
       <DataTable
         data={filteredData || []}
-        columns={columns}
+        columns={columns as ColumnDef<MembershipTable, unknown>[]}
         isLoading={isLoading}
         isSearch
         searchPlaceholder="Search membership name..."
