@@ -19,7 +19,7 @@ import ViewDetailInfo from "@/pages/vehicle/components/admin/ViewDetailInfo";
 import MembershipPage from "@/pages/membership";
 import StaffsManagementPage from "@/pages/employees/staffs";
 import TechniciansManagementPage from "@/pages/employees/technicians";
-import WorkShiftsManagementPage from "@/pages/employees/shifts";
+import WorkShiftsManagementPage from "@/pages/shifts";
 import Booking from "@/pages/booking/components/customer/Booking";
 import AuthFailed from "@/pages/auth/components/AuthFailed";
 import InventoryManagement from "@/pages/inventory";
@@ -110,7 +110,7 @@ const RouterComponent = () => {
                       hydrateFallbackElement: <CircularIndeterminate />,
                     },
                     {
-                      path: "/employees/shifts",
+                      path: "/shifts",
                       element: <WorkShiftsManagementPage />,
                       hydrateFallbackElement: <CircularIndeterminate />,
                     },
