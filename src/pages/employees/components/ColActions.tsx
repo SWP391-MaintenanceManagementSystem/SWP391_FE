@@ -93,11 +93,11 @@ export default function ColActions({
         onOpenChange={(open) => setOpenEditDialog(open)}
         form={form}
         title={row.original.role === "STAFF" ? "Staff" : "Technician"}
-        onConfirm={() => {
+        onConfirm={async (data) => {
           if (row.original.role === "STAFF") {
-            handleUpdateEmployeeInfo(row.original.id);
+            handleUpdateEmployeeInfo(row.original.id, data);
           } else if (row.original.role === "TECHNICIAN") {
-            handleUpdateEmployeeInfo(row.original.id);
+            handleUpdateEmployeeInfo(row.original.id, data);
           }
         }}
       />

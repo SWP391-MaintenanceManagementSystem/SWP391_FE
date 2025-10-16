@@ -35,9 +35,7 @@ export function EditDialog<TFormValues extends FieldValues>({
 }: EditDialogProps<TFormValues>) {
   const onSubmit = async (values: TFormValues) => {
     const isValid = await form.trigger();
-
     if (!isValid) return;
-
     onConfirm(values);
     onOpenChange(false);
   };

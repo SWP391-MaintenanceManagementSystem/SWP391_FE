@@ -17,6 +17,7 @@ import {
   updatePartItem,
 } from "../apis/inventory.api";
 import type { PartItemFormData } from "@/pages/inventory/libs/schema";
+import { type EditEmployeeFormData } from "@/pages/employees/libs/schema";
 
 export const useUpdateCustomerInfo = () => {
   const queryClient = useQueryClient();
@@ -259,7 +260,7 @@ export const useUpdateEmployeeInfo = () => {
       id,
     }: {
       role: "STAFF" | "TECHNICIAN";
-      data: ChangeProfileFormData;
+      data: EditEmployeeFormData;
       id: string;
       currentPage: number;
       currentPageSize: number;

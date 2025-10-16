@@ -4,13 +4,14 @@ import {
   useAddEmployee,
 } from "../mutations";
 import type { EmployeeTable } from "@/pages/employees/libs/table-types";
-import {
-  ChangeProfileSchema,
-  type ChangeProfileFormData,
-} from "@/pages/profile/components/profile/libs/schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import type { AxiosError } from "axios";
+import { AxiosError } from "axios";
+import { toast } from "sonner";
+import {
+  type EditEmployeeFormData,
+  EditEmployeeSchema,
+} from "@/pages/employees/libs/schema";
 
 export const useEmployee = (
   employee: EmployeeTable,
@@ -22,14 +23,23 @@ export const useEmployee = (
   const updateEmployeeInfoMutation = useUpdateEmployeeInfo();
   const addEmployeeMutation = useAddEmployee();
 
-  const form = useForm<ChangeProfileFormData>({
-    resolver: zodResolver(ChangeProfileSchema),
+  const form = useForm<EditEmployeeFormData>({
+    resolver: zodResolver(EditEmployeeSchema),
     defaultValues: {
       firstName: employee.profile?.firstName || "",
       lastName: employee.profile?.lastName || "",
       email: employee.email || "",
       phone: employee.phone || "",
       status: employee.status,
+      workCenter: {
+        centerId: employee.workCenter?.id || "",
+        startDate: employee.workCenter?.startDate
+          ? new Date(employee.workCenter.startDate)
+          : undefined,
+        endDate: employee.workCenter?.endDate
+          ? new Date(employee.workCenter.endDate)
+          : undefined,
+      },
     },
   });
 
@@ -42,14 +52,34 @@ export const useEmployee = (
     });
   };
 
-  const handleUpdateEmployeeInfo = (id: string) => {
-    updateEmployeeInfoMutation.mutate({
-      id,
-      role,
-      data: form.getValues(),
-      currentPage,
-      currentPageSize,
-    });
+  const handleUpdateEmployeeInfo = (id: string, data: EditEmployeeFormData) => {
+    console.log("handleUpdateEmployeeInfo", data);
+    try {
+      updateEmployeeInfoMutation.mutate({
+        id,
+        role,
+        data,
+        currentPage,
+        currentPageSize,
+      });
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        const apiErrors = error.response?.data?.errors;
+        const msg = error.response?.data.message;
+        if (apiErrors && typeof apiErrors === "object") {
+          Object.entries(apiErrors).forEach(([field, msg]) => {
+            form.setError(field as keyof EditEmployeeFormData, {
+              type: "server",
+              message: msg as string,
+            });
+          });
+        } else if (msg) {
+          toast.error(msg);
+        } else {
+          toast.error("Something went wrong. Please try again.");
+        }
+      }
+    }
   };
 
   const handleAddEmployee = async () => {
