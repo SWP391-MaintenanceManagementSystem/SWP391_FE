@@ -15,9 +15,16 @@ type Props = {
   value?: Date;
   onChange?: (date?: Date) => void;
   disabled?: boolean;
+  ariaInvalid?: boolean;
 };
 
-export function DatePickerInput({ label, value, onChange, disabled }: Props) {
+export function DatePickerInput({
+  label,
+  value,
+  onChange,
+  disabled,
+  ariaInvalid,
+}: Props) {
   const [open, setOpen] = React.useState(false);
   const [month, setMonth] = React.useState<Date | undefined>(value);
 
@@ -40,6 +47,7 @@ export function DatePickerInput({ label, value, onChange, disabled }: Props) {
           className="bg-background pr-10"
           readOnly
           disabled={disabled}
+          aria-invalid={ariaInvalid}
         />
         <Popover open={open} onOpenChange={setOpen}>
           <PopoverTrigger asChild>

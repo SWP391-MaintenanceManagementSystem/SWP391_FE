@@ -206,11 +206,10 @@ export default function EmployeeInfoForm({
                 value={field.value ?? undefined}
                 onChange={field.onChange}
                 disabled={!form.watch("workCenter.centerId")}
+                ariaInvalid={!!form.formState.errors.workCenter?.startDate}
               />
             </FormControl>
-            <FormMessage>
-              {form.formState.errors.workCenter?.startDate?.message}
-            </FormMessage>
+            <FormMessage />
           </FormItem>
         )}
       />
@@ -225,11 +224,10 @@ export default function EmployeeInfoForm({
                 value={field.value ?? undefined}
                 onChange={field.onChange}
                 disabled={!form.watch("workCenter.centerId")}
+                ariaInvalid={!!form.formState.errors.workCenter?.endDate}
               />
             </FormControl>
-            <FormMessage>
-              {form.formState.errors.workCenter?.endDate?.message}
-            </FormMessage>
+            <FormMessage />
           </FormItem>
         )}
       />

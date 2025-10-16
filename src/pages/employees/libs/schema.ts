@@ -48,11 +48,24 @@ export const EditEmployeeSchema = z.object({
 
   status: z.enum(["VERIFIED", "NOT_VERIFY", "BANNED", "DISABLED"]).optional(),
 
-  workCenter: z.object({
-    centerId: z.string().nonempty("Work center ID is required"),
-    startDate: z.date().nullable().optional(),
-    endDate: z.date().nullable().optional(),
-  }),
+  workCenter: z
+    .object({
+      centerId: z.string().nonempty("Work center ID is required"),
+      startDate: z.date().nullable().optional(),
+      endDate: z.date().nullable().optional(),
+    })
+    .refine((data) => !data.centerId || data.startDate != null, {
+      message: "Start date is required when center is selected",
+      path: ["startDate"],
+    })
+    .refine(
+      (data) =>
+        !data.startDate || !data.endDate || data.endDate >= data.startDate,
+      {
+        message: "End date cannot be earlier than start date",
+        path: ["endDate"],
+      },
+    ),
 });
 
 export type EditEmployeeFormData = z.infer<typeof EditEmployeeSchema>;
