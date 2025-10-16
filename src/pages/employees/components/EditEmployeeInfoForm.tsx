@@ -44,10 +44,7 @@ export default function EmployeeInfoForm({
     <EditDialog
       open={open}
       onOpenChange={onOpenChange}
-      onConfirm={(data) => {
-        console.log("Confirm pressed:", data);
-        onConfirm(data);
-      }}
+      onConfirm={onConfirm}
       form={form}
       title={title}
       styleFormLayout="grid-rows-6 md:grid-cols-2 md:grid-rows-5 "
@@ -163,7 +160,14 @@ export default function EmployeeInfoForm({
             <FormLabel>Service Center</FormLabel>
             <FormControl>
               <DropdownMenu>
-                <DropdownMenuTrigger asChild>
+                <DropdownMenuTrigger
+                  asChild
+                  className={`w-full border ${
+                    form.formState.errors.workCenter?.centerId
+                      ? "border-destructive focus:ring-destructive"
+                      : "border-input focus:ring-primary"
+                  }`}
+                >
                   <Button
                     variant="outline"
                     className="w-full !outline-none flex justify-between"
@@ -204,7 +208,9 @@ export default function EmployeeInfoForm({
                 disabled={!form.watch("workCenter.centerId")}
               />
             </FormControl>
-            <FormMessage />
+            <FormMessage>
+              {form.formState.errors.workCenter?.startDate?.message}
+            </FormMessage>
           </FormItem>
         )}
       />
@@ -221,7 +227,9 @@ export default function EmployeeInfoForm({
                 disabled={!form.watch("workCenter.centerId")}
               />
             </FormControl>
-            <FormMessage />
+            <FormMessage>
+              {form.formState.errors.workCenter?.endDate?.message}
+            </FormMessage>
           </FormItem>
         )}
       />

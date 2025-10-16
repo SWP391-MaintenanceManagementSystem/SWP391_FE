@@ -9,8 +9,8 @@ import { useForm } from "react-hook-form";
 import { AxiosError } from "axios";
 import { toast } from "sonner";
 import {
-  type EditEmployeeFormData,
   EditEmployeeSchema,
+  type EditEmployeeFormData,
 } from "@/pages/employees/libs/schema";
 
 export const useEmployee = (
@@ -53,33 +53,35 @@ export const useEmployee = (
   };
 
   const handleUpdateEmployeeInfo = (id: string, data: EditEmployeeFormData) => {
-    console.log("handleUpdateEmployeeInfo", data);
-    try {
-      updateEmployeeInfoMutation.mutate({
+    updateEmployeeInfoMutation.mutate(
+      {
         id,
         role,
         data,
         currentPage,
         currentPageSize,
-      });
-    } catch (error) {
-      if (error instanceof AxiosError) {
-        const apiErrors = error.response?.data?.errors;
-        const msg = error.response?.data.message;
-        if (apiErrors && typeof apiErrors === "object") {
-          Object.entries(apiErrors).forEach(([field, msg]) => {
-            form.setError(field as keyof EditEmployeeFormData, {
-              type: "server",
-              message: msg as string,
-            });
-          });
-        } else if (msg) {
-          toast.error(msg);
-        } else {
-          toast.error("Something went wrong. Please try again.");
-        }
-      }
-    }
+      },
+      {
+        onError: (error) => {
+          if (error instanceof AxiosError) {
+            const apiErrors = error.response?.data?.errors;
+            const msg = error.response?.data.message;
+            if (apiErrors && typeof apiErrors === "object") {
+              Object.entries(apiErrors).forEach(([field, msg]) => {
+                form.setError(field as keyof EditEmployeeFormData, {
+                  type: "server",
+                  message: msg as string,
+                });
+              });
+            } else if (msg) {
+              toast.error(msg);
+            } else {
+              toast.error("Something went wrong. Please try again.");
+            }
+          }
+        },
+      },
+    );
   };
 
   const handleAddEmployee = async () => {

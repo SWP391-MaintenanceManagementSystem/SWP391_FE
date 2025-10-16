@@ -3,8 +3,8 @@ import { z } from "zod";
 export const EditEmployeeSchema = z.object({
   firstName: z
     .string()
-    .min(2, "First name must be between 2 and 30 characters long")
-    .max(30, "First name must be between 2 and 30 characters long")
+    .min(2, { error: "First name must be between 2 and 30 characters long" })
+    .max(30, { error: "First name must be between 2 and 30 characters long" })
     .regex(
       /^[\p{L}\s'-]+$/u,
       "First name can only contain letters, spaces, hyphens and apostrophes",
@@ -14,12 +14,12 @@ export const EditEmployeeSchema = z.object({
 
   lastName: z
     .string()
-    .min(2, "Last name must be between 2 and 30 characters long")
-    .max(30, "Last name must be between 2 and 30 characters long")
-    .regex(
-      /^[\p{L}\s'-]+$/u,
-      "Last name can only contain letters, spaces, hyphens and apostrophes",
-    )
+    .min(2, { error: "Last name must be between 2 and 30 characters long" })
+    .max(30, { error: "Last name must be between 2 and 30 characters long" })
+    .regex(/^[\p{L}\s'-]+$/u, {
+      error:
+        "Last name can only contain letters, spaces, hyphens and apostrophes",
+    })
     .optional()
     .refine((val) => val !== "", "Last name cannot be empty string"),
 
@@ -30,8 +30,8 @@ export const EditEmployeeSchema = z.object({
 
   phone: z
     .string()
-    .min(10, "Phone must be at least 10 digits")
-    .max(15, "Phone must be at most 15 digits")
+    .min(10, { error: "Phone must be at least 10 digits" })
+    .max(15, { error: "Phone must be at most 15 digits" })
     .regex(
       /^(?:\+84|0)(3|5|7|8|9)\d{8}$/,
       "Phone number must be a valid Vietnamese phone number",
@@ -41,42 +41,26 @@ export const EditEmployeeSchema = z.object({
 
   address: z
     .string()
-    .min(5, "Address must be at least 5 characters")
-    .max(200, "Address must be at most 200 characters")
+    .min(5, { error: "Address must be at least 5 characters" })
+    .max(200, { error: "Address must be at most 200 characters" })
     .optional()
     .refine((val) => val !== "", "Address cannot be empty string"),
 
   status: z.enum(["VERIFIED", "NOT_VERIFY", "BANNED", "DISABLED"]).optional(),
 
-  workCenter: z
-    .object({
-      centerId: z.string().optional().or(z.literal("")).optional(),
-      startDate: z.preprocess(
-        (val) => (val ? new Date(val as string) : undefined),
-        z.date().optional(),
-      ),
-      endDate: z.preprocess(
-        (val) => (val ? new Date(val as string) : undefined),
-        z.date().optional(),
-      ),
-    })
-    .optional()
-    .refine(
-      (val) => {
-        if (val?.centerId && !val?.startDate) {
-          return false;
-        }
-        return true;
-      },
-      { message: "Start date is required when center is selected" },
-    )
-    .refine(
-      (val) => {
-        if (!val?.startDate || !val?.endDate) return true;
-        return val.startDate <= val.endDate;
-      },
-      { message: "End date must be after start date" },
-    ),
+  workCenter: z.object({
+    centerId: z.string().nonempty("Work center ID is required"),
+    startDate: z.preprocess((val) => {
+      if (!val) return undefined;
+      const date = new Date(val as string);
+      return isNaN(date.getTime()) ? undefined : date;
+    }, z.date().optional()),
+    endDate: z.preprocess((val) => {
+      if (!val) return undefined;
+      const date = new Date(val as string);
+      return isNaN(date.getTime()) ? undefined : date;
+    }, z.date().optional()),
+  }),
 });
 
 export type EditEmployeeFormData = z.infer<typeof EditEmployeeSchema>;
