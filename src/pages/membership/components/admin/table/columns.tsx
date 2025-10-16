@@ -5,14 +5,10 @@ import FilterHeader from "@/components/table/FilterHeader";
 import type { Membership } from "@/types/models/membership";
 import ColActions from "./ColActions";
 
-export const getColumns = (
-  handleFilterChange: (field: string, value: string | undefined) => void,
-  currentFilters: { status: string },
-) => {
+export const getColumns = () => {
   const columnHelper = createColumnHelper<Membership>();
 
   return [
-    // SELECT checkbox
     columnHelper.display({
       id: "select",
       header: ({ table }) => (
@@ -39,45 +35,52 @@ export const getColumns = (
       enableHiding: false,
     }),
 
-    // NAME
     columnHelper.accessor("name", {
       id: "name",
       header: (info) => <SortHeader title="Name" info={info} />,
-      size: 120,
+      size: 160,
       cell: (info) => info.getValue(),
+      enableSorting: true,
+      sortingFn: "alphanumeric",
+      meta: {
+        title: "Name",
+      },
     }),
 
-    // PRICE
     columnHelper.accessor("price", {
       id: "price",
       header: (info) => <SortHeader title="Price" info={info} />,
-      size: 100,
+      size: 120,
       cell: (info) => `$${info.getValue().toLocaleString()}`,
+      enableSorting: true,
+      sortingFn: "basic",
     }),
 
-    // DURATION
+
     columnHelper.accessor("duration", {
       id: "duration",
       header: (info) => <SortHeader title="Duration" info={info} />,
-      size: 100,
+      size: 120,
       cell: (info) => `${info.getValue()} ${info.row.original.periodType}`,
+      enableSorting: true,
+      sortingFn: "basic",
+      
     }),
 
-    // STATUS
     columnHelper.accessor("status", {
       id: "status",
-      header: (info) => (
+      header: ({ column }) => (
         <FilterHeader
-          column={info.column}
+          column={column}
           title="Status"
-          selectedValue={currentFilters.status}
-          onFilterChange={(value) => handleFilterChange("status", value)}
+          selectedValue={column.getFilterValue() as string}
+          onFilterChange={(value) => column.setFilterValue(value || undefined)}
         />
       ),
-      size: 100,
+      size: 120,
       cell: (info) => (
         <span
-          className={`px-2 py-1 rounded-md text-xs ${
+          className={`px-2 py-1 rounded-md text-xs font-medium ${
             info.getValue() === "ACTIVE"
               ? "bg-green-100 text-green-700"
               : "bg-red-100 text-red-700"
@@ -86,13 +89,20 @@ export const getColumns = (
           {info.getValue()}
         </span>
       ),
+      meta: {
+        filterOptions: ["ACTIVE", "INACTIVE"],
+      },
+      filterFn: (row, columnId, filterValue) => {
+        if (!filterValue) return true;
+        return row.getValue(columnId) === filterValue;
+      },
+      enableSorting: false, 
     }),
 
-    // ACTIONS
     columnHelper.display({
       id: "actions",
       header: "Actions",
-      size: 80,
+      size: 100,
       cell: ({ row, table }) => {
         const { pageIndex, pageSize } = table.getState().pagination;
         return (
@@ -103,6 +113,7 @@ export const getColumns = (
           />
         );
       },
+      enableSorting: false,
     }),
   ];
 };

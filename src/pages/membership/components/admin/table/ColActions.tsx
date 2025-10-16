@@ -12,6 +12,13 @@ import { toast } from "sonner";
 import { useForm } from "react-hook-form";
 import type { Membership } from "@/types/models/membership";
 import useMembership from "@/services/membership/hooks/useMembership";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 type ColActionsProps = {
   row: Row<Membership>;
@@ -122,26 +129,33 @@ export default function ColActions({ row }: ColActionsProps) {
               className="border p-2 rounded-md w-full"
             />
           </div>
+          {/* Period Type */}
           <div>
             <label>Period Type</label>
-            <select
-              {...form.register("periodType")}
-              className="border p-2 rounded-md w-full"
-            >
-              <option value="DAY">Day</option>
-              <option value="MONTH">Month</option>
-              <option value="YEAR">Year</option>
-            </select>
+            <Select>
+              <SelectTrigger className="border rounded-md w-full text-sm text-white placeholder:text-gray-400 focus:ring-2 focus:ring-primary focus:outline-none h-[38px] px-2">
+                <SelectValue placeholder="Select Period Type" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="DAY">DAY</SelectItem>
+                <SelectItem value="MONTH">MONTH</SelectItem>
+                <SelectItem value="YEAR">YEAR</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
+
+          {/* Status */}
           <div>
             <label>Status</label>
-            <select
-              {...form.register("status")}
-              className="border p-2 rounded-md w-full"
-            >
-              <option value="ACTIVE">Active</option>
-              <option value="INACTIVE">Inactive</option>
-            </select>
+            <Select>
+              <SelectTrigger className="border rounded-md w-full text-sm text-white placeholder:text-gray-400 focus:ring-2 focus:ring-primary focus:outline-none h-[38px] px-2">
+                <SelectValue placeholder="Select Status" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="ACTIVE">ACTIVE</SelectItem>
+                <SelectItem value="INACTIVE">INACTIVE</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
         </div>
       </EditDialog>

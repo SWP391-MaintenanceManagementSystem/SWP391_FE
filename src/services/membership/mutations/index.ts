@@ -12,8 +12,14 @@ export const useAddMembershipMutation = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (data: Omit<Membership, "id">) => {
-      const { name, periodType, duration,description, price } = data;
-      const response = await addMembership({name, periodType, duration, description, price });
+      const { name, periodType, duration, description, price } = data;
+      const response = await addMembership({
+        name,
+        periodType,
+        duration,
+        description,
+        price,
+      });
       return response.data;
     },
     onSuccess: () => {
@@ -58,10 +64,10 @@ export const useUpdateMembershipMutation = () => {
       const response = await updateMembership(membershipId, {
         name,
         periodType,
-        duration,
+        duration: Number(duration),
         status,
         description,
-        price,
+        price: Number(price),
       });
       return response.data;
     },

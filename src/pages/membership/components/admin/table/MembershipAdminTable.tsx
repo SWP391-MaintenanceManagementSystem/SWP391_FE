@@ -5,6 +5,13 @@ import { Button } from "@/components/ui/button";
 import { Plus, Search } from "lucide-react";
 import { AddDialog } from "@/components/dialog/AddDialog";
 import useMembership from "@/services/membership/hooks/useMembership";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export default function MembershipAdminTable() {
   const { data, isLoading, form, onSubmit, onDeleteMembership } =
@@ -36,7 +43,7 @@ export default function MembershipAdminTable() {
     );
   }, [data, searchTerm]);
 
-  const columns = getColumns(handleFilterChange, filters, handleDelete);
+  const columns = getColumns();
 
   return (
     <div className="w-full mt-4">
@@ -73,65 +80,74 @@ export default function MembershipAdminTable() {
       />
 
       <AddDialog
-        open={openAdd}
-        onOpenChange={setOpenAdd}
-        onConfirm={form.handleSubmit(handleConfirmAdd)}
-        form={form}
-        title=" Membership"
-      >
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <label>Name</label>
-            <input
-              {...form.register("name")}
-              className="border p-2 rounded-md w-full"
-              placeholder="Enter membership name"
-            />
-          </div>
+  open={openAdd}
+  onOpenChange={setOpenAdd}
+  onConfirm={form.handleSubmit(handleConfirmAdd)}
+  form={form}
+  title="Membership"
+>
+  <div className="grid grid-cols-2 gap-4">
+    <div>
+      <label>Name</label>
+      <input
+        {...form.register("name")}
+        className="border p-2 rounded-md w-full text-sm text-white placeholder:text-gray-400 focus:ring-2 focus:ring-primary focus:outline-none"
+        placeholder="Enter membership name"
+      />
+    </div>
 
-          <div>
-            <label>Price</label>
-            <input
-              type="number"
-              step={"0.01"}
-              {...form.register("price")}
-              className="border p-2 rounded-md w-full"
-              placeholder="Enter price"
-            />
-          </div>
+    <div>
+      <label>Price</label>
+      <input
+        type="number"
+        step="0.01"
+        {...form.register("price")}
+        className="border p-2 rounded-md w-full text-sm text-white placeholder:text-gray-400 focus:ring-2 focus:ring-primary focus:outline-none"
+        placeholder="Enter price"
+      />
+    </div>
 
-          <div>
-            <label>Duration</label>
-            <input
-              type="number"
-              {...form.register("duration")}
-              className="border p-2 rounded-md w-full"
-              placeholder="Enter duration"
-            />
-          </div>
+    <div>
+      <label>Duration</label>
+      <input
+        type="number"
+        {...form.register("duration")}
+        className="border p-2 rounded-md w-full text-sm text-white placeholder:text-gray-400 focus:ring-2 focus:ring-primary focus:outline-none"
+        placeholder="Enter duration"
+      />
+    </div>
 
-          <div>
-            <label>Period Type</label>
-            <select
-              {...form.register("periodType")}
-              className="border p-2 rounded-md w-full"
-            >
-              <option value="DAY">Day</option>
-              <option value="MONTH">Month</option>
-              <option value="YEAR">Year</option>
-            </select>
-          </div>
+    {/* Period Type */}
+    <div>
+      <label>Period Type</label>
+      <Select>
+        <SelectTrigger className="border rounded-md w-full text-sm text-white placeholder:text-gray-400 focus:ring-2 focus:ring-primary focus:outline-none h-[38px] px-2">
+          <SelectValue placeholder="Select Period Type" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="DAY">DAY</SelectItem>
+          <SelectItem value="MONTH">MONTH</SelectItem>
+          <SelectItem value="YEAR">YEAR</SelectItem>
+        </SelectContent>
+      </Select>
+    </div>
 
-          <div className="col-span-2">
-            <label>Description</label>
-            <textarea
-              {...form.register("description")}
-              className="border p-2 rounded-md w-full"
-              placeholder="Enter description"
-            />
-          </div>
-        </div>
-      </AddDialog>
+    {/* Status */}
+    <div>
+      <label>Status</label>
+      <Select>
+        <SelectTrigger className="border rounded-md w-full text-sm text-white placeholder:text-gray-400 focus:ring-2 focus:ring-primary focus:outline-none h-[38px] px-2">
+          <SelectValue placeholder="Select Status" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="ACTIVE">ACTIVE</SelectItem>
+          <SelectItem value="INACTIVE">INACTIVE</SelectItem>
+        </SelectContent>
+      </Select>
+    </div>
+  </div>
+</AddDialog>
+
     </div>
   );
 }
