@@ -88,7 +88,7 @@ export const getColumns = (
     }),
 
     // Work center
-    columnHelper.accessor((row) => row.workCenter?.name ?? "Not assigned", {
+    columnHelper.accessor("workCenter.name", {
       id: "name",
       header: (info) => (
         <FilterHeader
@@ -99,9 +99,11 @@ export const getColumns = (
         />
       ),
       size: 50,
-      cell: (info) => <Badge variant="outline">{info.getValue()}</Badge>,
+      cell: (info) => (
+        <Badge variant="outline">{info.getValue() ?? "Not assigned"}</Badge>
+      ),
       meta: {
-        title: "Phone",
+        title: "Work Center",
         filterVariant: "filterWorkCenter",
         filterOptions: ["not_assigned", ...centerList.map((c) => c.id)],
         labelOptions: {
