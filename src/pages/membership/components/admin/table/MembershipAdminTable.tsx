@@ -22,6 +22,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import type { PeriodType } from "@/types/enums/periodType";
+import type { SortingState } from "@tanstack/react-table"; // ✅ thêm import này
 import type { CreateMembershipsFormData } from "@/pages/membership/lib/schema";
 import type { MembershipTable } from "@/pages/membership/lib/table-types";
 import type { ColumnDef } from "@tanstack/react-table";
@@ -30,6 +31,7 @@ export default function MembershipAdminTable() {
   const { data, isLoading, form, onSubmit } = useMembership();
   const [openAdd, setOpenAdd] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
+  const [sorting, setSorting] = useState<SortingState>([]); 
 
   const handleConfirmAdd = (formData: CreateMembershipsFormData) => {
     onSubmit(formData);
@@ -53,6 +55,9 @@ export default function MembershipAdminTable() {
         data={filteredData || []}
         columns={columns as ColumnDef<MembershipTable, unknown>[]}
         isLoading={isLoading}
+        sorting={sorting}
+        onSortingChange={setSorting}
+        manualSorting={false}
         isSearch
         searchPlaceholder="Search membership name..."
         searchValue={["name"]}

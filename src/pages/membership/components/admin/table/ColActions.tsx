@@ -1,5 +1,5 @@
 import type { Row } from "@tanstack/react-table";
-import { Pencil, Trash2, Eye } from "lucide-react";
+import { Pencil, Trash2, Maximize2 } from "lucide-react";
 import ActionBtn from "@/components/table/ActionBtn";
 import { useState, useEffect } from "react";
 import { DeleteDialog } from "@/components/dialog/DeleteDialog";
@@ -63,15 +63,9 @@ export default function ColActions({ row }: ColActionsProps) {
 
   return (
     <div className="flex gap-1">
-      <ActionBtn icon={<Eye size={12} />} onClick={() => setOpenView(true)} />
-      <ActionBtn
-        icon={<Pencil size={12} />}
-        onClick={() => setOpenEdit(true)}
-      />
-      <ActionBtn
-        icon={<Trash2 size={12} />}
-        onClick={() => setOpenDelete(true)}
-      />
+      <ActionBtn icon={<Maximize2 size={12} />} onClick={() => setOpenView(true)} />
+      <ActionBtn icon={<Pencil size={12} />} onClick={() => setOpenEdit(true)} />
+      <ActionBtn icon={<Trash2 size={12} />} onClick={() => setOpenDelete(true)} />
 
       {/* View */}
       <ViewDetailDialog

@@ -35,18 +35,18 @@ export const getColumns = () => {
       enableHiding: false,
     }),
 
+    // NAME
     columnHelper.accessor("name", {
       id: "name",
       header: (info) => <SortHeader title="Name" info={info} />,
-      size: 160,
+      size: 50,
       cell: (info) => info.getValue(),
-      enableSorting: true,
-      sortingFn: "alphanumeric",
       meta: {
         title: "Name",
       },
     }),
 
+    //PRICE
     columnHelper.accessor("price", {
       id: "price",
       header: (info) => <SortHeader title="Price" info={info} />,
@@ -56,17 +56,40 @@ export const getColumns = () => {
       sortingFn: "basic",
     }),
 
-
+    // DURATION
     columnHelper.accessor("duration", {
       id: "duration",
       header: (info) => <SortHeader title="Duration" info={info} />,
       size: 120,
       cell: (info) => `${info.getValue()} ${info.row.original.periodType}`,
       enableSorting: true,
-      sortingFn: "basic",
-      
+      sortingFn: (rowA, rowB, columnId) => {
+        const toDays = (duration: number, type: string) => {
+          switch (type) {
+            case "YEAR":
+              return duration * 365;
+            case "MONTH":
+              return duration * 30;
+            case "DAY":
+            default:
+              return duration;
+          }
+        };
+
+        const a = toDays(
+          rowA.getValue<number>(columnId),
+          rowA.original.periodType
+        );
+        const b = toDays(
+          rowB.getValue<number>(columnId),
+          rowB.original.periodType
+        );
+
+        return a - b; // Sắp xếp tăng dần
+      },
     }),
 
+    // STATUS
     columnHelper.accessor("status", {
       id: "status",
       header: ({ column }) => (
@@ -96,7 +119,7 @@ export const getColumns = () => {
         if (!filterValue) return true;
         return row.getValue(columnId) === filterValue;
       },
-      enableSorting: false, 
+      enableSorting: false,
     }),
 
     columnHelper.display({
