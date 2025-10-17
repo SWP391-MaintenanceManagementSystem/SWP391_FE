@@ -1,5 +1,4 @@
 import { useState } from "react";
-import Slider, { type Settings } from "react-slick";
 import MembershipCard from "./MembershipCard";
 import Loading from "@/components/Loading";
 import { usePayment } from "@/services/payment/hooks/usePayment";
@@ -11,7 +10,6 @@ export default function MembershipOptions() {
   const { data, isLoading } = useMembership();
   const { paymentMutation } = usePayment();
 
-  // State quản lý dialog
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState<{
     name: string;
@@ -23,24 +21,6 @@ export default function MembershipOptions() {
   } | null>(null);
 
   if (isLoading) return <Loading />;
-
-  const settings: Settings = {
-    dots: false,
-    infinite: true,
-    speed: 500,
-    slidesToShow: 3,
-    slidesToScroll: 1,
-    responsive: [
-      {
-        breakpoint: 1024,
-        settings: { slidesToShow: 2 },
-      },
-      {
-        breakpoint: 640,
-        settings: { slidesToShow: 1 },
-      },
-    ],
-  };
 
   const handleBuyClick = (plan: {
     name: string;
@@ -69,9 +49,13 @@ export default function MembershipOptions() {
 
   return (
     <div className="w-full relative">
-      <Slider {...settings}>
+      {/* Scrollable container */}
+      <div className="flex gap-4 overflow-x-auto scrollbar-hide snap-x snap-mandatory px-3 py-5">
         {data?.map((m) => (
-          <div key={m.id} className="py-5 px-3">
+          <div
+            key={m.id}
+            className="min-w-[280px] snap-start shrink-0"
+          >
             <MembershipCard
               description={m.description ?? ""}
               title={m.name}
@@ -91,7 +75,7 @@ export default function MembershipOptions() {
             />
           </div>
         ))}
-      </Slider>
+      </div>
 
       {/* Dialog */}
       <PurchaseConfirmDialog
