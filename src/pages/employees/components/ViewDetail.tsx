@@ -4,6 +4,7 @@ import {
 } from "@/components/dialog/ViewDetailDialog";
 import type { EmployeeTable } from "../libs/table-types";
 import AccountStatusTag from "@/components/tag/AccountStatusTag";
+import dayjs from "dayjs";
 
 type Props = {
   employee: EmployeeTable;
@@ -38,11 +39,6 @@ export default function ViewDetailEmployeeInfo({ employee, title }: Props) {
           value={employee.phone}
         />
         <InputDisableWithLabel
-          label="Work center"
-          id="center"
-          value={employee.workCenter?.name ?? "Not assigned"}
-        />
-        <InputDisableWithLabel
           label="Status"
           id="status"
           value={
@@ -51,6 +47,29 @@ export default function ViewDetailEmployeeInfo({ employee, title }: Props) {
             ) : (
               "N/A"
             )
+          }
+        />
+        <InputDisableWithLabel
+          label="Work center"
+          id="center"
+          value={employee.workCenter?.name ?? "Not assigned"}
+        />
+        <InputDisableWithLabel
+          label="Start Date"
+          id="startDate"
+          value={
+            employee.workCenter?.startDate
+              ? dayjs(employee.workCenter.startDate).format("DD/MM/YYYY")
+              : "N/A"
+          }
+        />
+        <InputDisableWithLabel
+          label="End Date"
+          id="endDate"
+          value={
+            employee.workCenter?.endDate
+              ? dayjs(employee.workCenter.endDate).format("DD/MM/YYYY")
+              : "N/A"
           }
         />
       </InfoSection>

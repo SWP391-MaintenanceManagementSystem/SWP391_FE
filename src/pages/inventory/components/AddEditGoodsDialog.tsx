@@ -168,7 +168,7 @@ export function AddEditGoodsDialog({
               />
             </div>
 
-            {/* Category Select / Add New */}
+            {/* Category Select */}
             <div className="flex gap-4">
               <div className="space-y-2 w-full">
                 <Label>Category *</Label>

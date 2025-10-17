@@ -17,6 +17,7 @@ import {
   updatePartItem,
 } from "../apis/inventory.api";
 import type { PartItemFormData } from "@/pages/inventory/libs/schema";
+import { type EditEmployeeFormData } from "@/pages/employees/libs/schema";
 
 export const useUpdateCustomerInfo = () => {
   const queryClient = useQueryClient();
@@ -259,7 +260,7 @@ export const useUpdateEmployeeInfo = () => {
       id,
     }: {
       role: "STAFF" | "TECHNICIAN";
-      data: ChangeProfileFormData;
+      data: EditEmployeeFormData;
       id: string;
       currentPage: number;
       currentPageSize: number;
@@ -310,7 +311,7 @@ export const useAddEmployee = () => {
       data,
     }: {
       role: "STAFF" | "TECHNICIAN";
-      data: ChangeProfileFormData;
+      data: EditEmployeeFormData;
       currentPage: number;
       currentPageSize: number;
     }) => {
@@ -341,10 +342,6 @@ export const useAddEmployee = () => {
           queryKey: queryKeys.statusStat(variables.role),
         }),
       ]);
-    },
-
-    onError: () => {
-      toast.error("Failed to create new employee");
     },
   });
 };

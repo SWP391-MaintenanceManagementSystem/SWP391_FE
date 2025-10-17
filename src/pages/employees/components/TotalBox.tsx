@@ -87,12 +87,6 @@ export default function TotalBox({
   const AddNewButton = () => (
     <Button
       onClick={() => {
-        form.reset({
-          firstName: "",
-          lastName: "",
-          email: "",
-          phone: "",
-        });
         setOpenAddForm(true);
       }}
       className="bg-purple-primary text-accent dark:bg-purple-primary-dark dark:text-amber-primary hover:scale-110 transition-transform duration-300"
@@ -130,12 +124,16 @@ export default function TotalBox({
       {!isMobile && <AddNewButton />}
       <AddEmployeeForm
         open={openAddForm}
-        onOpenChange={(open) => setOpenAddForm(open)}
+        onOpenChange={(open) => {
+          setOpenAddForm(open);
+          if (!open) {
+            form.reset();
+          }
+        }}
         form={form}
-        onConfirm={async () => {
-          const success = await handleAddEmployee();
-          console.log(success);
-          if (success) {
+        onConfirm={async (data) => {
+          const result = await handleAddEmployee(data);
+          if (result) {
             setOpenAddForm(false);
           }
         }}
