@@ -4,9 +4,8 @@ import type {
   BaseResponse,
   StatusStatResponse,
 } from "@/types/models/response";
-// import type { AccountWithProfile } from "@/types/models/account";
-import type { ChangeProfileFormData } from "@/pages/profile/components/profile/libs/schema";
 import type { EmployeeTable } from "@/pages/employees/libs/table-types";
+import type { EditEmployeeFormData } from "@/pages/employees/libs/schema";
 
 export const getStaffs = (params: {
   page: number;
@@ -35,7 +34,7 @@ export const getStaffById = (id: string) => {
   return httpPrivate.get<BaseResponse<EmployeeTable>>(`/staffs/${id}`);
 };
 
-export const updateStaff = (id: string, data: ChangeProfileFormData) => {
+export const updateStaff = (id: string, data: EditEmployeeFormData) => {
   return httpPrivate.patch<BaseResponse<EmployeeTable>>(`/staffs/${id}`, data);
 };
 
@@ -45,6 +44,6 @@ export const getStatusStatStaff = () => {
   );
 };
 
-export const addStaff = async (formData: ChangeProfileFormData) => {
+export const addStaff = async (formData: EditEmployeeFormData) => {
   return httpPrivate.post<BaseResponse<EmployeeTable>>(`/staffs`, formData);
 };

@@ -84,26 +84,41 @@ export const useEmployee = (
     );
   };
 
-  const handleAddEmployee = async () => {
-    try {
-      await addEmployeeMutation.mutateAsync({
-        role,
-        data: form.getValues(),
-        currentPage,
-        currentPageSize,
-      });
-      return true;
-    } catch (err: unknown) {
-      const error = err as AxiosError<{ message?: string }>;
-      if (error.response?.data?.message?.toLowerCase().includes("email")) {
-        form.setError("email", {
-          type: "server",
-          message: error.response.data.message,
-        });
-      }
-      return false;
-    }
+  const handleAddEmployee = async (data: EditEmployeeFormData) => {
+    return new Promise<boolean>((resolve) => {
+      addEmployeeMutation.mutate(
+        {
+          role,
+          data,
+          currentPage,
+          currentPageSize,
+        },
+        {
+          onSuccess: () => {
+            resolve(true);
+          },
+          onError: (error) => {
+            if (error instanceof AxiosError) {
+              const apiErrors = error.response?.data?.errors;
+              const msg = error.response?.data.message;
+              if (apiErrors && typeof apiErrors === "object") {
+                Object.entries(apiErrors).forEach(([field, msg]) => {
+                  form.setError(field as keyof EditEmployeeFormData, {
+                    type: "server",
+                    message: msg as string,
+                  });
+                });
+              } else {
+                toast.error(msg || "Something went wrong.");
+              }
+            }
+            resolve(false);
+          },
+        },
+      );
+    });
   };
+
   return {
     form,
     handleDeleteEmployee,

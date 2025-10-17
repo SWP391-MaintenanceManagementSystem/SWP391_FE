@@ -311,7 +311,7 @@ export const useAddEmployee = () => {
       data,
     }: {
       role: "STAFF" | "TECHNICIAN";
-      data: ChangeProfileFormData;
+      data: EditEmployeeFormData;
       currentPage: number;
       currentPageSize: number;
     }) => {
@@ -342,10 +342,6 @@ export const useAddEmployee = () => {
           queryKey: queryKeys.statusStat(variables.role),
         }),
       ]);
-    },
-
-    onError: () => {
-      toast.error("Failed to create new employee");
     },
   });
 };

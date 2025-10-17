@@ -50,7 +50,7 @@ export const EditEmployeeSchema = z.object({
 
   workCenter: z
     .object({
-      centerId: z.string().nonempty("Work center ID is required"),
+      centerId: z.string().min(1, { error: "Work center is required" }),
       startDate: z.date().nullable().optional(),
       endDate: z.date().nullable().optional(),
     })
