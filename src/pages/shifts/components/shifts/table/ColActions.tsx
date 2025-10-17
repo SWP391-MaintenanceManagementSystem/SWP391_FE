@@ -4,7 +4,8 @@ import ActionBtn from "@/components/table/ActionBtn";
 import { TooltipWrapper } from "@/components/TooltipWrapper";
 import { useState } from "react";
 import type { Shift } from "@/types/models/shift";
-
+import ViewDetailShift from "../ViewDetailShift";
+import { ViewDetailDialog } from "@/components/dialog/ViewDetailDialog";
 export interface ColActionsProps {
   row: Row<Shift>;
   currentPage: number;
@@ -51,6 +52,14 @@ export default function ColActions({
           }}
         />
       </TooltipWrapper>
+
+      <ViewDetailDialog
+        open={openViewDialog}
+        onOpenChange={(open) => setOpenViewDialog(open)}
+        title="Shift Information"
+      >
+        <ViewDetailShift item={shift} />
+      </ViewDetailDialog>
     </div>
   );
 }
