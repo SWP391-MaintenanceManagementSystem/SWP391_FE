@@ -1,7 +1,7 @@
 import DynamicBreadcrumbs from "@/components/DynamicBreadcrumb";
 import MainContentLayout from "@/components/MainContentLayout";
-import ShiftsManagementPage from "./components/ShiftManagement";
-import WorkScheduleList from "./components/WorkScheduleList";
+import ShiftsManagementPage from "./components/shifts/ShiftManagement";
+import WorkScheduleList from "./components/schedule/WorkScheduleList";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";

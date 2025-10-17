@@ -1,3 +1,4 @@
+import type { ServiceCenter } from "./center";
 const ShiftStatus = {
   ACTIVE: "ACTIVE",
   INACTIVE: "INACTIVE",
@@ -10,8 +11,9 @@ export type Shift = {
   name: string;
   startTime: string;
   endTime: string;
-  maximumSlots: number;
+  maximumSlot: number;
   status: ShiftStatus;
   createdAt: string;
   updatedAt: string;
+  serviceCenter: ServiceCenter;
 };
