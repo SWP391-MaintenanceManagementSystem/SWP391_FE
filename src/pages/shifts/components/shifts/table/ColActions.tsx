@@ -6,6 +6,9 @@ import { useState } from "react";
 import type { Shift } from "@/types/models/shift";
 import ViewDetailShift from "../ViewDetailShift";
 import { ViewDetailDialog } from "@/components/dialog/ViewDetailDialog";
+import { DeleteDialog } from "@/components/dialog/DeleteDialog";
+import { useShift } from "@/services/shift/hooks/useShift";
+
 export interface ColActionsProps {
   row: Row<Shift>;
   currentPage: number;
@@ -21,6 +24,7 @@ export default function ColActions({
   const [openViewDialog, setOpenViewDialog] = useState(false);
   const [openEditDialog, setOpenEditDialog] = useState(false);
   const shift = row.original;
+  const { handleDeleteShift } = useShift(currentPage, currentPageSize, shift);
 
   return (
     <div className="flex gap-1">
@@ -60,6 +64,12 @@ export default function ColActions({
       >
         <ViewDetailShift item={shift} />
       </ViewDetailDialog>
+
+      <DeleteDialog
+        open={openDeleteDialog}
+        onOpenChange={(open) => setOpenDeleteDialog(open)}
+        onConfirm={handleDeleteShift}
+      />
     </div>
   );
 }

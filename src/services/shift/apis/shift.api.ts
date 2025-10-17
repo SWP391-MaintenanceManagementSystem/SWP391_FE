@@ -17,3 +17,7 @@ export const getShiftList = (params: {
     params,
   });
 };
+
+export const deleteShift = (id: string) => {
+  return httpPrivate.del<BaseResponse<void>>(`/shifts/${id}`);
+};
