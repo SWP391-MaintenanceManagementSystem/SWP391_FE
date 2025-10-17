@@ -8,7 +8,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import type { ChangeProfileFormData } from "@/pages/profile/components/profile/libs/schema";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -19,12 +18,15 @@ import { ChevronDown } from "lucide-react";
 import AccountStatusTag from "@/components/tag/AccountStatusTag";
 import type { AccountStatus } from "@/types/enums/accountStatus";
 import { EditDialog } from "@/components/dialog/EditDialog";
+import { useGetServiceCenterList } from "@/services/manager/queries";
+import { DatePickerInput } from "@/components/dialog/DatePickerInput";
+import { type EditEmployeeFormData } from "../libs/schema";
 
 interface EmployeeInfoFormProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onConfirm: (data: ChangeProfileFormData) => void;
-  form: ReturnType<typeof useForm<ChangeProfileFormData>>;
+  onConfirm: (data: EditEmployeeFormData) => void;
+  form: ReturnType<typeof useForm<EditEmployeeFormData>>;
   title: string;
 }
 
@@ -35,6 +37,9 @@ export default function EmployeeInfoForm({
   form,
   title,
 }: EmployeeInfoFormProps) {
+  const { data: centerListData } = useGetServiceCenterList();
+  const centerList = centerListData ?? [];
+
   return (
     <EditDialog
       open={open}
@@ -42,8 +47,8 @@ export default function EmployeeInfoForm({
       onConfirm={onConfirm}
       form={form}
       title={title}
-      styleFormLayout="grid-rows-6 md:grid-cols-2 md:grid-rows-4 "
-      styleLayoutFooter="md:col-start-2 md:row-start-4"
+      styleFormLayout="grid-rows-6 md:grid-cols-2 md:grid-rows-5 "
+      styleLayoutFooter="md:col-start-2 md:row-start-5"
     >
       <FormField
         control={form.control}
@@ -141,6 +146,86 @@ export default function EmployeeInfoForm({
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+
+      <FormField
+        control={form.control}
+        name="workCenter.centerId"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>Service Center</FormLabel>
+            <FormControl>
+              <DropdownMenu>
+                <DropdownMenuTrigger
+                  asChild
+                  className={`w-full border ${
+                    form.formState.errors.workCenter?.centerId
+                      ? "border-destructive focus:ring-destructive"
+                      : "border-input focus:ring-primary"
+                  }`}
+                >
+                  <Button
+                    variant="outline"
+                    className="w-full !outline-none flex justify-between"
+                  >
+                    <span>
+                      {centerList.find((c) => c.id === field.value)?.name ??
+                        "Select Center"}
+                    </span>
+                    <ChevronDown className="mr-2 h-4 w-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-56" align="end">
+                  {centerList.map((center) => (
+                    <DropdownMenuItem
+                      key={center.id}
+                      onSelect={() => field.onChange(center.id)}
+                    >
+                      {center.name}
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+      <FormField
+        control={form.control}
+        name="workCenter.startDate"
+        render={({ field }) => (
+          <FormItem>
+            <FormControl>
+              <DatePickerInput
+                label="Start Date"
+                value={field.value ?? undefined}
+                onChange={field.onChange}
+                disabled={!form.watch("workCenter.centerId")}
+                ariaInvalid={!!form.formState.errors.workCenter?.startDate}
+              />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+      <FormField
+        control={form.control}
+        name="workCenter.endDate"
+        render={({ field }) => (
+          <FormItem>
+            <FormControl>
+              <DatePickerInput
+                label="End Date"
+                value={field.value ?? undefined}
+                onChange={field.onChange}
+                disabled={!form.watch("workCenter.centerId")}
+                ariaInvalid={!!form.formState.errors.workCenter?.endDate}
+              />
             </FormControl>
             <FormMessage />
           </FormItem>
