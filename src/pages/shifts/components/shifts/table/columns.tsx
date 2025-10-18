@@ -78,7 +78,7 @@ export const getColumns = (
       },
     }),
     columnHelper.accessor("maximumSlot", {
-      id: "maximumSlots",
+      id: "maximumSlot",
       header: (info) => <SortHeader title="Maximum Slots" info={info} />,
       size: 50,
       cell: (info) => (
