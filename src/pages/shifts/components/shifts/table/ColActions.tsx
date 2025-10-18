@@ -8,23 +8,32 @@ import ViewDetailShift from "../ViewDetailShift";
 import { ViewDetailDialog } from "@/components/dialog/ViewDetailDialog";
 import { DeleteDialog } from "@/components/dialog/DeleteDialog";
 import { useShift } from "@/services/shift/hooks/useShift";
+import { AddEditShiftDialog } from "../AddEditShiftForm";
+import type { ShiftFormData } from "@/pages/shifts/libs/schema";
+import type { ServiceCenter } from "@/types/models/center";
 
 export interface ColActionsProps {
   row: Row<Shift>;
   currentPage: number;
   currentPageSize: number;
+  centerList: ServiceCenter[];
 }
 
 export default function ColActions({
   row,
   currentPage,
   currentPageSize,
+  centerList,
 }: ColActionsProps) {
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [openViewDialog, setOpenViewDialog] = useState(false);
   const [openEditDialog, setOpenEditDialog] = useState(false);
   const shift = row.original;
-  const { handleDeleteShift } = useShift(currentPage, currentPageSize, shift);
+  const { handleDeleteShift, handleEditShift, form } = useShift(
+    currentPage,
+    currentPageSize,
+    shift,
+  );
 
   return (
     <div className="flex gap-1">
@@ -70,6 +79,22 @@ export default function ColActions({
         open={openDeleteDialog}
         onOpenChange={(open) => setOpenDeleteDialog(open)}
         onConfirm={handleDeleteShift}
+      />
+
+      <AddEditShiftDialog
+        open={openEditDialog}
+        onOpenChange={(open) => {
+          setOpenEditDialog(open);
+          if (!open) {
+            form.reset();
+          }
+        }}
+        form={form}
+        onConfirm={async (data: ShiftFormData) => {
+          await handleEditShift(data);
+        }}
+        item={shift}
+        centerList={centerList}
       />
     </div>
   );

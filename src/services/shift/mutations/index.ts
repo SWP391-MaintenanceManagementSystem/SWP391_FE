@@ -1,7 +1,8 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { deleteShift } from "../apis/shift.api";
+import { deleteShift, updateShift } from "../apis/shift.api";
 import { queryKeys } from "../queries/keys";
 import { toast } from "sonner";
+import type { ShiftFormData } from "@/pages/shifts/libs/schema";
 
 export const useDeleteShift = () => {
   const queryCilent = useQueryClient();
@@ -27,6 +28,35 @@ export const useDeleteShift = () => {
     },
     onError: () => {
       toast.error("Failed to delete shift");
+    },
+  });
+};
+
+export const useUpdateShift = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async ({
+      id,
+      data,
+    }: {
+      id: string;
+      currentPage: number;
+      currentPageSize: number;
+      data: ShiftFormData;
+    }) => {
+      const update = await updateShift(id, data);
+      return update.data;
+    },
+    onSuccess: async (_data, variables) => {
+      await Promise.all([
+        queryClient.invalidateQueries({
+          queryKey: queryKeys.shiftsList({
+            page: variables.currentPage,
+            pageSize: variables.currentPageSize,
+          }),
+        }),
+      ]);
+      toast.success("Shift information updated successfully");
     },
   });
 };

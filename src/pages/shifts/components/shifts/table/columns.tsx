@@ -120,6 +120,7 @@ export const getColumns = (
             row={props.row}
             currentPage={pageIndex + 1}
             currentPageSize={pageSize}
+            centerList={centerList}
           />
         );
       },
