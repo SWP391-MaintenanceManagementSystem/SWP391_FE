@@ -61,6 +61,7 @@ export default function ColActions({
         open={openViewDialog}
         onOpenChange={(open) => setOpenViewDialog(open)}
         title="Shift Information"
+        styleContent=" md:min-w-[500px]"
       >
         <ViewDetailShift item={shift} />
       </ViewDetailDialog>

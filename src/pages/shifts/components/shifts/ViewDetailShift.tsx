@@ -13,7 +13,7 @@ interface ViewDetailShiftProps {
 export default function ViewDetailShift({ item }: ViewDetailShiftProps) {
   return (
     <div className="overflow-y-auto  max-h-[410px]">
-      <InfoSection styleFormLayout="md:grid-rows-4 md:grid-cols-2">
+      <InfoSection styleFormLayout="md:grid-rows-4 md:grid-cols-2 ">
         <InputDisableWithLabel
           label="Shift Name"
           id="name"
