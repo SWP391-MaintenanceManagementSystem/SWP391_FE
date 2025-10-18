@@ -7,7 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 
 
-export default function useVehicle() {
+export default function useVehicles() {
     const { data, isLoading, isError } = useGetMyVehicle();
     const addVehicleMutation = useAddVehicleMutation();
     const deleteVehicleMutation = useDeleteVehicleMutation();

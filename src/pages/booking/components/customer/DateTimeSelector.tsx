@@ -9,12 +9,15 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { CalendarIcon } from "lucide-react";
+import { CalendarIcon, Clock } from "lucide-react";
 import { cn } from "@/lib/utils";
 import dayjs from "dayjs";
+import type { BookingFormValues } from "../../lib/schema";
+
+
 
 interface DateTimeSelectorProps {
-  control: Control<any>;
+  control: Control<BookingFormValues>;
 }
 
 export default function DateTimeSelector({ control }: DateTimeSelectorProps) {
@@ -48,7 +51,6 @@ export default function DateTimeSelector({ control }: DateTimeSelectorProps) {
   return (
     <div className="space-y-2">
       <Label className="text-sm font-medium flex items-center gap-2">
-        <CalendarIcon className="w-4 h-4" />
         Appointment Date & Time
       </Label>
 
@@ -63,15 +65,14 @@ export default function DateTimeSelector({ control }: DateTimeSelectorProps) {
                 !field.value && "text-muted-foreground"
               )}
             >
-              <CalendarIcon className="mr-2 h-4 w-4 text-muted-foreground" />
               {field.value ? (
                 dayjs(field.value).format("DD MMM YYYY")
               ) : (
                 <span>Pick a date</span>
               )}
+              <CalendarIcon className="ml-auto h-4 w-4 text-muted-foreground" />
             </Button>
           </PopoverTrigger>
-
           <PopoverContent className="w-auto p-0" align="start">
             <Calendar
               mode="single"
@@ -83,12 +84,11 @@ export default function DateTimeSelector({ control }: DateTimeSelectorProps) {
               disabled={(date) =>
                 date < new Date(new Date().setHours(0, 0, 0, 0))
               }
-              initialFocus
             />
           </PopoverContent>
         </Popover>
 
-        {/* Time Input with icon inside */}
+        {/* Time Picker */}
         <div className="relative">
           <Input
             type="time"
@@ -98,8 +98,9 @@ export default function DateTimeSelector({ control }: DateTimeSelectorProps) {
               setTimeValue(newTime);
               updateDateTime(initialDate, newTime);
             }}
-            className="pl-9"
+            className="hide-time-icon pr-9 hover:bg-muted  hover:border-blue-600"
           />
+          <Clock className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
         </div>
       </div>
 

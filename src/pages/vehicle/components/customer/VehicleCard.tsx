@@ -13,7 +13,7 @@ import { Trash } from "lucide-react";
 import dayjs from "dayjs"
 import { useState } from "react";
 import DeleteAlertDialog from "./DeleteAlertDialog";
-import useVehicle from "@/services/vehicle/hooks/useVehicle";
+import useVehicles from "@/services/vehicle/hooks/useVehicles";
 import Loading from "@/components/Loading";
 
 type VehicleCardProps = {
@@ -21,7 +21,7 @@ type VehicleCardProps = {
 }
 
 export default function VehicleCard({ vehicle }: VehicleCardProps) {
-    const { onDeleteVehicle, isLoading } = useVehicle();
+    const { onDeleteVehicle, isLoading } = useVehicles();
     const [deleteModalOpen, setDeleteModalOpen] = useState(false);
 
     const handleDelete = () => {

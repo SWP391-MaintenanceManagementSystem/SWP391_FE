@@ -13,7 +13,7 @@ export default function NoteField({ form }: NoteFieldProps) {
       <Textarea
         {...form.register("note")}
         placeholder="Enter any special instructions or requests..."
-        className="w-full resize-none"
+        className="w-full resize-none outline-none focus:outline-none focus:ring-0 focus-visible:ring-0 focus-visible:ring-offset-0"
       />
     </div>
   );

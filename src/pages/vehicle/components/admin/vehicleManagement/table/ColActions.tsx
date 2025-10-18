@@ -9,7 +9,7 @@ import { toast } from "sonner";
 import { ViewDetailDialog } from "@/components/dialog/ViewDetailDialog";
 import { ViewDetailVehicle } from "../ViewDetailVehicleInfo";
 import VehicleInfoForm from "../VehicleInfoForm";
-import useVehicle from "@/services/manager/hooks/useVehicle";
+import useVehicles from "@/services/manager/hooks/useVehicles";
 import {
   useGetVehicleBrand,
   useGetVehicleModel,
@@ -37,7 +37,7 @@ export default function ColActions({
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [openViewDialog, setOpenViewDialog] = useState(false);
   const [openEditDialog, setOpenEditDialog] = useState(false);
-  const { handleDelete, handleEdit, form } = useVehicle(
+  const { handleDelete, handleEdit, form } = useVehicles(
     row.original.customerId,
     row.original,
     currentPage,

@@ -7,13 +7,13 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
-import { MapPin } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { type BookingFormValues } from "../../lib/schema";
+import type { ServiceCenter } from "@/types/models/center";
 
 interface ServiceCenterSelectorProps {
   form: UseFormReturn<BookingFormValues>;
-  centers: { id: string; name: string }[];
+  centers: ServiceCenter[];
 }
 
 export default function ServiceCenterSelector({
@@ -21,9 +21,8 @@ export default function ServiceCenterSelector({
   centers,
 }: ServiceCenterSelectorProps) {
   return (
-    <div className="space-y-2">
+    <div className="space-y-2 w-full">
       <Label className="text-sm font-medium flex items-center gap-2">
-        <MapPin className="w-4 h-4" />
         Service Center
       </Label>
       <Select
@@ -31,7 +30,10 @@ export default function ServiceCenterSelector({
         onValueChange={(value) => form.setValue("centerId", value)}
       >
         <SelectTrigger
-          className={cn(form.formState.errors.centerId && "border-red-500")}
+          className={cn(
+            form.formState.errors.centerId && "border-red-500",
+            "w-full"
+          )}
         >
           <SelectValue placeholder="Select service center" />
         </SelectTrigger>

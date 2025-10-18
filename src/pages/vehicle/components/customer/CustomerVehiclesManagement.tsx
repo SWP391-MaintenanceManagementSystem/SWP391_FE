@@ -1,7 +1,7 @@
 import DynamicBreadcrumbs from "@/components/DynamicBreadcrumb";
 import MainContentLayout from "@/components/MainContentLayout";
 import VehicleCard from "./VehicleCard";
-import useVehicle from "@/services/vehicle/hooks/useVehicle";
+import useVehicles from "@/services/vehicle/hooks/useVehicles";
 import Loading from "@/components/Loading";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input";
 import { useMemo, useState } from "react";
 import AddVehicleFormModal from "./AddVehicleFormModal";
 export default function CustomerVehiclesManagement() {
-    const { data, isLoading, onSubmit, form } = useVehicle();
+    const { data, isLoading, onSubmit, form } = useVehicles();
     const [openCreateVehicleModal, setOpenCreateVehicleModal] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
 

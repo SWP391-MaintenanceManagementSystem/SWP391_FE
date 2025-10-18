@@ -1,6 +1,3 @@
-"use client";
-
-import { useState, useEffect } from "react";
 import {
   Dialog,
   DialogContent,
@@ -19,11 +16,8 @@ import NoteField from "./NoteField";
 import { bookingSchema, type BookingFormValues } from "../../lib/schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ScrollArea } from "@/components/ui/scroll-area";
-
-const fetchCenters = async () => [
-  { id: "1", name: "Center A" },
-  { id: "2", name: "Center B" },
-];
+import useVehicles from "@/services/vehicle/hooks/useVehicles";
+import useCenters from "@/services/center/hooks/useCenters";
 
 export default function BookingModal({
   open,
@@ -32,8 +26,6 @@ export default function BookingModal({
   open: boolean;
   onClose: () => void;
 }) {
-  const [centers, setCenters] = useState<{ id: string; name: string }[]>([]);
-
   const form = useForm<BookingFormValues>({
     resolver: zodResolver(bookingSchema),
     defaultValues: {
@@ -46,10 +38,8 @@ export default function BookingModal({
     },
   });
 
-  useEffect(() => {
-    fetchCenters().then(setCenters);
-  }, []);
-
+  const { data: vehicles = [] } = useVehicles();
+  const { data: centers = [] } = useCenters();
   const onSubmit = (data: BookingFormValues) => {
     console.log("Booking data:", data);
     onClose();
@@ -65,8 +55,12 @@ export default function BookingModal({
           </DialogTitle>
         </DialogHeader>
         <ScrollArea className="overflow-y-auto px-6 text-sm">
-          <form id="booking-form" onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-y-3">
-            <VehicleSelector form={form} />
+          <form
+            id="booking-form"
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="flex flex-col gap-y-3"
+          >
+            <VehicleSelector form={form} vehicles={vehicles} />
             <ServiceCenterSelector form={form} centers={centers} />
             <DateTimeSelector control={form.control} />
             <ServicesSelector form={form} />
@@ -74,9 +68,7 @@ export default function BookingModal({
             <NoteField form={form} />
           </form>
         </ScrollArea>
-        <DialogFooter
-          className="sticky px-5 py-3 border-t"
-        >
+        <DialogFooter className="sticky px-5 py-3 border-t">
           <Button
             type="button"
             variant="outline"
