@@ -34,7 +34,7 @@ export default function VehicleSelector({ form }: VehicleSelectorProps) {
   }, [vehicleQuery]);
 
   const handleSelect = (vehicle: (typeof mockVehicles)[0]) => {
-    form.setValue("vehicle", vehicle.plate);
+    form.setValue("vehicleId", vehicle.id);
     setVehicleQuery(vehicle.plate);
     setOpen(false);
   };
@@ -53,13 +53,13 @@ export default function VehicleSelector({ form }: VehicleSelectorProps) {
           onFocus={() => setOpen(true)}
           onChange={(e) => {
             setVehicleQuery(e.target.value);
-            form.setValue("vehicle", e.target.value);
+            form.setValue("vehicleId", e.target.value);
             setOpen(true);
           }}
           onBlur={() => setTimeout(() => setOpen(false), 150)}
           className={cn(
             "pl-10",
-            form.formState.errors.vehicle && "border-red-500"
+            form.formState.errors.vehicleId && "border-red-500"
           )}
         />
 
@@ -89,9 +89,9 @@ export default function VehicleSelector({ form }: VehicleSelectorProps) {
         )}
       </div>
 
-      {form.formState.errors.vehicle && (
+      {form.formState.errors.vehicleId && (
         <p className="text-xs text-destructive">
-          {form.formState.errors.vehicle.message}
+          {form.formState.errors.vehicleId.message}
         </p>
       )}
     </div>

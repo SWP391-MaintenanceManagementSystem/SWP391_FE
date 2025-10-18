@@ -27,11 +27,11 @@ export default function ServiceCenterSelector({
         Service Center
       </Label>
       <Select
-        value={form.watch("center")}
-        onValueChange={(value) => form.setValue("center", value)}
+        value={form.watch("centerId")}
+        onValueChange={(value) => form.setValue("centerId", value)}
       >
         <SelectTrigger
-          className={cn(form.formState.errors.center && "border-red-500")}
+          className={cn(form.formState.errors.centerId && "border-red-500")}
         >
           <SelectValue placeholder="Select service center" />
         </SelectTrigger>
@@ -43,9 +43,9 @@ export default function ServiceCenterSelector({
           ))}
         </SelectContent>
       </Select>
-      {form.formState.errors.center && (
+      {form.formState.errors.centerId && (
         <p className="text-xs text-destructive">
-          {form.formState.errors.center.message}
+          {form.formState.errors.centerId.message}
         </p>
       )}
     </div>

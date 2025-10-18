@@ -1,7 +1,7 @@
 export const mockVehicles = [
-  { plate: "51A-12345", vin: "VIN123", model: "Toyota Camry 2023" },
-  { plate: "52B-54321", vin: "VIN456", model: "Honda Civic 2022" },
-  { plate: "51C-98765", vin: "VIN789", model: "Ford Mustang 2021" },
+  { id: "vehicle-1", plate: "51A-12345", vin: "VIN123", model: "Toyota Camry 2023" },
+  { id: "vehicle-2", plate: "52B-54321", vin: "VIN456", model: "Honda Civic 2022" },
+  { id: "vehicle-3", plate: "51C-98765", vin: "VIN789", model: "Ford Mustang 2021" },
 ];
 
 export const mockServices = [

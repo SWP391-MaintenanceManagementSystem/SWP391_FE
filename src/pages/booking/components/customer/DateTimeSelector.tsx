@@ -9,7 +9,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { CalendarIcon, Clock } from "lucide-react";
+import { CalendarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import dayjs from "dayjs";
 
@@ -90,7 +90,6 @@ export default function DateTimeSelector({ control }: DateTimeSelectorProps) {
 
         {/* Time Input with icon inside */}
         <div className="relative">
-          <Clock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
             type="time"
             value={timeValue}
