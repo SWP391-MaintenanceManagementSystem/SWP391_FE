@@ -34,7 +34,7 @@ export function InputDisableWithLabel({
     <div className={cn("flex flex-col w-full gap-2", styleFormat)}>
       <Label htmlFor={id}>{label}</Label>
       {typeof value === "string" ? (
-        <Input className="w-full" id={id} disabled value={value} />
+        <Input className="w-full" id={id} readOnly value={value} />
       ) : (
         <div className="rounded-md w-full border px-3 py-2 text-sm text-gray-400">
           {value}
@@ -78,6 +78,8 @@ export function ViewDetailDialog({
             "sm:max-w-[425px] font-inter overflow-y-auto",
             styleContent,
           )}
+          onOpenAutoFocus={(e) => e.preventDefault()}
+          onCloseAutoFocus={(e) => e.preventDefault()}
         >
           <DialogHeader className="mb-3">
             <DialogTitle className="text-center text-xl">{title}</DialogTitle>
