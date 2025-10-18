@@ -26,3 +26,7 @@ export const deleteShift = (id: string) => {
 export const updateShift = (id: string, data: ShiftFormData) => {
   return httpPrivate.patch<BaseResponse<Shift>>(`/shifts/${id}`, data);
 };
+
+export const addShift = (data: ShiftFormData) => {
+  return httpPrivate.post<BaseResponse<Shift>>(`/shifts`, data);
+};

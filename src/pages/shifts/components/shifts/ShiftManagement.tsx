@@ -12,7 +12,11 @@ import { type ColumnDef, type SortingState } from "@tanstack/react-table";
 import type { Shift } from "@/types/models/shift";
 import { useGetServiceCenterList } from "@/services/manager/queries";
 import { getColumns } from "./table/columns";
-import { CalendarClock } from "lucide-react";
+import { CalendarClock, Plus } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useShift } from "@/services/shift/hooks/useShift";
+import { AddEditShiftDialog } from "./AddEditShiftForm";
+import { type ShiftFormData } from "../../libs/schema";
 
 export default function ShiftsManagementPage() {
   const [page, setPage] = useState(1);
@@ -45,6 +49,8 @@ export default function ShiftsManagementPage() {
     }));
   };
   const columns = getColumns(handleFilterChange, filters, centerList);
+  const [openAddModal, setOpenAddModal] = useState(false);
+  const { handleAddShift, form } = useShift(page, pageSize);
   return (
     <Card className="w-full h-full">
       <CardHeader>
@@ -75,8 +81,36 @@ export default function ShiftsManagementPage() {
           manualSorting
           sorting={sorting}
           onSortingChange={setSorting}
+          headerActions={
+            <Button
+              onClick={() => setOpenAddModal(true)}
+              className=" w-full md:w-[150px]"
+              variant="outline"
+              autoFocus={false}
+            >
+              Add New Shift
+              <Plus className="h-4 w-4" />
+            </Button>
+          }
         />
       </CardContent>
+      <AddEditShiftDialog
+        open={openAddModal}
+        onOpenChange={(open) => {
+          setOpenAddModal(open);
+          if (!open) {
+            form.reset();
+          }
+        }}
+        form={form}
+        onConfirm={async (data: ShiftFormData) => {
+          const result = await handleAddShift(data);
+          if (result) {
+            setOpenAddModal(false);
+          }
+        }}
+        centerList={centerList}
+      />
     </Card>
   );
 }

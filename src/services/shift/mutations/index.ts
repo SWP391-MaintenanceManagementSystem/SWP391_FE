@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { deleteShift, updateShift } from "../apis/shift.api";
+import { deleteShift, updateShift, addShift } from "../apis/shift.api";
 import { queryKeys } from "../queries/keys";
 import { toast } from "sonner";
 import type { ShiftFormData } from "@/pages/shifts/libs/schema";
@@ -57,6 +57,33 @@ export const useUpdateShift = () => {
         }),
       ]);
       toast.success("Shift information updated successfully");
+    },
+  });
+};
+
+export const useAddShift = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async ({
+      data,
+    }: {
+      data: ShiftFormData;
+      currentPage: number;
+      currentPageSize: number;
+    }) => {
+      const add = await addShift(data);
+      return add.data;
+    },
+    onSuccess: async (_data, variables) => {
+      await Promise.all([
+        queryClient.invalidateQueries({
+          queryKey: queryKeys.shiftsList({
+            page: variables.currentPage,
+            pageSize: variables.currentPageSize,
+          }),
+        }),
+      ]);
+      toast.success("Shift added successfully");
     },
   });
 };

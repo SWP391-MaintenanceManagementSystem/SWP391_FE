@@ -170,7 +170,7 @@ export function AddEditShiftDialog({
               control={form.control}
               name="maximumSlot"
               render={({ field }) => (
-                <FormItem>
+                <FormItem className={item ? "col-span-1" : "col-span-2"}>
                   <FormLabel>Maximum Slots *</FormLabel>
                   <FormControl>
                     <Input

@@ -3,9 +3,7 @@ import MainContentLayout from "@/components/MainContentLayout";
 import ShiftsManagementPage from "./components/shifts/ShiftManagement";
 import WorkScheduleList from "./components/schedule/WorkScheduleList";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Button } from "@/components/ui/button";
 import { useState } from "react";
-import { PlusCircleIcon, ClipboardClockIcon } from "lucide-react";
 
 export default function WorkShiftsManagementPage() {
   const [currentTab, setCurrentTab] = useState("workSchedule");
@@ -32,7 +30,7 @@ export default function WorkShiftsManagementPage() {
               </TabsTrigger>
             </TabsList>
 
-            {currentTab === "workSchedule" ? (
+            {/*{currentTab === "workSchedule" ? (
               <Button className="ml-auto bg-purple-primary">
                 Schedule shift
                 <ClipboardClockIcon />
@@ -42,7 +40,7 @@ export default function WorkShiftsManagementPage() {
                 Add shift
                 <PlusCircleIcon />
               </Button>
-            )}
+            )}*/}
           </div>
           <TabsContent value="workSchedule">
             <WorkScheduleList />
