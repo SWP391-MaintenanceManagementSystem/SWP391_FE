@@ -13,7 +13,7 @@ export default function MyMembership() {
     )
   }
 
-  if (!mySubscriptionData || mySubscriptionData.length === 0) {
+  if (!mySubscriptionData ) {
     return (
       <div className="flex justify-center">
         <p className="text-gray-500 dark:text-gray-400">No active membership</p>
@@ -45,10 +45,10 @@ export default function MyMembership() {
         {/* Status */}
         <p
           className={`absolute bottom-3 right-4 text-sm font-semibold ${
-            data.status === "ACTIVE" ? "text-lime-600" : "text-red-500"
+            mySubscriptionData.status === "ACTIVE" ? "text-lime-600" : "text-red-500"
           }`}
         >
-          {data.status === "ACTIVE" ? "Active" : "Expired"}
+          {mySubscriptionData.status === "ACTIVE" ? "Active" : "Expired"}
         </p>
       </div>
     </div>

@@ -7,13 +7,20 @@ import {
 import type { Membership } from "@/types/models/membership";
 import { queryKeys } from "../queries/keys";
 import { toast } from "sonner";
+import type { CreateMembershipsFormData } from "@/pages/membership/lib/schema";
 
 export const useAddMembershipMutation = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async (data: Omit<Membership, "id">) => {
-      const { name, periodType, duration,description, price } = data;
-      const response = await addMembership({name, periodType, duration, description, price });
+    mutationFn: async (data: CreateMembershipsFormData) => {
+      const { name, periodType, duration, description, price } = data;
+      const response = await addMembership({
+        name,
+        periodType,
+        duration,
+        description,
+        price,
+      });
       return response.data;
     },
     onSuccess: () => {
@@ -45,6 +52,7 @@ export const useDeleteMembershipMutation = () => {
 
 export const useUpdateMembershipMutation = () => {
   const queryClient = useQueryClient();
+
   return useMutation({
     mutationFn: async ({
       membershipId,
@@ -53,23 +61,23 @@ export const useUpdateMembershipMutation = () => {
       membershipId: string;
       formData: Partial<Membership>;
     }) => {
-      const { name, periodType, duration, status, description, price } =
+      const { name, duration, periodType, description, price, status } =
         formData;
       const response = await updateMembership(membershipId, {
         name,
-        periodType,
         duration,
-        status,
+        periodType,
         description,
         price,
+        status,
       });
+
       return response.data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.memberships });
       toast.success("Membership updated successfully");
     },
-
     onError: (err: any) => {
       toast.error(err.message || "Failed to update membership");
     },

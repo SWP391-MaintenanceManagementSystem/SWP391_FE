@@ -1,7 +1,7 @@
 import type { Row } from "@tanstack/react-table";
 import { Pencil, Trash2, Eye } from "lucide-react";
 import ActionBtn from "@/components/table/ActionBtn";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { DeleteDialog } from "@/components/dialog/DeleteDialog";
 import { EditDialog } from "@/components/dialog/EditDialog";
 import {
@@ -12,6 +12,21 @@ import { toast } from "sonner";
 import { useForm } from "react-hook-form";
 import type { Membership } from "@/types/models/membership";
 import useMembership from "@/services/membership/hooks/useMembership";
+import {
+  FormField,
+  FormItem,
+  FormLabel,
+  FormControl,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 type ColActionsProps = {
   row: Row<Membership>;
@@ -30,6 +45,10 @@ export default function ColActions({ row }: ColActionsProps) {
   const form = useForm<Membership>({
     defaultValues: membership,
   });
+
+  useEffect(() => {
+    if (openEdit) form.reset(membership);
+  }, [openEdit, membership, form]);
 
   const handleConfirmEdit = (data: Membership) => {
     onUpdateMembership(membership.id, data);
@@ -93,56 +112,133 @@ export default function ColActions({ row }: ColActionsProps) {
       <EditDialog
         open={openEdit}
         onOpenChange={setOpenEdit}
-        onConfirm={handleConfirmEdit}
+        onConfirm={() => form.handleSubmit(handleConfirmEdit)()}
         form={form}
-        title="Edit Membership"
+        title="Membership"
       >
         <div className="grid grid-cols-2 gap-4">
-          <div>
-            <label>Name</label>
-            <input
-              {...form.register("name")}
-              className="border p-2 rounded-md w-full"
-            />
-          </div>
-          <div>
-            <label>Price</label>
-            <input
-              type="number"
-              step={0.01}
-              {...form.register("price")}
-              className="border p-2 rounded-md w-full"
-            />
-          </div>
-          <div>
-            <label>Duration</label>
-            <input
-              type="number"
-              {...form.register("duration")}
-              className="border p-2 rounded-md w-full"
-            />
-          </div>
-          <div>
-            <label>Period Type</label>
-            <select
-              {...form.register("periodType")}
-              className="border p-2 rounded-md w-full"
-            >
-              <option value="DAY">Day</option>
-              <option value="MONTH">Month</option>
-              <option value="YEAR">Year</option>
-            </select>
-          </div>
-          <div>
-            <label>Status</label>
-            <select
-              {...form.register("status")}
-              className="border p-2 rounded-md w-full"
-            >
-              <option value="ACTIVE">Active</option>
-              <option value="INACTIVE">Inactive</option>
-            </select>
-          </div>
+          {/* Name */}
+          <FormField
+            control={form.control}
+            name="name"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Name</FormLabel>
+                <FormControl>
+                  <Input
+                    {...field}
+                    placeholder="Enter membership name"
+                    className="border border-input bg-background text-foreground rounded-md w-full text-sm placeholder:text-muted-foreground focus:ring-2 focus:ring-primary focus:outline-none"
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          {/* Price */}
+          <FormField
+            control={form.control}
+            name="price"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Price</FormLabel>
+                <FormControl>
+                  <Input
+                    type="number"
+                    step="0.01"
+                    {...field}
+                    placeholder="Enter price"
+                    className="border border-input bg-background text-foreground rounded-md w-full text-sm placeholder:text-muted-foreground focus:ring-2 focus:ring-primary focus:outline-none"
+                    onChange={(e) =>
+                      field.onChange(parseFloat(e.target.value) || 0)
+                    }
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          {/* Duration */}
+          <FormField
+            control={form.control}
+            name="duration"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Duration</FormLabel>
+                <FormControl>
+                  <Input
+                    type="number"
+                    {...field}
+                    placeholder="Enter duration"
+                    className="border border-input bg-background text-foreground rounded-md w-full text-sm placeholder:text-muted-foreground focus:ring-2 focus:ring-primary focus:outline-none"
+                    onChange={(e) =>
+                      field.onChange(parseInt(e.target.value) || 0)
+                    }
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          {/* Period Type */}
+          <FormField
+            control={form.control}
+            name="periodType"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Period Type</FormLabel>
+                <Select
+                  onValueChange={(value: Membership["periodType"]) =>
+                    form.setValue("periodType", value, { shouldDirty: true })
+                  }
+                  value={field.value || ""}
+                >
+                  <FormControl>
+                    <SelectTrigger className="border border-input bg-background text-foreground rounded-md w-full text-sm placeholder:text-muted-foreground focus:ring-2 focus:ring-primary focus:outline-none h-[38px] px-2">
+                      <SelectValue placeholder="Select Period Type" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectItem value="DAY">DAY</SelectItem>
+                    <SelectItem value="MONTH">MONTH</SelectItem>
+                    <SelectItem value="YEAR">YEAR</SelectItem>
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          {/* Status */}
+          <FormField
+            control={form.control}
+            name="status"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Status</FormLabel>
+                <Select
+                  onValueChange={(value: Membership["status"]) =>
+                    form.setValue("status", value, { shouldDirty: true })
+                  }
+                  value={field.value || ""}
+                >
+                  <FormControl>
+                    <SelectTrigger className="border border-input bg-background text-foreground rounded-md w-full text-sm placeholder:text-muted-foreground focus:ring-2 focus:ring-primary focus:outline-none h-[38px] px-2">
+                      <SelectValue placeholder="Select Status" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectItem value="ACTIVE">ACTIVE</SelectItem>
+                    <SelectItem value="INACTIVE">INACTIVE</SelectItem>
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
         </div>
       </EditDialog>
 
@@ -151,6 +247,7 @@ export default function ColActions({ row }: ColActionsProps) {
         open={openDelete}
         onOpenChange={setOpenDelete}
         onConfirm={handleConfirmDelete}
+        isDisabled={membership.status === "INACTIVE"}
       />
     </div>
   );

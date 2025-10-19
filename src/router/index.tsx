@@ -23,6 +23,7 @@ import WorkShiftsManagementPage from "@/pages/shifts";
 import Booking from "@/pages/booking/components/customer/Booking";
 import AuthFailed from "@/pages/auth/components/AuthFailed";
 import InventoryManagement from "@/pages/inventory";
+import PaymentSuccessPage from "@/pages/payment";
 
 const RouterComponent = () => {
   const router = createBrowserRouter([
@@ -157,6 +158,16 @@ const RouterComponent = () => {
                 },
               ],
             },
+            {
+              element: <RequireAuth allowedRoles={[AccountRole.CUSTOMER]} />,
+              children: [
+                {
+                  path: "/payment-success",
+                  element: <PaymentSuccessPage />,
+                  hydrateFallbackElement: <CircularIndeterminate />,
+                },
+              ],
+            }
           ],
         },
       ],

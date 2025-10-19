@@ -6,6 +6,7 @@ import {
 } from "../mutations";
 import { useForm } from "react-hook-form";
 import type { Membership } from "@/types/models/membership";
+import type { CreateMembershipsFormData } from "@/pages/membership/lib/schema";
 
 export default function useMembership() {
   const { data, isLoading, isError } = useGetAllMemberships();
@@ -26,7 +27,7 @@ export default function useMembership() {
     },
   });
 
-  const onSubmit = (formData: Membership) => {
+  const onSubmit = (formData: CreateMembershipsFormData) => {
     addMembershipMutation.mutate(formData);
   };
 

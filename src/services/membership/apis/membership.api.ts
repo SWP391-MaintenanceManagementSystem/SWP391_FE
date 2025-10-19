@@ -16,7 +16,7 @@ export const addMembership = async (formData: Omit<Membership, "id" | "createdAt
   return await httpPrivate.post<BaseResponse<{ data: Membership }>>("/memberships", formData);
 };
 
-export const updateMembership = async (id: string, formData: Partial<Membership>) => {
+export const updateMembership = async (id: string, formData: Partial<Membership>) => { 
   return await httpPrivate.patch<BaseResponse<{ data: Membership }>>(`/memberships/${id}`, formData);
 };
 

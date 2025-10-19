@@ -92,42 +92,6 @@ export default function VehicleInfoForm({
           </FormItem>
         )}
       />
-      {/*<FormField
-        control={form.control}
-        name="status"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel>Status</FormLabel>
-            <FormControl>
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="outline" className="w-full !outline-none">
-                    <VehicleStatusTag status={field.value as VehicleStatus} />
-                    <ChevronDown className="mr-2 h-4 w-4" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-56" align="end">
-                  <DropdownMenuItem
-                    onSelect={() => {
-                      field.onChange("ACTIVE");
-                    }}
-                  >
-                    <VehicleStatusTag status="ACTIVE" />
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    onSelect={() => {
-                      field.onChange("INACTIVE");
-                    }}
-                  >
-                    <VehicleStatusTag status="INACTIVE" />
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        )}
-      />*/}
 
       <FormField
         control={form.control}
