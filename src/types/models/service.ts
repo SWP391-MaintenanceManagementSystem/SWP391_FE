@@ -8,6 +8,7 @@ export type Service = {
   status: ServiceStatus;
   createdAt: string | Date;
   updatedAt: string | Date;
-  parts: [];
   finalPrice: number;
 };
+
+

@@ -45,8 +45,13 @@ export default function BookingModal({
     onClose();
   };
 
+  const handleClose = () => {
+    form.reset();
+    onClose();
+  };
+
   return (
-    <Dialog open={open} onOpenChange={onClose}>
+    <Dialog open={open} onOpenChange={handleClose}>
       <DialogContent className="sm:max-w-lg w-full font-sans p-0 flex flex-col max-h-[90vh]">
         {/* Header */}
         <DialogHeader className="px-5 py-3">
@@ -64,7 +69,7 @@ export default function BookingModal({
             <ServiceCenterSelector form={form} centers={centers} />
             <DateTimeSelector control={form.control} />
             <ServicesSelector form={form} />
-            <PackagesSelector form={form} />
+            {/* <PackagesSelector form={form} /> */}
             <NoteField form={form} />
           </form>
         </ScrollArea>
@@ -72,7 +77,7 @@ export default function BookingModal({
           <Button
             type="button"
             variant="outline"
-            onClick={onClose}
+            onClick={handleClose}
             className="md:w-1/2 py-2 text-sm w-full"
           >
             Cancel

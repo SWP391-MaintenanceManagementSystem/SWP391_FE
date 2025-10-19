@@ -1,47 +1,57 @@
-import { useState, useMemo } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { type UseFormReturn } from "react-hook-form";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { X } from "lucide-react";
+import { Eye, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { type BookingFormValues } from "../lib/schema";
-import { useDebounce } from "@uidotdev/usehooks";
+import type { Service } from "@/types/models/service";
+
 interface MultiSelectorProps {
   form: UseFormReturn<BookingFormValues>;
   fieldName: "service" | "package";
   label: string;
-  items: { id: string; name: string }[];
   placeholder: string;
   hint?: string;
+  useSearchHook: () => {
+    keyword: string;
+    setKeyword: (val: string) => void;
+    data: Service[] | undefined;
+    isLoading: boolean;
+  };
 }
 
 export default function MultiSelector({
   form,
   fieldName,
   label,
-  items,
   placeholder,
   hint,
+  useSearchHook,
 }: MultiSelectorProps) {
-  const [query, setQuery] = useState("");
+  const { setKeyword, data: items = [], isLoading } = useSearchHook();
+  const [inputValue, setInputValue] = useState("");
+  const [cacheItems, setCacheItems] = useState<Service[]>([]);
   const currentIds = form.watch(fieldName) as string[];
-  const debouncedQuery = useDebounce(query, 300);
-  const filteredItems = useMemo(() => {
-    const q = debouncedQuery.trim().toLowerCase();
-    if (!q) return [];
-    return items.filter(
-      (item) =>
-        !currentIds.includes(item.id) && item.name.toLowerCase().includes(q)
-    );
-  }, [debouncedQuery, items, currentIds]);
+
+  useEffect(() => {
+    if (items.length > 0) {
+      setCacheItems((prev) => {
+        const map = new Map(prev.map((i) => [i.id, i]));
+        items.forEach((i) => map.set(i.id, i));
+        return Array.from(map.values());
+      });
+    }
+  }, [items]);
 
   const addItem = (id: string) => {
     const current = form.getValues(fieldName) || [];
     if (!current.includes(id)) {
       form.setValue(fieldName, [...current, id]);
     }
-    setQuery("");
+    setKeyword("");
+    setInputValue("");
   };
 
   const removeItem = (id: string) => {
@@ -52,21 +62,16 @@ export default function MultiSelector({
     );
   };
 
-  const hasSelectionError =
-    fieldName === "service"
-      ? form.formState.errors.service?.message
-      : form.formState.errors.package?.message;
+  const hasSelectionError = form.formState.errors[fieldName]?.message;
 
   const idToName = useMemo(
     () =>
-      items.reduce<Record<string, string>>((acc, item) => {
+      cacheItems.reduce<Record<string, string>>((acc, item) => {
         acc[item.id] = item.name;
         return acc;
       }, {}),
-    [items]
+    [cacheItems]
   );
-
-  
 
   return (
     <div className="space-y-2">
@@ -108,36 +113,61 @@ export default function MultiSelector({
               hasSelectionError && "text-destructive"
             )}
             placeholder={currentIds.length === 0 ? placeholder : "Add more..."}
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
+            value={inputValue}
+            onChange={(e) => {
+              setInputValue(e.target.value);
+              setKeyword(e.target.value);
+            }}
           />
         </div>
 
-        {query && filteredItems.length > 0 && (
+        {inputValue && (
           <div className="absolute z-50 w-full mt-2 bg-background border rounded-md shadow-lg max-h-48 overflow-auto">
-            {filteredItems.map((item) => (
-              <div
-                key={item.id}
-                className="p-3 cursor-pointer hover:bg-accent hover:text-accent-foreground transition-colors"
-                onMouseDown={() => addItem(item.id)}
-              >
-                {item.name}
+            {isLoading ? (
+              <div className="p-3 text-sm">Loading...</div>
+            ) : items.length > 0 ? (
+              items
+                .filter((item) => !currentIds.includes(item.id))
+                .map((item) => (
+                  <div
+                    key={item.id}
+                    className="cursor-pointer hover:bg-accent hover:text-accent-foreground transition-colors flex items-center justify-between"
+                  >
+                    <div
+                      className="flex-1 p-3"
+                      onMouseDown={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        addItem(item.id);
+                      }}
+                    >
+                      {item.name}
+                    </div>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      onMouseDown={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        // openDetailModal(item);
+                      }}
+                    >
+                      <Eye className="w-4 h-4" />
+                    </Button>
+                  </div>
+                ))
+            ) : (
+              <div className="p-3 text-sm text-muted-foreground">
+                No items found.
               </div>
-            ))}
-          </div>
-        )}
-
-        {query && filteredItems.length === 0 && (
-          <div className="absolute z-50 w-full mt-2 bg-background border rounded-md shadow p-3 text-sm text-muted-foreground">
-            No items found.
+            )}
           </div>
         )}
       </div>
 
-      {form.formState.errors[fieldName] && (
-        <p className="text-xs text-destructive">
-          {form.formState.errors[fieldName]?.message}
-        </p>
+      {hasSelectionError && (
+        <p className="text-xs text-destructive">{hasSelectionError}</p>
       )}
     </div>
   );
