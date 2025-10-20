@@ -8,11 +8,11 @@ import {
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
-import { type BookingFormValues } from "../../lib/schema";
+import { type CreateBookingFormValues } from "../../lib/schema";
 import type { ServiceCenter } from "@/types/models/center";
 
 interface ServiceCenterSelectorProps {
-  form: UseFormReturn<BookingFormValues>;
+  form: UseFormReturn<CreateBookingFormValues>;
   centers: ServiceCenter[];
 }
 

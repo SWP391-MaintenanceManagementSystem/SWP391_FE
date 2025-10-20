@@ -1,9 +1,9 @@
 import { Textarea } from "@/components/ui/textarea";
-import type { BookingFormValues } from "../../lib/schema";
+import type { CreateBookingFormValues } from "../../lib/schema";
 import type { UseFormReturn } from "react-hook-form";
 
 type NoteFieldProps = {
-  form: UseFormReturn<BookingFormValues>;
+  form: UseFormReturn<CreateBookingFormValues>;
 };
 
 export default function NoteField({ form }: NoteFieldProps) {
