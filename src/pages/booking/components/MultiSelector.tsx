@@ -5,41 +5,42 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Eye, X } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { type BookingFormValues } from "../lib/schema";
-import type { Service } from "@/types/models/service";
+import { type CreateBookingFormValues } from "../lib/schema";
 
-interface MultiSelectorProps {
-  form: UseFormReturn<BookingFormValues>;
-  fieldName: "service" | "package";
+interface MultiSelectorProps<T> {
+  form: UseFormReturn<CreateBookingFormValues>;
+  fieldName: "serviceIds" | "packageIds";
   label: string;
   placeholder: string;
   hint?: string;
   useSearchHook: () => {
     keyword: string;
     setKeyword: (val: string) => void;
-    data: Service[] | undefined;
+    data: T[] | undefined;
     isLoading: boolean;
   };
+  onOpenDetailModal?: (item: T) => void;
 }
 
-export default function MultiSelector({
+export default function MultiSelector<T>({
   form,
   fieldName,
   label,
   placeholder,
   hint,
   useSearchHook,
-}: MultiSelectorProps) {
+  onOpenDetailModal,
+}: MultiSelectorProps<T>) {
   const { setKeyword, data: items = [], isLoading } = useSearchHook();
   const [inputValue, setInputValue] = useState("");
-  const [cacheItems, setCacheItems] = useState<Service[]>([]);
+  const [cacheItems, setCacheItems] = useState<T[]>([]);
   const currentIds = form.watch(fieldName) as string[];
 
   useEffect(() => {
     if (items.length > 0) {
       setCacheItems((prev) => {
-        const map = new Map(prev.map((i) => [i.id, i]));
-        items.forEach((i) => map.set(i.id, i));
+        const map = new Map(prev.map((i: any) => [i.id, i]));
+        items.forEach((i: any) => map.set(i.id, i));
         return Array.from(map.values());
       });
     }
@@ -66,7 +67,7 @@ export default function MultiSelector({
 
   const idToName = useMemo(
     () =>
-      cacheItems.reduce<Record<string, string>>((acc, item) => {
+      cacheItems.reduce<Record<string, string>>((acc: any, item: any) => {
         acc[item.id] = item.name;
         return acc;
       }, {}),
@@ -92,7 +93,7 @@ export default function MultiSelector({
           {currentIds.map((id) => (
             <Badge
               key={id}
-              variant={fieldName === "package" ? "outline" : "secondary"}
+              variant={fieldName === "packageIds" ? "outline" : "secondary"}
               className="flex items-center gap-1"
             >
               {idToName[id] || "Unknown"}
@@ -127,14 +128,14 @@ export default function MultiSelector({
               <div className="p-3 text-sm">Loading...</div>
             ) : items.length > 0 ? (
               items
-                .filter((item) => !currentIds.includes(item.id))
-                .map((item) => (
+                .filter((item: any) => !currentIds.includes(item.id))
+                .map((item: any) => (
                   <div
                     key={item.id}
-                    className="cursor-pointer hover:bg-accent hover:text-accent-foreground transition-colors flex items-center justify-between"
+                    className="hover:bg-accent hover:text-accent-foreground transition-colors flex items-center justify-between"
                   >
                     <div
-                      className="flex-1 p-3"
+                      className="flex-1 p-3 cursor-pointer"
                       onMouseDown={(e) => {
                         e.preventDefault();
                         e.stopPropagation();
@@ -143,18 +144,21 @@ export default function MultiSelector({
                     >
                       {item.name}
                     </div>
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="sm"
-                      onMouseDown={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        // openDetailModal(item);
-                      }}
-                    >
-                      <Eye className="w-4 h-4" />
-                    </Button>
+                    <div className="p-2">
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        className="px-2 py-1 h-auto hover:bg-primary/10"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          onOpenDetailModal?.(item);
+                        }}
+                      >
+                        <Eye className="w-4 h-4" />
+                      </Button>
+                    </div>
                   </div>
                 ))
             ) : (

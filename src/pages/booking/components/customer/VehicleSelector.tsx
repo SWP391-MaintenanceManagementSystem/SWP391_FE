@@ -4,11 +4,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Search } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { type BookingFormValues } from "../../lib/schema";
+import { type CreateBookingFormValues } from "../../lib/schema";
 import type { Vehicle } from "@/types/models/vehicle";
 import { useDebounce } from "@uidotdev/usehooks";
 interface VehicleSelectorProps {
-  form: UseFormReturn<BookingFormValues>;
+  form: UseFormReturn<CreateBookingFormValues>;
   vehicles: Vehicle[];
 }
 

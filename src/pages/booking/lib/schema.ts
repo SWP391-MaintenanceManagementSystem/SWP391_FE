@@ -1,13 +1,13 @@
 import { z } from "zod";
 
-export const bookingSchema = z
+export const CreateBookingSchema = z
   .object({
     vehicleId: z.string().min(1, "Please select your vehicle"),
     centerId: z.string().min(1, "Please select a service center"),
-    service: z.array(z.string()).optional(),
-    package: z.array(z.string()).optional(),
+    serviceIds: z.array(z.string()).optional(),
+    packageIds: z.array(z.string()).optional(),
     note: z.string().optional(),
-    dateTime: z
+    bookingDate: z
       .date({
         error: "Please select date & time",
       })
@@ -17,8 +17,8 @@ export const bookingSchema = z
       ),
   })
   .superRefine((data, ctx) => {
-    const hasService = data.service && data.service.length > 0;
-    const hasPackage = data.package && data.package.length > 0;
+    const hasService = data.serviceIds && data.serviceIds.length > 0;
+    const hasPackage = data.packageIds && data.packageIds.length > 0;
 
     if (!hasService && !hasPackage) {
       ctx.addIssue({
@@ -34,5 +34,4 @@ export const bookingSchema = z
     }
   });
 
-export type BookingFormValues = z.infer<typeof bookingSchema>;
-
+export type CreateBookingFormValues = z.infer<typeof CreateBookingSchema>;

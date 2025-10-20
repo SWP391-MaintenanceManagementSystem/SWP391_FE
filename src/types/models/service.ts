@@ -9,6 +9,11 @@ export type Service = {
   createdAt: string | Date;
   updatedAt: string | Date;
   finalPrice: number;
+  parts: ServicePart[];
 };
 
-
+export type ServicePart = {
+  id: string;
+  name: string;
+  quantity: number;
+};

@@ -8,65 +8,69 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import type { Service } from "@/types/models/service";
+import type { Package } from "@/types/models/package";
 
-interface ServiceDetailDialogProps {
-  service: Service | null;
+interface PackageDetailDialogProps {
+  packageItem: Package | null;
   isOpen: boolean;
   onClose: () => void;
 }
 
-export function ServiceDetailDialog({
-  service,
+export function PackageDetailDialog({
+  packageItem,
   isOpen,
   onClose,
-}: ServiceDetailDialogProps) {
+}: PackageDetailDialogProps) {
   
-  if (!service) return null;
+  if (!packageItem) return null;
+
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[425px] font-inter">
         <DialogHeader>
-          <DialogTitle>{service.name}</DialogTitle>
+          <DialogTitle>{packageItem.name}</DialogTitle>
           <DialogDescription>
-            Detailed information and pricing for this service.
+            Detailed information and pricing for this package.
           </DialogDescription>
         </DialogHeader>
 
         <div className="grid gap-4 py-4">
+          {/* Description */}
           <div className="grid grid-cols-4 items-center gap-4">
             <p className="col-span-1 text-sm font-medium text-gray-500">
               Description:
             </p>
-            <p className="col-span-3 text-sm">{service.description}</p>
+            <p className="col-span-3 text-sm">{packageItem.description}</p>
           </div>
 
           <Separator className="my-2" />
 
+          {/* Price */}
           <div className="grid grid-cols-4 items-center gap-4">
             <p className="col-span-1 text-base font-medium text-gray-500">
               Price:
             </p>
             <p className="col-span-3 text-lg font-bold text-green-600">
-              {service.price}
+              {packageItem.price}
             </p>
           </div>
 
           <Separator className="my-2" />
 
+          {/* Included Services */}
           <div>
-            <h4 className="mb-2 text-sm font-semibold">Included Parts:</h4>
-            {service.parts.length > 0 ? (
+            <h4 className="mb-2 text-sm font-semibold">Included Services:</h4>
+            {packageItem.services.length > 0 ? (
               <ul className="list-disc pl-5 text-sm">
-                {service.parts.map((part, index) => (
+                {packageItem.services.map((s, index) => (
                   <li key={index}>
-                    {part.name} (x{part.quantity})
+                    {s.name} {s.price}
                   </li>
                 ))}
               </ul>
             ) : (
               <p className="text-sm italic text-gray-500">
-                No parts are included with this service.
+                No services included in this package.
               </p>
             )}
           </div>
