@@ -64,11 +64,33 @@ export const useInventory = (
   };
 
   const handleDeletePart = (id: string) => {
-    deletePartMutaion.mutate({
-      id,
-      currentPage,
-      currentPageSize,
-    });
+    deletePartMutaion.mutate(
+      {
+        id,
+        currentPage,
+        currentPageSize,
+      },
+      {
+        onError: (error) => {
+          if (error instanceof AxiosError) {
+            const apiErrors = error.response?.data?.errors;
+            const msg = error.response?.data.message;
+            if (apiErrors && typeof apiErrors === "object") {
+              Object.entries(apiErrors).forEach(([field, msg]) => {
+                form.setError(field as keyof PartItemFormData, {
+                  type: "server",
+                  message: msg as string,
+                });
+              });
+            } else if (msg) {
+              toast.error(msg);
+            } else {
+              toast.error("Something went wrong. Please try again.");
+            }
+          }
+        },
+      },
+    );
   };
 
   const handleAddPartItem = async (data: PartItemFormData) => {

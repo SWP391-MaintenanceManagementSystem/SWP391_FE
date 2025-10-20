@@ -195,9 +195,6 @@ export const useDeletePartItem = () => {
       ]);
       toast.success("Deleted part item successfully");
     },
-    onError: () => {
-      toast.error("Failed to delete part item");
-    },
   });
 };
 
