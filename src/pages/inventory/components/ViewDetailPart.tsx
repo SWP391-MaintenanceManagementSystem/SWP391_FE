@@ -4,6 +4,7 @@ import {
 } from "@/components/dialog/ViewDetailDialog";
 import StockStatusTag from "@/components/tag/StockTag";
 import { type Part } from "@/types/models/part";
+import dayjs from "dayjs";
 
 interface ViewDetailPartProps {
   partItem: Part;
@@ -12,7 +13,7 @@ interface ViewDetailPartProps {
 export default function ViewDetailPart({ partItem }: ViewDetailPartProps) {
   return (
     <div className="overflow-y-auto  max-h-[410px]">
-      <InfoSection styleFormLayout="md:grid-rows-4 md:grid-cols-2">
+      <InfoSection styleFormLayout="md:grid-rows-5 md:grid-cols-2">
         <InputDisableWithLabel label="Name" id="name" value={partItem.name} />
         <InputDisableWithLabel
           label="Category"
@@ -39,7 +40,16 @@ export default function ViewDetailPart({ partItem }: ViewDetailPartProps) {
           id="status"
           value={<StockStatusTag status={partItem.status} />}
         />
-
+        <InputDisableWithLabel
+          label="Created on"
+          id="createdAt"
+          value={dayjs(partItem.createdAt).format("HH:mm - DD/MM/YYYY")}
+        />
+        <InputDisableWithLabel
+          label="Last updated"
+          id="updatedAt"
+          value={dayjs(partItem.updatedAt).format("HH:mm - DD/MM/YYYY")}
+        />
         <InputDisableWithLabel
           label="Description"
           id="description"
