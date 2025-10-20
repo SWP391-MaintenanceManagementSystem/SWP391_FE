@@ -4,6 +4,8 @@ import ActionBtn from "@/components/table/ActionBtn";
 import { TooltipWrapper } from "@/components/TooltipWrapper";
 import { useState } from "react";
 import type { WorkSchedule } from "@/types/models/shift";
+import { ViewDetailDialog } from "@/components/dialog/ViewDetailDialog";
+import ViewDetailSchedule from "../ViewDetailSchedule";
 
 export interface ColActionsProps {
   row: Row<WorkSchedule>;
@@ -45,6 +47,15 @@ export default function ColActions({ row }: ColActionsProps) {
           }}
         />
       </TooltipWrapper>
+
+      <ViewDetailDialog
+        open={openViewDialog}
+        onOpenChange={(open) => setOpenViewDialog(open)}
+        title="Work Schedule Details"
+        styleContent="md:min-w-[580px]"
+      >
+        <ViewDetailSchedule item={schedule} />
+      </ViewDetailDialog>
     </div>
   );
 }

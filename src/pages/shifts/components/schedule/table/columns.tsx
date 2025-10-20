@@ -4,7 +4,6 @@ import type { ServiceCenter } from "@/types/models/center";
 import { Badge } from "@/components/ui/badge";
 import SortHeader from "@/components/table/SortHeader";
 import FilterHeader from "@/components/table/FilterHeader";
-
 import dayjs from "dayjs";
 import { ShiftCell } from "./ShiftCell";
 import ColActions from "./ColActions";
