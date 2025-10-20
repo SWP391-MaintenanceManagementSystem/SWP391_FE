@@ -16,11 +16,23 @@ export const useShift = (
   const addShiftMutation = useAddShift();
 
   const handleDeleteShift = () => {
-    delShiftMutation.mutate({
-      id: item?.id || "",
-      currentPage,
-      currentPageSize,
-    });
+    delShiftMutation.mutate(
+      {
+        id: item?.id || "",
+        currentPage,
+        currentPageSize,
+      },
+      {
+        onError: (error) => {
+          if (error instanceof AxiosError) {
+            const msg = error.response?.data.message;
+            toast.error(msg);
+          } else {
+            toast.error("Something went wrong. Please try again.");
+          }
+        },
+      },
+    );
   };
   const form = useForm<ShiftFormData>({
     resolver: zodResolver(ShiftSchema),

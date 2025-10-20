@@ -26,9 +26,6 @@ export const useDeleteShift = () => {
         }),
       });
     },
-    onError: () => {
-      toast.error("Failed to delete shift");
-    },
   });
 };
 
