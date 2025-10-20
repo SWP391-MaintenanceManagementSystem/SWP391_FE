@@ -9,6 +9,17 @@ export const queryKeys = {
     centerId?: string;
     sortBy?: string;
     orderBy?: "asc" | "desc";
-    type?: "CUSTOMER" | "STAFF" | "TECHNICIAN";
   }) => ["shiftsList", params] as const,
+
+  workSchedulesList: (params: {
+    page: number;
+    pageSize: number;
+    centerId?: string;
+    employeeId?: string;
+    shiftId?: string;
+    dateFrom?: string;
+    dateTo?: string;
+    sortBy?: string;
+    orderBy?: "asc" | "desc";
+  }) => ["workSchedulesList", params] as const,
 };

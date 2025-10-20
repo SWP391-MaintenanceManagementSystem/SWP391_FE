@@ -33,7 +33,7 @@ export const getColumns = (
       header: (info) => <SortHeader title="Name" info={info} />,
       cell: (info) => info.getValue(),
       meta: {
-        title: "Part Name",
+        title: "Shift Name",
       },
     }),
     columnHelper.accessor("startTime", {
