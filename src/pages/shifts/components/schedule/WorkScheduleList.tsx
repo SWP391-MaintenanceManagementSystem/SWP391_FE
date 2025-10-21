@@ -19,6 +19,7 @@ import {
 import Calendar04 from "@/components/calendar-04";
 import dayjs from "dayjs";
 import type { DateRange } from "react-day-picker";
+import clsx from "clsx";
 
 export default function WorkScheduleList() {
   const [page, setPage] = useState(1);
@@ -92,12 +93,19 @@ export default function WorkScheduleList() {
           sorting={sorting}
           onSortingChange={setSorting}
           headerActions={
-            <div className="flex flex-wrap justify-end gap-2 w-full">
+            <div
+              className={clsx(
+                "grid justify-end items-end gap-2 w-full grid-cols-1",
+                dateRange?.from
+                  ? "md:grid-cols-[auto_auto_auto]"
+                  : "md:grid-cols-[auto_auto]",
+              )}
+            >
               {dateRange?.from && (
                 <Button
                   variant="ghost"
                   onClick={() => setDateRange(undefined)}
-                  className="text-muted-foreground hover:text-foreground text-[12px]"
+                  className="text-muted-foreground hover:text-foreground text-[12px] justify-self-end"
                 >
                   <X size={10} />
                   Reset filter
@@ -105,7 +113,10 @@ export default function WorkScheduleList() {
               )}
               <Popover>
                 <PopoverTrigger asChild>
-                  <Button variant="secondary">
+                  <Button
+                    variant="secondary"
+                    className=" justify-self-end w-full lg:w-auto"
+                  >
                     <CalendarRange className="w-4 h-4 mr-2" />
                     {dateRange?.from
                       ? dateRange.to
@@ -130,6 +141,7 @@ export default function WorkScheduleList() {
                 onClick={() => setOpenAddModal(true)}
                 variant="outline"
                 autoFocus={false}
+                className=" justify-self-end w-full lg:w-auto"
               >
                 New Schedule
                 <Plus className="h-4 w-4 ml-2" />

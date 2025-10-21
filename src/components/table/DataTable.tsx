@@ -39,6 +39,7 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import clsx from "clsx";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -208,10 +209,17 @@ export function DataTable<TData, TValue>({
   return (
     <div className="grid gap-4 h-full font-inter grid-rows-[auto_1fr_auto]">
       {/* --- TABLE ACTIONS --- */}
-      <div className="flex flex-col md:flex-row justify-between gap-2 items-end w-full">
+      <div
+        className={clsx(
+          "grid  gap-2 w-full  grid-cols-1",
+          headerActions
+            ? " xl:grid-cols-[auto_1fr] xl:grid-rows-1"
+            : "lg:grid-cols-[auto_1fr]",
+        )}
+      >
         {/* Left: search */}
         {isSearch && (
-          <div className="relative w-full md:w-[300px]">
+          <div className="relative w-full lg:w-[300px]">
             <Search
               size={16}
               className="absolute text-gray-500 top-[10px] left-2"
@@ -226,13 +234,19 @@ export function DataTable<TData, TValue>({
         )}
 
         {/* Right: header actions + columns */}
-        <div className="flex lg:flex-row justify-end items-center gap-2 w-full md:w-auto">
+        <div
+          className={clsx(
+            headerActions
+              ? "grid grid-cols-1  md:grid-cols-[1fr_auto] justify-end items-center gap-2 w-full md:w-auto"
+              : "flex items-end justify-end w-full",
+          )}
+        >
           {headerActions}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button
                 variant="outline"
-                className="w-full md:w-28 !outline-none"
+                className="w-full !outline-none lg:w-28"
               >
                 Columns <ChevronDown />
               </Button>

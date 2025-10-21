@@ -68,7 +68,6 @@ export const useGetShiftsQuery = () => {
     queryFn: async () => {
       try {
         const res = await getShifts();
-        toast.success("Fetched shifts successfully");
         return res.data.data;
       } catch (error) {
         console.error("Error fetching shifts:", error);
