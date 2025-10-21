@@ -120,7 +120,14 @@ export const getColumns = (
       id: "actions",
       header: "Actions",
       cell: (props) => {
-        return <ColActions row={props.row} />;
+        const { pageIndex, pageSize } = props.table.getState().pagination;
+        return (
+          <ColActions
+            row={props.row}
+            currentPage={pageIndex + 1}
+            currentPageSize={pageSize}
+          />
+        );
       },
     }),
   ];

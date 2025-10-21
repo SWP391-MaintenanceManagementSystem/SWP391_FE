@@ -3,9 +3,10 @@ import { deleteShift, updateShift, addShift } from "../apis/shift.api";
 import { queryKeys } from "../queries/keys";
 import { toast } from "sonner";
 import type { ShiftFormData } from "@/pages/shifts/libs/schema";
+import { deleteWorkSchedule } from "../apis/work-schedules.api";
 
 export const useDeleteShift = () => {
-  const queryCilent = useQueryClient();
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async ({
       id,
@@ -20,7 +21,7 @@ export const useDeleteShift = () => {
     onSuccess: async (_data, variables) => {
       toast.success("Deleted shift successfully");
       await Promise.all([
-        queryCilent.invalidateQueries({
+        queryClient.invalidateQueries({
           queryKey: queryKeys.shiftsList({
             page: variables.currentPage,
             pageSize: variables.currentPageSize,
@@ -90,6 +91,33 @@ export const useAddShift = () => {
         }),
       ]);
       toast.success("Shift added successfully");
+    },
+  });
+};
+
+export const useDeleteWorkSchedule = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async ({
+      id,
+    }: {
+      id: string;
+      currentPage: number;
+      currentPageSize: number;
+    }) => {
+      const del = await deleteWorkSchedule(id);
+      return del.data;
+    },
+    onSuccess: async (_data, variables) => {
+      toast.success("Deleted work schedule successfully");
+      await Promise.all([
+        queryClient.invalidateQueries({
+          queryKey: queryKeys.workSchedulesList({
+            page: variables.currentPage,
+            pageSize: variables.currentPageSize,
+          }),
+        }),
+      ]);
     },
   });
 };

@@ -1,7 +1,7 @@
 import DynamicBreadcrumbs from "@/components/DynamicBreadcrumb";
 import MainContentLayout from "@/components/MainContentLayout";
 import ShiftsManagementPage from "./components/shifts/ShiftManagement";
-import WorkScheduleList from "./components/schedule/WorkScheduleList";
+import WorkScheduleList from "./components/schedules/WorkScheduleList";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useState } from "react";
 
@@ -29,18 +29,6 @@ export default function WorkShiftsManagementPage() {
                 Shift Management
               </TabsTrigger>
             </TabsList>
-
-            {/*{currentTab === "workSchedule" ? (
-              <Button className="ml-auto bg-purple-primary">
-                Schedule shift
-                <ClipboardClockIcon />
-              </Button>
-            ) : (
-              <Button className="ml-auto bg-purple-primary">
-                Add shift
-                <PlusCircleIcon />
-              </Button>
-            )}*/}
           </div>
           <TabsContent value="workSchedule">
             <WorkScheduleList />
