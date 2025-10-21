@@ -1,5 +1,5 @@
 import { createColumnHelper } from "@tanstack/react-table";
-import type { WorkSchedule } from "@/types/models/shift";
+import type { WorkSchedule, Shift } from "@/types/models/shift";
 import type { ServiceCenter } from "@/types/models/center";
 import { Badge } from "@/components/ui/badge";
 import SortHeader from "@/components/table/SortHeader";
@@ -10,11 +10,11 @@ import ColActions from "./ColActions";
 
 export const getColumns = (
   handleFilterChange: (field: string, value: string) => void,
-  currentFilter: { shiftId: string; centerId: string },
+  currentFilter: { shiftId: string; centerId: string; role: string },
   centerList: ServiceCenter[],
+  shiftsList: Shift[],
 ) => {
   const columnHelper = createColumnHelper<WorkSchedule>();
-
   return [
     columnHelper.display({
       id: "number",
@@ -51,11 +51,24 @@ export const getColumns = (
     }),
     columnHelper.accessor("account.role", {
       id: "role",
-      header: (info) => <FilterHeader title="Role" column={info.column} />,
+      header: (info) => (
+        <FilterHeader
+          title="Role"
+          column={info.column}
+          selectedValue={currentFilter.role}
+          onFilterChange={(value) => handleFilterChange("role", value)}
+        />
+      ),
       cell: (info) => <Badge variant="outline">{info.getValue()}</Badge>,
       size: 10,
       meta: {
         title: "Role",
+        filterVariant: "filterRole",
+        filterOptions: ["STAFF", "TECHNICIAN"],
+        labelOptions: {
+          STAFF: "Staff",
+          TECHNICIAN: "Technician",
+        },
       },
     }),
     columnHelper.accessor("date", {
@@ -81,8 +94,8 @@ export const getColumns = (
       meta: {
         title: "Shift",
         filterVariant: "filterShift",
-        // filterOptions: shiftList.map((s) => s.id),
-        // labelOptions: Object.fromEntries(shiftList.map((s) => [s.id, s.name])),
+        filterOptions: shiftsList.map((s) => s.id),
+        labelOptions: Object.fromEntries(shiftsList.map((s) => [s.id, s.name])),
       },
     }),
     columnHelper.accessor("shift.serviceCenter.name", {

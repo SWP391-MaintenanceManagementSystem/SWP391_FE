@@ -7,9 +7,11 @@ export const getWorkScheduleList = (params: {
   pageSize: number;
   centerId?: string;
   employeeId?: string;
+  role?: string;
   shiftId?: string;
   dateFrom?: string;
   dateTo?: string;
+  search?: string;
   sortBy?: string;
   orderBy?: "asc" | "desc";
 }) => {
@@ -20,15 +22,3 @@ export const getWorkScheduleList = (params: {
     },
   );
 };
-
-// export const deleteShift = (id: string) => {
-//   return httpPrivate.del<BaseResponse<void>>(`/shifts/${id}`);
-// };
-
-// export const updateShift = (id: string, data: ShiftFormData) => {
-//   return httpPrivate.patch<BaseResponse<Shift>>(`/shifts/${id}`, data);
-// };
-
-// export const addShift = (data: ShiftFormData) => {
-//   return httpPrivate.post<BaseResponse<Shift>>(`/shifts`, data);
-// };

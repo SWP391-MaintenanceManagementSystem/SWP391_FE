@@ -10,7 +10,7 @@ export const useGetCentersQuery = () => {
       try {
         const res = await getCenters();
         toast.success("Fetched centers successfully");
-        return res.data.data;
+        return res.data;
       } catch (error) {
         console.error("Error fetching centers:", error);
         toast.error("Failed to fetch centers");
