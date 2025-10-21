@@ -4,6 +4,8 @@ import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import type { CreateBookingFormValues } from "../../lib/schema";
 import dayjs from "dayjs";
+import { Calendar } from "lucide-react";
+import { useRef } from "react";
 
 interface DateTimeSelectorProps {
   control: Control<CreateBookingFormValues>;
@@ -18,14 +20,23 @@ export default function DateTimeSelector({ control }: DateTimeSelectorProps) {
     control,
   });
 
-  // Format cho datetime-local input
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  // Format for datetime-local input
   const inputValue = field.value
     ? dayjs(field.value).format("YYYY-MM-DDTHH:mm")
     : "";
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
+    // Convert to UTC
     field.onChange(value ? new Date(value) : undefined);
+  };
+
+  const handleContainerClick = () => {
+    if (inputRef.current) {
+      inputRef.current.showPicker(); // Programmatically open the calendar picker
+    }
   };
 
   return (
@@ -34,20 +45,39 @@ export default function DateTimeSelector({ control }: DateTimeSelectorProps) {
         Appointment Date & Time <span className="text-destructive">*</span>
       </Label>
 
-      <Input
-        type="datetime-local"
-        {...field}
-        value={inputValue}
-        onChange={handleChange}
-        min={dayjs().format("YYYY-MM-DDTHH:mm")}
-        className={cn(
-          "w-full h-10",
-          error &&
-            "border-destructive focus:border-destructive ring-1 ring-destructive/20"
-        )}
-        aria-invalid={!!error}
-        aria-describedby={error ? "booking-date-error" : undefined}
-      />
+      <div
+        className="relative cursor-pointer"
+        onClick={handleContainerClick}
+        role="button"
+        tabIndex={0}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            handleContainerClick();
+          }
+        }}
+      >
+        <Input
+          type="datetime-local"
+          {...field}
+          ref={inputRef}
+          value={inputValue}
+          onChange={handleChange}
+          min={dayjs().format("YYYY-MM-DDTHH:mm")}
+          className={cn(
+            "w-full h-10 pr-10", // Add padding-right for icon
+            error &&
+              "border-destructive focus:border-destructive ring-1 ring-destructive/20",
+            "[&::-webkit-calendar-picker-indicator]:hidden", // Hide default calendar icon
+            "focus:outline-none focus:ring-0 focus-visible:ring-0"
+          )}
+          aria-invalid={!!error}
+          aria-describedby={error ? "booking-date-error" : undefined}
+        />
+        <Calendar
+          className="absolute right-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground"
+          aria-hidden="true"
+        />
+      </div>
 
       {error && (
         <p id="booking-date-error" className="text-xs text-destructive">
