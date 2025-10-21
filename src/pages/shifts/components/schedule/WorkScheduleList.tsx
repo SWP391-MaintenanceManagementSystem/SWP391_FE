@@ -91,7 +91,7 @@ export default function WorkScheduleList() {
           sorting={sorting}
           onSortingChange={setSorting}
           headerActions={
-            <>
+            <div className="flex flex-wrap justify-end gap-2 w-full">
               {dateRange?.from && (
                 <Button
                   variant="ghost"
@@ -108,8 +108,10 @@ export default function WorkScheduleList() {
                     <CalendarRange className="w-4 h-4 mr-2" />
                     {dateRange?.from
                       ? dateRange.to
-                        ? `${dayjs(dateRange.from).format("DD MMM")} - ${dayjs(dateRange.to).format("DD MMM")}`
-                        : dayjs(dateRange.from).format("DD/MM/YYYY")
+                        ? dayjs(dateRange.from).isSame(dateRange.to, "day")
+                          ? dayjs(dateRange.from).format("DD MMM")
+                          : `${dayjs(dateRange.from).format("DD MMM")} - ${dayjs(dateRange.to).format("DD MMM")}`
+                        : dayjs(dateRange.from).format("DD MMM")
                       : "Filter by date"}
                   </Button>
                 </PopoverTrigger>
@@ -128,10 +130,10 @@ export default function WorkScheduleList() {
                 variant="outline"
                 autoFocus={false}
               >
-                Add New Schedule
+                New Schedule
                 <Plus className="h-4 w-4 ml-2" />
               </Button>
-            </>
+            </div>
           }
         />
       </CardContent>
