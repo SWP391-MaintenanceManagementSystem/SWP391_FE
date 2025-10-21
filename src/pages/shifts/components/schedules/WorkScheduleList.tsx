@@ -20,6 +20,7 @@ import Calendar04 from "@/components/calendar-04";
 import dayjs from "dayjs";
 import type { DateRange } from "react-day-picker";
 import clsx from "clsx";
+import { NavLink } from "react-router-dom";
 
 export default function WorkScheduleList() {
   const [page, setPage] = useState(1);
@@ -70,7 +71,6 @@ export default function WorkScheduleList() {
     centerList,
     shiftsList,
   );
-  const [openAddModal, setOpenAddModal] = useState(false);
   return (
     <Card className="w-full h-full">
       <CardContent className="h-full">
@@ -137,15 +137,16 @@ export default function WorkScheduleList() {
                   />
                 </PopoverContent>
               </Popover>
-              <Button
-                onClick={() => setOpenAddModal(true)}
-                variant="outline"
-                autoFocus={false}
-                className=" justify-self-end w-full lg:w-auto"
-              >
-                New Schedule
-                <Plus className="h-4 w-4 ml-2" />
-              </Button>
+              <NavLink to="/shifts/addNewSchedule">
+                <Button
+                  variant="outline"
+                  autoFocus={false}
+                  className=" justify-self-end w-full lg:w-auto"
+                >
+                  New Schedule
+                  <Plus className="h-4 w-4 ml-2" />
+                </Button>
+              </NavLink>
             </div>
           }
         />

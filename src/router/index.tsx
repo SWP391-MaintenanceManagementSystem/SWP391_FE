@@ -24,6 +24,7 @@ import Booking from "@/pages/booking/components/customer/Booking";
 import AuthFailed from "@/pages/auth/components/AuthFailed";
 import InventoryManagement from "@/pages/inventory";
 import PaymentSuccessPage from "@/pages/payment";
+import AddNewSchedulePage from "@/pages/shifts/components/schedules/AddNewSchedule";
 
 const RouterComponent = () => {
   const router = createBrowserRouter([
@@ -116,6 +117,11 @@ const RouterComponent = () => {
                       hydrateFallbackElement: <CircularIndeterminate />,
                     },
                     {
+                      path: "/shifts/addNewSchedule",
+                      element: <AddNewSchedulePage />,
+                      hydrateFallbackElement: <CircularIndeterminate />,
+                    },
+                    {
                       path: "/inventory",
                       element: <InventoryManagement />,
                       hydrateFallbackElement: <CircularIndeterminate />,
@@ -167,7 +173,7 @@ const RouterComponent = () => {
                   hydrateFallbackElement: <CircularIndeterminate />,
                 },
               ],
-            }
+            },
           ],
         },
       ],
