@@ -1,8 +1,8 @@
-import Booking from "./customer/Booking";
+import Booking from "./components/customer/Booking";
 
 export default function BookingPage() {
   return (
-    <div>
+    <div className="font-inter">
       <Booking />
     </div>
   );

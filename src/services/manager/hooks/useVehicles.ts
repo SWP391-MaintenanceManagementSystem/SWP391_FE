@@ -7,11 +7,11 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { Vehicle } from "@/types/models/vehicle";
 
-export default function useVehicle(
+export default function useVehicles(
   customerId: string,
   vehicle: Vehicle,
   currentPage: number,
-  currentPageSize: number,
+  currentPageSize: number
 ) {
   const deleteVehicleMutation = useDeleteVehicle();
   const editVehicleMutation = useEditVehicle();

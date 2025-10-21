@@ -18,11 +18,12 @@
 
 .dark .rbc-toolbar button:hover,
 .dark .rbc-toolbar button:focus {
-  background-color: #262626; /* lighter black hover */
+  background-color: #262626; 
+  color: #ffffff;
 }
 
 .dark .rbc-off-range-bg {
-  background: #111; /* dark gray for off-range */
+  background: #111; 
 }
 
 .dark .rbc-today {
@@ -30,7 +31,7 @@
 }
 
 .dark .rbc-event {
-  background-color: #9333ea; /* vibrant purple accent */
+  background-color: #9333ea; 
   color: #fff;
   border: none;
 }
@@ -57,4 +58,18 @@
 .dark .rbc-agenda-view th {
   border-color: #262626;
   color: #e5e5e5;
+}
+
+.dark .rbc-appointment {
+  background-color: #9333ea;
+  color: #fff;
+}
+
+
+.rbc-timeslot-group  {
+  min-height: 75px;
+}
+
+.rbc-event-label {
+  font-size: 10px;
 }

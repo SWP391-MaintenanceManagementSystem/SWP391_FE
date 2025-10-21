@@ -6,7 +6,7 @@ export default function Booking() {
   return (
     <div className=" w-full h-[calc(100vh-32px)]">
       <DynamicBreadcrumbs />
-      <MainContentLayout className="">
+      <MainContentLayout>
         <BookingCalendar />
       </MainContentLayout>
     </div>
