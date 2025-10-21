@@ -17,17 +17,16 @@ export const useDeleteShift = () => {
       const del = await deleteShift(id);
       return del.data;
     },
-    onSuccess: (_data, variables) => {
+    onSuccess: async (_data, variables) => {
       toast.success("Deleted shift successfully");
-      queryCilent.invalidateQueries({
-        queryKey: queryKeys.shiftsList({
-          page: variables.currentPage,
-          pageSize: variables.currentPageSize,
+      await Promise.all([
+        queryCilent.invalidateQueries({
+          queryKey: queryKeys.shiftsList({
+            page: variables.currentPage,
+            pageSize: variables.currentPageSize,
+          }),
         }),
-      });
-    },
-    onError: () => {
-      toast.error("Failed to delete shift");
+      ]);
     },
   });
 };
@@ -51,6 +50,13 @@ export const useUpdateShift = () => {
       await Promise.all([
         queryClient.invalidateQueries({
           queryKey: queryKeys.shiftsList({
+            page: variables.currentPage,
+            pageSize: variables.currentPageSize,
+          }),
+        }),
+
+        queryClient.invalidateQueries({
+          queryKey: queryKeys.workSchedulesList({
             page: variables.currentPage,
             pageSize: variables.currentPageSize,
           }),

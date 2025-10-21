@@ -4,6 +4,7 @@ import {
 } from "@/components/dialog/ViewDetailDialog";
 import VehicleStatusTag from "@/components/tag/VehicleStatusTag";
 import type { Shift } from "@/types/models/shift";
+import dayjs from "dayjs";
 import { Users } from "lucide-react";
 
 interface ViewDetailShiftProps {
@@ -13,7 +14,7 @@ interface ViewDetailShiftProps {
 export default function ViewDetailShift({ item }: ViewDetailShiftProps) {
   return (
     <div className="overflow-y-auto  max-h-[410px]">
-      <InfoSection styleFormLayout="md:grid-rows-4 md:grid-cols-2 ">
+      <InfoSection styleFormLayout="md:grid-rows-5 md:grid-cols-2 ">
         <InputDisableWithLabel
           label="Shift Name"
           id="name"
@@ -50,6 +51,16 @@ export default function ViewDetailShift({ item }: ViewDetailShiftProps) {
           id="serviceCenter"
           value={item.serviceCenter.name}
           styleFormat="md:col-span-2"
+        />
+        <InputDisableWithLabel
+          label="Created on"
+          id="createdAt"
+          value={dayjs(item.createdAt).format("HH:mm - DD/MM/YYYY")}
+        />
+        <InputDisableWithLabel
+          label="Last updated"
+          id="updatedAt"
+          value={dayjs(item.updatedAt).format("HH:mm - DD/MM/YYYY")}
         />
       </InfoSection>
     </div>

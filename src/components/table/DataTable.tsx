@@ -133,7 +133,10 @@ export function DataTable<TData, TValue>({
         MIN_ROWS,
       );
       // Update pagination state with new page size
-      setPagination((prev) => ({ ...prev, pageSize: newSize }));
+      setPagination((prev) => {
+        if (prev.pageSize === newSize) return prev; // prevent re-render loop
+        return { ...prev, pageSize: newSize };
+      });
       if (onPageSizeChange) onPageSizeChange(newSize);
     });
 
@@ -205,10 +208,10 @@ export function DataTable<TData, TValue>({
   return (
     <div className="grid gap-4 h-full font-inter grid-rows-[auto_1fr_auto]">
       {/* --- TABLE ACTIONS --- */}
-      <div className="flex flex-col md:flex-row w-full gap-2 items-end justify-end">
-        {/* Search input */}
+      <div className="flex flex-col md:flex-row justify-between gap-2 items-end w-full">
+        {/* Left: search */}
         {isSearch && (
-          <div className="relative w-full">
+          <div className="relative w-full md:w-[300px]">
             <Search
               size={16}
               className="absolute text-gray-500 top-[10px] left-2"
@@ -217,28 +220,28 @@ export function DataTable<TData, TValue>({
               placeholder={`Search by ${searchPlaceholder}...`}
               value={searchText}
               onChange={(e) => handleSearchInput(e.target.value)}
-              className="pl-8 lg:w-sm w-full "
+              className="pl-8 w-full"
             />
           </div>
         )}
 
-        <div className="flex items-end justify-end gap-2 w-full">
+        {/* Right: header actions + columns */}
+        <div className="flex lg:flex-row justify-end items-center gap-2 w-full md:w-auto">
           {headerActions}
-        </div>
-
-        {/* Visible Column */}
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" className=" !outline-none w-full md:w-28">
-              Columns <ChevronDown />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            {table
-              .getAllColumns()
-              .filter((column) => column.getCanHide())
-              .map((column) => {
-                return (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="outline"
+                className="w-full md:w-28 !outline-none"
+              >
+                Columns <ChevronDown />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              {table
+                .getAllColumns()
+                .filter((column) => column.getCanHide())
+                .map((column) => (
                   <DropdownMenuCheckboxItem
                     key={column.id}
                     className="capitalize"
@@ -249,10 +252,10 @@ export function DataTable<TData, TValue>({
                   >
                     {column.columnDef.meta?.title ?? column.id}
                   </DropdownMenuCheckboxItem>
-                );
-              })}
-          </DropdownMenuContent>
-        </DropdownMenu>
+                ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       </div>
 
       {/* --- TABLE --- */}
