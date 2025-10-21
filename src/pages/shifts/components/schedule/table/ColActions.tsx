@@ -6,16 +6,29 @@ import { useState } from "react";
 import type { WorkSchedule } from "@/types/models/shift";
 import { ViewDetailDialog } from "@/components/dialog/ViewDetailDialog";
 import ViewDetailSchedule from "../ViewDetailSchedule";
+import { useWorkSchedule } from "@/services/shift/hooks/useWorkSchedule";
+import { DeleteDialog } from "@/components/dialog/DeleteDialog";
 
 export interface ColActionsProps {
   row: Row<WorkSchedule>;
+  currentPage: number;
+  currentPageSize: number;
 }
 
-export default function ColActions({ row }: ColActionsProps) {
+export default function ColActions({
+  row,
+  currentPage,
+  currentPageSize,
+}: ColActionsProps) {
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [openViewDialog, setOpenViewDialog] = useState(false);
   const [openEditDialog, setOpenEditDialog] = useState(false);
   const schedule = row.original;
+  const { handleDeleteSchedule } = useWorkSchedule(
+    currentPage,
+    currentPageSize,
+    schedule,
+  );
 
   return (
     <div className="flex gap-1">
@@ -56,6 +69,12 @@ export default function ColActions({ row }: ColActionsProps) {
       >
         <ViewDetailSchedule item={schedule} />
       </ViewDetailDialog>
+
+      <DeleteDialog
+        open={openDeleteDialog}
+        onOpenChange={(open) => setOpenDeleteDialog(open)}
+        onConfirm={handleDeleteSchedule}
+      />
     </div>
   );
 }

@@ -22,3 +22,7 @@ export const getWorkScheduleList = (params: {
     },
   );
 };
+
+export const deleteWorkSchedule = (id: string) => {
+  return httpPrivate.del<BaseResponse<void>>(`/work-schedules/${id}`);
+};
