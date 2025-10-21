@@ -20,7 +20,7 @@ import MembershipPage from "@/pages/membership";
 import StaffsManagementPage from "@/pages/employees/staffs";
 import TechniciansManagementPage from "@/pages/employees/technicians";
 import WorkShiftsManagementPage from "@/pages/shifts";
-import Booking from "@/pages/booking/components/customer/Booking";
+import Booking from "@/pages/booking";
 import AuthFailed from "@/pages/auth/components/AuthFailed";
 import InventoryManagement from "@/pages/inventory";
 import PaymentSuccessPage from "@/pages/payment";
@@ -132,7 +132,11 @@ const RouterComponent = () => {
                 {
                   element: (
                     <RequireAuth
-                      allowedRoles={[AccountRole.ADMIN, AccountRole.CUSTOMER]}
+                      allowedRoles={[
+                        AccountRole.ADMIN,
+                        AccountRole.CUSTOMER,
+                        AccountRole.STAFF,
+                      ]}
                     />
                   ),
                   children: [
