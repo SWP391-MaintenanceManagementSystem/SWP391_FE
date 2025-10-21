@@ -11,14 +11,18 @@ export const queryKeys = {
     orderBy?: "asc" | "desc";
   }) => ["shiftsList", params] as const,
 
+  shifts: ["shifts"],
+
   workSchedulesList: (params: {
     page: number;
     pageSize: number;
     centerId?: string;
     employeeId?: string;
+    role?: string;
     shiftId?: string;
     dateFrom?: string;
     dateTo?: string;
+    search?: string;
     sortBy?: string;
     orderBy?: "asc" | "desc";
   }) => ["workSchedulesList", params] as const,

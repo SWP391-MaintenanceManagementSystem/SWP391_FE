@@ -30,3 +30,7 @@ export const updateShift = (id: string, data: ShiftFormData) => {
 export const addShift = (data: ShiftFormData) => {
   return httpPrivate.post<BaseResponse<Shift>>(`/shifts`, data);
 };
+
+export const getShifts = () => {
+  return httpPrivate.get<BaseResponse<{ data: Shift[] }>>("/shifts/all");
+};

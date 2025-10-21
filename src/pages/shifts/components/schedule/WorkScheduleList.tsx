@@ -1,14 +1,11 @@
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-} from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { useState } from "react";
 import type { SortingState, ColumnDef } from "@tanstack/react-table";
 import { DataTable } from "@/components/table/DataTable";
-import { useGetWorkSchedulesList } from "@/services/shift/queries";
+import {
+  useGetWorkSchedulesList,
+  useGetShiftsQuery,
+} from "@/services/shift/queries";
 import type { WorkSchedule } from "@/types/models/shift";
 import { useGetServiceCenterList } from "@/services/manager/queries";
 import { getColumns } from "./table/columns";
@@ -31,11 +28,14 @@ export default function WorkScheduleList() {
   const [filters, setFilters] = useState({
     centerId: "",
     shiftId: "",
+    role: "",
   });
   const [dateRange, setDateRange] = useState<DateRange | undefined>(undefined);
 
   const { data: centerListData } = useGetServiceCenterList();
   const centerList = centerListData ?? [];
+  const { data: shiftsData } = useGetShiftsQuery();
+  const shiftsList = shiftsData ?? [];
   const {
     data: apiData,
     isLoading,
@@ -45,6 +45,8 @@ export default function WorkScheduleList() {
     pageSize,
     centerId: filters.centerId || undefined,
     shiftId: filters.shiftId || undefined,
+    search: searchValue,
+    role: filters.role || undefined,
     dateFrom: dateRange?.from
       ? dayjs(dateRange.from).format("YYYY-MM-DD")
       : undefined,
@@ -61,16 +63,15 @@ export default function WorkScheduleList() {
       [field]: value,
     }));
   };
-  const columns = getColumns(handleFilterChange, filters, centerList);
+  const columns = getColumns(
+    handleFilterChange,
+    filters,
+    centerList,
+    shiftsList,
+  );
   const [openAddModal, setOpenAddModal] = useState(false);
   return (
     <Card className="w-full h-full">
-      <CardHeader>
-        <CardTitle className="text-xl">Employee Work Schedules</CardTitle>
-        <CardDescription>
-          Manage schedules and filter by date or service center.
-        </CardDescription>
-      </CardHeader>
       <CardContent className="h-full">
         <DataTable<WorkSchedule, unknown>
           data={apiData?.data ?? []}
