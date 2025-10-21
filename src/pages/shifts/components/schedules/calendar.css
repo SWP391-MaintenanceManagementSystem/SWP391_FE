@@ -1,8 +1,7 @@
 /* calendar.css */
 
-/* Hover toàn ô và hiện dấu + chính giữa */
 .rbc-month-view .rbc-day-bg:hover {
-    background-color: rgba(139, 92, 246, 0.15); /* tím nhạt */
+    background-color: rgba(139, 92, 246, 0.15);
     cursor: pointer;
 }
 
@@ -21,4 +20,11 @@
 .rbc-month-view .rbc-day-bg {
     position: relative;
     transition: background-color 0.2s;
+}
+
+.rbc-toolbar-label {
+    font-size: 30px;
+    font-weight: 700;
+    text-transform: capitalize;
+    letter-spacing: 0.5px;
 }
