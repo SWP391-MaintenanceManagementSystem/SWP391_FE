@@ -16,6 +16,7 @@ export const useWorkSchedule = (
     delScheduleMutation.mutate(
       {
         id: item?.account.id || "",
+        date: item?.date || "",
         currentPage,
         currentPageSize,
       },
