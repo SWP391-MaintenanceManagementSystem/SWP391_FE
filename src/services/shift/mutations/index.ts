@@ -33,6 +33,10 @@ export const useDeleteShift = () => {
             pageSize: variables.currentPageSize,
           }),
         }),
+
+        queryClient.invalidateQueries({
+          queryKey: queryKeys.shifts,
+        }),
       ]);
     },
   });
@@ -68,6 +72,10 @@ export const useUpdateShift = () => {
             pageSize: variables.currentPageSize,
           }),
         }),
+
+        queryClient.invalidateQueries({
+          queryKey: queryKeys.shifts,
+        }),
       ]);
       toast.success("Shift information updated successfully");
     },
@@ -94,6 +102,15 @@ export const useAddShift = () => {
             page: variables.currentPage,
             pageSize: variables.currentPageSize,
           }),
+        }),
+        queryClient.invalidateQueries({
+          queryKey: queryKeys.workSchedulesList({
+            page: variables.currentPage,
+            pageSize: variables.currentPageSize,
+          }),
+        }),
+        queryClient.invalidateQueries({
+          queryKey: queryKeys.shifts,
         }),
       ]);
       toast.success("Shift added successfully");

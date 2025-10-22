@@ -55,7 +55,10 @@ export function AddEditScheduleDialog({
   const filteredShifts = useMemo(() => {
     const centerId = selectedEmployee?.workCenter?.id;
     if (!centerId) return [];
-    return shiftList.filter((shift) => shift.serviceCenter?.id === centerId);
+    return shiftList.filter(
+      (shift) =>
+        shift.serviceCenter?.id === centerId && shift.status === "ACTIVE",
+    );
   }, [selectedEmployee, shiftList]);
 
   const onSubmit = async (values: WorkScheduleFormData) => {
@@ -85,7 +88,9 @@ export function AddEditScheduleDialog({
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
-            className={clsx("grid grid-cols-1 gap-4 md:grid-rows-4")}
+            className={clsx(
+              "grid grid-cols-1 gap-4 md:grid-rows-4  max-h-[360px] overflow-y-auto",
+            )}
           >
             {/* Employee Selector */}
             <div className="space-y-2 w-full col-span-2">
