@@ -1,6 +1,7 @@
 import { axiosPrivate } from "@/lib/axios";
 import type { CreateBookingFormValues } from "@/pages/booking/lib/schema";
 import type { Booking, BookingFilters } from "@/types/models/booking";
+import type { CustomerBookingDetail } from "@/types/models/booking-with-detail";
 import type { BaseResponse, PaginationResponse } from "@/types/models/response";
 
 export const getBookings = async (params: BookingFilters) => {
@@ -15,5 +16,12 @@ export const createBooking = async (bookingData: CreateBookingFormValues) => {
     "/bookings",
     bookingData
   );
+  return response.data;
+};
+
+export const getBookingById = async (bookingId: string) => {
+  const response = await axiosPrivate.get<
+    BaseResponse<{ data: CustomerBookingDetail }>
+  >(`/bookings/${bookingId}`);
   return response.data;
 };

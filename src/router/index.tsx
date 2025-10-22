@@ -25,6 +25,7 @@ import AuthFailed from "@/pages/auth/components/AuthFailed";
 import InventoryManagement from "@/pages/inventory";
 import PaymentSuccessPage from "@/pages/payment";
 import AddNewSchedulePage from "@/pages/shifts/components/schedules/AddNewSchedule";
+import BookingDetail from "@/pages/booking/components/customer/booking-detail/BookingDetail";
 
 const RouterComponent = () => {
   const router = createBrowserRouter([
@@ -139,6 +140,10 @@ const RouterComponent = () => {
                     {
                       path: "/booking",
                       element: <Booking />,
+                    },
+                    {
+                      path: "/booking/:id",
+                      element: <BookingDetail />,
                     },
                   ],
                 },

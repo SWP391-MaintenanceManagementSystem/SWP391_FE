@@ -1,4 +1,3 @@
-import { string } from "zod";
 import type { BookingStatus } from "../enums/bookingStatus";
 
 export type Booking = {

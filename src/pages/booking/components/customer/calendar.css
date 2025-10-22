@@ -1,18 +1,18 @@
 /* Pure black dark mode for react-big-calendar */
-.dark .rbc-calendar {
-  background-color: #0a0a0a; /* near-black background */
-  color: #e5e5e5; /* light gray text */
-}
+/* .dark .rbc-calendar {
+  background-color: #0a0a0a; 
+  color: #e5e5e5; 
+} */
 
 .dark .rbc-toolbar {
-  background-color: #000; /* full black toolbar */
+  background-color: #262626; /* full black toolbar */
   color: #f5f5f5;
   border-bottom: 1px solid #262626; /* subtle divider */
 }
 
 .dark .rbc-toolbar button {
   color: #d4d4d4;
-  background-color: #171717; /* dark gray button */
+  background-color: #171717; 
   border: none;
 }
 
@@ -30,15 +30,15 @@
   background-color: rgba(147, 51, 234, 0.15); /* soft purple highlight */
 }
 
-.dark .rbc-event {
+/* .dark .rbc-event {
   background-color: #9333ea; 
   color: #fff;
   border: none;
-}
+} */
 
-.dark .rbc-slot-selection {
-  background-color: rgba(147, 51, 234, 0.3); /* selection tint */
-}
+/*.dark .rbc-slot-selection {
+  background-color: rgba(147, 51, 234, 0.3); 
+} */
 
 .dark .rbc-time-slot,
 .dark .rbc-header {

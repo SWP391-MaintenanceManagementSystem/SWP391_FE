@@ -30,7 +30,7 @@ export default function ServicesSelector({
         form={form}
         fieldName="serviceIds"
         label="Services"
-        placeholder="Search services..."
+        placeholder="Type to search services..."
         useSearchHook={useSearchServices}
         onOpenDetailModal={handleOpenDetail}
       />

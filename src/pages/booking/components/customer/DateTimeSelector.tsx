@@ -22,7 +22,6 @@ export default function DateTimeSelector({ control }: DateTimeSelectorProps) {
 
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // Format for datetime-local input
   const inputValue = field.value
     ? dayjs(field.value).format("YYYY-MM-DDTHH:mm")
     : "";
@@ -35,7 +34,7 @@ export default function DateTimeSelector({ control }: DateTimeSelectorProps) {
 
   const handleContainerClick = () => {
     if (inputRef.current) {
-      inputRef.current.showPicker(); // Programmatically open the calendar picker
+      inputRef.current.showPicker();
     }
   };
 
@@ -64,10 +63,10 @@ export default function DateTimeSelector({ control }: DateTimeSelectorProps) {
           onChange={handleChange}
           min={dayjs().format("YYYY-MM-DDTHH:mm")}
           className={cn(
-            "w-full h-10 pr-10", // Add padding-right for icon
+            "w-full h-10 pr-10",
             error &&
               "border-destructive focus:border-destructive ring-1 ring-destructive/20",
-            "[&::-webkit-calendar-picker-indicator]:hidden", // Hide default calendar icon
+            "[&::-webkit-calendar-picker-indicator]:hidden",
             "focus:outline-none focus:ring-0 focus-visible:ring-0"
           )}
           aria-invalid={!!error}
