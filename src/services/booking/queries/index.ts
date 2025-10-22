@@ -9,7 +9,6 @@ export const useBookingsQuery = (filter: BookingFilters) => {
     queryFn: async () => {
       try {
         const res = await getBookings({ ...filter });
-        toast.success("Get booking list successfully");
         return res.data;
       } catch (error) {
         toast.error("Failed to get booking list");

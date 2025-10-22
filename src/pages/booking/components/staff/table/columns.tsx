@@ -5,13 +5,13 @@ import FilterHeader from "@/components/table/FilterHeader";
 import AccountStatusTag from "@/components/tag/AccountStatusTag";
 import type { ServiceCenter } from "@/types/models/center";
 import { Badge } from "@/components/ui/badge";
-import type { Booking } from "@/types/models/booking";
+import type { BookingTable } from "@/types/models/booking";
 
 export const getColumns = (
   handleFilterChange: (field: string, value: string) => void,
   currentFilters: { status: string; centerId: string },
 ) => {
-  const columnHelper = createColumnHelper<Booking>();
+  const columnHelper = createColumnHelper<BookingTable>();
 
   return [
     // SELECT checkbox
@@ -42,7 +42,7 @@ export const getColumns = (
     }),
 
     // Customer NAME
-    columnHelper.accessor("customerId", {
+    columnHelper.accessor("customer.firstName", {
       id: "firstName",
       header: (info) => <SortHeader title="First Name" info={info} />,
       size: 50,

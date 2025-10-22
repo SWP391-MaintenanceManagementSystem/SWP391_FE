@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getColumns } from "./table/columns";
 import { useState } from "react";
 import type { SortingState, ColumnDef } from "@tanstack/react-table";
-import type { Booking } from "@/types/models/booking";
+import type { BookingTable } from "@/types/models/booking";
 import { BookingStatus } from "@/types/enums/bookingStatus";
 
 export default function BookingManagement() {
@@ -24,10 +24,9 @@ export default function BookingManagement() {
     search: searchValue || undefined,
     centerId: filters.centerId || undefined,
     status: filters.status || undefined,
-    // sortBy: sorting[0]?.id ?? "createdAt",
-    // orderBy: sorting[0]?.desc ? "desc" : "asc",
+    sortBy: sorting[0]?.id ?? "createdAt",
+    orderBy: sorting[0]?.desc ? "desc" : "asc",
   });
-  console.log(bookingData);
   const handleFilterChange = (field: string, value: string) => {
     setFilters((prevFilters) => ({
       ...prevFilters,
@@ -47,8 +46,8 @@ export default function BookingManagement() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <DataTable<Booking, unknown>
-              columns={columns as ColumnDef<Booking, unknown>[]}
+            <DataTable<BookingTable, unknown>
+              columns={columns as ColumnDef<BookingTable, unknown>[]}
               data={bookingData?.data ?? []}
               pageIndex={(bookingData?.page ?? 1) - 1}
               pageSize={bookingData?.pageSize ?? 10}
