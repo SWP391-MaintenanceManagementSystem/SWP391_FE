@@ -2,8 +2,14 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { deleteShift, updateShift, addShift } from "../apis/shift.api";
 import { queryKeys } from "../queries/keys";
 import { toast } from "sonner";
-import type { ShiftFormData } from "@/pages/shifts/libs/schema";
-import { deleteWorkSchedule } from "../apis/work-schedules.api";
+import type {
+  ShiftFormData,
+  WorkScheduleFormData,
+} from "@/pages/shifts/libs/schema";
+import {
+  deleteWorkSchedule,
+  updateWorkSchedule,
+} from "../apis/work-schedules.api";
 
 export const useDeleteShift = () => {
   const queryClient = useQueryClient();
@@ -120,6 +126,39 @@ export const useDeleteWorkSchedule = () => {
           }),
         }),
       ]);
+    },
+  });
+};
+
+export const useUpdateSchedule = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async ({
+      employeeId,
+      shiftId,
+      date,
+      data,
+    }: {
+      employeeId: string;
+      shiftId: string;
+      date: string;
+      currentPage: number;
+      currentPageSize: number;
+      data: WorkScheduleFormData;
+    }) => {
+      const update = await updateWorkSchedule(employeeId, shiftId, date, data);
+      return update.data;
+    },
+    onSuccess: async (_data, variables) => {
+      await Promise.all([
+        queryClient.invalidateQueries({
+          queryKey: queryKeys.workSchedulesList({
+            page: variables.currentPage,
+            pageSize: variables.currentPageSize,
+          }),
+        }),
+      ]);
+      toast.success("Schedule information updated successfully");
     },
   });
 };
