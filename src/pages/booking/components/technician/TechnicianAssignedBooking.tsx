@@ -1,7 +1,27 @@
-import React from 'react'
+import DynamicBreadcrumbs from "@/components/DynamicBreadcrumb";
+import MainContentLayout from "@/components/MainContentLayout";
+import TechnicianAssignedBookingTable from "./table/TechnicianAssignedBookingTable";
+import useTechnicianBooking from "@/services/booking/hooks/useTechnicianBooking";
+
 
 export default function TechnicianAssignedBookingPage() {
+  const { bookingData, isLoading, isFetching } = useTechnicianBooking();
+  
+  console.log('Booking data:', bookingData);
+
   return (
-    <div>TechnicianAssignedBooking</div>
-  )
+    <div>
+      <DynamicBreadcrumbs pathTitles={{ "My assigned bookings": "Bookings" }} />
+      <MainContentLayout>
+        <TechnicianAssignedBookingTable
+          data={bookingData?.data ?? []}
+          isLoading={isLoading}
+          isFetching={isFetching}
+          totalPage={bookingData?.totalPages ?? 1}
+          pageIndex={bookingData?.page ? bookingData.page - 1 : 0}
+          pageSize={bookingData?.pageSize ?? 10}
+        />
+      </MainContentLayout>
+    </div>
+  );
 }

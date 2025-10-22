@@ -2,17 +2,15 @@ import { Button } from "@/components/ui/button";
 import { Eye, CheckSquare } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import type { Row } from "@tanstack/react-table";
-import type { Booking } from "@/types/models/booking";
+import type { TechnicianBooking } from "@/types/models/booking";
 
 interface ColActionsProps {
-  row: Row<Booking>;
+  row: Row<TechnicianBooking>;
   currentPage: number;
   currentPageSize: number;
 }
 
-export default function ColActions({
-  row,
-}: ColActionsProps) {
+export default function ColActions({ row }: ColActionsProps) {
   const navigate = useNavigate();
   const booking = row.original;
 
