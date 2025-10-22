@@ -13,6 +13,8 @@ export const queryKeys = {
 
   shifts: ["shifts"],
 
+  employees: ["employees"],
+
   workSchedulesList: (params: {
     page: number;
     pageSize: number;

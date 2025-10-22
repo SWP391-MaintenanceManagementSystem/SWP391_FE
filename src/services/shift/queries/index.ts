@@ -2,7 +2,10 @@ import { useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { queryKeys } from "./keys";
 import { getShiftList, getShifts } from "../apis/shift.api";
-import { getWorkScheduleList } from "../apis/work-schedules.api";
+import {
+  getWorkScheduleList,
+  getAllEmployees,
+} from "../apis/work-schedules.api";
 
 export const useGetWorkSchedulesList = (params: {
   page: number;
@@ -72,6 +75,22 @@ export const useGetShiftsQuery = () => {
       } catch (error) {
         console.error("Error fetching shifts:", error);
         toast.error("Failed to fetch shifts");
+        return [];
+      }
+    },
+  });
+};
+
+export const useGetEmployeesQuery = () => {
+  return useQuery({
+    queryKey: queryKeys.employees,
+    queryFn: async () => {
+      try {
+        const res = await getAllEmployees();
+        return res.data.data;
+      } catch (error) {
+        console.error("Error fetching employees:", error);
+        toast.error("Failed to fetch employees");
         return [];
       }
     },

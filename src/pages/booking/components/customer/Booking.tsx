@@ -4,7 +4,7 @@ import MainContentLayout from "@/components/MainContentLayout";
 
 export default function Booking() {
   return (
-    <div className=" w-full h-[calc(100vh-32px)]">
+    <div className=" w-full h-[calc(100vh-32px)] font-inter">
       <DynamicBreadcrumbs pathTitles={{ booking: "Booking Services" }} />
       <MainContentLayout>
         <BookingCalendar />

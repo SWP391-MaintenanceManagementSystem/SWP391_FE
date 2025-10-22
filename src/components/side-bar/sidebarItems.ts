@@ -14,6 +14,7 @@ import {
   Users,
   UserRoundCog,
   CalendarClock,
+  BookOpenCheckIcon,
 } from "lucide-react";
 
 export const adminItems: SidebarItem[] = [
@@ -53,4 +54,9 @@ export const customerItems: SidebarItem[] = [
   { title: "Settings", url: "/settings", icon: Settings },
   { title: "Help & Support", url: "/support", icon: CircleQuestionMark },
   { title: "Feedback", url: "/feedback", icon: Sparkles },
+];
+
+export const staffItems: SidebarItem[] = [
+  { title: "Dashboard", url: "/dashboard", icon: Home },
+  { title: "Booking Management", url: "/booking", icon: BookOpenCheckIcon },
 ];

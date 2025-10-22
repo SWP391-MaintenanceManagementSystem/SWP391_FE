@@ -62,14 +62,14 @@ export default function StaffsManagementPage() {
       }));
   }, [data]);
 
-  const handleStatusChange = (field: string, value: string) => {
+  const handleFilterChange = (field: string, value: string) => {
     setFilters((prevFilters) => ({
       ...prevFilters,
       [field]: value,
     }));
   };
 
-  const columns = getColumns(handleStatusChange, filters, centerList);
+  const columns = getColumns(handleFilterChange, filters, centerList);
 
   return (
     <div className="w-full h-[calc(100vh-32px)] font-inter">
