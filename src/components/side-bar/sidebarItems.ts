@@ -54,3 +54,9 @@ export const customerItems: SidebarItem[] = [
   { title: "Help & Support", url: "/support", icon: CircleQuestionMark },
   { title: "Feedback", url: "/feedback", icon: Sparkles },
 ];
+
+export const technicianItems: SidebarItem[] = [
+  { title: "Dashboard", url: "/dashboard", icon: Home },
+  { title: "My Assigned Bookings", url: "/booking", icon: CalendarClock },
+  { title: "Inventory", url: "/inventory", icon: PackageOpen },
+];
