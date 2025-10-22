@@ -33,9 +33,9 @@ export const ShiftFormDataValues: ShiftFormData = {
 };
 
 export const WorkScheduleSchema = z.object({
-  date: z.string().min(1, { error: "Date cannot be empty" }),
-  employeeId: z.string().min(1, { error: "Employee ID cannot be empty" }),
-  shiftId: z.string().min(1, { error: "Shift ID cannot be empty" }),
+  date: z.string().min(1, { message: "Date cannot be empty" }),
+  employeeId: z.string().min(1, { message: "Employee cannot be empty" }),
+  shiftId: z.string().min(1, { message: "Shift cannot be empty" }),
 });
 
 export type WorkScheduleFormData = z.infer<typeof WorkScheduleSchema>;

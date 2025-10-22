@@ -18,6 +18,7 @@ import {
 } from "../apis/inventory.api";
 import type { PartItemFormData } from "@/pages/inventory/libs/schema";
 import { type EditEmployeeFormData } from "@/pages/employees/libs/schema";
+import { queryKeys as queryShiftKeys } from "@/services/shift/queries/keys";
 
 export const useUpdateCustomerInfo = () => {
   const queryClient = useQueryClient();
@@ -239,6 +240,13 @@ export const useDeleteEmployee = () => {
         queryClient.invalidateQueries({
           queryKey: queryKeys.statusStat(variables.role),
         }),
+
+        queryClient.invalidateQueries({
+          queryKey: queryShiftKeys.workSchedulesList({
+            page: variables.currentPage,
+            pageSize: variables.currentPageSize,
+          }),
+        }),
       ]);
     },
     onError: () => {
@@ -291,6 +299,13 @@ export const useUpdateEmployeeInfo = () => {
         queryClient.invalidateQueries({
           queryKey: queryKeys.statusStat(variables.role),
         }),
+
+        queryClient.invalidateQueries({
+          queryKey: queryShiftKeys.workSchedulesList({
+            page: variables.currentPage,
+            pageSize: variables.currentPageSize,
+          }),
+        }),
       ]);
     },
 
@@ -337,6 +352,13 @@ export const useAddEmployee = () => {
         }),
         queryClient.invalidateQueries({
           queryKey: queryKeys.statusStat(variables.role),
+        }),
+
+        queryClient.invalidateQueries({
+          queryKey: queryShiftKeys.workSchedulesList({
+            page: variables.currentPage,
+            pageSize: variables.currentPageSize,
+          }),
         }),
       ]);
     },

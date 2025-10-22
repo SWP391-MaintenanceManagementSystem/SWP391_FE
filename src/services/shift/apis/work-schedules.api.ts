@@ -29,14 +29,9 @@ export const deleteWorkSchedule = (id: string, date: string) => {
   return httpPrivate.del<BaseResponse<void>>(`/work-schedules/${id}/${date}`);
 };
 
-export const updateWorkSchedule = (
-  employeeId: string,
-  shiftId: string,
-  date: string,
-  data: WorkScheduleFormData,
-) => {
+export const updateWorkSchedule = (id: string, data: WorkScheduleFormData) => {
   return httpPrivate.patch<BaseResponse<WorkSchedule>>(
-    `/work-schedules/${employeeId}/${shiftId}/${date}`,
+    `/work-schedules/${id}`,
     data,
   );
 };

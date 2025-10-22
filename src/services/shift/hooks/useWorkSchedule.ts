@@ -18,13 +18,13 @@ export const useWorkSchedule = (
   const updateScheduleMutation = useUpdateSchedule();
   const form = useForm<WorkScheduleFormData>({
     resolver: zodResolver(WorkScheduleSchema),
-    mode: "onChange",
     defaultValues: {
       employeeId: item?.account.id || "",
       date: item?.date || "",
       shiftId: item?.shift.id || "",
     },
   });
+
   const handleDeleteSchedule = () => {
     delScheduleMutation.mutate(
       {
@@ -49,9 +49,7 @@ export const useWorkSchedule = (
   const handleEditSchedule = (data: WorkScheduleFormData) => {
     updateScheduleMutation.mutate(
       {
-        employeeId: item?.account.id || "",
-        shiftId: item?.shift.id || "",
-        date: item?.date || "",
+        id: item?.id || "",
         data,
         currentPage,
         currentPageSize,

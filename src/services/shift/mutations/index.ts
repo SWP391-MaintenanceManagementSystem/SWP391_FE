@@ -151,19 +151,15 @@ export const useUpdateSchedule = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async ({
-      employeeId,
-      shiftId,
-      date,
+      id,
       data,
     }: {
-      employeeId: string;
-      shiftId: string;
-      date: string;
+      id: string;
+      data: WorkScheduleFormData;
       currentPage: number;
       currentPageSize: number;
-      data: WorkScheduleFormData;
     }) => {
-      const update = await updateWorkSchedule(employeeId, shiftId, date, data);
+      const update = await updateWorkSchedule(id, data);
       return update.data;
     },
     onSuccess: async (_data, variables) => {

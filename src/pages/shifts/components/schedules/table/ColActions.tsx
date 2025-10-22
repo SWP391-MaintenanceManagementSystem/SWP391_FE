@@ -39,60 +39,51 @@ export default function ColActions({
       <TooltipWrapper content="View Details">
         <ActionBtn
           icon={<Maximize2 size={12} />}
-          onClick={() => {
-            console.log("View Details");
-            setOpenViewDialog(true);
-          }}
+          onClick={() => setOpenViewDialog(true)}
         />
       </TooltipWrapper>
+
       <TooltipWrapper content="Edit">
         <ActionBtn
           icon={<Pencil size={12} />}
-          onClick={() => {
-            console.log("Row data to edit:", schedule);
-            setOpenEditDialog(true);
-          }}
+          onClick={() => setOpenEditDialog(true)}
         />
       </TooltipWrapper>
 
       <TooltipWrapper content="Delete">
         <ActionBtn
           icon={<Trash size={12} />}
-          onClick={() => {
-            console.log("Row data to delete:", schedule);
-            setOpenDeleteDialog(true);
-          }}
+          onClick={() => setOpenDeleteDialog(true)}
         />
       </TooltipWrapper>
 
+      {/* View */}
       <ViewDetailDialog
         open={openViewDialog}
-        onOpenChange={(open) => setOpenViewDialog(open)}
+        onOpenChange={setOpenViewDialog}
         title="Work Schedule Details"
         styleContent="md:min-w-[580px]"
       >
         <ViewDetailSchedule item={schedule} />
       </ViewDetailDialog>
 
+      {/* Delete */}
       <DeleteDialog
         open={openDeleteDialog}
-        onOpenChange={(open) => setOpenDeleteDialog(open)}
+        onOpenChange={setOpenDeleteDialog}
         onConfirm={handleDeleteSchedule}
       />
 
+      {/* Edit */}
       <AddEditScheduleDialog
         open={openEditDialog}
         onOpenChange={(open) => {
           setOpenEditDialog(open);
-          if (!open) {
-            form.reset();
-          }
+          if (!open) form.reset();
         }}
         shiftList={shiftList}
         form={form}
-        onConfirm={(data: WorkScheduleFormData) => {
-          handleEditSchedule(data);
-        }}
+        onConfirm={(data: WorkScheduleFormData) => handleEditSchedule(data)}
         item={schedule}
       />
     </div>
