@@ -2,16 +2,26 @@ import { createColumnHelper } from "@tanstack/react-table";
 import { Checkbox } from "@/components/ui/checkbox";
 import SortHeader from "@/components/table/SortHeader";
 import FilterHeader from "@/components/table/FilterHeader";
-import AccountStatusTag from "@/components/tag/AccountStatusTag";
 import type { ServiceCenter } from "@/types/models/center";
 import { Badge } from "@/components/ui/badge";
-import type { BookingTable } from "@/types/models/booking";
+import type { BookingStaffTable } from "@/types/models/booking-with-detail";
+import BookingTag from "@/components/tag/BookingTag";
+import dayjs from "dayjs";
+import ColActions from "./ColActions";
 
 export const getColumns = (
-  handleFilterChange: (field: string, value: string) => void,
-  currentFilters: { status: string; centerId: string },
+  handleFilterChange: (
+    field: string,
+    value: string | boolean | undefined,
+  ) => void,
+  currentFilters: {
+    status: string;
+    centerId: string;
+    isPremium: boolean | undefined;
+  },
+  centerList: ServiceCenter[],
 ) => {
-  const columnHelper = createColumnHelper<BookingTable>();
+  const columnHelper = createColumnHelper<BookingStaffTable>();
 
   return [
     // SELECT checkbox
@@ -42,13 +52,149 @@ export const getColumns = (
     }),
 
     // Customer NAME
-    columnHelper.accessor("customer.firstName", {
-      id: "firstName",
-      header: (info) => <SortHeader title="First Name" info={info} />,
-      size: 50,
+    columnHelper.accessor(
+      (row) => `${row.customer.firstName} ${row.customer.lastName}`,
+      {
+        id: "fullName",
+        header: "Customer Name",
+        cell: (info) => info.getValue(),
+        meta: {
+          title: "Customer Name",
+        },
+      },
+    ),
+
+    // Customer EMAIL
+    columnHelper.accessor((row) => row.customer.email, {
+      id: "email",
+      header: (info) => <SortHeader title="Email" info={info} />,
       cell: (info) => info.getValue(),
       meta: {
-        title: "First Name",
+        title: "Email",
+      },
+    }),
+
+    columnHelper.accessor("customer.isPremium", {
+      header: (info) => (
+        <FilterHeader
+          column={info.column}
+          title="Premium"
+          selectedValue={
+            currentFilters.isPremium === undefined
+              ? ""
+              : currentFilters.isPremium
+                ? "true"
+                : "false"
+          }
+          onFilterChange={(value) =>
+            handleFilterChange(
+              "isPremium",
+              value === "" ? undefined : value === "true",
+            )
+          }
+        />
+      ),
+      size: 50,
+      cell: (info) => (info.getValue() ? "Yes" : "No"),
+      filterFn: "equals",
+      meta: {
+        title: "Premium",
+        filterVariant: "filterPremium",
+        filterOptions: ["true", "false"],
+        labelOptions: { true: "Yes", false: "No" },
+      },
+    }),
+
+    // License Plate
+    columnHelper.accessor("vehicle.licensePlate", {
+      id: "licensePlate",
+      header: (info) => <SortHeader title="License Plate" info={info} />,
+      cell: (info) => <Badge variant="outline">{info.getValue()}</Badge>,
+      meta: {
+        title: "License Plate",
+      },
+    }),
+
+    // Booking Status
+    columnHelper.accessor("status", {
+      id: "status",
+      header: (info) => (
+        <FilterHeader
+          column={info.column}
+          title="Booking Status"
+          selectedValue={currentFilters.status}
+          onFilterChange={(value) => handleFilterChange("status", value)}
+        />
+      ),
+      cell: (info) => <BookingTag status={info.getValue()} />,
+      meta: {
+        title: "Booking Status",
+        filterVariant: "filterBookingStatus",
+        filterOptions: [
+          "PENDING",
+          "ASSIGNED",
+          "CANCELLED",
+          "COMPLETED",
+          "CHECKED_IN",
+          "CHECKED_OUT",
+        ],
+        labelOptions: {
+          PENDING: "Pending",
+          ASSIGNED: "Assigned",
+          CANCELLED: "Cancelled",
+          COMPLETED: "Completed",
+          CHECKED_IN: "Checked In",
+          CHECKED_OUT: "Checked Out",
+        },
+      },
+    }),
+
+    // Booking date
+    columnHelper.accessor("bookingDate", {
+      id: "bookingDate",
+      header: (info) => <SortHeader title="Booking Date" info={info} />,
+      cell: (info) => (
+        <Badge variant="outline">
+          {dayjs(info.getValue()).format("DD/MM/YYYY")}
+        </Badge>
+      ),
+      meta: {
+        title: "Booking Date",
+      },
+    }),
+
+    // Work Center
+    columnHelper.accessor("serviceCenter.name", {
+      id: "centerName",
+      header: (info) => (
+        <FilterHeader
+          column={info.column}
+          title="Work Center"
+          selectedValue={currentFilters.centerId}
+          onFilterChange={(value) => handleFilterChange("centerId", value)}
+        />
+      ),
+      cell: (info) => <Badge variant="outline">{info.getValue()}</Badge>,
+      meta: {
+        title: "Work Center",
+        filterVariant: "filterWorkCenter",
+        filterOptions: centerList.map((c) => c.id),
+        labelOptions: Object.fromEntries(centerList.map((c) => [c.id, c.name])),
+      },
+    }),
+
+    columnHelper.display({
+      id: "actions",
+      header: "Actions",
+      cell: (props) => {
+        const { pageIndex, pageSize } = props.table.getState().pagination;
+        return (
+          <ColActions
+            row={props.row}
+            currentPage={pageIndex + 1}
+            currentPageSize={pageSize}
+          />
+        );
       },
     }),
   ];

@@ -1,4 +1,5 @@
 import type { BookingStatus } from "../enums/bookingStatus";
+import type { BookingDetailStatus } from "../enums/bookingDetailStatus";
 
 export type CustomerInfo = {
   firstName: string;
@@ -53,4 +54,35 @@ export type CustomerBookingDetail = {
   shift: ShiftInfo;
   staff: StaffInfo;
   technicians: TechnicianInfo[];
+};
+
+export type BookingDetail = {
+  id: string;
+  bookingId: string;
+  serviceId: string;
+  packageId?: string | null;
+  quantity: number;
+  status: BookingDetailStatus;
+  unitPrice: number;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
+export type BookingStaffTable = {
+  id: string;
+  customerId: string;
+  vehicleId: string;
+  centerId: string;
+  shiftId: string;
+  totalCost: number;
+  bookingDate: Date;
+  status: BookingStatus;
+  note?: string;
+  createdAt: Date;
+  updatedAt: Date;
+  customer: CustomerInfo;
+  vehicle: VehicleInfo;
+  serviceCenter: ServiceCenter;
+  shift: ShiftInfo;
+  bookingDetails: BookingDetail[];
 };
