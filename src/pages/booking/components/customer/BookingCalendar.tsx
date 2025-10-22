@@ -10,10 +10,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import BookingModal from "./BookingModal";
 import { defaultBookingFilter } from "@/types/models/booking";
 import useBooking from "@/services/booking/hooks/useBooking";
-import { Skeleton } from "@/components/ui/skeleton";
 import { CustomEvent, type CalendarEvent } from "./CustomEvent";
-import Loading from "@/components/Loading";
 import { Spinner } from "@/components/ui/shadcn-io/spinner";
+import { useNavigate } from "react-router-dom";
 
 const localizer = dayjsLocalizer(dayjs);
 
@@ -22,7 +21,7 @@ const BookingCalendar = () => {
   const [view, setView] = useState<View>(Views.WEEK);
   const [date, setDate] = useState(new Date());
   const [filter, setFilter] = useState(defaultBookingFilter);
-
+  const navigate = useNavigate();
   useEffect(() => {
     let fromDate: Date;
     let toDate: Date;
@@ -103,6 +102,10 @@ const BookingCalendar = () => {
     };
   };
 
+  const handleDetailClick = (event: CalendarEvent) => {
+    navigate(`/booking/${event.title}`);
+  };
+
   return (
     <div className="h-[95%] font-inter">
       <Card className="h-full flex flex-col">
@@ -138,7 +141,7 @@ const BookingCalendar = () => {
               onNavigate={setDate}
               views={[Views.DAY, Views.WEEK, Views.MONTH]}
               onSelectSlot={() => setIsModalOpen(true)}
-              onSelectEvent={(event) => console.log(event)}
+              onSelectEvent={handleDetailClick}
               onShowMore={(events, date) => {
                 setDate(date);
                 setView(Views.DAY);
