@@ -22,7 +22,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import type { PeriodType } from "@/types/enums/periodType";
-import type { SortingState } from "@tanstack/react-table"; // ✅ thêm import này
+import type { SortingState } from "@tanstack/react-table";
 import type { CreateMembershipsFormData } from "@/pages/membership/lib/schema";
 import type { MembershipTable } from "@/pages/membership/lib/table-types";
 import type { ColumnDef } from "@tanstack/react-table";
@@ -31,7 +31,7 @@ export default function MembershipAdminTable() {
   const { data, isLoading, form, onSubmit } = useMembership();
   const [openAdd, setOpenAdd] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
-  const [sorting, setSorting] = useState<SortingState>([]); 
+  const [sorting, setSorting] = useState<SortingState>([]);
 
   const handleConfirmAdd = (formData: CreateMembershipsFormData) => {
     onSubmit(formData);
@@ -59,17 +59,18 @@ export default function MembershipAdminTable() {
         onSortingChange={setSorting}
         manualSorting={false}
         isSearch
-        searchPlaceholder="Search membership name..."
+        searchPlaceholder="Name..."
         searchValue={["name"]}
         onSearchChange={(value) => setSearchTerm(value)}
         headerActions={
           <Button
             onClick={() => setOpenAdd(true)}
+            className="w-full md:w-[150px] justify-self-end text-white bg-purple-primary hover:bg-purple-primary-dark 
+      dark:bg-purple-primary-dark dark:hover:bg-purple-landing dark:text-amber-primary caret-transparent"
             variant="ghost"
-            className="ml-3 h-9 text-white bg-purple-primary hover:bg-purple-primary-dark 
-              dark:bg-purple-primary-dark dark:hover:bg-purple-landing dark:text-amber-primary caret-transparent"
+            autoFocus={false}
           >
-            <Plus className="w-4 h-4 mr-2" />
+            <Plus className="h-4 w-4 mr-1" />
             Add Membership
           </Button>
         }
@@ -83,7 +84,7 @@ export default function MembershipAdminTable() {
         form={form}
         title="Membership"
       >
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-2 gap-4 min-h-screen">
           {/* Name */}
           <FormField
             control={form.control}

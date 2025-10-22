@@ -84,7 +84,7 @@ export default function ShiftsManagementPage() {
           headerActions={
             <Button
               onClick={() => setOpenAddModal(true)}
-              className=" w-full md:w-[150px]"
+              className=" w-full md:w-[150px] justify-self-end"
               variant="outline"
               autoFocus={false}
             >
