@@ -219,7 +219,7 @@ export function DataTable<TData, TValue>({
       >
         {/* Left: search */}
         {isSearch && (
-          <div className="relative w-full lg:w-[300px]">
+          <div className="relative w-full lg:w-[420px]">
             <Search
               size={16}
               className="absolute text-gray-500 top-[10px] left-2"
