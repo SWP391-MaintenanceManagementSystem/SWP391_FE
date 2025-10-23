@@ -1,5 +1,4 @@
 import { createColumnHelper } from "@tanstack/react-table";
-import { Checkbox } from "@/components/ui/checkbox";
 import SortHeader from "@/components/table/SortHeader";
 import FilterHeader from "@/components/table/FilterHeader";
 import type { TechnicianBooking } from "@/types/models/booking";
@@ -9,38 +8,12 @@ export const getColumns = () => {
   const columnHelper = createColumnHelper<TechnicianBooking>();
 
   return [
-    columnHelper.display({
-      id: "select",
-      header: ({ table }) => (
-        <Checkbox
-          checked={
-            table.getIsAllPageRowsSelected() ||
-            (table.getIsSomePageRowsSelected() && "indeterminate")
-          }
-          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-          aria-label="Select all"
-          className="!outline-none"
-        />
-      ),
-      cell: ({ row }) => (
-        <Checkbox
-          checked={row.getIsSelected()}
-          onCheckedChange={(value) => row.toggleSelected(!!value)}
-          aria-label="Select row"
-          className="!outline-none"
-        />
-      ),
-      size: 40,
-      enableSorting: false,
-      enableHiding: false,
-    }),
-
     //Booking ID
     columnHelper.accessor("id", {
       id: "bookingId",
       header: (info) => <SortHeader title="Booking ID" info={info} />,
       cell: (info) => (
-        <span className="font-mono text-xs font-medium text-gray-800 dark:text-gray-200">
+        <span className="font-inter font-medium text-gray-800 dark:text-gray-200">
           {info.getValue()?.slice(0, 8) ?? "—"}
         </span>
       ),
@@ -54,7 +27,7 @@ export const getColumns = () => {
       cell: (info) => {
         const c = info.getValue();
         return (
-          <span className="text-gray-700 dark:text-gray-300">
+          <span className="text-gray-700 dark:text-gray-300 font-inter font-medium">
             {c ? `${c.firstName} ${c.lastName}` : "—"}
           </span>
         );
@@ -71,10 +44,7 @@ export const getColumns = () => {
         if (!v) return "—";
         return (
           <div className="flex flex-col text-xs text-gray-700 dark:text-gray-300">
-            <span className="font-medium">
-              {v.brand} {v.model}
-            </span>
-            <span className="text-gray-500 dark:text-gray-400">
+            <span className="text-gray-500 dark:text-white font-medium font-inter">
               {v.licensePlate}
             </span>
           </div>
@@ -83,52 +53,58 @@ export const getColumns = () => {
       size: 200,
     }),
 
-    //Booking Time
-    columnHelper.display({
-      id: "bookingTime",
-      header: (info) => <SortHeader title="Booking Time" info={info} />,
-      cell: ({ row }) => {
-        const { bookingDate, shift } = row.original;
-        if (!bookingDate || !shift) return "—";
+    //Booking Time (sort theo ngày)
+    columnHelper.accessor(
+      (row) => (row.bookingDate ? new Date(row.bookingDate).getTime() : 0),
+      {
+        id: "bookingTime",
+        header: (info) => <SortHeader title="Booking Time" info={info} />,
+        cell: ({ row }) => {
+          const { bookingDate, shift } = row.original;
+          if (!bookingDate || !shift) return "—";
 
-        const date = new Date(bookingDate);
-        const formattedDate = date.toLocaleDateString();
-        const shiftTime = `${new Date(shift.startTime).toLocaleTimeString([], {
-          hour: "2-digit",
-          minute: "2-digit",
-        })} - ${new Date(shift.endTime).toLocaleTimeString([], {
-          hour: "2-digit",
-          minute: "2-digit",
-        })}`;
+          const date = new Date(bookingDate);
+          const formattedDate = date.toLocaleDateString();
+          const shiftTime = `${new Date(shift.startTime).toLocaleTimeString(
+            [],
+            {
+              hour: "2-digit",
+              minute: "2-digit",
+            }
+          )} - ${new Date(shift.endTime).toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+          })}`;
 
-        return (
-          <div className="flex flex-col text-xs text-gray-700 dark:text-gray-300">
-            <span className="font-medium">{formattedDate}</span>
-            <span className="text-gray-500 dark:text-gray-400">
-              {shift.name}
-            </span>
-            <span className="text-gray-400 dark:text-gray-500">
-              {shiftTime}
-            </span>
-          </div>
-        );
-      },
-      size: 180,
-    }),
+          return (
+            <div className="flex flex-col text-xs text-gray-700 dark:text-gray-300">
+              <span className="font-medium">{formattedDate}</span>
+              <span className="text-gray-400 dark:text-gray-500">
+                {shiftTime}
+              </span>
+            </div>
+          );
+        },
+        enableSorting: true,
+        size: 180,
+      }
+    ),
 
     //Service Center
-    columnHelper.accessor("serviceCenter.name", {
+    columnHelper.accessor((row) => row.serviceCenter?.name ?? "", {
       id: "serviceCenter",
       header: (info) => <SortHeader title="Service Center" info={info} />,
       cell: (info) => (
-        <span className="text-gray-700 dark:text-gray-300">
+        <span className="text-gray-700 dark:text-gray-300 font-inter font-medium">
           {info.getValue() || "—"}
         </span>
       ),
+      enableSorting: true,
+      sortingFn: "alphanumeric",
       size: 180,
     }),
 
-    //Status
+    //Status (filter dropdown)
     columnHelper.accessor("status", {
       id: "status",
       header: ({ column }) => (
@@ -139,15 +115,33 @@ export const getColumns = () => {
           onFilterChange={(v) => column.setFilterValue(v || undefined)}
         />
       ),
+      meta: {
+        filterOptions: [
+          "ASSIGNED",
+          "COMPLETED",
+          "IN PROGRESS",
+          "PENDING",
+          "CANCELLED",
+        ],
+        labelOptions: {
+          ASSIGNED: "ASSIGNED",
+          COMPLETED: "COMPLETED",
+          IN_PROGRESS: "IN PROGRESS",
+          PENDING: "PENDING",
+          CANCELLED: "CANCELLED",
+        },
+      },
       cell: (info) => {
         const status = info.getValue();
         const colorMap: Record<string, string> = {
           ASSIGNED:
             "bg-indigo-100 text-indigo-700 dark:bg-indigo-900/40 dark:text-indigo-300",
-          CONFIRMED:
-            "bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300",
           COMPLETED:
             "bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-300",
+          IN_PROGRESS:
+            "bg-yellow-100 text-yellow-800 dark:bg-yellow-800/40 dark:text-yellow-200",
+          PENDING:
+            "bg-gray-300 text-gray-700 dark:bg-gray-900/40 dark:text-gray-300",
           CANCELLED:
             "bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300",
         };
@@ -165,7 +159,7 @@ export const getColumns = () => {
       size: 120,
     }),
 
-    // Assigner
+    //Assigner
     columnHelper.accessor("assigner", {
       id: "assigner",
       header: (info) => <SortHeader title="Assigner" info={info} />,
@@ -180,7 +174,7 @@ export const getColumns = () => {
       size: 160,
     }),
 
-    // Actions
+    //Actions
     columnHelper.display({
       id: "actions",
       header: "Actions",

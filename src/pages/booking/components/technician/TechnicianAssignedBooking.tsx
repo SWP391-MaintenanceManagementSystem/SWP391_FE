@@ -13,9 +13,6 @@ export default function TechnicianAssignedBookingPage() {
       <DynamicBreadcrumbs pathTitles={{ "My assigned bookings": "Bookings" }} />
 
       <MainContentLayout>
-        {/* Header summary */}
-       
-
         <TechnicianAssignedBookingTable
           data={bookingData?.data ?? []}
           isLoading={isLoading}
