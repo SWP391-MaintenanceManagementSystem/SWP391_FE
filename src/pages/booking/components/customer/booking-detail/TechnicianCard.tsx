@@ -6,11 +6,13 @@ import { Button } from "@/components/ui/button";
 interface TechnicianProps {
   technicians?: { firstName?: string; lastName?: string }[];
   onAssign?: () => void;
+  disabled?: boolean;
 }
 
 export default function TechnicianCard({
   technicians,
   onAssign,
+  disabled,
 }: TechnicianProps) {
   const { auth } = useAuth();
   const role = auth?.user?.role;
@@ -28,6 +30,7 @@ export default function TechnicianCard({
             size="sm"
             className="bg-purple-primary dark:bg-purple-primary-dark dark:text-amber-primary"
             onClick={onAssign}
+            disabled={disabled}
           >
             <Plus />
             Assign

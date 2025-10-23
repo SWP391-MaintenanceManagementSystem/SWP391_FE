@@ -155,6 +155,12 @@ export default function ViewBookingDetail() {
           <TechnicianCard
             technicians={data?.technicians}
             onAssign={() => setOpenAssignmentDialog(true)}
+            disabled={
+              data?.status === "CANCELLED" ||
+              data?.status === "CHECKED_OUT" ||
+              data?.status === "COMPLETED" ||
+              data?.status === "IN_PROGRESS"
+            }
           />
         </div>
       </MainContentLayout>
