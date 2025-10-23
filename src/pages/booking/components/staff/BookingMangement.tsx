@@ -10,7 +10,7 @@ import { BookingStatus } from "@/types/enums/bookingStatus";
 import useBooking from "@/services/staffManagement/booking/hooks/useBooking";
 import { useGetServiceCenterList } from "@/services/manager/queries";
 import { Button } from "@/components/ui/button";
-import { CalendarRange, Plus, X } from "lucide-react";
+import { CalendarRange, X } from "lucide-react";
 import {
   Popover,
   PopoverContent,
@@ -41,6 +41,7 @@ export default function BookingManagement() {
     search: searchValue || undefined,
     centerId: filters.centerId || undefined,
     status: filters.status || undefined,
+    isPremium: filters.isPremium,
     fromDate: dateRange?.from
       ? dayjs(dateRange.from).format("YYYY-MM-DD")
       : undefined,

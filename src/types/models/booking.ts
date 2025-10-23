@@ -18,6 +18,7 @@ export type BookingFilters = {
   search?: string;
   centerId?: string;
   status?: BookingStatus | "";
+  isPremium?: boolean;
   fromDate?: Date | string;
   toDate?: Date | string;
   bookingDate?: Date | string;

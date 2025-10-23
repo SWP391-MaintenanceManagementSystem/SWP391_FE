@@ -25,7 +25,7 @@ export default function ColActions({
         <ActionBtn
           icon={<Maximize2 size={12} />}
           onClick={() => {
-            console.log("View Details");
+            console.log("View Details", booking);
             setOpenViewDialog(true);
           }}
         />
