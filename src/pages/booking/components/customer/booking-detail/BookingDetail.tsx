@@ -1,12 +1,12 @@
 import DynamicBreadcrumbs from "@/components/DynamicBreadcrumb";
 import MainContentLayout from "@/components/MainContentLayout";
 import { useBookingDetail } from "@/services/booking/hooks/useBookingDetail";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import VehicleInfoCard from "./VehicleInfoCard";
 import StaffCard from "./StaffCard";
-import { StatusBadge } from "./StatusBadge";
+import BookingTag from "@/components/tag/BookingTag";
 import dayjs from "dayjs";
 import CustomerInfoCard from "./CustomerInfoCard";
 import TechnicianCard from "./TechnicianCard";
@@ -15,6 +15,7 @@ import { useState } from "react";
 import { BookingServicesDialog } from "./BookingServicesDialog";
 import { CancelBookingDialog } from "./CancelBookingDialog";
 import useCancelBooking from "@/services/booking/hooks/useCancelBooking";
+import type { BookingStatus } from "@/types/enums/bookingStatus";
 export default function BookingDetail() {
   const { id } = useParams<{ id: string }>();
   const { data, isLoading } = useBookingDetail(id ?? "");
@@ -103,7 +104,8 @@ export default function BookingDetail() {
           <CardContent className="p-4 space-y-4 md:space-y-0">
             <div className="flex flex-col md:flex-row justify-between text-gray-700 dark:text-gray-50 md:space-y-0 space-y-4">
               <p>
-                <strong>Status:</strong> <StatusBadge status={data?.status} />
+                <strong>Status:</strong>{" "}
+                <BookingTag status={data?.status as BookingStatus} />
               </p>
               <p>
                 <strong>Center: </strong> {data?.serviceCenter?.name || "N/A"} -{" "}

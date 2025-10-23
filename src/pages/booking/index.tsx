@@ -6,7 +6,9 @@ const Booking = lazy(() => import("./components/customer/Booking"));
 const TechnicianAssignedBookingPage = lazy(
   () => import("./components/technician/TechnicianAssignedBooking"),
 );
-const StaffBookingPage = lazy(() => import("./components/customer/Booking"));
+const StaffBookingPage = lazy(
+  () => import("./components/staff/BookingMangement"),
+);
 
 export default function BookingPage() {
   const { auth } = useAuth();
@@ -18,7 +20,7 @@ export default function BookingPage() {
         return <TechnicianAssignedBookingPage />;
 
       case "STAFF":
-        return <StaffBookingPage />; // tạm thời render Booking
+        return <StaffBookingPage />;
 
       case "ADMIN":
       case "CUSTOMER":

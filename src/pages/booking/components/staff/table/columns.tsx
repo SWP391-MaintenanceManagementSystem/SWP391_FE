@@ -2,7 +2,6 @@ import { createColumnHelper } from "@tanstack/react-table";
 import { Checkbox } from "@/components/ui/checkbox";
 import SortHeader from "@/components/table/SortHeader";
 import FilterHeader from "@/components/table/FilterHeader";
-import type { ServiceCenter } from "@/types/models/center";
 import { Badge } from "@/components/ui/badge";
 import type { BookingStaffTable } from "@/types/models/booking-with-detail";
 import BookingTag from "@/components/tag/BookingTag";
@@ -16,10 +15,8 @@ export const getColumns = (
   ) => void,
   currentFilters: {
     status: string;
-    centerId: string;
     isPremium: boolean | undefined;
   },
-  centerList: ServiceCenter[],
 ) => {
   const columnHelper = createColumnHelper<BookingStaffTable>();
 
@@ -166,20 +163,10 @@ export const getColumns = (
     // Work Center
     columnHelper.accessor("serviceCenter.name", {
       id: "centerName",
-      header: (info) => (
-        <FilterHeader
-          column={info.column}
-          title="Work Center"
-          selectedValue={currentFilters.centerId}
-          onFilterChange={(value) => handleFilterChange("centerId", value)}
-        />
-      ),
+      header: "Service Center",
       cell: (info) => <Badge variant="outline">{info.getValue()}</Badge>,
       meta: {
-        title: "Work Center",
-        filterVariant: "filterWorkCenter",
-        filterOptions: centerList.map((c) => c.id),
-        labelOptions: Object.fromEntries(centerList.map((c) => [c.id, c.name])),
+        title: "Service Center",
       },
     }),
 

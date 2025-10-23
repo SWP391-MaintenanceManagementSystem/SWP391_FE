@@ -6,7 +6,7 @@ export default function useCancelBooking() {
   const onCancel = (bookingId: string) => {
     cancelMutation.mutateAsync(bookingId, {
       onSuccess: () => {
-        navigate("/bookings");
+        navigate("/booking");
       },
     });
   };

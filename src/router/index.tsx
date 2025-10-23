@@ -20,13 +20,10 @@ import MembershipPage from "@/pages/membership";
 import StaffsManagementPage from "@/pages/employees/staffs";
 import TechniciansManagementPage from "@/pages/employees/technicians";
 import WorkShiftsManagementPage from "@/pages/shifts";
-import Booking from "@/pages/booking";
 import AuthFailed from "@/pages/auth/components/AuthFailed";
 import InventoryManagement from "@/pages/inventory";
 import PaymentSuccessPage from "@/pages/payment";
 import AddNewSchedulePage from "@/pages/shifts/components/schedules/AddNewSchedule";
-import BookingDetail from "@/pages/booking/components/customer/booking-detail/BookingDetail";
-import TechnicianAssignedBookingPage from "@/pages/booking/components/technician/TechnicianAssignedBooking";
 import BookingPage from "@/pages/booking";
 import BookingDetailPage from "@/pages/booking/components/BookingDetailPage";
 
@@ -152,7 +149,6 @@ const RouterComponent = () => {
                       path: "/booking/:id",
                       element: <BookingDetailPage />,
                     },
-
                   ],
                 },
                 {

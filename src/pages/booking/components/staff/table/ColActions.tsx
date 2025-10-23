@@ -2,7 +2,6 @@ import type { Row } from "@tanstack/react-table";
 import { Maximize2, UserCheck } from "lucide-react";
 import ActionBtn from "@/components/table/ActionBtn";
 import { TooltipWrapper } from "@/components/TooltipWrapper";
-import { useState } from "react";
 import type { BookingStaffTable } from "@/types/models/booking-with-detail";
 import { encodeBase64 } from "@/utils/base64";
 import { useNavigate } from "react-router-dom";
@@ -18,7 +17,6 @@ export default function ColActions({
   currentPage,
   currentPageSize,
 }: ColActionsProps) {
-  const [openViewDialog, setOpenViewDialog] = useState(false);
   const booking = row.original;
   const navigate = useNavigate();
   return (
@@ -42,7 +40,6 @@ export default function ColActions({
           icon={<UserCheck size={12} />}
           onClick={() => {
             console.log("Assign");
-            setOpenViewDialog(true);
           }}
         />
       </TooltipWrapper>

@@ -3,6 +3,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { cancelBookingById, createBooking } from "../apis/booking.api";
 import { toast } from "sonner";
 import { AxiosError } from "axios";
+import { queryKeys } from "../queries/keys";
 export const useCreateBookingMutation = () => {
   const queryClient = useQueryClient();
   return useMutation({
@@ -30,9 +31,14 @@ export const useCancelBookingMutation = () => {
       return updatedCustomerInfo.data;
     },
     onSuccess: async () => {
-      queryClient.invalidateQueries({
-        queryKey: ["bookings"],
-      });
+      await Promise.all([
+        queryClient.invalidateQueries({
+          queryKey: ["bookings"],
+        }),
+        queryClient.invalidateQueries({
+          queryKey: ["staff-bookings"],
+        }),
+      ]);
       toast.success("Booking canceled successfully");
     },
     onError: (error) => {

@@ -7,8 +7,7 @@ import { useState } from "react";
 import type { SortingState, ColumnDef } from "@tanstack/react-table";
 import type { BookingStaffTable } from "@/types/models/booking-with-detail";
 import { BookingStatus } from "@/types/enums/bookingStatus";
-import useBooking from "@/services/staffManagement/booking/hooks/useBooking";
-import { useGetServiceCenterList } from "@/services/manager/queries";
+import useBooking from "@/services/booking/hooks/useStaffBooking";
 import { Button } from "@/components/ui/button";
 import { CalendarRange, X } from "lucide-react";
 import {
@@ -28,18 +27,13 @@ export default function BookingManagement() {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [filters, setFilters] = useState({
     status: "" as "" | BookingStatus,
-    centerId: "",
     isPremium: undefined as boolean | undefined,
   });
   const [dateRange, setDateRange] = useState<DateRange | undefined>(undefined);
-  console.log("dateRange", dateRange);
-  const { data: centerListData } = useGetServiceCenterList();
-  const centerList = centerListData ?? [];
   const { bookingData, isLoading } = useBooking({
     page,
     pageSize,
     search: searchValue || undefined,
-    centerId: filters.centerId || undefined,
     status: filters.status || undefined,
     isPremium: filters.isPremium,
     fromDate: dateRange?.from
@@ -61,7 +55,7 @@ export default function BookingManagement() {
     }));
   };
 
-  const columns = getColumns(handleFilterChange, filters, centerList);
+  const columns = getColumns(handleFilterChange, filters);
   return (
     <div className="w-full h-[calc(100vh-32px)] font-inter">
       <DynamicBreadcrumbs pathTitles={{ booking: "Booking Management" }} />

@@ -3,16 +3,18 @@ import { useAuth } from "@/contexts/AuthContext";
 import CircularIndeterminate from "@/components/CircularIndeterminate";
 import BookingDetail from "./customer/booking-detail/BookingDetail";
 import AssignedBookingDetail from "./technician/booking-detail/AssignedBookingDetail";
+import ViewBookingDetail from "./staff/ViewBookingDetail";
 
 export default function BookingDetailPage() {
   const { auth } = useAuth();
   const role = auth?.user?.role;
-
+  console.log(role);
   const renderPageByRole = () => {
     switch (role) {
       case "TECHNICIAN":
         return <AssignedBookingDetail />;
-
+      case "STAFF":
+        return <ViewBookingDetail />;
       case "ADMIN":
       case "CUSTOMER":
         return <BookingDetail />;
