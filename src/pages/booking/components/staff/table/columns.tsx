@@ -53,7 +53,7 @@ export const getColumns = (
       (row) => `${row.customer.firstName} ${row.customer.lastName}`,
       {
         id: "fullName",
-        header: "Customer Name",
+        header: (info) => <SortHeader title="Customer Name" info={info} />,
         cell: (info) => info.getValue(),
         meta: {
           title: "Customer Name",
