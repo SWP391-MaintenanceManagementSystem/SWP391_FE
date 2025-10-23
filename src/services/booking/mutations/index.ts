@@ -29,13 +29,16 @@ export const useCancelBookingMutation = () => {
       const updatedCustomerInfo = await cancelBookingById(bookingId);
       return updatedCustomerInfo.data;
     },
-    onSuccess: async () => {
+    onSuccess: async (_data, bookingId, page, pageSize) => {
       await Promise.all([
         queryClient.invalidateQueries({
           queryKey: ["bookings"],
         }),
         queryClient.invalidateQueries({
-          queryKey: ["staff-bookings"],
+          queryKey: ["staff-bookings", page, pageSize],
+        }),
+        queryClient.invalidateQueries({
+          queryKey: ["booking", bookingId],
         }),
       ]);
       toast.success("Booking canceled successfully");

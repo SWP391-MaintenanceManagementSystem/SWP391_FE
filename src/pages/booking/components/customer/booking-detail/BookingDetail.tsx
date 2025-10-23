@@ -39,7 +39,9 @@ export default function BookingDetail() {
     try {
       onCancel(id);
       navigate("/booking");
-    } catch (error) {}
+    } catch (error) {
+      console.error(error);
+    }
     setIsCancelModalOpen(false);
   };
 
