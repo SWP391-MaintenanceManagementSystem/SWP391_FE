@@ -28,6 +28,7 @@ import AddNewSchedulePage from "@/pages/shifts/components/schedules/AddNewSchedu
 import BookingDetail from "@/pages/booking/components/customer/booking-detail/BookingDetail";
 import TechnicianAssignedBookingPage from "@/pages/booking/components/technician/TechnicianAssignedBooking";
 import BookingPage from "@/pages/booking";
+import BookingDetailPage from "@/pages/booking/components/BookingDetailPage";
 
 const RouterComponent = () => {
   const router = createBrowserRouter([
@@ -148,8 +149,9 @@ const RouterComponent = () => {
                     },
                     {
                       path: "/booking/:id",
-                      element: <BookingDetail />,
+                      element: <BookingDetailPage />,
                     },
+
                   ],
                 },
                 {

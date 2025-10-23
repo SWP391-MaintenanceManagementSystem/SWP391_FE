@@ -25,12 +25,14 @@ export default function ColActions({ row }: ColActionsProps) {
   return (
     <div className="flex items-center gap-2 justify-center">
       {/* View Details */}
-      <TooltipWrapper content="View Details">
-        <ActionBtn
-          icon={<Eye size={14} />}
-          onClick={() => setOpenViewDialog(true)}
-        />
-      </TooltipWrapper>
+     <TooltipWrapper content="View Details">
+  <ActionBtn
+    icon={<Eye size={14} />}
+    onClick={() => navigate(`/booking/${booking.id}`)}
+  />
+</TooltipWrapper>
+
+
 
       {/* Checklist */}
       <TooltipWrapper content="Checklist">
