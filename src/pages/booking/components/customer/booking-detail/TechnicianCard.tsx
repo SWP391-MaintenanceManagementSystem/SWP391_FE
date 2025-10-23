@@ -18,7 +18,7 @@ export default function TechnicianCard({ technicians }: TechnicianProps) {
         {/* Technicians Grid */}
         <div className="space-y-2">
           {technicians?.length ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-[auto_auto] lg:grid-cols-[auto_auto_auto] gap-4">
               {technicians.map((tech, index) => (
                 <Card
                   key={index}
@@ -38,7 +38,9 @@ export default function TechnicianCard({ technicians }: TechnicianProps) {
               ))}
             </div>
           ) : (
-            <p className="text-gray-500 dark:text-gray italic">No technicians assigned</p>
+            <p className="text-gray-500 dark:text-gray italic">
+              No technicians assigned
+            </p>
           )}
         </div>
       </CardContent>
