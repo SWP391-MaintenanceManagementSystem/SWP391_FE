@@ -19,7 +19,6 @@ export const useAssignBooking = () => {
       bookingId: "",
       employeeIds: [],
     },
-    mode: "onBlur",
   });
 
   const onSubmit = async (data: BookingAssignmentFormValues) => {
@@ -36,8 +35,16 @@ export const useAssignBooking = () => {
           },
           onError: (error) => {
             if (error instanceof AxiosError) {
+              const apiErrors = error.response?.data?.errors;
               const msg = error.response?.data.message;
-              if (msg) {
+              if (apiErrors && typeof apiErrors === "object") {
+                Object.entries(apiErrors).forEach(([field, msg]) => {
+                  form.setError(field as keyof BookingAssignmentFormValues, {
+                    type: "server",
+                    message: msg as string,
+                  });
+                });
+              } else if (msg) {
                 toast.error(msg);
               } else {
                 toast.error("Something went wrong. Please try again.");

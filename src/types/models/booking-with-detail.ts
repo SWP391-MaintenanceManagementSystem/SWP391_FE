@@ -19,6 +19,7 @@ type VehicleInfo = {
 };
 
 type ServiceCenter = {
+  id: string;
   name: string;
   address: string;
 };
@@ -38,6 +39,7 @@ type StaffInfo = {
 };
 
 type TechnicianInfo = {
+  id: string;
   firstName: string;
   lastName: string;
 };

@@ -9,6 +9,7 @@ import AssignmentDialog from "../AssignmentDialog";
 import { useState } from "react";
 import { useAssignBooking } from "@/services/booking/hooks/useAssignBooking";
 import { toast } from "sonner";
+import { useBookingDetail } from "@/services/booking/hooks/useBookingDetail";
 
 export interface ColActionsProps {
   row: Row<BookingStaffTable>;
@@ -24,8 +25,8 @@ export default function ColActions({
   const [openAssignmentDialog, setOpenAssignmentDialog] = useState(false);
   const booking = row.original;
   const navigate = useNavigate();
-
-  const { form, onSubmit } = useAssignBooking();
+  const { form, onSubmit, isSuccess } = useAssignBooking();
+  const { data } = useBookingDetail(booking.id ?? "");
   return (
     <div className="flex gap-1">
       <TooltipWrapper content="View Details">
@@ -68,9 +69,11 @@ export default function ColActions({
         form={form}
         onConfirm={async (values) => {
           await onSubmit({ ...values, bookingId: booking.id });
-          setOpenAssignmentDialog(false);
+          if (isSuccess) {
+            setOpenAssignmentDialog(false);
+          }
         }}
-        item={booking}
+        item={data!}
       />
     </div>
   );

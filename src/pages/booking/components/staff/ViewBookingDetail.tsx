@@ -17,6 +17,8 @@ import { BookingServicesDialog } from "../customer/booking-detail/BookingService
 import { CancelBookingDialog } from "../customer/booking-detail/CancelBookingDialog";
 import useCancelBooking from "@/services/booking/hooks/useCancelBooking";
 import type { BookingStatus } from "@/types/enums/bookingStatus";
+import AssignmentDialog from "./AssignmentDialog";
+import { useAssignBooking } from "@/services/booking/hooks/useAssignBooking";
 
 export default function ViewBookingDetail() {
   const { id } = useParams<{ id: string }>();
@@ -24,9 +26,11 @@ export default function ViewBookingDetail() {
   const { data, isLoading } = useBookingDetail(bookingId ?? "");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
+  const [openAssignmentDialog, setOpenAssignmentDialog] = useState(false);
   const { onCancel } = useCancelBooking();
+  const { form, onSubmit, isSuccess } = useAssignBooking();
 
-  if (!id) {
+  if (!bookingId) {
     return <div className="text-red-500 p-6">Booking ID is missing</div>;
   }
 
@@ -144,9 +148,24 @@ export default function ViewBookingDetail() {
             productionYear={data?.vehicle?.productionYear}
           />
           <StaffCard staff={data?.staff} />
-          <TechnicianCard technicians={data?.technicians} />
+          <TechnicianCard
+            technicians={data?.technicians}
+            onAssign={() => setOpenAssignmentDialog(true)}
+          />
         </div>
       </MainContentLayout>
+      <AssignmentDialog
+        open={openAssignmentDialog}
+        onOpenChange={(open) => setOpenAssignmentDialog(open)}
+        form={form}
+        onConfirm={async (values) => {
+          await onSubmit({ ...values, bookingId });
+          if (isSuccess) {
+            setOpenAssignmentDialog(false);
+          }
+        }}
+        item={data!}
+      />
     </div>
   );
 }

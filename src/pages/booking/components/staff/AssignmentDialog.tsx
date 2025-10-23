@@ -14,14 +14,14 @@ import clsx from "clsx";
 import type { BookingAssignmentFormValues } from "../../lib/schema";
 import MultiTechnicianSelector from "./MultiTechnicianSelector";
 import { useTechnicianSearch } from "@/services/manager/hooks/useEmployeeSearch";
-import type { Booking } from "@/types/models/booking";
+import type { CustomerBookingDetails } from "@/types/models/booking-with-detail";
 
 interface AssignmentProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onConfirm: (data: BookingAssignmentFormValues) => void;
   form: ReturnType<typeof useForm<BookingAssignmentFormValues>>;
-  item: Booking;
+  item: CustomerBookingDetails;
 }
 
 export default function AssignmentDialog({
@@ -34,7 +34,8 @@ export default function AssignmentDialog({
   const [initialized, setInitialized] = useState(false);
 
   const { keyword, setKeyword, data, isLoading } = useTechnicianSearch({
-    centerId: item.centerId,
+    centerId: item.serviceCenter.id,
+    assignedIds: item.technicians.map((technician) => technician.id),
   });
 
   useEffect(() => {
