@@ -9,23 +9,28 @@ import {
   type WorkScheduleFormData,
 } from "@/pages/shifts/libs/schema";
 
-export const useWorkSchedule = (
-  currentPage: number,
-  currentPageSize: number,
-  item?: WorkSchedule,
-) => {
+export const useWorkSchedule = (item?: WorkSchedule) => {
   const delScheduleMutation = useDeleteWorkSchedule();
   const updateScheduleMutation = useUpdateSchedule();
   const form = useForm<WorkScheduleFormData>({
     resolver: zodResolver(WorkScheduleSchema),
     defaultValues: {
+      centerId: item?.shift.serviceCenter.id || "",
       employeeId: item?.account.id || "",
-      date: item?.date || "",
       shiftId: item?.shift.id || "",
+      date: item?.date || "",
+      endDate: "",
+      repeatDays: [],
     },
   });
 
-  const handleDeleteSchedule = () => {
+  const handleDeleteSchedule = ({
+    currentPage,
+    currentPageSize,
+  }: {
+    currentPage: number;
+    currentPageSize: number;
+  }) => {
     delScheduleMutation.mutate(
       {
         id: item?.account.id || "",
@@ -46,7 +51,15 @@ export const useWorkSchedule = (
     );
   };
 
-  const handleEditSchedule = (data: WorkScheduleFormData) => {
+  const handleEditSchedule = ({
+    currentPage,
+    currentPageSize,
+    data,
+  }: {
+    currentPage: number;
+    currentPageSize: number;
+    data: WorkScheduleFormData;
+  }) => {
     updateScheduleMutation.mutate(
       {
         id: item?.id || "",

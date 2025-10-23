@@ -41,3 +41,7 @@ export const getAllEmployees = () => {
     `/employees/all`,
   );
 };
+
+export const getWorkScheduleById = (id: string) => {
+  return httpPrivate.get<BaseResponse<WorkSchedule>>(`/work-schedules/${id}`);
+};

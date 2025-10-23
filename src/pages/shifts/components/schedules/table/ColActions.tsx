@@ -28,11 +28,8 @@ export default function ColActions({
   const [openViewDialog, setOpenViewDialog] = useState(false);
   const [openEditDialog, setOpenEditDialog] = useState(false);
   const schedule = row.original;
-  const { handleDeleteSchedule, handleEditSchedule, form } = useWorkSchedule(
-    currentPage,
-    currentPageSize,
-    schedule,
-  );
+  const { handleDeleteSchedule, handleEditSchedule, form } =
+    useWorkSchedule(schedule);
 
   return (
     <div className="flex gap-1">
@@ -71,7 +68,7 @@ export default function ColActions({
       <DeleteDialog
         open={openDeleteDialog}
         onOpenChange={setOpenDeleteDialog}
-        onConfirm={handleDeleteSchedule}
+        onConfirm={() => handleDeleteSchedule({ currentPage, currentPageSize })}
       />
 
       {/* Edit */}
@@ -83,7 +80,9 @@ export default function ColActions({
         }}
         shiftList={shiftList}
         form={form}
-        onConfirm={(data: WorkScheduleFormData) => handleEditSchedule(data)}
+        onConfirm={(data: WorkScheduleFormData) =>
+          handleEditSchedule({ currentPage, currentPageSize, data })
+        }
         item={schedule}
       />
     </div>
