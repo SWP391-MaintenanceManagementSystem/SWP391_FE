@@ -3,16 +3,19 @@ import MainContentLayout from "@/components/MainContentLayout";
 import TechnicianAssignedBookingTable from "./table/TechnicianAssignedBookingTable";
 import useTechnicianBooking from "@/services/booking/hooks/useTechnicianBooking";
 
-
 export default function TechnicianAssignedBookingPage() {
   const { bookingData, isLoading, isFetching } = useTechnicianBooking();
-  
-  console.log('Booking data:', bookingData);
+
+  console.log("Booking data:", bookingData);
 
   return (
     <div>
       <DynamicBreadcrumbs pathTitles={{ "My assigned bookings": "Bookings" }} />
+
       <MainContentLayout>
+        {/* Header summary */}
+       
+
         <TechnicianAssignedBookingTable
           data={bookingData?.data ?? []}
           isLoading={isLoading}

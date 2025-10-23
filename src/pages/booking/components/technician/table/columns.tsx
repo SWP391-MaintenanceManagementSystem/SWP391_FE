@@ -2,15 +2,13 @@ import { createColumnHelper } from "@tanstack/react-table";
 import { Checkbox } from "@/components/ui/checkbox";
 import SortHeader from "@/components/table/SortHeader";
 import FilterHeader from "@/components/table/FilterHeader";
-
-import type { TechnicianBooking } from "@/types/models/booking"; // Đảm bảo model khớp
+import type { TechnicianBooking } from "@/types/models/booking";
 import ColActions from "./ColAction";
 
 export const getColumns = () => {
   const columnHelper = createColumnHelper<TechnicianBooking>();
 
   return [
-    // ✅ Checkbox select
     columnHelper.display({
       id: "select",
       header: ({ table }) => (
@@ -24,7 +22,6 @@ export const getColumns = () => {
           className="!outline-none"
         />
       ),
-      size: 40,
       cell: ({ row }) => (
         <Checkbox
           checked={row.getIsSelected()}
@@ -33,86 +30,69 @@ export const getColumns = () => {
           className="!outline-none"
         />
       ),
+      size: 40,
       enableSorting: false,
       enableHiding: false,
     }),
 
-    // ✅ Booking ID
+    //Booking ID
     columnHelper.accessor("id", {
       id: "bookingId",
       header: (info) => <SortHeader title="Booking ID" info={info} />,
-      size: 120,
       cell: (info) => (
-        <span className="font-mono text-xs font-medium text-gray-800">
-          {info.getValue().slice(0, 8)}...
+        <span className="font-mono text-xs font-medium text-gray-800 dark:text-gray-200">
+          {info.getValue()?.slice(0, 8) ?? "—"}
         </span>
       ),
-      meta: { title: "Booking ID" },
+      size: 120,
     }),
 
-    // ✅ Customer (firstName + lastName)
+    //Customer
     columnHelper.accessor("customer", {
       id: "customer",
       header: (info) => <SortHeader title="Customer" info={info} />,
-      size: 180,
       cell: (info) => {
-        const customer = info.getValue();
-        if (!customer) return "—";
-        return `${customer.firstName} ${customer.lastName}`;
+        const c = info.getValue();
+        return (
+          <span className="text-gray-700 dark:text-gray-300">
+            {c ? `${c.firstName} ${c.lastName}` : "—"}
+          </span>
+        );
       },
-      sortingFn: (rowA, rowB) => {
-        const nameA = `${rowA.original.customer?.firstName} ${rowA.original.customer?.lastName}`;
-        const nameB = `${rowB.original.customer?.firstName} ${rowB.original.customer?.lastName}`;
-        return nameA.localeCompare(nameB);
-      },
-      meta: { title: "Customer" },
+      size: 180,
     }),
 
-    // ✅ Vehicle (brand + model + licensePlate)
+    //Vehicle
     columnHelper.accessor("vehicle", {
       id: "vehicle",
       header: (info) => <SortHeader title="Vehicle" info={info} />,
-      size: 200,
       cell: (info) => {
-        const vehicle = info.getValue();
-        if (!vehicle) return "—";
+        const v = info.getValue();
+        if (!v) return "—";
         return (
-          <div className="flex flex-col text-xs">
+          <div className="flex flex-col text-xs text-gray-700 dark:text-gray-300">
             <span className="font-medium">
-              {vehicle.brand} {vehicle.model}
+              {v.brand} {v.model}
             </span>
-            <span className="text-gray-500">{vehicle.licensePlate}</span>
+            <span className="text-gray-500 dark:text-gray-400">
+              {v.licensePlate}
+            </span>
           </div>
         );
       },
-      sortingFn: (rowA, rowB) => {
-        const vA = rowA.original.vehicle;
-        const vB = rowB.original.vehicle;
-        const strA = `${vA?.brand} ${vA?.model} ${vA?.licensePlate}`;
-        const strB = `${vB?.brand} ${vB?.model} ${vB?.licensePlate}`;
-        return strA.localeCompare(strB);
-      },
-      meta: { title: "Vehicle" },
+      size: 200,
     }),
 
-    // ✅ Booking Date & Shift
+    //Booking Time
     columnHelper.display({
       id: "bookingTime",
       header: (info) => <SortHeader title="Booking Time" info={info} />,
-      size: 180,
       cell: ({ row }) => {
-        const bookingDate = row.original.bookingDate;
-        const shift = row.original.shift;
-
+        const { bookingDate, shift } = row.original;
         if (!bookingDate || !shift) return "—";
 
         const date = new Date(bookingDate);
         const formattedDate = date.toLocaleDateString();
-        const formattedTime = date.toLocaleTimeString([], {
-          hour: "2-digit",
-          minute: "2-digit",
-        });
-
         const shiftTime = `${new Date(shift.startTime).toLocaleTimeString([], {
           hour: "2-digit",
           minute: "2-digit",
@@ -122,33 +102,33 @@ export const getColumns = () => {
         })}`;
 
         return (
-          <div className="flex flex-col text-xs">
-            <span className="font-medium">
-              {formattedDate} {formattedTime}
+          <div className="flex flex-col text-xs text-gray-700 dark:text-gray-300">
+            <span className="font-medium">{formattedDate}</span>
+            <span className="text-gray-500 dark:text-gray-400">
+              {shift.name}
             </span>
-            <span className="text-gray-500">{shift.name}</span>
-            <span className="text-gray-400 text-xs">{shiftTime}</span>
+            <span className="text-gray-400 dark:text-gray-500">
+              {shiftTime}
+            </span>
           </div>
         );
       },
-      sortingFn: (rowA, rowB) => {
-        const dateA = new Date(rowA.original.bookingDate).getTime();
-        const dateB = new Date(rowB.original.bookingDate).getTime();
-        return dateA - dateB;
-      },
-      meta: { title: "Booking Time" },
+      size: 180,
     }),
 
-    // ✅ Service Center
+    //Service Center
     columnHelper.accessor("serviceCenter.name", {
       id: "serviceCenter",
       header: (info) => <SortHeader title="Service Center" info={info} />,
+      cell: (info) => (
+        <span className="text-gray-700 dark:text-gray-300">
+          {info.getValue() || "—"}
+        </span>
+      ),
       size: 180,
-      cell: (info) => info.getValue() || "—",
-      meta: { title: "Service Center" },
     }),
 
-    // ✅ Status (with Filter)
+    //Status
     columnHelper.accessor("status", {
       id: "status",
       header: ({ column }) => (
@@ -156,64 +136,51 @@ export const getColumns = () => {
           column={column}
           title="Status"
           selectedValue={column.getFilterValue() as string}
-          onFilterChange={(value) => column.setFilterValue(value || undefined)}
+          onFilterChange={(v) => column.setFilterValue(v || undefined)}
         />
       ),
-      size: 120,
       cell: (info) => {
-        const value = info.getValue();
+        const status = info.getValue();
         const colorMap: Record<string, string> = {
-          CONFIRMED: "bg-blue-100 text-blue-700",
-          PENDING: "bg-yellow-100 text-yellow-700",
-          ASSIGNED: "bg-indigo-100 text-indigo-700",
-          COMPLETED: "bg-green-100 text-green-700",
-          CANCELLED: "bg-red-100 text-red-700",
+          ASSIGNED:
+            "bg-indigo-100 text-indigo-700 dark:bg-indigo-900/40 dark:text-indigo-300",
+          CONFIRMED:
+            "bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300",
+          COMPLETED:
+            "bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-300",
+          CANCELLED:
+            "bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300",
         };
-        const colorClass = colorMap[value] || "bg-gray-100 text-gray-700";
-
         return (
           <span
-            className={`px-2 py-1 rounded-md text-xs font-medium ${colorClass}`}
+            className={`px-2 py-1 rounded-md text-xs font-medium ${
+              colorMap[status] ||
+              "bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300"
+            }`}
           >
-            {value}
+            {status}
           </span>
         );
       },
-      meta: {
-        filterOptions: [
-          "PENDING",
-          "CONFIRMED",
-          "ASSIGNED",
-          "COMPLETED",
-          "CANCELLED",
-        ],
-      },
-      filterFn: (row, columnId, filterValue) => {
-        if (!filterValue) return true;
-        return row.getValue(columnId) === filterValue;
-      },
-      enableSorting: false,
+      size: 120,
     }),
 
-    // ✅ Assigner
+    // Assigner
     columnHelper.accessor("assigner", {
       id: "assigner",
       header: (info) => <SortHeader title="Assigner" info={info} />,
-      size: 160,
       cell: (info) => {
-        const assigner = info.getValue();
-        if (!assigner) return "—";
-        return `${assigner.firstName} ${assigner.lastName}`;
+        const a = info.getValue();
+        return (
+          <span className="text-gray-700 dark:text-gray-300">
+            {a ? `${a.firstName} ${a.lastName}` : "—"}
+          </span>
+        );
       },
-      sortingFn: (rowA, rowB) => {
-        const a = `${rowA.original.assigner?.firstName} ${rowA.original.assigner?.lastName}`;
-        const b = `${rowB.original.assigner?.firstName} ${rowB.original.assigner?.lastName}`;
-        return a.localeCompare(b);
-      },
-      meta: { title: "Assigner" },
+      size: 160,
     }),
 
-    // ✅ Actions
+    // Actions
     columnHelper.display({
       id: "actions",
       header: "Actions",
