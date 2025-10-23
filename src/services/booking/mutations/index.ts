@@ -3,6 +3,9 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { cancelBookingById, createBooking } from "../apis/booking.api";
 import { toast } from "sonner";
 import { AxiosError } from "axios";
+import type { BookingAssignmentFormValues } from "@/pages/booking/lib/schema";
+import { createBookingAssignment } from "../apis/booking-assignment.api";
+
 export const useCreateBookingMutation = () => {
   const queryClient = useQueryClient();
   return useMutation({
@@ -49,6 +52,25 @@ export const useCancelBookingMutation = () => {
         msg = error.message || msg;
       }
       toast.error(msg);
+    },
+  });
+};
+
+export const useCreateBookingAssignmentMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ data }: { data: BookingAssignmentFormValues }) => {
+      const assign = await createBookingAssignment(data);
+      return assign.data;
+    },
+    onSuccess: async (_data, variables) => {
+      const bookingId = variables.data.bookingId;
+      await Promise.all([
+        queryClient.invalidateQueries({
+          queryKey: ["booking", bookingId],
+        }),
+      ]);
+      toast.success("Assignment technician successfully");
     },
   });
 };

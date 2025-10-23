@@ -5,6 +5,10 @@ import { TooltipWrapper } from "@/components/TooltipWrapper";
 import type { BookingStaffTable } from "@/types/models/booking-with-detail";
 import { encodeBase64 } from "@/utils/base64";
 import { useNavigate } from "react-router-dom";
+import AssignmentDialog from "../AssignmentDialog";
+import { useState } from "react";
+import { useAssignBooking } from "@/services/booking/hooks/useAssignBooking";
+import { toast } from "sonner";
 
 export interface ColActionsProps {
   row: Row<BookingStaffTable>;
@@ -17,8 +21,11 @@ export default function ColActions({
   currentPage,
   currentPageSize,
 }: ColActionsProps) {
+  const [openAssignmentDialog, setOpenAssignmentDialog] = useState(false);
   const booking = row.original;
   const navigate = useNavigate();
+
+  const { form, onSubmit } = useAssignBooking();
   return (
     <div className="flex gap-1">
       <TooltipWrapper content="View Details">
@@ -39,10 +46,32 @@ export default function ColActions({
         <ActionBtn
           icon={<UserCheck size={12} />}
           onClick={() => {
-            console.log("Assign");
+            if (
+              booking.status === "IN_PROGRESS" ||
+              booking.status === "COMPLETED" ||
+              booking.status === "CHECKED_OUT" ||
+              booking.status === "CANCELLED"
+            ) {
+              toast.error(
+                `Cannot assign technician to ${booking.status} booking`,
+              );
+              return;
+            }
+            setOpenAssignmentDialog(true);
           }}
         />
       </TooltipWrapper>
+
+      <AssignmentDialog
+        open={openAssignmentDialog}
+        onOpenChange={(open) => setOpenAssignmentDialog(open)}
+        form={form}
+        onConfirm={async (values) => {
+          await onSubmit({ ...values, bookingId: booking.id });
+          setOpenAssignmentDialog(false);
+        }}
+        item={booking}
+      />
     </div>
   );
 }
