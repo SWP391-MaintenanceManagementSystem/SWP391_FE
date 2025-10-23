@@ -42,7 +42,26 @@ type TechnicianInfo = {
   lastName: string;
 };
 
-export type CustomerBookingDetail = {
+type ServiceInfo = {
+  id: string;
+  name: string;
+  price: number;
+  status: BookingDetailStatus;
+};
+
+type PackageInfo = {
+  id: string;
+  name: string;
+  price: number;
+  status: BookingDetailStatus;
+};
+
+type BookingDetails = {
+  services: ServiceInfo[];
+  packages: PackageInfo[];
+};
+
+export type CustomerBookingDetails = {
   id: string;
   bookingDate: Date | string;
   status: BookingStatus;
@@ -54,6 +73,7 @@ export type CustomerBookingDetail = {
   shift: ShiftInfo;
   staff: StaffInfo;
   technicians: TechnicianInfo[];
+  bookingDetails: BookingDetails;
 };
 
 export type BookingDetail = {

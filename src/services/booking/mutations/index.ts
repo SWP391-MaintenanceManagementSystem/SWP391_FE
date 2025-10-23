@@ -1,7 +1,8 @@
 import type { CreateBookingFormValues } from "@/pages/booking/lib/schema";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createBooking } from "../apis/booking.api";
+import { cancelBookingById, createBooking } from "../apis/booking.api";
 import { toast } from "sonner";
+import { AxiosError } from "axios";
 export const useCreateBookingMutation = () => {
   const queryClient = useQueryClient();
   return useMutation({
@@ -17,6 +18,29 @@ export const useCreateBookingMutation = () => {
     },
     onError: () => {
       toast.error("Failed to create booking");
+    },
+  });
+};
+
+export const useCancelBookingMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (bookingId: string) => {
+      const updatedCustomerInfo = await cancelBookingById(bookingId);
+      return updatedCustomerInfo.data;
+    },
+    onSuccess: async () => {
+      queryClient.invalidateQueries({
+        queryKey: ["bookings"],
+      });
+      toast.success("Booking canceled successfully");
+    },
+    onError: (error) => {
+      let msg = "Failed to cancel booking";
+      if (error instanceof AxiosError) {
+        msg = error.message || msg;
+      }
+      toast.error(msg);
     },
   });
 };

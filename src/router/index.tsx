@@ -26,6 +26,9 @@ import InventoryManagement from "@/pages/inventory";
 import PaymentSuccessPage from "@/pages/payment";
 import AddNewSchedulePage from "@/pages/shifts/components/schedules/AddNewSchedule";
 import BookingDetail from "@/pages/booking/components/customer/booking-detail/BookingDetail";
+import TechnicianAssignedBookingPage from "@/pages/booking/components/technician/TechnicianAssignedBooking";
+import BookingPage from "@/pages/booking";
+import BookingDetailPage from "@/pages/booking/components/BookingDetailPage";
 
 const RouterComponent = () => {
   const router = createBrowserRouter([
@@ -129,7 +132,6 @@ const RouterComponent = () => {
                     },
                   ],
                 },
-
                 {
                   element: (
                     <RequireAuth
@@ -137,18 +139,20 @@ const RouterComponent = () => {
                         AccountRole.ADMIN,
                         AccountRole.CUSTOMER,
                         AccountRole.STAFF,
+                        AccountRole.TECHNICIAN,
                       ]}
                     />
                   ),
                   children: [
                     {
                       path: "/booking",
-                      element: <Booking />,
+                      element: <BookingPage />,
                     },
                     {
                       path: "/booking/:id",
-                      element: <BookingDetail />,
+                      element: <BookingDetailPage />,
                     },
+
                   ],
                 },
                 {

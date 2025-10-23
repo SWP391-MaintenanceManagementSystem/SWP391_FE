@@ -1,7 +1,7 @@
 import DynamicBreadcrumbs from "@/components/DynamicBreadcrumb";
 import MainContentLayout from "@/components/MainContentLayout";
 import { useBookingDetail } from "@/services/booking/hooks/useBookingDetail";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import VehicleInfoCard from "./VehicleInfoCard";
@@ -11,9 +11,16 @@ import dayjs from "dayjs";
 import CustomerInfoCard from "./CustomerInfoCard";
 import TechnicianCard from "./TechnicianCard";
 import { Spinner } from "@/components/ui/shadcn-io/spinner";
+import { useState } from "react";
+import { BookingServicesDialog } from "./BookingServicesDialog";
+import { CancelBookingDialog } from "./CancelBookingDialog";
+import useCancelBooking from "@/services/booking/hooks/useCancelBooking";
 export default function BookingDetail() {
   const { id } = useParams<{ id: string }>();
   const { data, isLoading } = useBookingDetail(id ?? "");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
+  const { onCancel } = useCancelBooking();
 
   if (!id) {
     return <div className="text-red-500 p-6">Booking ID is missing</div>;
@@ -26,8 +33,26 @@ export default function BookingDetail() {
       </div>
     );
 
+  const handleCancelBooking = () => {
+    onCancel(id);
+    setIsCancelModalOpen(false);
+  };
+
   return (
     <div className="w-full min-h-[calc(100vh-32px)] font-inter bg-gradient-to-br ">
+      <BookingServicesDialog
+        open={isModalOpen}
+        onOpenChange={setIsModalOpen}
+        services={data?.bookingDetails?.services}
+        packages={data?.bookingDetails?.packages}
+      />
+
+      <CancelBookingDialog
+        open={isCancelModalOpen}
+        onOpenChange={setIsCancelModalOpen}
+        onConfirm={handleCancelBooking}
+      />
+
       <DynamicBreadcrumbs
         pathTitles={{
           booking: "Booking Services",
@@ -47,17 +72,33 @@ export default function BookingDetail() {
                 </span>
               </p>
             </div>
-            {/* <div className="space-x-2">
+            <div className="flex gap-2">
               <Button
+                onClick={() => setIsModalOpen(true)}
                 variant="outline"
-                className="text-blue-600 border-blue-600 hover:bg-blue-50"
+                className="border-purple-500 text-purple-600 hover:bg-purple-50
+            dark:border-purple-300 dark:text-purple-200 dark:hover:bg-purple-700/30"
+              >
+                View Services
+              </Button>
+
+              <Button
+                variant="default"
+                className="bg-purple-600 hover:bg-purple-700 text-white
+            dark:bg-purple-500 dark:hover:bg-purple-600"
               >
                 Edit
               </Button>
-              <Button variant="destructive" className="hover:bg-red-600">
+
+              <Button
+                onClick={() => setIsCancelModalOpen(true)}
+                variant="destructive"
+                className="hover:bg-red-600
+            dark:hover:bg-red-700"
+              >
                 Cancel
               </Button>
-            </div> */}
+            </div>
           </CardHeader>
           <CardContent className="p-4 space-y-4 md:space-y-0">
             <div className="flex flex-col md:flex-row justify-between text-gray-700 dark:text-gray-50 md:space-y-0 space-y-4">

@@ -60,3 +60,8 @@ export const staffItems: SidebarItem[] = [
   { title: "Dashboard", url: "/dashboard", icon: Home },
   { title: "Booking Management", url: "/booking", icon: BookOpenCheckIcon },
 ];
+export const technicianItems: SidebarItem[] = [
+  { title: "Dashboard", url: "/dashboard", icon: Home },
+  { title: "My Assigned Bookings", url: "/booking", icon: CalendarClock },
+  { title: "Inventory", url: "/inventory", icon: PackageOpen },
+];

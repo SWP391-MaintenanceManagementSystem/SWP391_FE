@@ -1,31 +1,25 @@
-import { lazy, Suspense } from "react";
+import { Suspense } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import CircularIndeterminate from "@/components/CircularIndeterminate";
+import BookingDetail from "./customer/booking-detail/BookingDetail";
+import AssignedBookingDetail from "./technician/booking-detail/AssignedBookingDetail";
 
-const Booking = lazy(() => import("./components/customer/Booking"));
-const TechnicianAssignedBookingPage = lazy(
-  () => import("./components/technician/TechnicianAssignedBooking"),
-);
-const StaffBookingPage = lazy(() => import("./components/customer/Booking"));
-
-export default function BookingPage() {
+export default function BookingDetailPage() {
   const { auth } = useAuth();
   const role = auth?.user?.role;
 
   const renderPageByRole = () => {
     switch (role) {
       case "TECHNICIAN":
-        return <TechnicianAssignedBookingPage />;
-
-      case "STAFF":
-        return <StaffBookingPage />; // tạm thời render Booking
+        return <AssignedBookingDetail />;
 
       case "ADMIN":
       case "CUSTOMER":
+        return <BookingDetail />;
       default:
         return (
           <div className="font-inter">
-            <Booking />
+            <BookingDetail />
           </div>
         );
     }
