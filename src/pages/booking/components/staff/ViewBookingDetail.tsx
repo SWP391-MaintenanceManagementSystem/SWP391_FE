@@ -63,7 +63,7 @@ export default function ViewBookingDetail() {
           [id ?? ""]: "Detailed Information",
         }}
       />
-      <MainContentLayout className="p-6">
+      <MainContentLayout className="p-6 max-h-[calc(100vh-50px)] overflow-y-auto">
         <Card className="mb-6 bg-purple-50 border-purple-200 dark:bg-purple-800 dark:border-purple-800 shadow-md">
           <CardHeader className="flex flex-row items-center justify-between p-4">
             <div>
