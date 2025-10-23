@@ -3,8 +3,9 @@ import { Maximize2, UserCheck } from "lucide-react";
 import ActionBtn from "@/components/table/ActionBtn";
 import { TooltipWrapper } from "@/components/TooltipWrapper";
 import { useState } from "react";
-import { ViewDetailDialog } from "@/components/dialog/ViewDetailDialog";
 import type { BookingStaffTable } from "@/types/models/booking-with-detail";
+import { encodeBase64 } from "@/utils/base64";
+import { useNavigate } from "react-router-dom";
 
 export interface ColActionsProps {
   row: Row<BookingStaffTable>;
@@ -19,14 +20,20 @@ export default function ColActions({
 }: ColActionsProps) {
   const [openViewDialog, setOpenViewDialog] = useState(false);
   const booking = row.original;
+  const navigate = useNavigate();
   return (
     <div className="flex gap-1">
       <TooltipWrapper content="View Details">
         <ActionBtn
           icon={<Maximize2 size={12} />}
           onClick={() => {
-            console.log("View Details", booking);
-            setOpenViewDialog(true);
+            const encodedId = encodeBase64(booking.id);
+            navigate(`/booking/${encodedId}`, {
+              state: {
+                currentPage,
+                currentPageSize,
+              },
+            });
           }}
         />
       </TooltipWrapper>
