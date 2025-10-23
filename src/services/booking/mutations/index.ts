@@ -3,7 +3,6 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { cancelBookingById, createBooking } from "../apis/booking.api";
 import { toast } from "sonner";
 import { AxiosError } from "axios";
-import { queryKeys } from "../queries/keys";
 export const useCreateBookingMutation = () => {
   const queryClient = useQueryClient();
   return useMutation({

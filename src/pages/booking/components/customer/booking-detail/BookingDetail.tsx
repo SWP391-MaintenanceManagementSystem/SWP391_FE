@@ -1,7 +1,7 @@
 import DynamicBreadcrumbs from "@/components/DynamicBreadcrumb";
 import MainContentLayout from "@/components/MainContentLayout";
 import { useBookingDetail } from "@/services/booking/hooks/useBookingDetail";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import VehicleInfoCard from "./VehicleInfoCard";
@@ -21,6 +21,7 @@ export default function BookingDetail() {
   const { data, isLoading } = useBookingDetail(id ?? "");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
+  const navigate = useNavigate();
   const { onCancel } = useCancelBooking();
 
   if (!id) {
@@ -35,7 +36,10 @@ export default function BookingDetail() {
     );
 
   const handleCancelBooking = () => {
-    onCancel(id);
+    try {
+      onCancel(id);
+      navigate("/booking");
+    } catch (error) {}
     setIsCancelModalOpen(false);
   };
 
