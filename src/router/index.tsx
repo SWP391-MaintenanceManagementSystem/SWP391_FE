@@ -24,6 +24,8 @@ import Booking from "@/pages/booking/components/customer/Booking";
 import AuthFailed from "@/pages/auth/components/AuthFailed";
 import InventoryManagement from "@/pages/inventory";
 import PaymentSuccessPage from "@/pages/payment";
+import AddNewSchedulePage from "@/pages/shifts/components/schedules/AddNewSchedule";
+import BookingDetail from "@/pages/booking/components/customer/booking-detail/BookingDetail";
 import TechnicianAssignedBookingPage from "@/pages/booking/components/technician/TechnicianAssignedBooking";
 import BookingPage from "@/pages/booking";
 
@@ -118,6 +120,11 @@ const RouterComponent = () => {
                       hydrateFallbackElement: <CircularIndeterminate />,
                     },
                     {
+                      path: "/shifts/addNewSchedule",
+                      element: <AddNewSchedulePage />,
+                      hydrateFallbackElement: <CircularIndeterminate />,
+                    },
+                    {
                       path: "/inventory",
                       element: <InventoryManagement />,
                       hydrateFallbackElement: <CircularIndeterminate />,
@@ -138,6 +145,10 @@ const RouterComponent = () => {
                     {
                       path: "/booking",
                       element: <BookingPage />,
+                    },
+                    {
+                      path: "/booking/:id",
+                      element: <BookingDetail />,
                     },
                   ],
                 },

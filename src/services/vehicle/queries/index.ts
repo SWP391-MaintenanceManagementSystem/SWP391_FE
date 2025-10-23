@@ -10,7 +10,6 @@ export const useGetMyVehicle = () => {
         queryFn: async () => {
             try {
                 const response = await getMyVehicles();
-                toast.success("Fetched my vehicles successfully");
                 return response.data.data;
             } catch (error) {
                 toast.error("Failed to fetch my vehicles");

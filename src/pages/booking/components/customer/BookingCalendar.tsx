@@ -12,7 +12,8 @@ import { defaultBookingFilter } from "@/types/models/booking";
 import useBooking from "@/services/booking/hooks/useBooking";
 import { Skeleton } from "@/components/ui/skeleton";
 import { CustomEvent, type CalendarEvent } from "./CustomEvent";
-
+import Loading from "@/components/Loading";
+import { Spinner } from "@/components/ui/shadcn-io/spinner";
 
 const localizer = dayjsLocalizer(dayjs);
 
@@ -70,18 +71,9 @@ const BookingCalendar = () => {
 
   if (isLoading) {
     return (
-      <Card className="h-[95vh]">
-        <CardHeader>
-          <Skeleton className="h-8 w-16" />
-        </CardHeader>
-        <CardContent className="p-0 h-[calc(95vh-120px)]">
-          <div className="p- space-y-3">
-            {[...Array(6)].map((_, i) => (
-              <Skeleton key={i} className="h-12 w-full" />
-            ))}
-          </div>
-        </CardContent>
-      </Card>
+      <div className=" p-6 flex justify-center items-center h-full">
+        <Spinner />
+      </div>
     );
   }
 
@@ -95,7 +87,7 @@ const BookingCalendar = () => {
       case "COMPLETED":
         backgroundColor = "#10b981";
         break;
-      case "CONFIRMED":
+      case "ASSIGNED":
         backgroundColor = "#3b82f6";
         break;
       case "PENDING":
