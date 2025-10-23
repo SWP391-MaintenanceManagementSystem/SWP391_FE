@@ -9,5 +9,6 @@ export const getTechnicianBookings = async (params: BookingFilters) => {
   const response = await axiosPrivate.get<
     BaseResponse<PaginationResponse<TechnicianBooking>>
   >("/technicians/bookings", { params });
+  console.log('API Response:', response.data);
   return response.data.data;
 };

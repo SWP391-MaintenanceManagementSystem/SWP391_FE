@@ -13,6 +13,12 @@ interface TechnicianAssignedBookingTableProps {
   pageSize?: number;
   onPageChange?: (pageIndex: number) => void;
   onPageSizeChange?: (pageSize: number) => void;
+  onSearchChange?: (value: string) => void;
+  searchValue?: string;
+  manualPagination?: boolean;
+  manualSorting?: boolean;
+  manualSearch?: boolean;
+  isSearch?: boolean;
 }
 
 export default function TechnicianAssignedBookingTable({
@@ -24,11 +30,13 @@ export default function TechnicianAssignedBookingTable({
   pageSize,
   onPageChange,
   onPageSizeChange,
+  onSearchChange,
 }: TechnicianAssignedBookingTableProps) {
   const columns = getColumns();
 
   const [sorting, setSorting] = useState<SortingState>([]);
 
+  
   return (
     <DataTable
       columns={columns as ColumnDef<TechnicianBooking, unknown>[]}
@@ -44,8 +52,16 @@ export default function TechnicianAssignedBookingTable({
       sorting={sorting}
       onSortingChange={setSorting}
       isSearch
-      searchValue={["id", "customerId", "vehicleId"]}
-      searchPlaceholder="booking ID, customer, vehicle"
+      searchValue={[
+        "id",
+        "customer.firstName",
+        "customer.lastName",
+        "vehicle.licensePlate",
+      ]}
+      onSearchChange={onSearchChange}
+      searchPlaceholder="Search by booking ID, customer name, or vehicle"
+      manualSearch
+    
     />
   );
 }
