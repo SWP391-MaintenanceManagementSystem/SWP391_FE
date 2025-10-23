@@ -22,6 +22,7 @@ interface AssignmentProps {
   onConfirm: (data: BookingAssignmentFormValues) => void;
   form: ReturnType<typeof useForm<BookingAssignmentFormValues>>;
   item: CustomerBookingDetails;
+  isPending?: boolean;
 }
 
 export default function AssignmentDialog({
@@ -30,9 +31,9 @@ export default function AssignmentDialog({
   onConfirm,
   form,
   item,
+  isPending,
 }: AssignmentProps) {
   const [initialized, setInitialized] = useState(false);
-
   const { keyword, setKeyword, data, isLoading } = useTechnicianSearch({
     centerId: item.serviceCenter.id,
     assignedIds: item.technicians.map((technician) => technician.id),
@@ -56,12 +57,21 @@ export default function AssignmentDialog({
     const isValid = await form.trigger();
     if (!isValid) return;
     onConfirm(values);
-    form.reset();
     setKeyword("");
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog
+      open={open}
+      onOpenChange={(newState) => {
+        if (!newState) {
+          form.reset();
+          setKeyword("");
+          setInitialized(false);
+        }
+        onOpenChange(newState);
+      }}
+    >
       <DialogContent
         className="sm:max-w-[500px] min-h-[300px] font-inter"
         onOpenAutoFocus={(e) => e.preventDefault()}
@@ -96,7 +106,10 @@ export default function AssignmentDialog({
               <Button
                 type="button"
                 variant="outline"
-                onClick={() => onOpenChange(false)}
+                onClick={() => {
+                  form.reset();
+                  onOpenChange(false);
+                }}
               >
                 Cancel
               </Button>
@@ -104,7 +117,9 @@ export default function AssignmentDialog({
                 type="submit"
                 className="bg-purple-primary"
                 disabled={
-                  selectedIds.length === 0 || form.formState.isSubmitting
+                  selectedIds.length === 0 ||
+                  form.formState.isSubmitting ||
+                  isPending
                 }
               >
                 Assign Technician

@@ -1,7 +1,6 @@
 import { useCreateBookingAssignmentMutation } from "../mutations";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import {
   BookingAssignmentSchema,
@@ -9,8 +8,7 @@ import {
 } from "@/pages/booking/lib/schema";
 import { AxiosError } from "axios";
 
-export const useAssignBooking = () => {
-  const queryClient = useQueryClient();
+export const useAssignBooking = (options?: { onSuccess?: () => void }) => {
   const assignBookingMutation = useCreateBookingAssignmentMutation();
 
   const form = useForm<BookingAssignmentFormValues>({
@@ -27,23 +25,51 @@ export const useAssignBooking = () => {
         { data },
         {
           onSuccess: () => {
-            queryClient.invalidateQueries({
-              queryKey: ["booking", data.bookingId],
-            });
-            toast.success("Assignment booking successfully");
             form.reset();
+            options?.onSuccess?.();
           },
           onError: (error) => {
             if (error instanceof AxiosError) {
-              const apiErrors = error.response?.data?.errors;
-              const msg = error.response?.data.message;
-              if (apiErrors && typeof apiErrors === "object") {
-                Object.entries(apiErrors).forEach(([field, msg]) => {
+              const res = error.response?.data;
+              const apiErrors = res?.errors;
+              const msg = res?.message;
+              if (
+                apiErrors &&
+                typeof apiErrors === "object" &&
+                !Array.isArray(apiErrors)
+              ) {
+                Object.entries(apiErrors).forEach(([field, message]) => {
                   form.setError(field as keyof BookingAssignmentFormValues, {
                     type: "server",
-                    message: msg as string,
+                    message: message as string,
                   });
                 });
+              } else if (Array.isArray(apiErrors)) {
+                const cacheItems = (form as any)._formValuesCacheItems || [];
+                const emailsMap = new Map<string, string>();
+                cacheItems.forEach((item: any) => {
+                  emailsMap.set(item.id, item.email);
+                });
+
+                const mappedErrors = apiErrors.map((err: string) => {
+                  const match = err.match(/accountId ([a-z0-9-]+)/i);
+                  if (match) {
+                    const email = emailsMap.get(match[1]);
+                    if (email) {
+                      return err.replace(match[0], `email ${email}`);
+                    }
+                  }
+                  return err;
+                });
+
+                const joined = mappedErrors.join("\n");
+
+                form.setError("employeeIds", {
+                  type: "server",
+                  message: joined,
+                });
+
+                toast.error(msg || "Some employees are unavailable");
               } else if (msg) {
                 toast.error(msg);
               } else {

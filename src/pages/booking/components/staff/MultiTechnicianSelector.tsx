@@ -48,6 +48,10 @@ export default function MultiTechnicianSelector<
     }
   }, [items]);
 
+  useEffect(() => {
+    (form as any)._formValuesCacheItems = cacheItems;
+  }, [form, cacheItems]);
+
   const addItem = (id: string) => {
     const current = form.getValues(fieldName) || [];
     if (!current.includes(id)) form.setValue(fieldName, [...current, id]);
@@ -61,8 +65,6 @@ export default function MultiTechnicianSelector<
       current.filter((v) => v !== id),
     );
   };
-
-  const hasSelectionError = form.formState.errors[fieldName]?.message;
 
   const idToEmail = useMemo(
     () =>
@@ -78,7 +80,14 @@ export default function MultiTechnicianSelector<
 
   return (
     <div className="space-y-2">
-      <label className="text-sm font-medium flex items-center gap-2">
+      <label
+        className={cn(
+          "text-sm font-medium flex items-center gap-2",
+          form.formState.errors.employeeIds?.message
+            ? "text-destructive"
+            : "text-primary",
+        )}
+      >
         {label}{" "}
         {hint && (
           <span className="text-xs text-muted-foreground">({hint})</span>
@@ -88,7 +97,9 @@ export default function MultiTechnicianSelector<
         <div
           className={cn(
             "flex flex-wrap items-center gap-2 px-3 py-2 border rounded-md",
-            hasSelectionError && "border-red-500",
+            form.formState.errors.employeeIds?.message
+              ? "border-destructive focus:ring-destructive"
+              : "border-input focus:ring-primary",
           )}
         >
           {currentIds.map((id) => (
@@ -112,11 +123,14 @@ export default function MultiTechnicianSelector<
           <Input
             className={cn(
               "flex-1 bg-transparent border-none !ring-0 focus-visible:ring-0",
-              hasSelectionError && "text-destructive",
+              form.formState.errors.employeeIds?.message
+                ? "border-destructive focus:ring-destructive"
+                : "border-input focus:ring-primary",
             )}
             placeholder={currentIds.length === 0 ? placeholder : "Add more..."}
             value={keyword}
             onChange={(e) => setKeyword(e.target.value)}
+            aria-invalid={!!form.formState.errors.employeeIds}
           />
         </div>
 
@@ -152,8 +166,10 @@ export default function MultiTechnicianSelector<
         )}
       </div>
 
-      {hasSelectionError && (
-        <p className="text-xs text-destructive">{hasSelectionError}</p>
+      {form.formState.errors.employeeIds && (
+        <p className="text-xs text-destructive">
+          {form.formState.errors.employeeIds.message}
+        </p>
       )}
     </div>
   );

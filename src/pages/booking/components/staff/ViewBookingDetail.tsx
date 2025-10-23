@@ -28,7 +28,11 @@ export default function ViewBookingDetail() {
   const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
   const [openAssignmentDialog, setOpenAssignmentDialog] = useState(false);
   const { onCancel } = useCancelBooking();
-  const { form, onSubmit, isSuccess } = useAssignBooking();
+  const { form, onSubmit } = useAssignBooking({
+    onSuccess: () => {
+      setOpenAssignmentDialog(false);
+    },
+  });
 
   if (!bookingId) {
     return <div className="text-red-500 p-6">Booking ID is missing</div>;
@@ -160,9 +164,6 @@ export default function ViewBookingDetail() {
         form={form}
         onConfirm={async (values) => {
           await onSubmit({ ...values, bookingId });
-          if (isSuccess) {
-            setOpenAssignmentDialog(false);
-          }
         }}
         item={data!}
       />

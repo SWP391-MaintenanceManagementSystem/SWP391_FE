@@ -2,7 +2,10 @@ import type { Row } from "@tanstack/react-table";
 import { Maximize2, UserCheck } from "lucide-react";
 import ActionBtn from "@/components/table/ActionBtn";
 import { TooltipWrapper } from "@/components/TooltipWrapper";
-import type { BookingStaffTable } from "@/types/models/booking-with-detail";
+import type {
+  BookingStaffTable,
+  CustomerBookingDetails,
+} from "@/types/models/booking-with-detail";
 import { encodeBase64 } from "@/utils/base64";
 import { useNavigate } from "react-router-dom";
 import AssignmentDialog from "../AssignmentDialog";
@@ -25,7 +28,11 @@ export default function ColActions({
   const [openAssignmentDialog, setOpenAssignmentDialog] = useState(false);
   const booking = row.original;
   const navigate = useNavigate();
-  const { form, onSubmit, isSuccess } = useAssignBooking();
+  const { form, onSubmit, isPending } = useAssignBooking({
+    onSuccess: () => {
+      setOpenAssignmentDialog(false);
+    },
+  });
   const { data } = useBookingDetail(booking.id ?? "");
   return (
     <div className="flex gap-1">
@@ -63,18 +70,18 @@ export default function ColActions({
         />
       </TooltipWrapper>
 
-      <AssignmentDialog
-        open={openAssignmentDialog}
-        onOpenChange={(open) => setOpenAssignmentDialog(open)}
-        form={form}
-        onConfirm={async (values) => {
-          await onSubmit({ ...values, bookingId: booking.id });
-          if (isSuccess) {
-            setOpenAssignmentDialog(false);
-          }
-        }}
-        item={data!}
-      />
+      {data && (
+        <AssignmentDialog
+          open={openAssignmentDialog}
+          onOpenChange={(open) => setOpenAssignmentDialog(open)}
+          form={form}
+          onConfirm={async (values) => {
+            await onSubmit({ ...values, bookingId: booking.id });
+          }}
+          item={data ?? ({} as CustomerBookingDetails)}
+          isPending={isPending}
+        />
+      )}
     </div>
   );
 }
