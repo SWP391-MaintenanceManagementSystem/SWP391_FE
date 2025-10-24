@@ -9,12 +9,12 @@ import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useDebounce } from "@uidotdev/usehooks";
-import type { WorkScheduleFormData } from "../../libs/schema";
+import type { EditWorkScheduleFormData } from "../../libs/schema";
 import type { EmployeeTable } from "@/pages/employees/libs/table-types";
 import type { UseFormReturn } from "react-hook-form";
 
 interface EmployeeSelectorProps {
-  form: UseFormReturn<WorkScheduleFormData>;
+  form: UseFormReturn<EditWorkScheduleFormData>;
   employees: EmployeeTable[];
   disabled?: boolean;
 }
@@ -42,12 +42,13 @@ export default function EmployeeSelector({
   const filteredEmployees = useMemo(() => {
     const q = debouncedQuery.trim().toLowerCase();
     if (!q) return [];
-    return employees.filter(
-      (e) =>
-        e.profile?.firstName.toLowerCase().includes(q) ||
-        e.profile?.lastName.toLowerCase().includes(q) ||
-        e.email?.toLowerCase().includes(q),
-    );
+    return employees.filter((e) => {
+      if (e.workCenter?.endDate !== null) return false;
+      const firstName = e.profile?.firstName?.toLowerCase() ?? "";
+      const lastName = e.profile?.lastName?.toLowerCase() ?? "";
+      const email = e.email?.toLowerCase() ?? "";
+      return firstName.includes(q) || lastName.includes(q) || email.includes(q);
+    });
   }, [debouncedQuery, employees]);
 
   const handleSelect = (employee: EmployeeTable) => {

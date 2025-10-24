@@ -22,7 +22,7 @@ export const useAssignBooking = (options?: { onSuccess?: () => void }) => {
   const onSubmit = async (data: BookingAssignmentFormValues) => {
     try {
       await assignBookingMutation.mutateAsync(
-        { data },
+        { data: { ...data, bookingId: data.bookingId } },
         {
           onSuccess: () => {
             form.reset();

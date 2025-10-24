@@ -32,13 +32,13 @@ export const useCancelBookingMutation = () => {
       const updatedCustomerInfo = await cancelBookingById(bookingId);
       return updatedCustomerInfo.data;
     },
-    onSuccess: async (_data, bookingId, page, pageSize) => {
+    onSuccess: async (_data, bookingId) => {
       await Promise.all([
         queryClient.invalidateQueries({
           queryKey: ["bookings"],
         }),
         queryClient.invalidateQueries({
-          queryKey: ["staff-bookings", page, pageSize],
+          queryKey: ["staff-bookings"],
         }),
         queryClient.invalidateQueries({
           queryKey: ["booking", bookingId],
@@ -66,11 +66,10 @@ export const useCreateBookingAssignmentMutation = () => {
     onSuccess: async (_data, variables) => {
       const bookingId = variables.data.bookingId;
       await Promise.all([
-        queryClient.invalidateQueries({
-          queryKey: ["booking", bookingId],
-        }),
+        queryClient.invalidateQueries({ queryKey: ["booking", bookingId] }),
+        queryClient.invalidateQueries({ queryKey: ["staff-bookings"] }),
       ]);
-      toast.success("Assignment technician successfully");
+      toast.success("Assigned technician successfully");
     },
   });
 };

@@ -1,5 +1,5 @@
 import type { Row } from "@tanstack/react-table";
-import { Maximize2, UserCheck } from "lucide-react";
+import { MapPinCheck, Maximize2, UserCheck } from "lucide-react";
 import ActionBtn from "@/components/table/ActionBtn";
 import { TooltipWrapper } from "@/components/TooltipWrapper";
 import type {
@@ -69,7 +69,15 @@ export default function ColActions({
           }}
         />
       </TooltipWrapper>
-
+      <TooltipWrapper content="Check-in">
+        <ActionBtn
+          icon={<MapPinCheck size={12} />}
+          onClick={() => {
+            const encodedId = encodeBase64(booking.id);
+            console.log(encodedId);
+          }}
+        />
+      </TooltipWrapper>
       {data && (
         <AssignmentDialog
           open={openAssignmentDialog}

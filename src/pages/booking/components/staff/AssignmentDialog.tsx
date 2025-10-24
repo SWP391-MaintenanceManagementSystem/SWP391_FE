@@ -38,7 +38,6 @@ export default function AssignmentDialog({
     centerId: item.serviceCenter.id,
     assignedIds: item.technicians.map((technician) => technician.id),
   });
-
   useEffect(() => {
     if (open && !initialized) {
       form.setValue("bookingId", item.id);

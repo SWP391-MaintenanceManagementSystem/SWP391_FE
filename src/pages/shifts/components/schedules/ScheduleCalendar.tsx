@@ -12,17 +12,22 @@ import type { AddWorkScheduleFormData } from "../../libs/schema";
 import { useGetShiftsQuery } from "@/services/shift/queries";
 import { useGetServiceCenterList } from "@/services/manager/queries";
 import { toast } from "sonner";
+import { useEffect } from "react";
 
 const localizer = dayjsLocalizer(dayjs);
 
 interface ScheduleCalendarProps {
   form: UseFormReturn<AddWorkScheduleFormData>;
   onConfirm: (data: AddWorkScheduleFormData) => void;
+  isPending: boolean;
+  isSuccess: boolean;
 }
 
 export default function ScheduleCalendar({
   form,
   onConfirm,
+  isPending,
+  isSuccess,
 }: ScheduleCalendarProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
@@ -33,8 +38,13 @@ export default function ScheduleCalendar({
   const centerList = centerListData ?? [];
   const handleAddSchedule = (data: AddWorkScheduleFormData) => {
     onConfirm(data);
-    form.reset();
   };
+
+  useEffect(() => {
+    if (isSuccess) {
+      setIsModalOpen(false);
+    }
+  }, [isSuccess, form]);
 
   return (
     <>
@@ -87,15 +97,17 @@ export default function ScheduleCalendar({
         onOpenChange={(open) => {
           setIsModalOpen(open);
           if (!open) {
-            form.reset();
             setSelectedDate(null);
           }
         }}
-        onConfirm={(data) => handleAddSchedule(data)}
+        onConfirm={(data) => {
+          handleAddSchedule(data);
+        }}
         form={form}
         selectedDate={selectedDate}
         shiftList={shiftsList}
         centerList={centerList}
+        isPending={isPending}
       />
     </>
   );

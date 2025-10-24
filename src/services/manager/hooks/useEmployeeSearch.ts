@@ -17,7 +17,10 @@ export function useTechnicianSearch({
     return employeesList
       .filter((emp) => emp.role === "TECHNICIAN")
       .filter((emp) => emp.status === "VERIFIED")
-      .filter((emp) => emp.workCenter?.id === centerId)
+      .filter(
+        (emp) =>
+          emp.workCenter?.id === centerId && emp.workCenter.endDate === null,
+      )
       .filter((emp) => !assignedIds.includes(emp.id))
       .filter((emp) => emp.email.toLowerCase().includes(keyword.toLowerCase()))
       .map((emp) => ({ id: emp.id, email: emp.email }));
@@ -35,7 +38,10 @@ export function useEmployeesSearch({ centerId }: { centerId: string }) {
     if (!employeesList) return undefined;
     return employeesList
       .filter((emp) => emp.status === "VERIFIED")
-      .filter((emp) => emp.workCenter?.id === centerId)
+      .filter(
+        (emp) =>
+          emp.workCenter?.id === centerId && emp.workCenter.endDate === null,
+      )
       .filter((emp) => emp.email.toLowerCase().includes(keyword.toLowerCase()))
       .map((emp) => ({ id: emp.id, email: emp.email }));
   }, [employeesList, keyword, centerId]);
