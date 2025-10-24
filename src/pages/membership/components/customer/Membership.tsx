@@ -10,7 +10,7 @@ export default function Membership() {
 
   return (
     <div className="w-full h-[calc(100vh-32px)]">
-      <DynamicBreadcrumbs pathTitles={{ membership: "Membership" }} />
+      <DynamicBreadcrumbs pathTitles={{ membership: "Memberships" }} />
       <MainContentLayout
         className={clsx("flex flex-col ", activeTab === "my" && "items-start ")}
       >
