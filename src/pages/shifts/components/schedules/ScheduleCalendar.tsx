@@ -11,6 +11,7 @@ import type { UseFormReturn } from "react-hook-form";
 import type { AddWorkScheduleFormData } from "../../libs/schema";
 import { useGetShiftsQuery } from "@/services/shift/queries";
 import { useGetServiceCenterList } from "@/services/manager/queries";
+import { toast } from "sonner";
 
 const localizer = dayjsLocalizer(dayjs);
 
@@ -65,6 +66,12 @@ export default function ScheduleCalendar({ form }: ScheduleCalendarProps) {
             onNavigate={setCurrentDate}
             views={{ month: true }}
             onSelectSlot={(slotInfo) => {
+              const today = new Date();
+              today.setHours(0, 0, 0, 0);
+              if (slotInfo.start < today) {
+                toast.warning("Cannot schedule in the past");
+                return;
+              }
               setSelectedDate(slotInfo.start);
               setIsModalOpen(true);
             }}

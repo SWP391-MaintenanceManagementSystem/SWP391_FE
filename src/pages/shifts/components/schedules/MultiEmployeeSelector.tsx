@@ -5,10 +5,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { X } from "lucide-react";
 import { cn } from "@/lib/utils";
-import type { WorkScheduleFormData } from "../../libs/schema";
+import type { AddWorkScheduleFormData } from "../../libs/schema";
 
 interface MultiEmployeeSelectorProps<T extends { id: string; email: string }> {
-  form: UseFormReturn<WorkScheduleFormData>;
+  form: UseFormReturn<AddWorkScheduleFormData>;
   fieldName: "employeeIds";
   label: string;
   placeholder: string;
@@ -17,6 +17,7 @@ interface MultiEmployeeSelectorProps<T extends { id: string; email: string }> {
   setKeyword: (val: string) => void;
   data: T[] | undefined;
   isLoading: boolean;
+  disable?: boolean;
 }
 
 export default function MultiEmployeeSelector<
@@ -31,6 +32,7 @@ export default function MultiEmployeeSelector<
   setKeyword,
   data: items = [],
   isLoading,
+  disable,
 }: MultiEmployeeSelectorProps<T>) {
   const [cacheItems, setCacheItems] = useState<T[]>([]);
   const currentIds = form.watch(fieldName) as string[];
@@ -129,6 +131,7 @@ export default function MultiEmployeeSelector<
             value={keyword}
             onChange={(e) => setKeyword(e.target.value)}
             aria-invalid={!!form.formState.errors.employeeIds}
+            disabled={disable}
           />
         </div>
 

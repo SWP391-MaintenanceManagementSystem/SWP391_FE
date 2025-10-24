@@ -26,7 +26,6 @@ import {
 import { useForm } from "react-hook-form";
 import type { AddWorkScheduleFormData } from "../../libs/schema";
 import type { Shift } from "@/types/models/shift";
-import EmployeeSelector from "./EmployeeSelector";
 import { useGetEmployeesQuery } from "@/services/shift/queries";
 import clsx from "clsx";
 import { Calendar } from "@/components/ui/calendar";
@@ -36,7 +35,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { CalendarIcon } from "lucide-react";
+import { CalendarIcon, ChevronDown } from "lucide-react";
 import dayjs from "dayjs";
 import type { ServiceCenter } from "@/types/models/center";
 import {
@@ -45,7 +44,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { ChevronDown } from "lucide-react";
+import MultiEmployeeSelector from "./MultiEmployeeSelector";
+import { useEmployeesSearch } from "@/services/manager/hooks/useEmployeeSearch";
 
 interface AddScheduleProps {
   open: boolean;
@@ -68,6 +68,21 @@ export function AddScheduleDialog({
 }: AddScheduleProps) {
   const { watch } = form;
   const { data: employeesList } = useGetEmployeesQuery();
+  const [initialized, setInitialized] = useState(false);
+  const { keyword, setKeyword, data, isLoading } = useEmployeesSearch({
+    centerId: watch("centerId"),
+  });
+
+  useEffect(() => {
+    if (open && !initialized) {
+      form.setValue("employeeIds", []);
+      setKeyword("");
+      setInitialized(true);
+    }
+    if (!open) {
+      setInitialized(false);
+    }
+  }, [open, form, setKeyword, initialized]);
 
   const selectedEmployeeIds = watch("employeeIds");
   const selectedEmployee = useMemo(
@@ -86,28 +101,25 @@ export function AddScheduleDialog({
     );
   }, [centerId, selectedEmployee, shiftList]);
 
-  // Date states
-  const [openDate, setOpenDate] = useState(false);
-  const [date, setDate] = useState<Date | undefined>();
-  const [month, setMonth] = useState<Date | undefined>();
+  // ---- Separate date states ----
+  const [openStartDate, setOpenStartDate] = useState(false);
+  const [openEndDate, setOpenEndDate] = useState(false);
+  const [startDate, setStartDate] = useState<Date | undefined>();
+  const [startMonth, setStartMonth] = useState<Date | undefined>();
+  const [endDate, setEndDate] = useState<Date | undefined>();
+  const [endMonth, setEndMonth] = useState<Date | undefined>();
 
-  // --- Sync date when dialog opens ---
+  // --- Sync selectedDate for startDate only ---
   useEffect(() => {
     if (open) {
-      let defaultDate: Date | undefined;
-
       if (selectedDate) {
-        defaultDate = selectedDate;
-      }
-
-      if (defaultDate) {
-        const formatted = dayjs(defaultDate).format("YYYY-MM-DD");
+        const formatted = dayjs(selectedDate).format("YYYY-MM-DD");
         form.setValue("date", formatted);
-        setDate(defaultDate);
-        setMonth(defaultDate);
+        setStartDate(selectedDate);
+        setStartMonth(selectedDate);
       } else {
-        setDate(undefined);
-        setMonth(undefined);
+        setStartDate(undefined);
+        setStartMonth(undefined);
         form.setValue("date", "");
       }
     }
@@ -130,7 +142,17 @@ export function AddScheduleDialog({
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog
+      open={open}
+      onOpenChange={(newState) => {
+        if (!newState) {
+          form.reset();
+          setKeyword("");
+          setInitialized(false);
+        }
+        onOpenChange(newState);
+      }}
+    >
       <DialogContent
         className="sm:max-w-[500px] font-inter"
         onOpenAutoFocus={(e) => e.preventDefault()}
@@ -146,9 +168,10 @@ export function AddScheduleDialog({
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
-            className="grid grid-cols-1 gap-4"
+            className="grid grid-cols-1 gap-6"
           >
             <div className="grid grid-cols-1 gap-4 max-h-[320px] overflow-y-auto">
+              {/* Center */}
               <FormField
                 control={form.control}
                 name="centerId"
@@ -157,17 +180,14 @@ export function AddScheduleDialog({
                     <FormLabel>Service Center *</FormLabel>
                     <FormControl>
                       <DropdownMenu>
-                        <DropdownMenuTrigger
-                          asChild
-                          className={`w-full border ${
-                            form.formState.errors.centerId
-                              ? "border-destructive focus:ring-destructive"
-                              : "border-input focus:ring-primary"
-                          }`}
-                        >
+                        <DropdownMenuTrigger asChild>
                           <Button
                             variant="outline"
-                            className="w-full !outline-none flex justify-between"
+                            className={clsx(
+                              "w-full justify-between",
+                              form.formState.errors.centerId &&
+                                "border-destructive focus:ring-destructive",
+                            )}
                           >
                             <span>
                               {centerList?.find((c) => c.id === field.value)
@@ -176,7 +196,7 @@ export function AddScheduleDialog({
                             <ChevronDown className="mr-2 h-4 w-4" />
                           </Button>
                         </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
+                        <DropdownMenuContent className="w-full" align="start">
                           {centerList?.map((center) => (
                             <DropdownMenuItem
                               key={center.id}
@@ -194,19 +214,19 @@ export function AddScheduleDialog({
               />
 
               {/* Employee Selector */}
-              <EmployeeSelector
+              <MultiEmployeeSelector
                 form={form}
-                disabled={!form.watch("centerId")}
-                employees={
-                  employeesList
-                    ?.filter((emp) => emp.status === "VERIFIED")
-                    .filter(
-                      (emp) => emp.workCenter?.id === form.watch("centerId"),
-                    ) || []
-                }
+                fieldName="employeeIds"
+                label="Select Employees"
+                placeholder="Search email to find employees..."
+                keyword={keyword}
+                setKeyword={setKeyword}
+                data={data}
+                isLoading={isLoading}
+                disable={!form.watch("centerId")}
               />
 
-              {/* Shift Field */}
+              {/* Shift */}
               <FormField
                 control={form.control}
                 name="shiftId"
@@ -216,8 +236,7 @@ export function AddScheduleDialog({
                     <Select
                       onValueChange={field.onChange}
                       value={field.value}
-                      disabled={!form.watch("centerId") && !selectedEmployee}
-                      aria-invalid={!!form.formState.errors.shiftId}
+                      disabled={!form.watch("centerId")}
                     >
                       <FormControl>
                         <SelectTrigger
@@ -231,11 +250,7 @@ export function AddScheduleDialog({
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        {!selectedEmployee && !centerId ? (
-                          <SelectItem value="none" disabled>
-                            Please select an employee first
-                          </SelectItem>
-                        ) : filteredShifts.length > 0 ? (
+                        {filteredShifts.length > 0 ? (
                           filteredShifts.map((shift) => (
                             <SelectItem key={shift.id} value={shift.id}>
                               {shift.name}
@@ -253,117 +268,31 @@ export function AddScheduleDialog({
                 )}
               />
 
-              {/* Date Field */}
+              {/* Start Date */}
               <FormField
                 control={form.control}
                 name="date"
-                render={() =>
-                  selectedDate ? (
-                    <FormItem>
-                      <FormLabel>Selected Date *</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="text"
-                          value={dayjs(selectedDate).format("DD-MM-YYYY")}
-                          readOnly
-                          className="bg-gray-100 cursor-not-allowed"
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  ) : (
-                    <FormItem>
-                      <FormLabel>Start Date *</FormLabel>
-                      <FormControl>
-                        <div className="relative flex gap-2">
-                          <Input
-                            id="date"
-                            value={formatDateForInput(date)}
-                            placeholder="dd-mm-yyyy"
-                            readOnly
-                            aria-invalid={!!form.formState.errors.date}
-                          />
-                          <Popover open={openDate} onOpenChange={setOpenDate}>
-                            <PopoverTrigger asChild>
-                              <Button
-                                id="date-picker"
-                                variant="ghost"
-                                className={`absolute top-1/2 right-2 size-6 -translate-y-1/2 ${
-                                  form.formState.errors.date
-                                    ? "border-destructive focus:ring-destructive"
-                                    : "border-input focus:ring-primary"
-                                }`}
-                              >
-                                <CalendarIcon className="size-3.5" />
-                                <span className="sr-only">Select date</span>
-                              </Button>
-                            </PopoverTrigger>
-                            <PopoverContent
-                              className="w-auto overflow-hidden p-0"
-                              align="end"
-                              alignOffset={-8}
-                              sideOffset={10}
-                            >
-                              <Calendar
-                                mode="single"
-                                selected={date}
-                                captionLayout="dropdown"
-                                month={month}
-                                onMonthChange={setMonth}
-                                onSelect={(selectedDate) => {
-                                  if (!selectedDate) return;
-                                  const localDate = new Date(
-                                    selectedDate.getFullYear(),
-                                    selectedDate.getMonth(),
-                                    selectedDate.getDate(),
-                                  );
-                                  setDate(localDate);
-                                  form.setValue(
-                                    "date",
-                                    formatDateForValue(localDate),
-                                  ); // yyyy-mm-dd
-                                  setOpenDate(false);
-                                }}
-                              />
-                            </PopoverContent>
-                          </Popover>
-                        </div>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )
-                }
-              />
-
-              {/*End Date Field*/}
-              <FormField
-                control={form.control}
-                name="endDate"
                 render={() => (
                   <FormItem>
-                    <FormLabel>End Date</FormLabel>
+                    <FormLabel>Start Date *</FormLabel>
                     <FormControl>
                       <div className="relative flex gap-2">
                         <Input
-                          id="endDate"
-                          value={formatDateForInput(date)}
+                          id="date"
+                          value={formatDateForInput(startDate)}
                           placeholder="dd-mm-yyyy"
                           readOnly
-                          aria-invalid={!!form.formState.errors.date}
                         />
-                        <Popover open={openDate} onOpenChange={setOpenDate}>
+                        <Popover
+                          open={openStartDate}
+                          onOpenChange={setOpenStartDate}
+                        >
                           <PopoverTrigger asChild>
                             <Button
-                              id="endDate-picker"
                               variant="ghost"
-                              className={`absolute top-1/2 right-2 size-6 -translate-y-1/2 ${
-                                form.formState.errors.date
-                                  ? "border-destructive focus:ring-destructive"
-                                  : "border-input focus:ring-primary"
-                              }`}
+                              className="absolute top-1/2 right-2 size-6 -translate-y-1/2"
                             >
                               <CalendarIcon className="size-3.5" />
-                              <span className="sr-only">Select date</span>
                             </Button>
                           </PopoverTrigger>
                           <PopoverContent
@@ -374,23 +303,18 @@ export function AddScheduleDialog({
                           >
                             <Calendar
                               mode="single"
-                              selected={date}
+                              selected={startDate}
                               captionLayout="dropdown"
-                              month={month}
-                              onMonthChange={setMonth}
+                              month={startMonth}
+                              onMonthChange={setStartMonth}
                               onSelect={(selectedDate) => {
                                 if (!selectedDate) return;
-                                const localDate = new Date(
-                                  selectedDate.getFullYear(),
-                                  selectedDate.getMonth(),
-                                  selectedDate.getDate(),
-                                );
-                                setDate(localDate);
+                                setStartDate(selectedDate);
                                 form.setValue(
-                                  "endDate",
-                                  formatDateForValue(localDate),
-                                ); // yyyy-mm-dd
-                                setOpenDate(false);
+                                  "date",
+                                  formatDateForValue(selectedDate),
+                                );
+                                setOpenStartDate(false);
                               }}
                             />
                           </PopoverContent>
@@ -402,47 +326,124 @@ export function AddScheduleDialog({
                 )}
               />
 
+              {/* End Date */}
               <FormField
                 control={form.control}
-                name="repeatDays"
-                render={({ field }) => (
+                name="endDate"
+                render={() => (
                   <FormItem>
-                    <FormLabel>Repeat Days</FormLabel>
-                    <div className="flex justify-between gap-1">
-                      {[
-                        { label: "Su", value: 0 },
-                        { label: "Mo", value: 1 },
-                        { label: "Tu", value: 2 },
-                        { label: "We", value: 3 },
-                        { label: "Th", value: 4 },
-                        { label: "Fr", value: 5 },
-                        { label: "Sa", value: 6 },
-                      ].map((day) => (
-                        <Button
-                          key={day.value}
-                          type="button"
-                          variant={
-                            field.value?.includes(day.value)
-                              ? "default"
-                              : "outline"
-                          }
-                          onClick={() => {
-                            const newValue = field.value?.includes(day.value)
-                              ? field.value.filter(
-                                  (v: number) => v !== day.value,
-                                )
-                              : [...(field.value || []), day.value];
-                            field.onChange(newValue);
-                          }}
-                          className="w-9"
+                    <FormLabel>End Date</FormLabel>
+                    <FormControl>
+                      <div className="relative flex gap-2">
+                        <Input
+                          id="endDate"
+                          value={formatDateForInput(endDate)}
+                          placeholder="dd-mm-yyyy"
+                          readOnly
+                        />
+                        <Popover
+                          open={openEndDate}
+                          onOpenChange={setOpenEndDate}
                         >
-                          {day.label}
-                        </Button>
-                      ))}
-                    </div>
+                          <PopoverTrigger asChild>
+                            <Button
+                              variant="ghost"
+                              className="absolute top-1/2 right-2 size-6 -translate-y-1/2"
+                            >
+                              <CalendarIcon className="size-3.5" />
+                            </Button>
+                          </PopoverTrigger>
+                          <PopoverContent
+                            className="w-auto overflow-hidden p-0"
+                            align="end"
+                            alignOffset={-8}
+                            sideOffset={10}
+                          >
+                            <Calendar
+                              mode="single"
+                              selected={endDate}
+                              captionLayout="dropdown"
+                              month={endMonth}
+                              onMonthChange={setEndMonth}
+                              onSelect={(selectedDate) => {
+                                if (!selectedDate) return;
+                                setEndDate(selectedDate);
+                                form.setValue(
+                                  "endDate",
+                                  formatDateForValue(selectedDate),
+                                );
+                                setOpenEndDate(false);
+                              }}
+                              disabled={(date) =>
+                                startDate ? date < startDate : false
+                              }
+                            />
+                          </PopoverContent>
+                        </Popover>
+                      </div>
+                    </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
+              />
+
+              {/* Repeat Days */}
+              <FormField
+                control={form.control}
+                name="repeatDays"
+                render={({ field }) => {
+                  const disableRepeat =
+                    !endDate ||
+                    (startDate &&
+                      endDate &&
+                      dayjs(startDate).isSame(endDate, "day"));
+
+                  return (
+                    <FormItem>
+                      <FormLabel>Repeat Days</FormLabel>
+                      <div className="flex justify-between gap-1">
+                        {[
+                          { label: "Su", value: 0 },
+                          { label: "Mo", value: 1 },
+                          { label: "Tu", value: 2 },
+                          { label: "We", value: 3 },
+                          { label: "Th", value: 4 },
+                          { label: "Fr", value: 5 },
+                          { label: "Sa", value: 6 },
+                        ].map((day) => (
+                          <Button
+                            key={day.value}
+                            type="button"
+                            disabled={disableRepeat}
+                            variant={
+                              field.value?.includes(day.value)
+                                ? "default"
+                                : "outline"
+                            }
+                            onClick={() => {
+                              const newValue = field.value?.includes(day.value)
+                                ? field.value.filter(
+                                    (v: number) => v !== day.value,
+                                  )
+                                : [...(field.value || []), day.value];
+                              field.onChange(newValue);
+                            }}
+                            className="w-9"
+                          >
+                            {day.label}
+                          </Button>
+                        ))}
+                      </div>
+                      {disableRepeat && (
+                        <p className="text-sm text-muted-foreground mt-1">
+                          Repeat days are disabled because end date is empty or
+                          equals start date.
+                        </p>
+                      )}
+                      <FormMessage />
+                    </FormItem>
+                  );
+                }}
               />
             </div>
 
@@ -454,7 +455,9 @@ export function AddScheduleDialog({
               <Button
                 type="submit"
                 className="bg-purple-primary"
-                disabled={!form.formState.isDirty}
+                disabled={
+                  !form.formState.isDirty || form.formState.isSubmitting
+                }
               >
                 Add
               </Button>

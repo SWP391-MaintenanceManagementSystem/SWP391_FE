@@ -40,13 +40,7 @@ export const AddWorkScheduleSchema = z.object({
     .min(1, "Please select at least one employee"),
   date: z.string().min(1, { message: "Date cannot be empty" }),
   endDate: z.string().optional(),
-  repeatDays: z
-    .array(z.number().int().min(0).max(6))
-    .optional()
-    .refine(
-      (val) => !val || val.length > 0,
-      "Repeat days cannot be an empty array",
-    ),
+  repeatDays: z.array(z.number().int().min(0).max(6)).optional().default([]),
 });
 
 export type AddWorkScheduleFormData = z.infer<typeof AddWorkScheduleSchema>;
