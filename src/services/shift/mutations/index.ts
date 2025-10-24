@@ -3,12 +3,14 @@ import { deleteShift, updateShift, addShift } from "../apis/shift.api";
 import { queryKeys } from "../queries/keys";
 import { toast } from "sonner";
 import type {
+  AddWorkScheduleFormData,
   EditWorkScheduleFormData,
   ShiftFormData,
 } from "@/pages/shifts/libs/schema";
 import {
   deleteWorkSchedule,
   updateWorkSchedule,
+  addSchedule,
 } from "../apis/work-schedules.api";
 
 export const useDeleteShift = () => {
@@ -172,6 +174,33 @@ export const useUpdateSchedule = () => {
         }),
       ]);
       toast.success("Schedule information updated successfully");
+    },
+  });
+};
+
+export const useAddSchedule = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async ({
+      data,
+    }: {
+      data: AddWorkScheduleFormData;
+      currentPage: number;
+      currentPageSize: number;
+    }) => {
+      const add = await addSchedule(data);
+      return add.data;
+    },
+    onSuccess: async (_data, variables) => {
+      await Promise.all([
+        queryClient.invalidateQueries({
+          queryKey: queryKeys.workSchedulesList({
+            page: variables.currentPage,
+            pageSize: variables.currentPageSize,
+          }),
+        }),
+      ]);
+      toast.success("Schedule added successfully");
     },
   });
 };

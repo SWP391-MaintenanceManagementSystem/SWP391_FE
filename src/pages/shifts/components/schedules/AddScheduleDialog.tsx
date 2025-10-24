@@ -114,13 +114,13 @@ export function AddScheduleDialog({
     if (open) {
       if (selectedDate) {
         const formatted = dayjs(selectedDate).format("YYYY-MM-DD");
-        form.setValue("date", formatted);
+        form.setValue("startDate", formatted);
         setStartDate(selectedDate);
         setStartMonth(selectedDate);
       } else {
         setStartDate(undefined);
         setStartMonth(undefined);
-        form.setValue("date", "");
+        form.setValue("startDate", "");
       }
     }
   }, [open, selectedDate, form]);
@@ -271,17 +271,22 @@ export function AddScheduleDialog({
               {/* Start Date */}
               <FormField
                 control={form.control}
-                name="date"
+                name="startDate"
                 render={() => (
                   <FormItem>
                     <FormLabel>Start Date *</FormLabel>
                     <FormControl>
                       <div className="relative flex gap-2">
                         <Input
-                          id="date"
+                          id="startDate"
                           value={formatDateForInput(startDate)}
                           placeholder="dd-mm-yyyy"
                           readOnly
+                          className={clsx(
+                            "w-full",
+                            form.formState.errors.startDate &&
+                              "border-destructive focus:ring-destructive",
+                          )}
                         />
                         <Popover
                           open={openStartDate}
@@ -311,7 +316,7 @@ export function AddScheduleDialog({
                                 if (!selectedDate) return;
                                 setStartDate(selectedDate);
                                 form.setValue(
-                                  "date",
+                                  "startDate",
                                   formatDateForValue(selectedDate),
                                 );
                                 setOpenStartDate(false);
@@ -340,6 +345,11 @@ export function AddScheduleDialog({
                           value={formatDateForInput(endDate)}
                           placeholder="dd-mm-yyyy"
                           readOnly
+                          className={clsx(
+                            "w-full",
+                            form.formState.errors.endDate &&
+                              "border-destructive focus:ring-destructive",
+                          )}
                         />
                         <Popover
                           open={openEndDate}

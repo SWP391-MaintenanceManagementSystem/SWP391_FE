@@ -38,9 +38,9 @@ export const AddWorkScheduleSchema = z.object({
   employeeIds: z
     .array(z.string().min(1, "Employee ID is required"))
     .min(1, "Please select at least one employee"),
-  date: z.string().min(1, { message: "Date cannot be empty" }),
+  startDate: z.string().min(1, { message: "Date cannot be empty" }),
   endDate: z.string().optional(),
-  repeatDays: z.array(z.number().int().min(0).max(6)).optional().default([]),
+  repeatDays: z.array(z.number().int().min(0).max(6)).optional(),
 });
 
 export type AddWorkScheduleFormData = z.infer<typeof AddWorkScheduleSchema>;
@@ -49,7 +49,7 @@ export const AddWorkScheduleFormDataValues: AddWorkScheduleFormData = {
   centerId: "",
   shiftId: "",
   employeeIds: [],
-  date: "",
+  startDate: "",
   endDate: "",
   repeatDays: [],
 };

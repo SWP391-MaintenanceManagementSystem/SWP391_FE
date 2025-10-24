@@ -5,7 +5,7 @@ import ScheduleCalendar from "./ScheduleCalendar";
 import { useWorkSchedule } from "@/services/shift/hooks/useWorkSchedule";
 
 export default function AddNewSchedulePage() {
-  const { addForm } = useWorkSchedule();
+  const { addForm, handleAddSchedule } = useWorkSchedule();
 
   return (
     <div className="w-full h-[calc(100vh-32px)] font-inter">
@@ -16,7 +16,7 @@ export default function AddNewSchedulePage() {
         }}
       />
       <MainContentLayout className="h-full">
-        <ScheduleCalendar form={addForm} />
+        <ScheduleCalendar form={addForm} onConfirm={handleAddSchedule} />
       </MainContentLayout>
     </div>
   );

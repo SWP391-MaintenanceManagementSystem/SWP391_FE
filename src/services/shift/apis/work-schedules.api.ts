@@ -1,7 +1,10 @@
 import { httpPrivate } from "@/lib/http";
 import type { BaseResponse, PaginationResponse } from "@/types/models/response";
 import type { WorkSchedule } from "@/types/models/shift";
-import type { WorkScheduleFormData } from "@/pages/shifts/libs/schema";
+import type {
+  AddWorkScheduleFormData,
+  EditWorkScheduleFormData,
+} from "@/pages/shifts/libs/schema";
 import type { EmployeeTable } from "@/pages/employees/libs/table-types";
 
 export const getWorkScheduleList = (params: {
@@ -29,7 +32,10 @@ export const deleteWorkSchedule = (id: string, date: string) => {
   return httpPrivate.del<BaseResponse<void>>(`/work-schedules/${id}/${date}`);
 };
 
-export const updateWorkSchedule = (id: string, data: WorkScheduleFormData) => {
+export const updateWorkSchedule = (
+  id: string,
+  data: EditWorkScheduleFormData,
+) => {
   return httpPrivate.patch<BaseResponse<WorkSchedule>>(
     `/work-schedules/${id}`,
     data,
@@ -44,4 +50,8 @@ export const getAllEmployees = () => {
 
 export const getWorkScheduleById = (id: string) => {
   return httpPrivate.get<BaseResponse<WorkSchedule>>(`/work-schedules/${id}`);
+};
+
+export const addSchedule = (data: AddWorkScheduleFormData) => {
+  return httpPrivate.post<BaseResponse<WorkSchedule>>(`/work-schedules`, data);
 };

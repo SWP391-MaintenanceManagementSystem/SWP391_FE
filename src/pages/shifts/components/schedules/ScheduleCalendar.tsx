@@ -17,9 +17,13 @@ const localizer = dayjsLocalizer(dayjs);
 
 interface ScheduleCalendarProps {
   form: UseFormReturn<AddWorkScheduleFormData>;
+  onConfirm: (data: AddWorkScheduleFormData) => void;
 }
 
-export default function ScheduleCalendar({ form }: ScheduleCalendarProps) {
+export default function ScheduleCalendar({
+  form,
+  onConfirm,
+}: ScheduleCalendarProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -28,8 +32,7 @@ export default function ScheduleCalendar({ form }: ScheduleCalendarProps) {
   const { data: centerListData } = useGetServiceCenterList();
   const centerList = centerListData ?? [];
   const handleAddSchedule = (data: AddWorkScheduleFormData) => {
-    console.log("Schedule submitted:", data);
-    setIsModalOpen(false);
+    onConfirm(data);
     form.reset();
   };
 

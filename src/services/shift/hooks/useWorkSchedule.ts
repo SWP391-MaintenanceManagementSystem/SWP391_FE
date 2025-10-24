@@ -1,5 +1,9 @@
 import type { WorkSchedule } from "@/types/models/shift";
-import { useDeleteWorkSchedule, useUpdateSchedule } from "../mutations";
+import {
+  useDeleteWorkSchedule,
+  useUpdateSchedule,
+  useAddSchedule,
+} from "../mutations";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { AxiosError } from "axios";
@@ -14,6 +18,7 @@ import {
 export const useWorkSchedule = (item?: WorkSchedule) => {
   const delScheduleMutation = useDeleteWorkSchedule();
   const updateScheduleMutation = useUpdateSchedule();
+  const addScheduleMutation = useAddSchedule();
 
   const editForm = useForm<EditWorkScheduleFormData>({
     resolver: zodResolver(EditWorkScheduleSchema),
@@ -30,11 +35,48 @@ export const useWorkSchedule = (item?: WorkSchedule) => {
       centerId: item?.shift.serviceCenter.id || "",
       employeeIds: [],
       shiftId: item?.shift.id || "",
-      date: item?.date || "",
+      startDate: item?.date || "",
       endDate: "",
       repeatDays: [],
     },
   });
+
+  const handleAddSchedule = async (data: AddWorkScheduleFormData) => {
+    return new Promise<boolean>((resolve) => {
+      addScheduleMutation.mutateAsync(
+        {
+          data,
+          currentPage: 1,
+          currentPageSize: 10,
+        },
+        {
+          onSuccess: () => {
+            toast.success("Schedule added successfully");
+            resolve(true);
+          },
+          onError: (error) => {
+            if (error instanceof AxiosError) {
+              const apiErrors = error.response?.data?.errors;
+              const msg = error.response?.data.message;
+              if (apiErrors && typeof apiErrors === "object") {
+                Object.entries(apiErrors).forEach(([field, msg]) => {
+                  addForm.setError(field as keyof AddWorkScheduleFormData, {
+                    type: "server",
+                    message: msg as string,
+                  });
+                });
+              } else if (msg) {
+                toast.error(msg);
+              } else {
+                toast.error("Something went wrong. Please try again.");
+              }
+            }
+            resolve(false);
+          },
+        },
+      );
+    });
+  };
 
   const handleDeleteSchedule = ({
     currentPage,
@@ -105,6 +147,7 @@ export const useWorkSchedule = (item?: WorkSchedule) => {
   return {
     handleDeleteSchedule,
     handleEditSchedule,
+    handleAddSchedule,
     editForm,
     addForm,
   };
