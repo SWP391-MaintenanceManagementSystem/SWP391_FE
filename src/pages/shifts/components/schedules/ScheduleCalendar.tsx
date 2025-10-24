@@ -18,11 +18,13 @@ const localizer = dayjsLocalizer(dayjs);
 interface ScheduleCalendarProps {
   form: UseFormReturn<AddWorkScheduleFormData>;
   onConfirm: (data: AddWorkScheduleFormData) => void;
+  isPending: boolean;
 }
 
 export default function ScheduleCalendar({
   form,
   onConfirm,
+  isPending,
 }: ScheduleCalendarProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
@@ -96,6 +98,7 @@ export default function ScheduleCalendar({
         selectedDate={selectedDate}
         shiftList={shiftsList}
         centerList={centerList}
+        isPending={isPending}
       />
     </>
   );

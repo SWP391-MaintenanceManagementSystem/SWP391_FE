@@ -150,5 +150,7 @@ export const useWorkSchedule = (item?: WorkSchedule) => {
     handleAddSchedule,
     editForm,
     addForm,
+    isEditingPending: updateScheduleMutation.isPending,
+    isAddingPending: addScheduleMutation.isPending,
   };
 };

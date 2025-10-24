@@ -55,6 +55,7 @@ interface AddScheduleProps {
   centerList?: ServiceCenter[];
   form: ReturnType<typeof useForm<AddWorkScheduleFormData>>;
   selectedDate?: Date | null;
+  isPending: boolean;
 }
 
 export function AddScheduleDialog({
@@ -65,6 +66,7 @@ export function AddScheduleDialog({
   centerList,
   form,
   selectedDate,
+  isPending,
 }: AddScheduleProps) {
   const { watch } = form;
   const { data: employeesList } = useGetEmployeesQuery();
@@ -466,7 +468,9 @@ export function AddScheduleDialog({
                 type="submit"
                 className="bg-purple-primary"
                 disabled={
-                  !form.formState.isDirty || form.formState.isSubmitting
+                  !form.formState.isDirty ||
+                  form.formState.isSubmitting ||
+                  isPending
                 }
               >
                 Add

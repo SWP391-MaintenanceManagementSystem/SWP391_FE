@@ -28,8 +28,12 @@ export default function ColActions({
   const [openViewDialog, setOpenViewDialog] = useState(false);
   const [openEditDialog, setOpenEditDialog] = useState(false);
   const schedule = row.original;
-  const { handleDeleteSchedule, handleEditSchedule, editForm } =
-    useWorkSchedule(schedule);
+  const {
+    handleDeleteSchedule,
+    handleEditSchedule,
+    editForm,
+    isEditingPending,
+  } = useWorkSchedule(schedule);
 
   return (
     <div className="flex gap-1">
@@ -91,6 +95,7 @@ export default function ColActions({
           });
         }}
         item={schedule}
+        isPending={isEditingPending}
       />
     </div>
   );

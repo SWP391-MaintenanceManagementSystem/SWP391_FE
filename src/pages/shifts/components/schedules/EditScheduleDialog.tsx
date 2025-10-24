@@ -46,6 +46,7 @@ interface EditScheduleProps {
   item: WorkSchedule | null;
   shiftList: Shift[];
   form: ReturnType<typeof useForm<EditWorkScheduleFormData>>;
+  isPending: boolean;
 }
 
 export function EditScheduleDialog({
@@ -55,6 +56,7 @@ export function EditScheduleDialog({
   item,
   shiftList,
   form,
+  isPending,
 }: EditScheduleProps) {
   const { watch } = form;
   const { data: employeesList } = useGetEmployeesQuery();
@@ -65,18 +67,22 @@ export function EditScheduleDialog({
     [employeesList, selectedEmployeeId],
   );
 
-  useEffect(() => {
-    form.setValue("shiftId", item?.shift.id || "");
-  }, [selectedEmployeeId, form, item]);
-
   const filteredShifts = useMemo(() => {
     const centerId = selectedEmployee?.workCenter?.id;
+
     if (!centerId) return [];
     return shiftList.filter(
       (shift) =>
         shift.serviceCenter?.id === centerId && shift.status === "ACTIVE",
     );
   }, [selectedEmployee, shiftList]);
+
+  useEffect(() => {
+    if (!selectedEmployee) return;
+    const currentShiftId = form.getValues("shiftId");
+    const isValidShift = filteredShifts.some((s) => s.id === currentShiftId);
+    if (!isValidShift) form.setValue("shiftId", "");
+  }, [selectedEmployee, filteredShifts, form]);
 
   // Date field states
   const [openDate, setOpenDate] = useState(false);
@@ -90,15 +96,22 @@ export function EditScheduleDialog({
     item?.date ? dayjs(item.date).format("YYYY-MM-DD") : "",
   );
 
-  // Reset local date when opening or when item changes
+  // Reset form when modal opens & data ready
   useEffect(() => {
-    if (open) {
-      const defaultDate = item?.date ? new Date(item.date) : undefined;
-      setDate(defaultDate);
-      setMonth(defaultDate);
-      setValue(item?.date ? dayjs(item.date).format("YYYY-MM-DD") : "");
-    }
-  }, [open, item]);
+    if (!open || !item || !employeesList || !shiftList) return;
+
+    const defaultDate = item.date ? new Date(item.date) : undefined;
+    setDate(defaultDate);
+    setMonth(defaultDate);
+    setValue(item.date ? dayjs(item.date).format("YYYY-MM-DD") : "");
+
+    form.reset({
+      ...item,
+      employeeId: item.account?.id || "",
+      shiftId: item.shift?.id || "",
+      date: item.date || "",
+    });
+  }, [open, item, employeesList, shiftList, form]);
 
   const isValidDate = (d: Date) => d instanceof Date && !isNaN(d.getTime());
   const formatDate = (d?: Date) => (d ? dayjs(d).format("YYYY-MM-DD") : "");
@@ -111,11 +124,6 @@ export function EditScheduleDialog({
 
   const handleCancel = () => {
     onOpenChange(false);
-    form.reset({ ...item });
-    const defaultDate = item?.date ? new Date(item.date) : undefined;
-    setDate(defaultDate);
-    setMonth(defaultDate);
-    setValue(item?.date ? dayjs(item.date).format("YYYY-MM-DD") : "");
   };
 
   return (
@@ -191,12 +199,22 @@ export function EditScheduleDialog({
                             </SelectItem>
                           )}
 
-                          {item?.shift?.id &&
+                          {/* Ensure inactive shift appears if currently assigned */}
+                          {item?.shift &&
                             !filteredShifts.some(
                               (s) => s.id === item.shift.id,
                             ) && (
-                              <SelectItem value={item.shift.id} disabled>
-                                Shift {item.shift.name} invalid, select another
+                              <SelectItem
+                                value={item.shift.id}
+                                disabled={item.shift.status === "INACTIVE"}
+                              >
+                                {item.shift.status === "INACTIVE" ? (
+                                  <p className="text-destructive">
+                                    {item.shift.name} invalid, select another
+                                  </p>
+                                ) : (
+                                  item.shift.name
+                                )}
                               </SelectItem>
                             )}
                         </>
@@ -289,7 +307,7 @@ export function EditScheduleDialog({
               <Button
                 type="submit"
                 className="bg-purple-primary"
-                disabled={!form.formState.isDirty}
+                disabled={!form.formState.isDirty || isPending}
               >
                 Update
               </Button>
