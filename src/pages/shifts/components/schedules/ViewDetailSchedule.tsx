@@ -20,8 +20,18 @@ export default function ViewDetailSchedule({ item }: ViewDetailScheduleProps) {
         <InputDisableWithLabel
           label="Date"
           id="date"
-          value={dayjs(item.date).format("YYYY-MM-DD")}
+          value={dayjs(item.date).format("DD/MM/YYYY")}
           styleFormat="md:col-span-2"
+        />
+        <InputDisableWithLabel
+          label="Create on"
+          id="createdAt"
+          value={dayjs(item.createdAt).format("HH:mm [on] DD/MM/YYYY")}
+        />
+        <InputDisableWithLabel
+          label="Last Updated on"
+          id="updatedAt"
+          value={dayjs(item.updatedAt).format("HH:mm [on] DD/MM/YYYY")}
         />
       </InfoSection>
 

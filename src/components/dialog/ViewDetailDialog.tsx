@@ -56,10 +56,12 @@ export const InfoSection = ({
 }) => {
   return (
     <div className="flex flex-col gap-3">
-      <h2 className="text-[16px] font-medium flex text-center items-center gap-1">
-        <InfoIcon size={18} />
-        {title || ""}
-      </h2>
+      {title && (
+        <h2 className="text-[16px] font-medium flex text-center items-center gap-1">
+          <InfoIcon size={18} />
+          {title}
+        </h2>
+      )}
       <div className={cn("grid grid-cols-1 gap-4", styleFormLayout)}>
         {children}
       </div>

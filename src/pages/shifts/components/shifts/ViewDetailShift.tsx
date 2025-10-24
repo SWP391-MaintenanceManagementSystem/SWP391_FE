@@ -55,12 +55,12 @@ export default function ViewDetailShift({ item }: ViewDetailShiftProps) {
         <InputDisableWithLabel
           label="Created on"
           id="createdAt"
-          value={dayjs(item.createdAt).format("HH:mm - DD/MM/YYYY")}
+          value={dayjs(item.createdAt).format("HH:mm [on] DD/MM/YYYY")}
         />
         <InputDisableWithLabel
-          label="Last updated"
+          label="Last Updated on"
           id="updatedAt"
-          value={dayjs(item.updatedAt).format("HH:mm - DD/MM/YYYY")}
+          value={dayjs(item.updatedAt).format("HH:mm [on] DD/MM/YYYY")}
         />
       </InfoSection>
     </div>
