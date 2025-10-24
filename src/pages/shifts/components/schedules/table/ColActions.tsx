@@ -10,6 +10,8 @@ import { useWorkSchedule } from "@/services/shift/hooks/useWorkSchedule";
 import { DeleteDialog } from "@/components/dialog/DeleteDialog";
 import { EditScheduleDialog } from "../EditScheduleDialog";
 import type { EditWorkScheduleFormData } from "@/pages/shifts/libs/schema";
+import { toast } from "sonner";
+import dayjs from "dayjs";
 
 export interface ColActionsProps {
   row: Row<WorkSchedule>;
@@ -45,13 +47,19 @@ export default function ColActions({
       </TooltipWrapper>
 
       <TooltipWrapper content="Edit">
-        <ActionBtn
-          icon={<Pencil size={12} />}
-          onClick={() => {
-            console.log("Edit", schedule);
-            setOpenEditDialog(true);
-          }}
-        />
+        <TooltipWrapper content="Edit">
+          <ActionBtn
+            icon={<Pencil size={12} />}
+            onClick={() => {
+              if (dayjs(schedule.date).isBefore(new Date())) {
+                toast.warning("Cannot edit past schedules");
+                return;
+              }
+              setOpenEditDialog(true);
+              console.log("Edit", schedule);
+            }}
+          />
+        </TooltipWrapper>
       </TooltipWrapper>
 
       <TooltipWrapper content="Delete">
