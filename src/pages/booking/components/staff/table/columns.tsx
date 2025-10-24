@@ -92,13 +92,28 @@ export const getColumns = (
         />
       ),
       size: 50,
-      cell: (info) => (info.getValue() ? "Yes" : "No"),
+      cell: (info) =>
+        info.getValue() ? (
+          <Badge variant="outline">Yes</Badge>
+        ) : (
+          <Badge variant="outline">No</Badge>
+        ),
       filterFn: "equals",
       meta: {
         title: "Premium",
         filterVariant: "filterPremium",
         filterOptions: ["true", "false"],
         labelOptions: { true: "Yes", false: "No" },
+      },
+    }),
+
+    // Vehicle Model
+    columnHelper.accessor("vehicle.model", {
+      id: "vehicleModel",
+      header: (info) => <SortHeader title="Vehicle Model" info={info} />,
+      cell: (info) => info.getValue(),
+      meta: {
+        title: "Vehicle Model",
       },
     }),
 
@@ -157,16 +172,6 @@ export const getColumns = (
       ),
       meta: {
         title: "Booking Date",
-      },
-    }),
-
-    // Work Center
-    columnHelper.accessor("serviceCenter.name", {
-      id: "centerName",
-      header: "Service Center",
-      cell: (info) => <Badge variant="outline">{info.getValue()}</Badge>,
-      meta: {
-        title: "Service Center",
       },
     }),
 

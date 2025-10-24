@@ -63,11 +63,13 @@ export const useCreateBookingAssignmentMutation = () => {
       const assign = await createBookingAssignment(data);
       return assign.data;
     },
-    onSuccess: async (_data, variables) => {
-      const bookingId = variables.data.bookingId;
+    onSuccess: async (_data, bookingId, page, pageSize) => {
       await Promise.all([
         queryClient.invalidateQueries({
           queryKey: ["booking", bookingId],
+        }),
+        queryClient.invalidateQueries({
+          queryKey: ["staff-bookings", page, pageSize],
         }),
       ]);
       toast.success("Assignment technician successfully");
