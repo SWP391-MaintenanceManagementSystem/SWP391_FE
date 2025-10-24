@@ -1,67 +1,63 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { DataTable } from "@/components/table/DataTable";
 import { getColumns } from "./columns";
-import type { TechnicianBooking } from "@/types/models/booking";
+import {
+  defaultBookingFilter,
+  type TechnicianBooking,
+} from "@/types/models/booking";
 import type { ColumnDef, SortingState } from "@tanstack/react-table";
-
-interface TechnicianAssignedBookingTableProps {
-  data: TechnicianBooking[];
-  isLoading?: boolean;
-  isFetching?: boolean;
-  totalPage?: number;
-  pageIndex?: number;
-  pageSize?: number;
-  onPageChange?: (pageIndex: number) => void;
-  onPageSizeChange?: (pageSize: number) => void;
-  onSearchChange?: (value: string) => void;
-  searchValue?: string;
-  manualPagination?: boolean;
-  manualSorting?: boolean;
-  manualSearch?: boolean;
-  isSearch?: boolean;
-}
-
-export default function TechnicianAssignedBookingTable({
-  data,
-  isLoading,
-  isFetching,
-  totalPage,
-  pageIndex,
-  pageSize,
-  onPageChange,
-  onPageSizeChange,
-  onSearchChange,
-}: TechnicianAssignedBookingTableProps) {
-  const columns = getColumns();
-
+import useTechnicianBooking from "@/services/booking/hooks/useTechnicianBooking";
+import { useDebounce } from "@uidotdev/usehooks";
+export default function TechnicianAssignedBookingTable() {
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+  const [searchValue, setSearchValue] = useState("");
   const [sorting, setSorting] = useState<SortingState>([]);
+  const [filters, setFilters] = useState(defaultBookingFilter);
+  const debouncedSearch = useDebounce(searchValue, 300);
+  const handleFilterChange = useCallback(
+    (field: string, value: string | boolean | undefined) => {
+      setFilters((prevFilters) => ({
+        ...prevFilters,
+        [field]: value,
+      }));
+    },
+    []
+  );
 
-  
+  const { bookingData, isLoading } = useTechnicianBooking({
+    ...filters,
+    page,
+    pageSize,
+    search: debouncedSearch,
+    sortBy: sorting[0]?.id ?? "createdAt",
+    orderBy: sorting[0]?.desc ? "desc" : "asc",
+  });
+
+  const bookings = bookingData?.data;
+
+  const columns = getColumns(handleFilterChange, filters);
+
   return (
-    <DataTable
-      columns={columns as ColumnDef<TechnicianBooking, unknown>[]}
-      data={data}
-      isLoading={isLoading}
-      isFetching={isFetching}
-      pageIndex={pageIndex}
-      pageSize={pageSize}
-      totalPage={totalPage}
-      onPageChange={onPageChange}
-      onPageSizeChange={onPageSizeChange}
-      manualPagination
-      sorting={sorting}
-      onSortingChange={setSorting}
-      isSearch
-      searchValue={[
-        "id",
-        "customer.firstName",
-        "customer.lastName",
-        "vehicle.licensePlate",
-      ]}
-      onSearchChange={onSearchChange}
-      searchPlaceholder="Search by booking ID, customer name, or vehicle"
-      manualSearch
-    
-    />
+    <div className="w-full h-[calc(100vh-32px)] ">
+      <DataTable<TechnicianBooking, unknown>
+        columns={columns as ColumnDef<TechnicianBooking, unknown>[]}
+        data={bookings ?? []}
+        pageIndex={page - 1}
+        pageSize={pageSize}
+        totalPage={bookingData?.totalPages ?? 1}
+        isLoading={isLoading}
+        onPageChange={(newPage) => setPage(newPage + 1)}
+        onPageSizeChange={setPageSize}
+        onSearchChange={setSearchValue}
+        searchPlaceholder="Customer, License plate ..."
+        sorting={sorting}
+        onSortingChange={setSorting}
+        manualPagination
+        manualSorting
+        manualSearch
+        isSearch
+      />
+    </div>
   );
 }

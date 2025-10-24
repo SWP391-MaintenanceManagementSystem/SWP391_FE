@@ -6,11 +6,7 @@ import type { PaginationResponse } from "@/types/models/response";
 import { getTechnicianBookings } from "../apis/technician-booking.api";
 
 export const useTechnicianBookingsQuery = (filter: BookingFilters) => {
-  const queryKey = queryKeys.technicianBookings({
-    page: filter.page,
-    pageSize: filter.pageSize,
-    search: filter.search
-  });
+  const queryKey = queryKeys.technicianBookings(filter);
 
   return useQuery<PaginationResponse<TechnicianBooking>>({
     queryKey,
@@ -23,6 +19,6 @@ export const useTechnicianBookingsQuery = (filter: BookingFilters) => {
         throw error;
       }
     },
-    refetchOnWindowFocus: false
+    enabled: !!filter.page && !!filter.page,
   });
 };

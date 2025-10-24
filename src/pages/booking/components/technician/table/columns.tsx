@@ -1,29 +1,43 @@
 import { createColumnHelper } from "@tanstack/react-table";
 import SortHeader from "@/components/table/SortHeader";
 import FilterHeader from "@/components/table/FilterHeader";
-import type { TechnicianBooking } from "@/types/models/booking";
 import ColActions from "./ColAction";
+import type { TechnicianBooking } from "@/types/models/booking";
 
 export const getColumns = () => {
   const columnHelper = createColumnHelper<TechnicianBooking>();
-
   return [
-    //Booking ID
+    columnHelper.display({
+      id: "number",
+      header: "#",
+      size: 50,
+      cell: ({ row, table }) =>
+        row.index +
+        1 +
+        table.getState().pagination.pageIndex *
+          table.getState().pagination.pageSize,
+      enableSorting: false,
+      enableHiding: false,
+    }),
+
+    // Booking ID
     columnHelper.accessor("id", {
       id: "bookingId",
-      header: (info) => <SortHeader title="Booking ID" info={info} />,
+      header: "Booking ID",
+      size: 120,
       cell: (info) => (
         <span className="font-inter font-medium text-gray-800 dark:text-gray-200">
           {info.getValue()?.slice(0, 8) ?? "—"}
         </span>
       ),
-      size: 120,
+      meta: { title: "Booking ID" },
     }),
 
-    //Customer
+    // Customer
     columnHelper.accessor("customer", {
-      id: "customer",
+      id: "fullName",
       header: (info) => <SortHeader title="Customer" info={info} />,
+      size: 180,
       cell: (info) => {
         const c = info.getValue();
         return (
@@ -32,13 +46,14 @@ export const getColumns = () => {
           </span>
         );
       },
-      size: 180,
+      meta: { title: "Customer" },
     }),
 
-    //Vehicle
+    // Vehicle
     columnHelper.accessor("vehicle", {
-      id: "vehicle",
+      id: "licensePlate",
       header: (info) => <SortHeader title="Vehicle" info={info} />,
+      size: 200,
       cell: (info) => {
         const v = info.getValue();
         if (!v) return "—";
@@ -50,49 +65,37 @@ export const getColumns = () => {
           </div>
         );
       },
-      size: 200,
+      meta: { title: "Vehicle" },
     }),
 
-    //Booking Time (sort theo ngày)
+    // Booking Time
     columnHelper.accessor(
       (row) => (row.bookingDate ? new Date(row.bookingDate).getTime() : 0),
       {
-        id: "bookingTime",
+        id: "bookingDate",
         header: (info) => <SortHeader title="Booking Time" info={info} />,
         cell: ({ row }) => {
           const { bookingDate, shift } = row.original;
           if (!bookingDate || !shift) return "—";
 
           const date = new Date(bookingDate);
-          const formattedDate = date.toLocaleDateString();
-          const shiftTime = `${new Date(shift.startTime).toLocaleTimeString(
-            [],
-            {
-              hour: "2-digit",
-              minute: "2-digit",
-            }
-          )} - ${new Date(shift.endTime).toLocaleTimeString([], {
-            hour: "2-digit",
-            minute: "2-digit",
-          })}`;
+          const formattedDate = date.toLocaleString();
 
           return (
             <div className="flex flex-col text-xs text-gray-700 dark:text-gray-300">
-              <span className="font-medium">{formattedDate}</span>
-              <span className="text-gray-400 dark:text-gray-500">
-                {shiftTime}
-              </span>
+              <span className="font-medium font-inter">{formattedDate}</span>
             </div>
           );
         },
         enableSorting: true,
         size: 180,
+        meta: { title: "Booking Time" },
       }
     ),
 
-    //Service Center
+    // Service Center
     columnHelper.accessor((row) => row.serviceCenter?.name ?? "", {
-      id: "serviceCenter",
+      id: "center",
       header: (info) => <SortHeader title="Service Center" info={info} />,
       cell: (info) => (
         <span className="text-gray-700 dark:text-gray-300 font-inter font-medium">
@@ -102,9 +105,10 @@ export const getColumns = () => {
       enableSorting: true,
       sortingFn: "alphanumeric",
       size: 180,
+      meta: { title: "Service Center" },
     }),
 
-    //Status (filter dropdown)
+    // Status (filter dropdown)
     columnHelper.accessor("status", {
       id: "status",
       header: ({ column }) => (
@@ -119,7 +123,7 @@ export const getColumns = () => {
         filterOptions: [
           "ASSIGNED",
           "COMPLETED",
-          "IN PROGRESS",
+          "IN_PROGRESS",
           "PENDING",
           "CANCELLED",
         ],
@@ -157,9 +161,10 @@ export const getColumns = () => {
         );
       },
       size: 120,
+      // meta: { title: "Status" },
     }),
 
-    //Assigner
+    // Assigner
     columnHelper.accessor("assigner", {
       id: "assigner",
       header: (info) => <SortHeader title="Assigner" info={info} />,
@@ -172,12 +177,13 @@ export const getColumns = () => {
         );
       },
       size: 160,
+      meta: { title: "Assigner" },
     }),
 
-    //Actions
+    // Actions
     columnHelper.display({
       id: "actions",
-      header: "Actions",
+      header: () => "Actions",
       size: 100,
       cell: ({ row, table }) => {
         const { pageIndex, pageSize } = table.getState().pagination;
@@ -190,6 +196,7 @@ export const getColumns = () => {
         );
       },
       enableSorting: false,
+      meta: { title: "Actions" },
     }),
   ];
 };

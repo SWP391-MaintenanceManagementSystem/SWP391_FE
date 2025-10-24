@@ -15,6 +15,7 @@ export const useBookingsQuery = (filter: BookingFilters) => {
         throw error;
       }
     },
+    enabled: !!filter.page && !!filter.pageSize,
   });
 };
 
