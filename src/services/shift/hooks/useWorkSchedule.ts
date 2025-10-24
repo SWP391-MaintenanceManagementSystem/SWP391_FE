@@ -5,18 +5,30 @@ import { useForm } from "react-hook-form";
 import { AxiosError } from "axios";
 import { toast } from "sonner";
 import {
-  WorkScheduleSchema,
-  type WorkScheduleFormData,
+  AddWorkScheduleSchema,
+  EditWorkScheduleSchema,
+  type AddWorkScheduleFormData,
+  type EditWorkScheduleFormData,
 } from "@/pages/shifts/libs/schema";
 
 export const useWorkSchedule = (item?: WorkSchedule) => {
   const delScheduleMutation = useDeleteWorkSchedule();
   const updateScheduleMutation = useUpdateSchedule();
-  const form = useForm<WorkScheduleFormData>({
-    resolver: zodResolver(WorkScheduleSchema),
+
+  const editForm = useForm<EditWorkScheduleFormData>({
+    resolver: zodResolver(EditWorkScheduleSchema),
+    defaultValues: {
+      employeeId: item?.account.id || "",
+      shiftId: item?.shift.id || "",
+      date: item?.date || "",
+    },
+  });
+
+  const addForm = useForm<AddWorkScheduleFormData>({
+    resolver: zodResolver(AddWorkScheduleSchema),
     defaultValues: {
       centerId: item?.shift.serviceCenter.id || "",
-      employeeId: item?.account.id || "",
+      employeeIds: [],
       shiftId: item?.shift.id || "",
       date: item?.date || "",
       endDate: "",
@@ -58,7 +70,7 @@ export const useWorkSchedule = (item?: WorkSchedule) => {
   }: {
     currentPage: number;
     currentPageSize: number;
-    data: WorkScheduleFormData;
+    data: EditWorkScheduleFormData;
   }) => {
     updateScheduleMutation.mutate(
       {
@@ -74,7 +86,7 @@ export const useWorkSchedule = (item?: WorkSchedule) => {
             const msg = error.response?.data.message;
             if (apiErrors && typeof apiErrors === "object") {
               Object.entries(apiErrors).forEach(([field, msg]) => {
-                form.setError(field as keyof WorkScheduleFormData, {
+                editForm.setError(field as keyof EditWorkScheduleFormData, {
                   type: "server",
                   message: msg as string,
                 });
@@ -93,6 +105,7 @@ export const useWorkSchedule = (item?: WorkSchedule) => {
   return {
     handleDeleteSchedule,
     handleEditSchedule,
-    form,
+    editForm,
+    addForm,
   };
 };

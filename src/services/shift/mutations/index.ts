@@ -3,8 +3,8 @@ import { deleteShift, updateShift, addShift } from "../apis/shift.api";
 import { queryKeys } from "../queries/keys";
 import { toast } from "sonner";
 import type {
+  EditWorkScheduleFormData,
   ShiftFormData,
-  WorkScheduleFormData,
 } from "@/pages/shifts/libs/schema";
 import {
   deleteWorkSchedule,
@@ -155,7 +155,7 @@ export const useUpdateSchedule = () => {
       data,
     }: {
       id: string;
-      data: WorkScheduleFormData;
+      data: EditWorkScheduleFormData;
       currentPage: number;
       currentPageSize: number;
     }) => {

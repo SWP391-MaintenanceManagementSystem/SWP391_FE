@@ -6,16 +6,16 @@ import "./calendar.css";
 import { Button } from "@/components/ui/button";
 import { Plus, Calendar as CalendarIcon } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { AddEditScheduleDialog } from "./AddEditScheduleDialog";
+import { AddScheduleDialog } from "./AddScheduleDialog";
 import type { UseFormReturn } from "react-hook-form";
-import type { WorkScheduleFormData } from "../../libs/schema";
+import type { AddWorkScheduleFormData } from "../../libs/schema";
 import { useGetShiftsQuery } from "@/services/shift/queries";
 import { useGetServiceCenterList } from "@/services/manager/queries";
 
 const localizer = dayjsLocalizer(dayjs);
 
 interface ScheduleCalendarProps {
-  form: UseFormReturn<WorkScheduleFormData>;
+  form: UseFormReturn<AddWorkScheduleFormData>;
 }
 
 export default function ScheduleCalendar({ form }: ScheduleCalendarProps) {
@@ -26,7 +26,7 @@ export default function ScheduleCalendar({ form }: ScheduleCalendarProps) {
   const shiftsList = shiftsData ?? [];
   const { data: centerListData } = useGetServiceCenterList();
   const centerList = centerListData ?? [];
-  const handleAddSchedule = (data: WorkScheduleFormData) => {
+  const handleAddSchedule = (data: AddWorkScheduleFormData) => {
     console.log("Schedule submitted:", data);
     setIsModalOpen(false);
     form.reset();
@@ -72,7 +72,7 @@ export default function ScheduleCalendar({ form }: ScheduleCalendarProps) {
         </CardContent>
       </Card>
 
-      <AddEditScheduleDialog
+      <AddScheduleDialog
         open={isModalOpen}
         onOpenChange={(open) => {
           setIsModalOpen(open);
