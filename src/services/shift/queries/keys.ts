@@ -28,4 +28,6 @@ export const queryKeys = {
     sortBy?: string;
     orderBy?: "asc" | "desc";
   }) => ["workSchedulesList", params] as const,
+
+  workScheduleById: (id: string) => ["workScheduleById", id] as const,
 };

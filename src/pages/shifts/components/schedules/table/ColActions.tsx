@@ -8,8 +8,8 @@ import { ViewDetailDialog } from "@/components/dialog/ViewDetailDialog";
 import ViewDetailSchedule from "../ViewDetailSchedule";
 import { useWorkSchedule } from "@/services/shift/hooks/useWorkSchedule";
 import { DeleteDialog } from "@/components/dialog/DeleteDialog";
-import { AddEditScheduleDialog } from "../AddEditScheduleDialog";
-import type { WorkScheduleFormData } from "@/pages/shifts/libs/schema";
+import { EditScheduleDialog } from "../EditScheduleDialog";
+import type { EditWorkScheduleFormData } from "@/pages/shifts/libs/schema";
 
 export interface ColActionsProps {
   row: Row<WorkSchedule>;
@@ -28,11 +28,8 @@ export default function ColActions({
   const [openViewDialog, setOpenViewDialog] = useState(false);
   const [openEditDialog, setOpenEditDialog] = useState(false);
   const schedule = row.original;
-  const { handleDeleteSchedule, handleEditSchedule, form } = useWorkSchedule(
-    currentPage,
-    currentPageSize,
-    schedule,
-  );
+  const { handleDeleteSchedule, handleEditSchedule, editForm } =
+    useWorkSchedule(schedule);
 
   return (
     <div className="flex gap-1">
@@ -46,7 +43,10 @@ export default function ColActions({
       <TooltipWrapper content="Edit">
         <ActionBtn
           icon={<Pencil size={12} />}
-          onClick={() => setOpenEditDialog(true)}
+          onClick={() => {
+            console.log("Edit", schedule);
+            setOpenEditDialog(true);
+          }}
         />
       </TooltipWrapper>
 
@@ -71,19 +71,25 @@ export default function ColActions({
       <DeleteDialog
         open={openDeleteDialog}
         onOpenChange={setOpenDeleteDialog}
-        onConfirm={handleDeleteSchedule}
+        onConfirm={() => handleDeleteSchedule({ currentPage, currentPageSize })}
       />
 
       {/* Edit */}
-      <AddEditScheduleDialog
+      <EditScheduleDialog
         open={openEditDialog}
         onOpenChange={(open) => {
           setOpenEditDialog(open);
-          if (!open) form.reset();
+          if (!open) editForm.reset();
         }}
         shiftList={shiftList}
-        form={form}
-        onConfirm={(data: WorkScheduleFormData) => handleEditSchedule(data)}
+        form={editForm}
+        onConfirm={(data: EditWorkScheduleFormData) => {
+          handleEditSchedule({
+            currentPage,
+            currentPageSize,
+            data,
+          });
+        }}
         item={schedule}
       />
     </div>

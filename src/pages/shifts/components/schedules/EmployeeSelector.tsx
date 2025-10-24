@@ -16,11 +16,13 @@ import type { UseFormReturn } from "react-hook-form";
 interface EmployeeSelectorProps {
   form: UseFormReturn<WorkScheduleFormData>;
   employees: EmployeeTable[];
+  disabled?: boolean;
 }
 
 export default function EmployeeSelector({
   form,
   employees,
+  disabled,
 }: EmployeeSelectorProps) {
   const employeeId = form.watch("employeeId");
   const initialEmployee = employees.find((e) => e.id === employeeId);
@@ -67,6 +69,7 @@ export default function EmployeeSelector({
             <Input
               placeholder="Enter first name, last name, or email"
               value={query}
+              disabled={disabled}
               onFocus={() => setOpen(true)}
               onChange={(e) => {
                 const value = e.target.value;
