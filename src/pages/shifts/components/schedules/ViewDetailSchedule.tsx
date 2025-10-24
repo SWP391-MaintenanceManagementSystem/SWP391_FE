@@ -11,7 +11,7 @@ interface ViewDetailScheduleProps {
 
 export default function ViewDetailSchedule({ item }: ViewDetailScheduleProps) {
   return (
-    <div className="overflow-y-auto max-h-[500px] grid grid-cols-1 gap-7">
+    <div className="overflow-y-auto max-h-[480px] grid grid-cols-1 gap-5">
       {/* Date Section */}
       <InfoSection
         title="Schedule Information"
@@ -76,10 +76,7 @@ export default function ViewDetailSchedule({ item }: ViewDetailScheduleProps) {
       </InfoSection>
 
       {/* Work Center Section */}
-      <InfoSection
-        title="Work Center Information"
-        styleFormLayout="md:grid-cols-2"
-      >
+      <InfoSection title="Work Center Information">
         <InputDisableWithLabel
           label="Work Center"
           id="centerName"

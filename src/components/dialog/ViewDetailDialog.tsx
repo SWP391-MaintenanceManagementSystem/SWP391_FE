@@ -8,6 +8,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
+import { InfoIcon } from "lucide-react";
 
 interface ViewDetailDialogProps {
   open: boolean;
@@ -54,8 +55,11 @@ export const InfoSection = ({
   styleFormLayout?: string;
 }) => {
   return (
-    <div className="flex flex-col gap-2">
-      <h2 className="text-[16px] font-medium">{title || ""}</h2>
+    <div className="flex flex-col gap-3">
+      <h2 className="text-[16px] font-medium flex text-center items-center gap-1">
+        <InfoIcon size={18} />
+        {title || ""}
+      </h2>
       <div className={cn("grid grid-cols-1 gap-4", styleFormLayout)}>
         {children}
       </div>
