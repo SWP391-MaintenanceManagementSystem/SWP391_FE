@@ -102,14 +102,16 @@ export default function ViewBookingDetail() {
                 Vehicle Check-In
               </Button>
 
-              <Button
-                onClick={() => setIsCancelModalOpen(true)}
-                variant="destructive"
-                className="hover:bg-red-600
+              {(data?.status === "PENDING" || data?.status === "ASSIGNED") && (
+                <Button
+                  onClick={() => setIsCancelModalOpen(true)}
+                  variant="destructive"
+                  className="hover:bg-red-600
             dark:hover:bg-red-700"
-              >
-                Cancel
-              </Button>
+                >
+                  Cancel
+                </Button>
+              )}
             </div>
           </CardHeader>
           <CardContent className="p-4 space-y-4 md:space-y-0">
