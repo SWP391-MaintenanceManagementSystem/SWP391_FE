@@ -97,7 +97,8 @@ export default function MultiEmployeeSelector<
         <div
           className={cn(
             "flex flex-wrap items-center gap-2 px-3 py-2 border rounded-md",
-            form.formState.errors.employeeIds?.message
+            form.formState.errors.employeeIds?.message &&
+              form.formState.errors.root?.serverError.message
               ? "border-destructive focus:ring-destructive"
               : "border-input focus:ring-primary",
           )}

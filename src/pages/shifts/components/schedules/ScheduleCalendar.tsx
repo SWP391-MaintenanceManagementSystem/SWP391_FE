@@ -35,7 +35,6 @@ export default function ScheduleCalendar({
   const centerList = centerListData ?? [];
   const handleAddSchedule = (data: AddWorkScheduleFormData) => {
     onConfirm(data);
-    form.reset();
   };
 
   return (
@@ -89,11 +88,12 @@ export default function ScheduleCalendar({
         onOpenChange={(open) => {
           setIsModalOpen(open);
           if (!open) {
-            form.reset();
             setSelectedDate(null);
           }
         }}
-        onConfirm={(data) => handleAddSchedule(data)}
+        onConfirm={(data) => {
+          handleAddSchedule(data);
+        }}
         form={form}
         selectedDate={selectedDate}
         shiftList={shiftsList}

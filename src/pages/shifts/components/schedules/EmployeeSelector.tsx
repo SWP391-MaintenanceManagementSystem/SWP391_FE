@@ -9,12 +9,12 @@ import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useDebounce } from "@uidotdev/usehooks";
-import type { WorkScheduleFormData } from "../../libs/schema";
+import type { EditWorkScheduleFormData } from "../../libs/schema";
 import type { EmployeeTable } from "@/pages/employees/libs/table-types";
 import type { UseFormReturn } from "react-hook-form";
 
 interface EmployeeSelectorProps {
-  form: UseFormReturn<WorkScheduleFormData>;
+  form: UseFormReturn<EditWorkScheduleFormData>;
   employees: EmployeeTable[];
   disabled?: boolean;
 }

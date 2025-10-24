@@ -3,8 +3,11 @@ import MainContentLayout from "@/components/MainContentLayout";
 import "animate.css";
 import ScheduleCalendar from "./ScheduleCalendar";
 import { useWorkSchedule } from "@/services/shift/hooks/useWorkSchedule";
+import { useGetEmployeesQuery } from "@/services/shift/queries";
+import type { AddWorkScheduleFormData } from "../../libs/schema";
 
 export default function AddNewSchedulePage() {
+  const { data: employeesList } = useGetEmployeesQuery();
   const { addForm, handleAddSchedule, isAddingPending } = useWorkSchedule();
 
   return (
@@ -18,7 +21,9 @@ export default function AddNewSchedulePage() {
       <MainContentLayout className="h-full">
         <ScheduleCalendar
           form={addForm}
-          onConfirm={handleAddSchedule}
+          onConfirm={(data: AddWorkScheduleFormData) =>
+            handleAddSchedule(data, employeesList ?? [])
+          }
           isPending={isAddingPending}
         />
       </MainContentLayout>

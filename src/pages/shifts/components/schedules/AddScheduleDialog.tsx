@@ -35,7 +35,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { CalendarIcon, ChevronDown } from "lucide-react";
+import { CalendarIcon, ChevronDown, TriangleAlert } from "lucide-react";
 import dayjs from "dayjs";
 import type { ServiceCenter } from "@/types/models/center";
 import {
@@ -148,7 +148,6 @@ export function AddScheduleDialog({
       open={open}
       onOpenChange={(newState) => {
         if (!newState) {
-          form.reset();
           setKeyword("");
           setInitialized(false);
         }
@@ -173,6 +172,29 @@ export function AddScheduleDialog({
             className="grid grid-cols-1 gap-6"
           >
             <div className="grid grid-cols-1 gap-4 max-h-[320px] overflow-y-auto">
+              {form.formState.errors.root?.serverError?.message && (
+                <div className="mt-3 rounded-md bg-red-50 p-3 border border-red-200">
+                  <p className="text-sm font-semibold text-red-600 mb-1 flex items-center gap-2 text-center">
+                    <TriangleAlert size={16} />
+                    Please review the following issues:
+                  </p>
+                  <div className="space-y-2">
+                    {form.formState.errors.root.serverError.message
+                      ?.split("\n")
+                      .map((msg, i) => {
+                        const match = msg.match(/^(.*?)\s*:\s*(.*)$/);
+                        const name = match?.[1] || "Employee";
+                        const detail = match?.[2] || msg;
+                        return (
+                          <div key={i} className="text-sm text-red-700">
+                            <span className="font-medium">{name}</span>:{" "}
+                            {detail}
+                          </div>
+                        );
+                      })}
+                  </div>
+                </div>
+              )}
               {/* Center */}
               <FormField
                 control={form.control}
@@ -473,7 +495,7 @@ export function AddScheduleDialog({
                   isPending
                 }
               >
-                Add
+                {isPending ? "Adding..." : "Add"}
               </Button>
             </DialogFooter>
           </form>
