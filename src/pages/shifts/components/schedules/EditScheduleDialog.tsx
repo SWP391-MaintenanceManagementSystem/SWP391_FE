@@ -66,8 +66,8 @@ export function EditScheduleDialog({
   );
 
   useEffect(() => {
-    form.setValue("shiftId", "");
-  }, [selectedEmployeeId, form]);
+    form.setValue("shiftId", item?.shift.id || "");
+  }, [selectedEmployeeId, form, item]);
 
   const filteredShifts = useMemo(() => {
     const centerId = selectedEmployee?.workCenter?.id;
@@ -176,16 +176,30 @@ export function EditScheduleDialog({
                         <SelectItem value="none" disabled>
                           Please select an employee first
                         </SelectItem>
-                      ) : filteredShifts.length > 0 ? (
-                        filteredShifts.map((shift) => (
-                          <SelectItem key={shift.id} value={shift.id}>
-                            {shift.name}
-                          </SelectItem>
-                        ))
                       ) : (
-                        <SelectItem value="none" disabled>
-                          No shifts available
-                        </SelectItem>
+                        <>
+                          {filteredShifts.length > 0 ? (
+                            filteredShifts.map((shift) => (
+                              <SelectItem key={shift.id} value={shift.id}>
+                                {shift.name}
+                              </SelectItem>
+                            ))
+                          ) : (
+                            <SelectItem value="none" disabled>
+                              No shifts available in this center. Please create
+                              a new one.
+                            </SelectItem>
+                          )}
+
+                          {item?.shift?.id &&
+                            !filteredShifts.some(
+                              (s) => s.id === item.shift.id,
+                            ) && (
+                              <SelectItem value={item.shift.id} disabled>
+                                Shift {item.shift.name} invalid, select another
+                              </SelectItem>
+                            )}
+                        </>
                       )}
                     </SelectContent>
                   </Select>
