@@ -69,7 +69,6 @@ export function EditScheduleDialog({
 
   const filteredShifts = useMemo(() => {
     const centerId = selectedEmployee?.workCenter?.id;
-
     if (!centerId) return [];
     return shiftList.filter(
       (shift) =>
@@ -186,37 +185,35 @@ export function EditScheduleDialog({
                         </SelectItem>
                       ) : (
                         <>
-                          {filteredShifts.length > 0 ? (
-                            filteredShifts.map((shift) => (
-                              <SelectItem key={shift.id} value={shift.id}>
-                                {shift.name}
+                          {filteredShifts.map((shift) => (
+                            <SelectItem key={shift.id} value={shift.id}>
+                              {shift.name}
+                            </SelectItem>
+                          ))}
+
+                          {item?.shift &&
+                            !filteredShifts.some(
+                              (s) => s.id === item.shift.id,
+                            ) && (
+                              <SelectItem value={item.shift.id} disabled>
+                                <span className="text-destructive">
+                                  {item.shift.name}{" "}
+                                  {item.shift.serviceCenter?.id !==
+                                  selectedEmployee.workCenter?.id
+                                    ? "(Different center with employee)"
+                                    : item.shift.status === "INACTIVE"
+                                      ? "(Invalid)"
+                                      : ""}
+                                </span>
                               </SelectItem>
-                            ))
-                          ) : (
+                            )}
+
+                          {filteredShifts.length === 0 && !item?.shift && (
                             <SelectItem value="none" disabled>
                               No shifts available in this center. Please create
                               a new one.
                             </SelectItem>
                           )}
-
-                          {/* Ensure inactive shift appears if currently assigned */}
-                          {item?.shift &&
-                            !filteredShifts.some(
-                              (s) => s.id === item.shift.id,
-                            ) && (
-                              <SelectItem
-                                value={item.shift.id}
-                                disabled={item.shift.status === "INACTIVE"}
-                              >
-                                {item.shift.status === "INACTIVE" ? (
-                                  <p className="text-destructive">
-                                    {item.shift.name} invalid, select another
-                                  </p>
-                                ) : (
-                                  item.shift.name
-                                )}
-                              </SelectItem>
-                            )}
                         </>
                       )}
                     </SelectContent>
