@@ -99,7 +99,7 @@ export default function ViewBookingDetail() {
                 className="bg-purple-600 hover:bg-purple-700 text-white
             dark:bg-purple-500 dark:hover:bg-purple-600"
               >
-                Edit
+                Vehicle Check-In
               </Button>
 
               <Button

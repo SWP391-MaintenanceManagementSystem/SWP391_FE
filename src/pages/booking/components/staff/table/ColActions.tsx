@@ -69,17 +69,12 @@ export default function ColActions({
           }}
         />
       </TooltipWrapper>
-      <TooltipWrapper content="Check in">
+      <TooltipWrapper content="Check-in">
         <ActionBtn
           icon={<MapPinCheck size={12} />}
           onClick={() => {
             const encodedId = encodeBase64(booking.id);
-            navigate(`/booking/${encodedId}`, {
-              state: {
-                currentPage,
-                currentPageSize,
-              },
-            });
+            console.log(encodedId);
           }}
         />
       </TooltipWrapper>
