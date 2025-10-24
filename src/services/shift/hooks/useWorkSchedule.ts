@@ -52,8 +52,6 @@ export const useWorkSchedule = (item?: WorkSchedule) => {
         currentPage: 1,
         currentPageSize: 10,
       });
-
-      toast.success("Added successfully");
       addForm.reset();
     } catch (error) {
       if (error instanceof AxiosError) {
@@ -168,5 +166,6 @@ export const useWorkSchedule = (item?: WorkSchedule) => {
     addForm,
     isEditingPending: updateScheduleMutation.isPending,
     isAddingPending: addScheduleMutation.isPending,
+    isAddSuccess: addScheduleMutation.isSuccess,
   };
 };

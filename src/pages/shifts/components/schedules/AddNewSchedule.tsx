@@ -8,7 +8,8 @@ import type { AddWorkScheduleFormData } from "../../libs/schema";
 
 export default function AddNewSchedulePage() {
   const { data: employeesList } = useGetEmployeesQuery();
-  const { addForm, handleAddSchedule, isAddingPending } = useWorkSchedule();
+  const { addForm, handleAddSchedule, isAddingPending, isAddSuccess } =
+    useWorkSchedule();
 
   return (
     <div className="w-full h-[calc(100vh-32px)] font-inter">
@@ -25,6 +26,7 @@ export default function AddNewSchedulePage() {
             handleAddSchedule(data, employeesList ?? [])
           }
           isPending={isAddingPending}
+          isSuccess={isAddSuccess}
         />
       </MainContentLayout>
     </div>
