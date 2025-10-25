@@ -13,7 +13,7 @@ export const CreateBookingSchema = z
       })
       .refine(
         (date) => date.getTime() > Date.now(),
-        "Date & time must be in the future"
+        "Date & time must be in the future",
       ),
   })
   .superRefine((data, ctx) => {
@@ -35,3 +35,14 @@ export const CreateBookingSchema = z
   });
 
 export type CreateBookingFormValues = z.infer<typeof CreateBookingSchema>;
+
+export const BookingAssignmentSchema = z.object({
+  bookingId: z.string().min(1, "Booking ID is required"),
+  employeeIds: z
+    .array(z.string().min(1, "Employee ID is required"))
+    .min(1, "Please select at least one employee"),
+});
+
+export type BookingAssignmentFormValues = z.infer<
+  typeof BookingAssignmentSchema
+>;

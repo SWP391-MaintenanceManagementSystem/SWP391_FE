@@ -1,7 +1,7 @@
 import DynamicBreadcrumbs from "@/components/DynamicBreadcrumb";
 import MainContentLayout from "@/components/MainContentLayout";
 import { DataTable } from "@/components/table/DataTable";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { getColumns } from "./table/columns";
 import { useState } from "react";
 import type { SortingState, ColumnDef } from "@tanstack/react-table";
@@ -60,12 +60,7 @@ export default function BookingManagement() {
     <div className="w-full h-[calc(100vh-32px)] font-inter">
       <DynamicBreadcrumbs pathTitles={{ booking: "Booking Management" }} />
       <MainContentLayout className="grid grid-cols-1 gap-8 pt-4">
-        <Card className=" w-full h-full grid grid-rows-[auto_1fr] min-h-[600px]">
-          <CardHeader>
-            <CardTitle className="text-2xl font-semibold font-inter text-gray-text-header">
-              Booking List
-            </CardTitle>
-          </CardHeader>
+        <Card className=" w-full h-full grid min-h-[600px]">
           <CardContent>
             <DataTable<BookingStaffTable, unknown>
               columns={columns as ColumnDef<BookingStaffTable, unknown>[]}

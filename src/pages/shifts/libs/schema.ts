@@ -32,16 +32,38 @@ export const ShiftFormDataValues: ShiftFormData = {
   maximumSlot: 0,
 };
 
-export const WorkScheduleSchema = z.object({
-  date: z.string().min(1, { message: "Date cannot be empty" }),
-  employeeId: z.string().min(1, { message: "Employee cannot be empty" }),
+export const AddWorkScheduleSchema = z.object({
+  centerId: z.string().min(1, { message: "Center cannot be empty" }),
   shiftId: z.string().min(1, { message: "Shift cannot be empty" }),
+  employeeIds: z
+    .array(z.string().min(1, "Employee ID is required"))
+    .min(1, "Please select at least one employee"),
+  startDate: z.string().min(1, { message: "Date cannot be empty" }),
+  endDate: z.string().optional(),
+  repeatDays: z.array(z.number().int().min(0).max(6)).optional(),
 });
 
-export type WorkScheduleFormData = z.infer<typeof WorkScheduleSchema>;
+export type AddWorkScheduleFormData = z.infer<typeof AddWorkScheduleSchema>;
 
-export const WorkScheduleFormDataValues: WorkScheduleFormData = {
-  date: "",
-  employeeId: "",
+export const AddWorkScheduleFormDataValues: AddWorkScheduleFormData = {
+  centerId: "",
   shiftId: "",
+  employeeIds: [],
+  startDate: "",
+  endDate: "",
+  repeatDays: [],
+};
+
+export const EditWorkScheduleSchema = z.object({
+  shiftId: z.string().min(1, { message: "Shift cannot be empty" }),
+  employeeId: z.string().min(1, { message: "Employee cannot be empty" }),
+  date: z.string().min(1, { message: "Date cannot be empty" }),
+});
+
+export type EditWorkScheduleFormData = z.infer<typeof EditWorkScheduleSchema>;
+
+export const EditWorkScheduleFormDataValues: EditWorkScheduleFormData = {
+  shiftId: "",
+  employeeId: "",
+  date: "",
 };

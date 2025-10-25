@@ -11,7 +11,7 @@ interface ViewDetailScheduleProps {
 
 export default function ViewDetailSchedule({ item }: ViewDetailScheduleProps) {
   return (
-    <div className="overflow-y-auto max-h-[500px] grid grid-cols-1 gap-7">
+    <div className="overflow-y-auto max-h-[480px] grid grid-cols-1 gap-5">
       {/* Date Section */}
       <InfoSection
         title="Schedule Information"
@@ -20,8 +20,18 @@ export default function ViewDetailSchedule({ item }: ViewDetailScheduleProps) {
         <InputDisableWithLabel
           label="Date"
           id="date"
-          value={dayjs(item.date).format("YYYY-MM-DD")}
+          value={dayjs(item.date).format("DD/MM/YYYY")}
           styleFormat="md:col-span-2"
+        />
+        <InputDisableWithLabel
+          label="Create on"
+          id="createdAt"
+          value={dayjs(item.createdAt).format("HH:mm [on] DD/MM/YYYY")}
+        />
+        <InputDisableWithLabel
+          label="Last Updated on"
+          id="updatedAt"
+          value={dayjs(item.updatedAt).format("HH:mm [on] DD/MM/YYYY")}
         />
       </InfoSection>
 
@@ -76,10 +86,7 @@ export default function ViewDetailSchedule({ item }: ViewDetailScheduleProps) {
       </InfoSection>
 
       {/* Work Center Section */}
-      <InfoSection
-        title="Work Center Information"
-        styleFormLayout="md:grid-cols-2"
-      >
+      <InfoSection title="Work Center Information">
         <InputDisableWithLabel
           label="Work Center"
           id="centerName"

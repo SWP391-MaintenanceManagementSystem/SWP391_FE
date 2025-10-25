@@ -24,7 +24,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useForm } from "react-hook-form";
-import type { WorkScheduleFormData } from "../../libs/schema";
+import type { EditWorkScheduleFormData } from "../../libs/schema";
 import type { Shift, WorkSchedule } from "@/types/models/shift";
 import EmployeeSelector from "./EmployeeSelector";
 import { useGetEmployeesQuery } from "@/services/shift/queries";
@@ -39,23 +39,25 @@ import {
 import { CalendarIcon } from "lucide-react";
 import dayjs from "dayjs";
 
-interface AddEditScheduleProps {
+interface EditScheduleProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onConfirm: (data: WorkScheduleFormData) => void;
-  item?: WorkSchedule | null;
+  onConfirm: (data: EditWorkScheduleFormData) => void;
+  item: WorkSchedule | null;
   shiftList: Shift[];
-  form: ReturnType<typeof useForm<WorkScheduleFormData>>;
+  form: ReturnType<typeof useForm<EditWorkScheduleFormData>>;
+  isPending: boolean;
 }
 
-export function AddEditScheduleDialog({
+export function EditScheduleDialog({
   open,
   onOpenChange,
   onConfirm,
   item,
   shiftList,
   form,
-}: AddEditScheduleProps) {
+  isPending,
+}: EditScheduleProps) {
   const { watch } = form;
   const { data: employeesList } = useGetEmployeesQuery();
 
@@ -74,6 +76,13 @@ export function AddEditScheduleDialog({
     );
   }, [selectedEmployee, shiftList]);
 
+  useEffect(() => {
+    if (!selectedEmployee) return;
+    const currentShiftId = form.getValues("shiftId");
+    const isValidShift = filteredShifts.some((s) => s.id === currentShiftId);
+    if (!isValidShift) form.setValue("shiftId", "");
+  }, [selectedEmployee, filteredShifts, form]);
+
   // Date field states
   const [openDate, setOpenDate] = useState(false);
   const [date, setDate] = useState<Date | undefined>(
@@ -86,20 +95,27 @@ export function AddEditScheduleDialog({
     item?.date ? dayjs(item.date).format("YYYY-MM-DD") : "",
   );
 
-  // Reset local date when opening or when item changes
+  // Reset form when modal opens & data ready
   useEffect(() => {
-    if (open) {
-      const defaultDate = item?.date ? new Date(item.date) : undefined;
-      setDate(defaultDate);
-      setMonth(defaultDate);
-      setValue(item?.date ? dayjs(item.date).format("YYYY-MM-DD") : "");
-    }
-  }, [open, item]);
+    if (!open || !item || !employeesList || !shiftList) return;
+
+    const defaultDate = item.date ? new Date(item.date) : undefined;
+    setDate(defaultDate);
+    setMonth(defaultDate);
+    setValue(item.date ? dayjs(item.date).format("YYYY-MM-DD") : "");
+
+    form.reset({
+      ...item,
+      employeeId: item.account?.id || "",
+      shiftId: item.shift?.id || "",
+      date: item.date || "",
+    });
+  }, [open, item, employeesList, shiftList, form]);
 
   const isValidDate = (d: Date) => d instanceof Date && !isNaN(d.getTime());
   const formatDate = (d?: Date) => (d ? dayjs(d).format("YYYY-MM-DD") : "");
 
-  const onSubmit = async (values: WorkScheduleFormData) => {
+  const onSubmit = async (values: EditWorkScheduleFormData) => {
     const isValid = await form.trigger();
     if (!isValid) return;
     onConfirm(values);
@@ -107,11 +123,6 @@ export function AddEditScheduleDialog({
 
   const handleCancel = () => {
     onOpenChange(false);
-    form.reset(item ? { ...item } : {});
-    const defaultDate = item?.date ? new Date(item.date) : undefined;
-    setDate(defaultDate);
-    setMonth(defaultDate);
-    setValue(item?.date ? dayjs(item.date).format("YYYY-MM-DD") : "");
   };
 
   return (
@@ -122,13 +133,9 @@ export function AddEditScheduleDialog({
         onCloseAutoFocus={(e) => e.preventDefault()}
       >
         <DialogHeader>
-          <DialogTitle>
-            {item ? "Edit Schedule" : "Add New Schedule"}
-          </DialogTitle>
+          <DialogTitle>Edit Schedule</DialogTitle>
           <DialogDescription>
-            {item
-              ? "Update the schedule details below."
-              : "Enter the details for the new schedule."}
+            Update the schedule details below.
           </DialogDescription>
         </DialogHeader>
 
@@ -162,11 +169,11 @@ export function AddEditScheduleDialog({
                   >
                     <FormControl>
                       <SelectTrigger
-                        className={clsx(
-                          "w-full",
-                          form.formState.errors.shiftId &&
-                            "border-destructive focus:ring-destructive",
-                        )}
+                        className={`w-full border ${
+                          form.formState.errors.shiftId
+                            ? "border-destructive focus:ring-destructive"
+                            : "border-input focus:ring-primary"
+                        }`}
                       >
                         <SelectValue placeholder="Select shift" />
                       </SelectTrigger>
@@ -176,16 +183,38 @@ export function AddEditScheduleDialog({
                         <SelectItem value="none" disabled>
                           Please select an employee first
                         </SelectItem>
-                      ) : filteredShifts.length > 0 ? (
-                        filteredShifts.map((shift) => (
-                          <SelectItem key={shift.id} value={shift.id}>
-                            {shift.name}
-                          </SelectItem>
-                        ))
                       ) : (
-                        <SelectItem value="none" disabled>
-                          No shifts available
-                        </SelectItem>
+                        <>
+                          {filteredShifts.map((shift) => (
+                            <SelectItem key={shift.id} value={shift.id}>
+                              {shift.name}
+                            </SelectItem>
+                          ))}
+
+                          {item?.shift &&
+                            !filteredShifts.some(
+                              (s) => s.id === item.shift.id,
+                            ) && (
+                              <SelectItem value={item.shift.id} disabled>
+                                <span className="text-destructive">
+                                  {item.shift.name}{" "}
+                                  {item.shift.serviceCenter?.id !==
+                                  selectedEmployee.workCenter?.id
+                                    ? "(Different center with employee)"
+                                    : item.shift.status === "INACTIVE"
+                                      ? "(Invalid)"
+                                      : ""}
+                                </span>
+                              </SelectItem>
+                            )}
+
+                          {filteredShifts.length === 0 && !item?.shift && (
+                            <SelectItem value="none" disabled>
+                              No shifts available in this center. Please create
+                              a new one.
+                            </SelectItem>
+                          )}
+                        </>
                       )}
                     </SelectContent>
                   </Select>
@@ -206,7 +235,7 @@ export function AddEditScheduleDialog({
                       <Input
                         id="date"
                         value={value}
-                        placeholder="YYYY-MM-DD"
+                        placeholder="dd-mm-yyyy"
                         aria-invalid={!!form.formState.errors.date}
                         onChange={(e) => {
                           const inputDate = new Date(e.target.value);
@@ -275,9 +304,9 @@ export function AddEditScheduleDialog({
               <Button
                 type="submit"
                 className="bg-purple-primary"
-                disabled={!form.formState.isDirty}
+                disabled={!form.formState.isDirty || isPending}
               >
-                {item ? "Update" : "Add"}
+                Update
               </Button>
             </DialogFooter>
           </form>

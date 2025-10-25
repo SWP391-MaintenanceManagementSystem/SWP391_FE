@@ -43,12 +43,12 @@ export default function ViewDetailPart({ partItem }: ViewDetailPartProps) {
         <InputDisableWithLabel
           label="Created on"
           id="createdAt"
-          value={dayjs(partItem.createdAt).format("HH:mm - DD/MM/YYYY")}
+          value={dayjs(partItem.createdAt).format("HH:mm [on] DD/MM/YYYY")}
         />
         <InputDisableWithLabel
-          label="Last updated"
+          label="Last Updated on"
           id="updatedAt"
-          value={dayjs(partItem.updatedAt).format("HH:mm - DD/MM/YYYY")}
+          value={dayjs(partItem.updatedAt).format("HH:mm [on] DD/MM/YYYY")}
         />
         <InputDisableWithLabel
           label="Description"

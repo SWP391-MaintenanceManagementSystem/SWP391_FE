@@ -17,6 +17,8 @@ import { BookingServicesDialog } from "../customer/booking-detail/BookingService
 import { CancelBookingDialog } from "../customer/booking-detail/CancelBookingDialog";
 import useCancelBooking from "@/services/booking/hooks/useCancelBooking";
 import type { BookingStatus } from "@/types/enums/bookingStatus";
+import AssignmentDialog from "./AssignmentDialog";
+import { useAssignBooking } from "@/services/booking/hooks/useAssignBooking";
 
 export default function ViewBookingDetail() {
   const { id } = useParams<{ id: string }>();
@@ -24,9 +26,15 @@ export default function ViewBookingDetail() {
   const { data, isLoading } = useBookingDetail(bookingId ?? "");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
+  const [openAssignmentDialog, setOpenAssignmentDialog] = useState(false);
   const { onCancel } = useCancelBooking();
+  const { form, onSubmit } = useAssignBooking({
+    onSuccess: () => {
+      setOpenAssignmentDialog(false);
+    },
+  });
 
-  if (!id) {
+  if (!bookingId) {
     return <div className="text-red-500 p-6">Booking ID is missing</div>;
   }
 
@@ -63,7 +71,7 @@ export default function ViewBookingDetail() {
           [id ?? ""]: "Detailed Information",
         }}
       />
-      <MainContentLayout className="p-6">
+      <MainContentLayout className="p-6 max-h-[calc(100vh-60px)] overflow-y-auto">
         <Card className="mb-6 bg-purple-50 border-purple-200 dark:bg-purple-800 dark:border-purple-800 shadow-md">
           <CardHeader className="flex flex-row items-center justify-between p-4">
             <div>
@@ -91,17 +99,19 @@ export default function ViewBookingDetail() {
                 className="bg-purple-600 hover:bg-purple-700 text-white
             dark:bg-purple-500 dark:hover:bg-purple-600"
               >
-                Edit
+                Vehicle Check-In
               </Button>
 
-              <Button
-                onClick={() => setIsCancelModalOpen(true)}
-                variant="destructive"
-                className="hover:bg-red-600
+              {(data?.status === "PENDING" || data?.status === "ASSIGNED") && (
+                <Button
+                  onClick={() => setIsCancelModalOpen(true)}
+                  variant="destructive"
+                  className="hover:bg-red-600
             dark:hover:bg-red-700"
-              >
-                Cancel
-              </Button>
+                >
+                  Cancel
+                </Button>
+              )}
             </div>
           </CardHeader>
           <CardContent className="p-4 space-y-4 md:space-y-0">
@@ -144,9 +154,27 @@ export default function ViewBookingDetail() {
             productionYear={data?.vehicle?.productionYear}
           />
           <StaffCard staff={data?.staff} />
-          <TechnicianCard technicians={data?.technicians} />
+          <TechnicianCard
+            technicians={data?.technicians}
+            onAssign={() => setOpenAssignmentDialog(true)}
+            disabled={
+              data?.status === "CANCELLED" ||
+              data?.status === "CHECKED_OUT" ||
+              data?.status === "COMPLETED" ||
+              data?.status === "IN_PROGRESS"
+            }
+          />
         </div>
       </MainContentLayout>
+      <AssignmentDialog
+        open={openAssignmentDialog}
+        onOpenChange={(open) => setOpenAssignmentDialog(open)}
+        form={form}
+        onConfirm={async (values) => {
+          await onSubmit({ ...values, bookingId });
+        }}
+        item={data!}
+      />
     </div>
   );
 }

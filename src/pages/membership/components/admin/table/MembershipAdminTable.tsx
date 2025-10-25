@@ -50,7 +50,7 @@ export default function MembershipAdminTable() {
   const columns = getColumns();
 
   return (
-    <div className="w-full mt-4">
+    <div className="w-full h-[calc(100vh-32px)]">
       <DataTable
         data={filteredData || []}
         columns={columns as ColumnDef<MembershipTable, unknown>[]}
