@@ -49,8 +49,6 @@ export const useWorkSchedule = (item?: WorkSchedule) => {
     try {
       await addScheduleMutation.mutateAsync({
         data,
-        currentPage: 1,
-        currentPageSize: 10,
       });
       addForm.reset();
     } catch (error) {
