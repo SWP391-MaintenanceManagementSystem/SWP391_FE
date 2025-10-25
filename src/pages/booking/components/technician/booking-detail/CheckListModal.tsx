@@ -13,14 +13,19 @@ import { Checkbox } from "@/components/ui/checkbox";
 interface CheckListModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  bookingId?: string;
 }
 
-export default function CheckListModal({ open, onOpenChange }: CheckListModalProps) {
+export default function CheckListModal({
+  open,
+  onOpenChange,
+  bookingId,
+}: CheckListModalProps) {
   const [tasks, setTasks] = useState([
-    { id: 1, label: "Kiểm tra thiết bị điện", done: false },
-    { id: 2, label: "Thay linh kiện hỏng", done: false },
-    { id: 3, label: "Vệ sinh khu vực làm việc", done: false },
-    { id: 4, label: "Hoàn tất báo cáo", done: false },
+    { id: 1, label: "Inspect electrical equipment", done: false },
+    { id: 2, label: "Replace faulty components", done: false },
+    { id: 3, label: "Clean the workspace", done: false },
+    { id: 4, label: "Complete the service report", done: false },
   ]);
 
   const handleToggle = (id: number) => {
@@ -36,9 +41,11 @@ export default function CheckListModal({ open, onOpenChange }: CheckListModalPro
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-md">
         <DialogHeader>
-          <DialogTitle>Checklist công việc</DialogTitle>
+          <DialogTitle>Checklist</DialogTitle>
           <DialogDescription>
-            Đánh dấu các công việc bạn đã hoàn thành.
+            {bookingId
+              ? `Booking ID: ${bookingId}`
+              : "Danh sách công việc của bạn."}
           </DialogDescription>
         </DialogHeader>
 
@@ -71,9 +78,6 @@ export default function CheckListModal({ open, onOpenChange }: CheckListModalPro
         </div>
 
         <div className="mt-6 flex justify-end space-x-3">
-          <Button variant="outline" onClick={() => onOpenChange(false)}>
-            Đóng
-          </Button>
           <Button
             disabled={completed !== tasks.length}
             onClick={() => alert("Đã hoàn thành tất cả công việc! 🎉")}

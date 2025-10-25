@@ -140,10 +140,10 @@ export default function AssignedBookingDetail() {
           />
         </div>
 
-        {/* Checklist modal */}
+        {/* ✅ Checklist modal (đúng props) */}
         <CheckListModal
           open={isModalOpen}
-          onClose={() => setIsModalOpen(false)}
+          onOpenChange={setIsModalOpen}
           bookingId={data?.id}
         />
       </MainContentLayout>
