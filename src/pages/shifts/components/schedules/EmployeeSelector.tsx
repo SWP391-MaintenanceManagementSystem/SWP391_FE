@@ -17,12 +17,14 @@ interface EmployeeSelectorProps {
   form: UseFormReturn<EditWorkScheduleFormData>;
   employees: EmployeeTable[];
   disabled?: boolean;
+  role?: string;
 }
 
 export default function EmployeeSelector({
   form,
   employees,
   disabled,
+  role,
 }: EmployeeSelectorProps) {
   const employeeId = form.watch("employeeId");
   const initialEmployee = employees.find((e) => e.id === employeeId);
@@ -44,12 +46,13 @@ export default function EmployeeSelector({
     if (!q) return [];
     return employees.filter((e) => {
       if (e.workCenter?.endDate !== null) return false;
+      if (role && e.role !== role) return false;
       const firstName = e.profile?.firstName?.toLowerCase() ?? "";
       const lastName = e.profile?.lastName?.toLowerCase() ?? "";
       const email = e.email?.toLowerCase() ?? "";
       return firstName.includes(q) || lastName.includes(q) || email.includes(q);
     });
-  }, [debouncedQuery, employees]);
+  }, [debouncedQuery, employees, role]);
 
   const handleSelect = (employee: EmployeeTable) => {
     form.setValue("employeeId", employee.id, { shouldDirty: true });

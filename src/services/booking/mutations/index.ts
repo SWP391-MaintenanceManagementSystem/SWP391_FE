@@ -11,7 +11,10 @@ import {
 import { toast } from "sonner";
 import { AxiosError } from "axios";
 import type { BookingAssignmentFormValues } from "@/pages/booking/lib/schema";
-import { createBookingAssignment } from "../apis/booking-assignment.api";
+import {
+  createBookingAssignment,
+  unBookingAssignment,
+} from "../apis/booking-assignment.api";
 
 export const useCreateBookingMutation = () => {
   const queryClient = useQueryClient();
@@ -112,8 +115,45 @@ export const useCreateBookingAssignmentMutation = () => {
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: ["booking", bookingId] }),
         queryClient.invalidateQueries({ queryKey: ["staff-bookings"] }),
+        queryClient.invalidateQueries({
+          queryKey: ["booking-assignment-list"],
+        }),
       ]);
       toast.success("Assigned technician successfully");
+    },
+  });
+};
+
+export const useUnBookingAssignmentMutation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({
+      id,
+    }: {
+      id: string;
+      employeeEmail: string;
+      bookingId: string;
+    }) => {
+      const res = await unBookingAssignment(id);
+      return res?.data;
+    },
+    onSuccess: async (_data, variables) => {
+      await Promise.all([
+        queryClient.invalidateQueries({
+          queryKey: ["booking", variables.bookingId],
+        }),
+        queryClient.invalidateQueries({
+          queryKey: ["booking-assignment-list"],
+        }),
+      ]);
+
+      toast.success(
+        `Unassigned technician with email ${variables.employeeEmail} successfully`,
+      );
+    },
+    onError: () => {
+      toast.error("Failed to unassign technician");
     },
   });
 };
