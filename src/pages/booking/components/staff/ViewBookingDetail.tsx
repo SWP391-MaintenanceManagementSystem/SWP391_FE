@@ -19,6 +19,8 @@ import useCancelBooking from "@/services/booking/hooks/useCancelBooking";
 import type { BookingStatus } from "@/types/enums/bookingStatus";
 import AssignmentDialog from "./AssignmentDialog";
 import { useAssignBooking } from "@/services/booking/hooks/useAssignBooking";
+import UnAssignmentDialog from "./UnAssignmentDialog";
+import useUnAssign from "@/services/booking/hooks/useUnAssign";
 
 export default function ViewBookingDetail() {
   const { id } = useParams<{ id: string }>();
@@ -27,12 +29,15 @@ export default function ViewBookingDetail() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
   const [openAssignmentDialog, setOpenAssignmentDialog] = useState(false);
+  const [openUnassignmentDialog, setOpenUnassignmentDialog] = useState(false);
   const { onCancel } = useCancelBooking();
   const { form, onSubmit } = useAssignBooking({
     onSuccess: () => {
       setOpenAssignmentDialog(false);
     },
   });
+
+  const { onUnAssign, isPending: isUnAssignPending } = useUnAssign();
 
   if (!bookingId) {
     return <div className="text-red-500 p-6">Booking ID is missing</div>;
@@ -163,6 +168,7 @@ export default function ViewBookingDetail() {
               data?.status === "COMPLETED" ||
               data?.status === "IN_PROGRESS"
             }
+            onUnAssign={() => setOpenUnassignmentDialog(true)}
           />
         </div>
       </MainContentLayout>
@@ -174,6 +180,13 @@ export default function ViewBookingDetail() {
           await onSubmit({ ...values, bookingId });
         }}
         item={data!}
+      />
+      <UnAssignmentDialog
+        open={openUnassignmentDialog}
+        onOpenChange={(open) => setOpenUnassignmentDialog(open)}
+        item={data!}
+        onConfirm={onUnAssign}
+        isPending={isUnAssignPending}
       />
     </div>
   );
