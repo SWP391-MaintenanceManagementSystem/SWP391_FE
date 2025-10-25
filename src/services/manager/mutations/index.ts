@@ -240,6 +240,9 @@ export const useDeleteEmployee = () => {
         queryClient.invalidateQueries({
           queryKey: queryKeys.statusStat(variables.role),
         }),
+        queryClient.invalidateQueries({
+          queryKey: queryShiftKeys.employees,
+        }),
 
         queryClient.invalidateQueries({
           queryKey: queryShiftKeys.workSchedulesList({
@@ -295,7 +298,9 @@ export const useUpdateEmployeeInfo = () => {
             pageSize: variables.currentPageSize,
           }),
         }),
-
+        queryClient.invalidateQueries({
+          queryKey: queryShiftKeys.employees,
+        }),
         queryClient.invalidateQueries({
           queryKey: queryKeys.statusStat(variables.role),
         }),
@@ -350,6 +355,10 @@ export const useAddEmployee = () => {
             pageSize: variables.currentPageSize,
           }),
         }),
+        queryClient.invalidateQueries({
+          queryKey: queryShiftKeys.employees,
+        }),
+
         queryClient.invalidateQueries({
           queryKey: queryKeys.statusStat(variables.role),
         }),
