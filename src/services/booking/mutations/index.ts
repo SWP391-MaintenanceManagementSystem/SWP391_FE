@@ -1,6 +1,13 @@
-import type { CreateBookingFormValues } from "@/pages/booking/lib/schema";
+import type {
+  CreateBookingFormValues,
+  EditBookingFormValues,
+} from "@/pages/booking/lib/schema";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { cancelBookingById, createBooking } from "../apis/booking.api";
+import {
+  cancelBookingById,
+  createBooking,
+  customerUpdateBooking,
+} from "../apis/booking.api";
 import { toast } from "sonner";
 import { AxiosError } from "axios";
 import type { BookingAssignmentFormValues } from "@/pages/booking/lib/schema";
@@ -21,6 +28,43 @@ export const useCreateBookingMutation = () => {
     },
     onError: () => {
       toast.error("Failed to create booking");
+    },
+  });
+};
+
+export const useUpdateBookingMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ data }: { data: EditBookingFormValues }) => {
+      const { id, bookingDate, note, packageIds, serviceIds, vehicleId } = data;
+      const updatedBooking = await customerUpdateBooking({
+        id,
+        bookingDate,
+        note,
+        packageIds: packageIds || [],
+        serviceIds: serviceIds || [],
+        vehicleId,
+      });
+      return updatedBooking.data;
+    },
+    onSuccess: async (_data, variables) => {
+      const bookingId = variables.data.id;
+      await Promise.all([
+        queryClient.invalidateQueries({
+          queryKey: ["bookings"],
+        }),
+        queryClient.invalidateQueries({
+          queryKey: ["booking", bookingId],
+        }),
+      ]);
+      toast.success("Booking updated successfully");
+    },
+    onError: (error) => {
+      let msg = "Failed to update booking";
+      if (error instanceof AxiosError) {
+        msg = error.response?.data?.message || msg;
+      }
+      toast.error(msg);
     },
   });
 };

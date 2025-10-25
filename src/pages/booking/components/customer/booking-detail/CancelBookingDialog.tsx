@@ -9,7 +9,6 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 
-
 interface CancelBookingDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -21,7 +20,10 @@ export function CancelBookingDialog({
   onOpenChange,
   onConfirm,
 }: CancelBookingDialogProps) {
-
+  const handleCancel = () => {
+    onOpenChange(false);
+    onConfirm();
+  };
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogContent className="font-inter">
@@ -36,14 +38,12 @@ export function CancelBookingDialog({
         </AlertDialogHeader>
 
         <AlertDialogFooter>
-          {/* Primary action = Keep booking */}
           <AlertDialogCancel className="bg-purple-600 hover:bg-purple-700 text-white">
             No, Keep It
           </AlertDialogCancel>
 
-          {/* Secondary danger action */}
           <AlertDialogAction
-            onClick={onConfirm}
+            onClick={handleCancel}
             className="border border-red-500 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 bg-transparent"
           >
             Yes, Cancel

@@ -9,10 +9,6 @@ const AdminVehiclesManagement = lazy(
 const CustomerVehiclesManagement = lazy(
   () => import("./components/customer/CustomerVehiclesManagement")
 );
-const roleComponents = {
-  admin: AdminVehiclesManagement,
-  customer: CustomerVehiclesManagement,
-};
 
 export default function Vehicle() {
   const { auth } = useAuth();
@@ -20,11 +16,9 @@ export default function Vehicle() {
   const getComponent = () => {
     switch (auth.user?.role) {
       case AccountRole.ADMIN:
-        const AdminComponent = roleComponents.admin;
-        return <AdminComponent />;
+        return <AdminVehiclesManagement />;
       case AccountRole.CUSTOMER:
-        const CustomerComponent = roleComponents.customer;
-        return <CustomerComponent />;
+        return <CustomerVehiclesManagement />;
       default:
         return <Loading />;
     }

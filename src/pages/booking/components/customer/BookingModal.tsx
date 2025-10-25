@@ -15,21 +15,36 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import useVehicles from "@/services/vehicle/hooks/useVehicles";
 import useCenters from "@/services/center/hooks/useCenters";
 import PackagesSelector from "./PackagesSelector";
-import { useBookingForm } from "@/services/booking/hooks/useBookingForm";
+import { useBookingCreateForm } from "@/services/booking/hooks/useCreateBookingForm";
+
+type BookingModalProps = {
+  open: boolean;
+  onClose: () => void;
+  initialData?: {
+    vehicleId?: string;
+    bookingDate?: string;
+  };
+};
+
 export default function BookingModal({
   open,
   onClose,
-}: {
-  open: boolean;
-  onClose: () => void;
-}) {
+  initialData,
+}: BookingModalProps) {
   const { data: vehicles = [] } = useVehicles();
   const { data: centers = [] } = useCenters();
-  const { form, onSubmit } = useBookingForm();
-
   const handleClose = () => {
     form.reset();
     onClose();
+  };
+  const { form, onSubmit } = useBookingCreateForm(initialData);
+
+   const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    await form.handleSubmit(async (data) => {
+      await onSubmit(data);
+      handleClose();
+    })();
   };
 
   return (
@@ -42,11 +57,7 @@ export default function BookingModal({
           </DialogTitle>
         </DialogHeader>
         <ScrollArea className="overflow-y-auto px-6 text-sm">
-          <form
-            id="booking-form"
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="flex flex-col gap-y-3"
-          >
+          <form id="booking-form" onSubmit={handleSubmit} className="flex flex-col gap-y-3">
             <VehicleSelector form={form} vehicles={vehicles} />
             <ServiceCenterSelector form={form} centers={centers} />
             <DateTimeSelector control={form.control} />

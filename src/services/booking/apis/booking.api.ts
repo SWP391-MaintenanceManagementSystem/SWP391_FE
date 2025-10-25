@@ -1,5 +1,5 @@
 import { axiosPrivate } from "@/lib/axios";
-import type { CreateBookingFormValues } from "@/pages/booking/lib/schema";
+import type { CreateBookingFormValues, EditBookingFormValues } from "@/pages/booking/lib/schema";
 import type { Booking, BookingFilters } from "@/types/models/booking";
 import type { CustomerBookingDetails } from "@/types/models/booking-with-detail";
 import type { BaseResponse, PaginationResponse } from "@/types/models/response";
@@ -16,6 +16,15 @@ export const createBooking = async (bookingData: CreateBookingFormValues) => {
   const response = await axiosPrivate.post<BaseResponse<Booking>>(
     "/bookings",
     bookingData,
+  );
+  return response.data;
+};
+
+export const customerUpdateBooking = async (bookingData: EditBookingFormValues) => {
+  const { id, ...data } = bookingData;
+  const response = await axiosPrivate.patch<BaseResponse<Booking>>(
+    `/bookings/customer/${id}`,
+    data,
   );
   return response.data;
 };
