@@ -85,7 +85,11 @@ const RouterComponent = () => {
                   element: <ViewDetailInfo />,
                   hydrateFallbackElement: <CircularIndeterminate />,
                 },
-
+                {
+                  path: "/inventory",
+                  element: <InventoryManagement />,
+                  hydrateFallbackElement: <CircularIndeterminate />,
+                },
                 {
                   element: (
                     <RequireAuth
@@ -122,13 +126,9 @@ const RouterComponent = () => {
                       element: <AddNewSchedulePage />,
                       hydrateFallbackElement: <CircularIndeterminate />,
                     },
-                    {
-                      path: "/inventory",
-                      element: <InventoryManagement />,
-                      hydrateFallbackElement: <CircularIndeterminate />,
-                    },
                   ],
                 },
+
                 {
                   element: (
                     <RequireAuth
