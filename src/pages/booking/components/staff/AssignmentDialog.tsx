@@ -37,6 +37,7 @@ export default function AssignmentDialog({
   const { keyword, setKeyword, data, isLoading } = useTechnicianSearch({
     centerId: item.serviceCenter.id,
     assignedIds: item.technicians.map((technician) => technician.id),
+    shiftId: item.shift.id,
   });
   useEffect(() => {
     if (open && !initialized) {
