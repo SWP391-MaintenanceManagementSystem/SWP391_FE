@@ -1,9 +1,11 @@
+import { useState } from "react";
 import { useParams } from "react-router-dom";
 import dayjs from "dayjs";
 import DynamicBreadcrumbs from "@/components/DynamicBreadcrumb";
 import MainContentLayout from "@/components/MainContentLayout";
 import { useBookingDetail } from "@/services/booking/hooks/useBookingDetail";
-
+import BookingTag from "@/components/tag/BookingTag";
+import type { BookingStatus } from "@/types/enums/bookingStatus";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Spinner } from "@/components/ui/shadcn-io/spinner";
 import { Button } from "@/components/ui/button";
@@ -11,11 +13,12 @@ import CustomerInfoCard from "./CustomerInfoCard";
 import VehicleInfoCard from "./VehicleInfoCard";
 import ShiftInfoCard from "./ShiftInfoCard";
 import AssignerInfoCard from "./AssignerInfoCard";
+import CheckListModal from "./CheckListModal";
 
 export default function AssignedBookingDetail() {
   const { id } = useParams<{ id: string }>();
   const { data, isLoading } = useBookingDetail(id ?? "");
-
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   if (!id) {
     return <div className="text-red-500 p-6">Booking ID is missing</div>;
@@ -69,6 +72,7 @@ export default function AssignedBookingDetail() {
             <div className="flex flex-col md:flex-row justify-between text-gray-700 dark:text-gray-50 space-y-4 md:space-y-0">
               <p>
                 <strong>Status:</strong>{" "}
+                <BookingTag status={data?.status as BookingStatus} />
               </p>
               <p>
                 <strong>Center:</strong> {data?.serviceCenter?.name || "N/A"} -{" "}
@@ -91,11 +95,11 @@ export default function AssignedBookingDetail() {
               </p>
             </div>
 
-            {data?.note && (
-              <div className="pt-3 text-gray-700 dark:text-gray-200">
-                <strong>Note:</strong> {data.note}
-              </div>
-            )}
+            <div className="flex flex-col md:flex-row justify-between text-gray-700 dark:text-gray-50 space-y-4 md:space-y-0">
+              <p>
+                <strong>Note:</strong> {data?.note}
+              </p>
+            </div>
           </CardContent>
         </Card>
 
@@ -128,12 +132,20 @@ export default function AssignedBookingDetail() {
                 : new Date(),
             }}
           />
+
           <AssignerInfoCard
             firstName={data?.staff?.firstName}
             lastName={data?.staff?.lastName}
             email={data?.staff?.email}
           />
         </div>
+
+        {/* Checklist modal */}
+        <CheckListModal
+          open={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          bookingId={data?.id}
+        />
       </MainContentLayout>
     </div>
   );

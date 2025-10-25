@@ -166,7 +166,7 @@ export const getColumns = () => {
 
     // Assigner
     columnHelper.accessor("assigner", {
-      id: "assigner",
+      id: "fullName",
       header: (info) => <SortHeader title="Assigner" info={info} />,
       cell: (info) => {
         const a = info.getValue();
