@@ -1,24 +1,38 @@
-import { useState, useMemo } from "react";
-import { type UseFormReturn } from "react-hook-form";
+import { useState, useMemo, useEffect } from "react";
+import { type FieldValues, type Path, type UseFormReturn } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Search } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { type CreateBookingFormValues } from "../../lib/schema";
 import type { Vehicle } from "@/types/models/vehicle";
 import { useDebounce } from "@uidotdev/usehooks";
-interface VehicleSelectorProps {
-  form: UseFormReturn<CreateBookingFormValues>;
+
+interface VehicleSelectorProps<T extends FieldValues> {
+  form: UseFormReturn<T>;
   vehicles: Vehicle[];
+  disabled?: boolean;
 }
 
-export default function VehicleSelector({
+export default function VehicleSelector<T extends FieldValues>({
   form,
   vehicles,
-}: VehicleSelectorProps) {
+  disabled = false,
+}: VehicleSelectorProps<T>) {
   const [query, setQuery] = useState("");
   const [open, setOpen] = useState(false);
   const debouncedQuery = useDebounce(query, 300);
+
+  const selectedVehicleId = form.watch("vehicleId" as Path<T>) as string | undefined;
+
+  // Set initial value from selected vehicle
+  useEffect(() => {
+    if (selectedVehicleId && vehicles.length > 0) {
+      const selectedVehicle = vehicles.find((v) => v.id === selectedVehicleId);
+      if (selectedVehicle && !query) {
+        setQuery(selectedVehicle.licensePlate);
+      }
+    }
+  }, [selectedVehicleId, vehicles, query]);
 
   const filteredVehicles = useMemo(() => {
     const q = debouncedQuery.trim().toLowerCase();
@@ -32,10 +46,12 @@ export default function VehicleSelector({
   }, [debouncedQuery, vehicles]);
 
   const handleSelect = (vehicle: Vehicle) => {
-    form.setValue("vehicleId", vehicle.id);
+    form.setValue("vehicleId" as Path<T>, vehicle.id as T[Path<T>]);
     setQuery(vehicle.licensePlate);
     setOpen(false);
   };
+
+  const vehicleIdError = form.formState.errors?.vehicleId;
 
   return (
     <div className="space-y-2">
@@ -45,26 +61,29 @@ export default function VehicleSelector({
 
       <div className="relative">
         <Input
-          placeholder="Enter plate number, VIN, or model"
+          placeholder={disabled ? "" : "Enter plate number, VIN, or model"}
           value={query}
-          onFocus={() => setOpen(true)}
+          onFocus={() => !disabled && setOpen(true)}
           onChange={(e) => {
+            if (disabled) return;
             const value = e.target.value;
             setQuery(value);
-            if (!value) form.setValue("vehicleId", "");
+            if (!value) form.setValue("vehicleId" as Path<T>, "" as T[Path<T>]);
             setOpen(true);
           }}
           onBlur={() => setTimeout(() => setOpen(false), 150)}
+          disabled={disabled}
           className={cn(
             "pl-10 focus-visible:ring-0 focus-visible:ring-offset-0",
-            form.formState.errors.vehicleId && "border-red-500"
+            vehicleIdError && "border-red-500",
+            disabled && "cursor-not-allowed opacity-70"
           )}
         />
 
         <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
 
         {/* Dropdown results */}
-        {open && query && (
+        {!disabled && open && query && (
           <div className="absolute z-50 w-full mt-1 bg-background border rounded-md shadow-lg max-h-60 overflow-auto">
             {filteredVehicles.length > 0 ? (
               filteredVehicles.map((vehicle) => (
@@ -88,9 +107,9 @@ export default function VehicleSelector({
         )}
       </div>
 
-      {form.formState.errors.vehicleId && (
+      {vehicleIdError && (
         <p className="text-xs text-destructive">
-          {form.formState.errors.vehicleId.message}
+          {String(vehicleIdError.message || "")}
         </p>
       )}
     </div>

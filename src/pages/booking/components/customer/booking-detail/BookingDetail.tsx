@@ -1,12 +1,11 @@
 import DynamicBreadcrumbs from "@/components/DynamicBreadcrumb";
 import MainContentLayout from "@/components/MainContentLayout";
 import { useBookingDetail } from "@/services/booking/hooks/useBookingDetail";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import VehicleInfoCard from "./VehicleInfoCard";
 import StaffCard from "./StaffCard";
-import BookingTag from "@/components/tag/BookingTag";
 import dayjs from "dayjs";
 import CustomerInfoCard from "./CustomerInfoCard";
 import TechnicianCard from "./TechnicianCard";
@@ -15,13 +14,16 @@ import { useState } from "react";
 import { BookingServicesDialog } from "./BookingServicesDialog";
 import { CancelBookingDialog } from "./CancelBookingDialog";
 import useCancelBooking from "@/services/booking/hooks/useCancelBooking";
-import type { BookingStatus } from "@/types/enums/bookingStatus";
+import BookingTag from "@/components/tag/BookingTag";
+import EditBookingModal from "./EditBookingModal";
+import { BookingStatus } from "@/types/enums/bookingStatus";
+
 export default function BookingDetail() {
   const { id } = useParams<{ id: string }>();
   const { data, isLoading } = useBookingDetail(id ?? "");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
-  const navigate = useNavigate();
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const { onCancel } = useCancelBooking();
 
   if (!id) {
@@ -36,12 +38,7 @@ export default function BookingDetail() {
     );
 
   const handleCancelBooking = () => {
-    try {
-      onCancel(id);
-      navigate("/booking");
-    } catch (error) {
-      console.error(error);
-    }
+    onCancel(id);
     setIsCancelModalOpen(false);
   };
 
@@ -59,6 +56,14 @@ export default function BookingDetail() {
         onOpenChange={setIsCancelModalOpen}
         onConfirm={handleCancelBooking}
       />
+
+      {data && (
+        <EditBookingModal
+          open={isEditModalOpen}
+          onClose={() => setIsEditModalOpen(false)}
+          booking={data}
+        />
+      )}
 
       <DynamicBreadcrumbs
         pathTitles={{
@@ -90,7 +95,9 @@ export default function BookingDetail() {
               </Button>
 
               <Button
+                onClick={() => setIsEditModalOpen(true)}
                 variant="default"
+                disabled={data?.status !== BookingStatus.PENDING}
                 className="bg-purple-600 hover:bg-purple-700 text-white
             dark:bg-purple-500 dark:hover:bg-purple-600"
               >
@@ -111,7 +118,7 @@ export default function BookingDetail() {
             <div className="flex flex-col md:flex-row justify-between text-gray-700 dark:text-gray-50 md:space-y-0 space-y-4">
               <p>
                 <strong>Status:</strong>{" "}
-                <BookingTag status={data?.status as BookingStatus} />
+                {data?.status && <BookingTag status={data.status} />}
               </p>
               <p>
                 <strong>Center: </strong> {data?.serviceCenter?.name || "N/A"} -{" "}
