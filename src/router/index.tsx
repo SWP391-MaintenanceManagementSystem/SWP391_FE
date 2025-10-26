@@ -19,13 +19,14 @@ import ViewDetailInfo from "@/pages/vehicle/components/admin/ViewDetailInfo";
 import MembershipPage from "@/pages/membership";
 import StaffsManagementPage from "@/pages/employees/staffs";
 import TechniciansManagementPage from "@/pages/employees/technicians";
-import WorkShiftsManagementPage from "@/pages/shifts";
+import WorkShiftsManagementPage from "@/pages/shifts/admin";
 import AuthFailed from "@/pages/auth/components/AuthFailed";
 import InventoryManagement from "@/pages/inventory";
 import PaymentSuccessPage from "@/pages/payment";
-import AddNewSchedulePage from "@/pages/shifts/components/schedules/AddNewSchedule";
+import AddNewSchedulePage from "@/pages/shifts/admin/schedules/AddNewSchedule";
 import BookingPage from "@/pages/booking";
 import BookingDetailPage from "@/pages/booking/components/BookingDetailPage";
+import ViewSchedule from "@/pages/shifts/employee/ViewSchedule";
 
 const RouterComponent = () => {
   const router = createBrowserRouter([
@@ -91,6 +92,14 @@ const RouterComponent = () => {
                   hydrateFallbackElement: <CircularIndeterminate />,
                 },
                 {
+                  path: "/booking",
+                  element: <BookingPage />,
+                },
+                {
+                  path: "/booking/:id",
+                  element: <BookingDetailPage />,
+                },
+                {
                   element: (
                     <RequireAuth
                       allowedRoles={[AccountRole.ADMIN, AccountRole.CUSTOMER]}
@@ -130,24 +139,12 @@ const RouterComponent = () => {
                 },
 
                 {
-                  element: (
-                    <RequireAuth
-                      allowedRoles={[
-                        AccountRole.ADMIN,
-                        AccountRole.CUSTOMER,
-                        AccountRole.STAFF,
-                        AccountRole.TECHNICIAN,
-                      ]}
-                    />
-                  ),
+                  element: <RequireAuth allowedRoles={[AccountRole.STAFF]} />,
                   children: [
                     {
-                      path: "/booking",
-                      element: <BookingPage />,
-                    },
-                    {
-                      path: "/booking/:id",
-                      element: <BookingDetailPage />,
+                      path: "/viewSchedule",
+                      element: <ViewSchedule />,
+                      hydrateFallbackElement: <CircularIndeterminate />,
                     },
                   ],
                 },
