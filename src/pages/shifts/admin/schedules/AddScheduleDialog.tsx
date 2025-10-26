@@ -336,6 +336,17 @@ export function AddScheduleDialog({
                               captionLayout="dropdown"
                               month={startMonth}
                               onMonthChange={setStartMonth}
+                              disabled={(date) => {
+                                const today = new Date();
+                                return (
+                                  date <
+                                  new Date(
+                                    today.getFullYear(),
+                                    today.getMonth(),
+                                    today.getDate(),
+                                  )
+                                );
+                              }}
                               onSelect={(selectedDate) => {
                                 if (!selectedDate) return;
                                 setStartDate(selectedDate);

@@ -15,6 +15,7 @@ import {
   UserRoundCog,
   CalendarClock,
   BookOpenCheckIcon,
+  CalendarRange,
 } from "lucide-react";
 
 export const adminItems: SidebarItem[] = [
@@ -58,6 +59,7 @@ export const customerItems: SidebarItem[] = [
 
 export const staffItems: SidebarItem[] = [
   { title: "Dashboard", url: "/dashboard", icon: Home },
+  { title: "Work Schedule", url: "/viewSchedule", icon: CalendarRange },
   { title: "Booking Management", url: "/booking", icon: BookOpenCheckIcon },
 ];
 export const technicianItems: SidebarItem[] = [

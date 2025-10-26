@@ -181,25 +181,12 @@ export const useUpdateSchedule = () => {
 export const useAddSchedule = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async ({
-      data,
-    }: {
-      data: AddWorkScheduleFormData;
-      currentPage: number;
-      currentPageSize: number;
-    }) => {
+    mutationFn: async ({ data }: { data: AddWorkScheduleFormData }) => {
       const add = await addSchedule(data);
       return add.data;
     },
-    onSuccess: async (_data, variables) => {
-      await Promise.all([
-        queryClient.invalidateQueries({
-          queryKey: queryKeys.workSchedulesList({
-            page: variables.currentPage,
-            pageSize: variables.currentPageSize,
-          }),
-        }),
-      ]);
+    onSuccess: async () => {
+      queryClient.invalidateQueries({ queryKey: ["workSchedulesList"] });
       toast.success("Schedule added successfully");
     },
   });

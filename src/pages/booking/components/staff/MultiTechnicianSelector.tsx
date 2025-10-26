@@ -79,7 +79,7 @@ export default function MultiTechnicianSelector<
   );
 
   return (
-    <div className="space-y-2 max-h-[320px] overflow-y-auto">
+    <div className="space-y-2 ">
       <label
         className={cn(
           "text-sm font-medium flex items-center gap-2",
