@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import SortHeader from "@/components/table/SortHeader";
 import dayjs from "dayjs";
 import { ShiftCell } from "@/pages/shifts/admin/schedules/table/ShiftCell";
+import { CenterCell } from "@/pages/shifts/admin/schedules/table/CenterCell";
 
 export const getColumns = () => {
   const columnHelper = createColumnHelper<WorkSchedule>();
@@ -54,7 +55,9 @@ export const getColumns = () => {
     columnHelper.accessor("shift.serviceCenter.name", {
       id: "centerName",
       header: "Work Center",
-      cell: (info) => <Badge variant="outline">{info.getValue()}</Badge>,
+      cell: ({ row }) => (
+        <CenterCell center={row.original.shift.serviceCenter} />
+      ),
       meta: {
         title: "Work Center",
         filterVariant: "filterWorkCenter",
