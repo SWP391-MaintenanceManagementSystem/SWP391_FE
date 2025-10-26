@@ -7,10 +7,12 @@ export function useTechnicianSearch({
   centerId,
   assignedIds = [],
   shiftId,
+  bookingDate,
 }: {
   centerId: string;
   assignedIds?: string[];
   shiftId?: string;
+  bookingDate?: Date;
 }) {
   const { data: employeesList, isLoading } = useGetEmployeesQuery();
   const { data: schedules } = useGetWorkSchedulesList({
@@ -18,6 +20,7 @@ export function useTechnicianSearch({
     pageSize: 500,
     centerId,
     shiftId,
+    dateFrom: bookingDate?.toISOString(),
   });
   const [keyword, setKeywordState] = useState("");
   const setKeyword = (val: string) => setKeywordState(val.toLowerCase());
