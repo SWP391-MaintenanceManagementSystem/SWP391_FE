@@ -128,6 +128,10 @@ export default function CalendarView({ employeeId }: { employeeId: string }) {
                   <strong>Service Center:</strong>{" "}
                   {selectedEvent.shift.serviceCenter.name}
                 </p>
+                <p>
+                  <strong>Address:</strong>{" "}
+                  {selectedEvent.shift.serviceCenter.address}
+                </p>
               </div>
             </>
           )}
