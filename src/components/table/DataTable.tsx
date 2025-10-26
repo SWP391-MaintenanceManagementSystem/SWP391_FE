@@ -237,7 +237,7 @@ export function DataTable<TData, TValue>({
         <div
           className={clsx(
             headerActions
-              ? "grid grid-cols-1  md:grid-cols-[1fr_auto] justify-end items-center gap-2 w-full md:w-auto"
+              ? "grid grid-cols-1 md:grid-cols-[1fr_auto] justify-end items-center gap-2 w-full md:w-auto"
               : "flex items-end justify-end w-full",
           )}
         >
