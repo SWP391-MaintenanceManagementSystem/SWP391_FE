@@ -8,7 +8,7 @@ export type Booking = {
   shiftId: string;
   totalCost: number;
   bookingDate: Date;
-  status: string;
+  status: BookingStatus;
   note?: string;
   createdAt: Date;
   updatedAt: Date;

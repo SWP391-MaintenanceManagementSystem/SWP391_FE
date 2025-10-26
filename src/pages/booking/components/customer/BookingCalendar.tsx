@@ -13,12 +13,20 @@ import useBooking from "@/services/booking/hooks/useBooking";
 import { CustomEvent, type CalendarEvent } from "./CustomEvent";
 import { Spinner } from "@/components/ui/shadcn-io/spinner";
 import { useNavigate } from "react-router-dom";
+import { BookingStatus } from "@/types/enums/bookingStatus";
 
 const localizer = dayjsLocalizer(dayjs);
 
 type Props = {
   initialVehicleId?: string;
 };
+
+const ONGOING_STATUSES: BookingStatus[] = [
+  BookingStatus.PENDING,
+  BookingStatus.ASSIGNED,
+  BookingStatus.COMPLETED,
+  BookingStatus.IN_PROGRESS,
+];
 
 const BookingCalendar = ({ initialVehicleId }: Props) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -85,7 +93,7 @@ const BookingCalendar = ({ initialVehicleId }: Props) => {
   const events = useMemo(
     () =>
       bookingData?.data
-        ?.filter((b) => b.status !== "CANCELLED")
+        ?.filter((b) => ONGOING_STATUSES.includes(b.status))
         .map((b) => {
           return {
             id: b.id,
@@ -105,7 +113,6 @@ const BookingCalendar = ({ initialVehicleId }: Props) => {
       </div>
     );
   }
-
   const eventStyleGetter = (event: CalendarEvent) => {
     let backgroundColor;
 
@@ -118,6 +125,15 @@ const BookingCalendar = ({ initialVehicleId }: Props) => {
         break;
       case "ASSIGNED":
         backgroundColor = "#3b82f6";
+        break;
+      case "CHECKED_IN":
+        backgroundColor = "#2563eb";
+        break;
+      case "IN_PROGRESS":
+        backgroundColor = "#0ea5e9";
+        break;
+      case "CHECKED_OUT":
+        backgroundColor = "#14b8a6";
         break;
       case "PENDING":
       default:
