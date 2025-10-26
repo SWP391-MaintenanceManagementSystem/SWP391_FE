@@ -7,6 +7,7 @@ import FilterHeader from "@/components/table/FilterHeader";
 import dayjs from "dayjs";
 import { ShiftCell } from "./ShiftCell";
 import ColActions from "./ColActions";
+import { CenterCell } from "./CenterCell";
 
 export const getColumns = (
   handleFilterChange: (field: string, value: string) => void,
@@ -108,7 +109,9 @@ export const getColumns = (
           onFilterChange={(value) => handleFilterChange("centerId", value)}
         />
       ),
-      cell: (info) => <Badge variant="outline">{info.getValue()}</Badge>,
+      cell: ({ row }) => (
+        <CenterCell center={row.original.shift.serviceCenter} />
+      ),
       meta: {
         title: "Work Center",
         filterVariant: "filterWorkCenter",

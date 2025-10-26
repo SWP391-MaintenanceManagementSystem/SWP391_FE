@@ -3,7 +3,7 @@ import Unauthorized from "@/pages/unauthorized";
 import { Suspense } from "react";
 import CircularIndeterminate from "@/components/CircularIndeterminate";
 import { AccountRole } from "@/types/enums/role";
-import StaffSchedule from "./components/staff/StaffSchedule";
+import StaffSchedule from "./components/StaffSchedule";
 
 export default function ViewSchedule() {
   const { auth } = useAuth();
