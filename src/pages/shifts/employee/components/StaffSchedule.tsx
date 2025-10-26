@@ -6,7 +6,7 @@ import { useGetWorkSchedulesList } from "@/services/shift/queries";
 import type { WorkSchedule } from "@/types/models/shift";
 import { getColumns } from "./table/columns";
 import { Button } from "@/components/ui/button";
-import { Calendar, CalendarDays, CalendarRange, Table, X } from "lucide-react";
+import { CalendarDays, CalendarRange, Table, X } from "lucide-react";
 import {
   Popover,
   PopoverContent,
@@ -19,13 +19,16 @@ import clsx from "clsx";
 import DynamicBreadcrumbs from "@/components/DynamicBreadcrumb";
 import MainContentLayout from "@/components/MainContentLayout";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import CalendarView from "./CalendarView";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function StaffSchedule() {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [sorting, setSorting] = useState<SortingState>([]);
   const [dateRange, setDateRange] = useState<DateRange | undefined>(undefined);
-  const [currentTab, setCurrentTab] = useState("list");
+  const [currentTab, setCurrentTab] = useState("calendar");
+  const { auth } = useAuth();
 
   const {
     data: apiData,
@@ -34,6 +37,7 @@ export default function StaffSchedule() {
   } = useGetWorkSchedulesList({
     page,
     pageSize,
+    employeeId: auth?.user?.id,
     dateFrom: dateRange?.from
       ? dayjs(dateRange.from).format("YYYY-MM-DD")
       : undefined,
@@ -57,11 +61,11 @@ export default function StaffSchedule() {
         >
           <div className="flex items-center justify-between">
             <TabsList>
-              <TabsTrigger value="list">
-                <Table /> Table View
-              </TabsTrigger>
               <TabsTrigger value="calendar">
                 <CalendarDays /> Calendar View
+              </TabsTrigger>
+              <TabsTrigger value="list">
+                <Table /> Table View
               </TabsTrigger>
             </TabsList>
           </div>
@@ -137,7 +141,7 @@ export default function StaffSchedule() {
             </Card>
           </TabsContent>
           <TabsContent value="calendar">
-            <h1>Calendar View</h1>
+            <CalendarView employeeId={auth.user?.id || ""} />
           </TabsContent>
         </Tabs>
       </MainContentLayout>

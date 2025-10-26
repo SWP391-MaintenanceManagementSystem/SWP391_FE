@@ -1,0 +1,81 @@
+.rbc-calendar,
+.rbc-month-view,
+.rbc-row,
+.rbc-month-row,
+.rbc-row-bg,
+.rbc-row-content {
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+}
+.rbc-month-view {
+    overflow-x: hidden !important;
+}
+
+.rbc-month-view .rbc-date-cell,
+.rbc-month-view .rbc-header {
+    width: 14.2857% !important;
+    text-align: center !important;
+}
+
+.rbc-month-view .rbc-month-row {
+    display: table !important;
+    table-layout: fixed !important;
+    width: 100% !important;
+}
+
+@media (max-width: 1024px) {
+    .rbc-month-view .rbc-date-cell {
+        font-size: 0.85rem !important;
+    }
+    .rbc-event {
+        font-size: 0.75rem !important;
+        padding: 0 2px !important;
+    }
+}
+
+@media (max-width: 640px) {
+    .rbc-toolbar-label {
+        font-size: 0.9rem !important;
+    }
+
+    .rbc-month-view .rbc-header {
+        font-size: 0.75rem !important;
+    }
+
+    .rbc-event {
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+    }
+}
+
+.rbc-time-view {
+    overflow-x: hidden !important;
+}
+
+.rbc-calendar {
+    transition:
+        width 0.2s ease,
+        height 0.2s ease;
+}
+
+.rbc-addons-dnd-row-level .rbc-event-add {
+    display: none !important;
+}
+
+.rbc-day-bg:hover,
+.rbc-day-slot:hover {
+    background-color: transparent !important;
+    cursor: default !important;
+}
+
+.rbc-day-bg::after {
+    display: none !important;
+    content: none !important;
+}
+
+.rbc-day-bg:hover::after {
+    content: none !important;
+    display: none !important;
+}
