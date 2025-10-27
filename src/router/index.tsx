@@ -139,7 +139,7 @@ const RouterComponent = () => {
                 },
 
                 {
-                  element: <RequireAuth allowedRoles={[AccountRole.STAFF]} />,
+                  element: <RequireAuth allowedRoles={[AccountRole.STAFF, AccountRole.TECHNICIAN]} />,
                   children: [
                     {
                       path: "/viewSchedule",
