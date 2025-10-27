@@ -51,9 +51,6 @@ const InfoBox = ({ user, handleLogout }: InfoBoxProps) => {
                 <p>
                   <strong>Email:</strong> {user.email}
                 </p>
-                <p>
-                  <strong>Role:</strong> {user.role}
-                </p>
                 {!isAdmin && user.phone && (
                   <p>
                     <strong>Tel:</strong> {user.phone}
