@@ -17,17 +17,23 @@ import useCancelBooking from "@/services/booking/hooks/useCancelBooking";
 import BookingTag from "@/components/tag/BookingTag";
 import EditBookingModal from "./EditBookingModal";
 import { BookingStatus } from "@/types/enums/bookingStatus";
+import { b64DecodeUnicode } from "@/utils/base64";
 import { usePayment } from "@/services/payment/hooks/usePayment";
 
+const CAN_CANCEL: BookingStatus[] = [
+  BookingStatus.PENDING,
+  BookingStatus.ASSIGNED,
+];
 export default function BookingDetail() {
   const { id } = useParams<{ id: string }>();
-  const { data, isLoading } = useBookingDetail(id ?? "");
+
+  const decodedId = b64DecodeUnicode(id!);
+  const { data, isLoading } = useBookingDetail(decodedId ?? "");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const { paymentMutation } = usePayment();
   const { onCancel } = useCancelBooking();
-
   if (!id) {
     return <div className="text-red-500 p-6">Booking ID is missing</div>;
   }
@@ -105,20 +111,21 @@ export default function BookingDetail() {
                   View Services
                 </Button>
 
-                <Button
-                  onClick={() => setIsEditModalOpen(true)}
-                  variant="default"
-                  disabled={data?.status !== BookingStatus.PENDING}
-                  className="bg-purple-600 hover:bg-purple-700 text-white
+              <Button
+                onClick={() => setIsEditModalOpen(true)}
+                variant="default"
+                disabled={!(data?.status && CAN_CANCEL.includes(data.status))}
+                className="bg-purple-600 hover:bg-purple-700 text-white
             dark:bg-purple-500 dark:hover:bg-purple-600"
                 >
                   Edit
                 </Button>
 
-                <Button
-                  onClick={() => setIsCancelModalOpen(true)}
-                  variant="destructive"
-                  className="hover:bg-red-600
+              <Button
+                onClick={() => setIsCancelModalOpen(true)}
+                variant="destructive"
+                disabled={!(data?.status && CAN_CANCEL.includes(data.status))}
+                className="hover:bg-red-600
             dark:hover:bg-red-700"
                 >
                   Cancel

@@ -1,4 +1,5 @@
 import type { BookingStatus } from "../enums/bookingStatus";
+import type { CustomerBookingDetails } from "./booking-with-detail";
 
 export type Booking = {
   id: string;
@@ -89,3 +90,8 @@ export type TechnicianBooking = {
   createdAt: Date;
   updatedAt: Date;
 };
+
+export type CustomerBookingHistory = Omit<
+  CustomerBookingDetails,
+  "bookingDetails"
+>;
