@@ -1,9 +1,17 @@
 import { axiosPrivate } from "@/lib/axios";
-import type { CreateBookingFormValues, EditBookingFormValues } from "@/pages/booking/lib/schema";
-import type { Booking, BookingFilters } from "@/types/models/booking";
+import type {
+  CreateBookingFormValues,
+  EditBookingFormValues,
+} from "@/pages/booking/lib/schema";
+import type {
+  Booking,
+  BookingFilters,
+  CustomerBookingHistory,
+} from "@/types/models/booking";
 import type { CustomerBookingDetails } from "@/types/models/booking-with-detail";
 import type { BaseResponse, PaginationResponse } from "@/types/models/response";
 import type { BookingStaffTable } from "@/types/models/booking-with-detail";
+import { httpPrivate } from "@/lib/http";
 
 export const getBookings = async (params: BookingFilters) => {
   const response = await axiosPrivate.get<
@@ -15,16 +23,18 @@ export const getBookings = async (params: BookingFilters) => {
 export const createBooking = async (bookingData: CreateBookingFormValues) => {
   const response = await axiosPrivate.post<BaseResponse<Booking>>(
     "/bookings",
-    bookingData,
+    bookingData
   );
   return response.data;
 };
 
-export const customerUpdateBooking = async (bookingData: EditBookingFormValues) => {
+export const customerUpdateBooking = async (
+  bookingData: EditBookingFormValues
+) => {
   const { id, ...data } = bookingData;
   const response = await axiosPrivate.patch<BaseResponse<Booking>>(
     `/bookings/customer/${id}`,
-    data,
+    data
   );
   return response.data;
 };
@@ -49,3 +59,11 @@ export const getBookingManagementList = async (params: BookingFilters) => {
   >("/bookings", { params });
   return response.data;
 };
+
+export const getBookingHistory = async (params: BookingFilters) => {
+  const response = await httpPrivate.get<
+    BaseResponse<PaginationResponse<CustomerBookingHistory>>
+  >("/bookings/history", { params});
+  return response.data;
+};
+
