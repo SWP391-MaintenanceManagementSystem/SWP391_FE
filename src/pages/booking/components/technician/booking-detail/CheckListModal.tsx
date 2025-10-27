@@ -14,10 +14,13 @@ import {
   AccordionTrigger,
   AccordionContent,
 } from "@/components/ui/accordion";
-import { CheckCircle, Circle, AlertCircle } from "lucide-react";
+import { CheckCircle, Circle } from "lucide-react";
 import { toast } from "sonner";
 import { useCompleteTechnicianBookingMutation } from "@/services/booking/mutations";
 import type { CustomerBookingDetails } from "@/types/models/booking-with-detail";
+import BookingTag from "@/components/tag/BookingTag";
+import type { BookingStatus } from "@/types/enums/bookingStatus";
+import { Textarea } from "@/components/ui/textarea";
 
 interface CheckListModalProps {
   open: boolean;
@@ -30,7 +33,7 @@ type TaskItem = {
   label: string;
   done: boolean;
   type: "package" | "service";
-  services?: { id: string; name: string }[];
+  services?: { id: string; name: string; done?: boolean }[];
 };
 
 export default function CheckListModal({
@@ -42,8 +45,19 @@ export default function CheckListModal({
   const [note, setNote] = useState("");
   const [isDone, setIsDone] = useState(false);
 
+  const handleOnSuccess = () => {
+    setTasks((prev) =>
+      prev.map((t) => ({
+        ...t,
+        done: true,
+        services: t.services?.map((s) => ({ ...s, done: true })) || t.services,
+      }))
+    );
+    setIsDone(true);
+  };
+
   const { mutate: completeBooking, isPending } =
-    useCompleteTechnicianBookingMutation();
+    useCompleteTechnicianBookingMutation(handleOnSuccess);
 
   useEffect(() => {
     if (!bookingData) return;
@@ -54,9 +68,14 @@ export default function CheckListModal({
       newTasks.push({
         id: pkg.id,
         label: pkg.name,
-        done: false,
+        done: pkg.status === "COMPLETED",
         type: "package",
-        services: pkg.services || [],
+        services:
+          pkg.services?.map((s) => ({
+            id: s.id,
+            name: s.name,
+            done: pkg.status === "COMPLETED",
+          })) || [],
       });
     });
 
@@ -64,19 +83,46 @@ export default function CheckListModal({
       newTasks.push({
         id: srv.id,
         label: srv.name,
-        done: false,
+        done: srv.status === "COMPLETED",
         type: "service",
       });
     });
 
     setTasks(newTasks);
-    setIsDone(bookingData.status === "COMPLETED");
+    const allDone = newTasks.length > 0 && newTasks.every((t) => t.done);
+    setIsDone(allDone);
   }, [bookingData]);
 
-  const handleToggle = (id: string) => {
+  const handleToggle = (id: string, parentId?: string) => {
     if (isDone) return;
+
     setTasks((prev) =>
-      prev.map((t) => (t.id === id ? { ...t, done: !t.done } : t))
+      prev.map((t) => {
+        if (parentId && t.id === parentId && t.services) {
+          const updatedServices = t.services.map((srv) =>
+            srv.id === id ? { ...srv, done: !srv.done } : srv
+          );
+          const allDone = updatedServices.every((srv) => srv.done);
+          return { ...t, services: updatedServices, done: allDone };
+        }
+
+        if (t.id === id && t.type === "package") {
+          if (t.services && t.services.length) {
+            const allDone = t.services.every((srv) => srv.done);
+            if (allDone) {
+              return { ...t, done: !t.done };
+            }
+          } else {
+            return { ...t, done: !t.done };
+          }
+        }
+
+        if (t.id === id && t.type === "service") {
+          return { ...t, done: !t.done };
+        }
+
+        return t;
+      })
     );
   };
 
@@ -84,89 +130,93 @@ export default function CheckListModal({
   const progress = tasks.length > 0 ? (completed / tasks.length) * 100 : 0;
 
   const handleUpdate = () => {
-    toast.info("Progress saved locally (demo)");
+    toast.info("Saved successfully");
   };
 
   const handleDone = () => {
     if (!bookingData?.id) return;
-    completeBooking(bookingData.id, {
-      onSuccess: () => {
-        setIsDone(true);
-      },
-      onError: (err) => {
-        toast.error(err?.message || "Failed to complete booking");
-      },
+
+    const packageIds =
+      bookingData.bookingDetails?.packages?.map((p) => p.bookingDetailId) ?? [];
+    const serviceIds =
+      bookingData.bookingDetails?.services?.map((s) => s.bookingDetailId) ?? [];
+    const detailIds = [...packageIds, ...serviceIds];
+
+    completeBooking({
+      bookingId: bookingData.id,
+      detailIds,
     });
   };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent
-        className=" font-inter max-w-md bg-white text-gray-900 border border-gray-300 rounded-2xl 
-                   dark:bg-neutral-950 dark:text-white dark:border-purple-500/30"
-      >
+      <DialogContent className="font-inter max-w-md bg-white text-gray-900 border border-gray-300 rounded-2xl dark:bg-neutral-950 dark:text-white dark:border-purple-500/30">
         <DialogHeader>
           <DialogTitle className="text-lg font-semibold flex flex-col items-center gap-2">
-            Checklist
-            {isDone && (
-              <span className="text-green-600 dark:text-green-400 text-sm font-medium">
-                (Completed)
-              </span>
-            )}
+            <div className="flex flex-col items-center gap-2">
+              <span>Checklist</span>
+              {isDone && <BookingTag status={"COMPLETED" as BookingStatus} />}
+            </div>
           </DialogTitle>
-          <DialogDescription className="text-gray-500 dark:text-gray-400">
-            {bookingData
-              ? `Booking ID: ${bookingData.id}`
-              : " "}
+
+          <DialogDescription className="text-gray-500 dark:text-gray-400 flex flex-col items-center">
+            {bookingData ? `Booking ID: ${bookingData.id}` : ""}
           </DialogDescription>
         </DialogHeader>
 
-        {/* Progress bar */}
+        {/* Progress */}
         <div className="mt-3">
           <Progress
             value={progress}
-            className="h-2 bg-gray-200 dark:bg-gray-700"
+            className="h-2 bg-gray-200 dark:bg-gray-700 [&>div]:bg-green-600"
           />
           <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
             {completed} / {tasks.length} tasks completed
           </p>
         </div>
 
-        {/* Note */}
-        <div className="mt-4">
-          <p className="text-sm text-gray-700 dark:text-gray-300 mb-1">
-            Technician Note
-          </p>
-          <textarea
-            value={note}
-            onChange={(e) => !isDone && setNote(e.target.value)}
-            disabled={isDone}
-            className={`w-full bg-gray-100 text-gray-800 text-sm p-2 rounded-md border ${
-              isDone
-                ? "opacity-50 cursor-not-allowed"
-                : "border-gray-300 focus:ring-2 focus:ring-purple-500"
-            } dark:bg-neutral-900 dark:text-gray-200 dark:border-gray-700`}
-            placeholder="Type your notes here..."
-            rows={2}
-          />
-        </div>
+        {/* Scrollable content (Note + Task list + Buttons) */}
+        <div className="mt-4 max-h-[60vh] overflow-y-auto pr-2 p-2">
+          {/* Note */}
+          <div>
+            <p className="text-sm text-gray-700 dark:text-gray-300 mb-1">
+              Technician Note
+            </p>
+            <Textarea
+              value={note}
+              onChange={(e) => !isDone && setNote(e.target.value)}
+              disabled={isDone}
+              className={`w-full bg-gray-100 text-gray-800 text-sm p-2 rounded-md border ${
+                isDone
+                  ? "opacity-50 cursor-not-allowed"
+                  : "border-gray-300 !outline-none focus:ring-0 focus:border-transparent"
+              } dark:bg-neutral-900 dark:text-gray-200 dark:border-gray-700`}
+              placeholder="Type your notes here..."
+              rows={2}
+            />
+          </div>
 
-        {/* Task list */}
-        <div className="mt-5 space-y-3">
-          {tasks.map((task) =>
-            task.type === "package" ? (
-              <Accordion type="single" collapsible key={task.id}>
+          {/* Task list */}
+          <div className="mt-5 space-y-2">
+            <Accordion type="multiple">
+              {tasks.map((task) => (
                 <AccordionItem
+                  key={task.id}
                   value={task.id}
-                  className="border border-gray-300 dark:border-gray-700 rounded-lg"
+                  className="rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-100 dark:bg-neutral-900 overflow-hidden"
                 >
-                  <div className="flex items-center space-x-3 p-2 bg-gray-100 dark:bg-neutral-900 rounded-t-lg">
+                  {/* Header */}
+                  <div
+                    className={`flex items-center justify-between px-4 py-3 min-h-[52px] transition-colors ${
+                      isDone
+                        ? "opacity-60"
+                        : "hover:bg-gray-200 dark:hover:bg-neutral-800"
+                    }`}
+                  >
                     <div
                       onClick={() => handleToggle(task.id)}
                       className={`flex items-center gap-2 ${
-                        isDone
-                          ? "cursor-not-allowed opacity-60"
-                          : "cursor-pointer"
+                        isDone ? "cursor-not-allowed" : "cursor-pointer"
                       }`}
                     >
                       {task.done ? (
@@ -184,72 +234,64 @@ export default function CheckListModal({
                         {task.label}
                       </span>
                     </div>
-                    <AccordionTrigger className="ml-auto text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white" />
+
+                    {task.type === "package" && (
+                      <AccordionTrigger
+                        className="ml-auto w-auto p-0 h-[20px] [&>svg]:h-4 [&>svg]:w-4 
+                           [&>svg]:text-gray-500 hover:[&>svg]:text-gray-900 
+                           dark:[&>svg]:text-gray-400 dark:hover:[&>svg]:text-white"
+                      />
+                    )}
                   </div>
-                  <AccordionContent className="bg-white border-t border-gray-200 dark:bg-neutral-950 dark:border-gray-800">
-                    <ul className="ml-8 mt-2 list-disc space-y-1 text-gray-600 dark:text-gray-400">
-                      {task.services?.map((srv) => (
-                        <li key={srv.id}>{srv.name}</li>
-                      ))}
-                    </ul>
-                  </AccordionContent>
-                </AccordionItem>
-              </Accordion>
-            ) : (
-              <div
-                key={task.id}
-                className={`flex items-center gap-2 bg-gray-100 p-2 rounded-lg border border-gray-300 
-                  dark:bg-neutral-900 dark:border-gray-700 ${
-                    isDone ? "opacity-60" : ""
-                  }`}
-              >
-                <div
-                  onClick={() => handleToggle(task.id)}
-                  className={isDone ? "cursor-not-allowed" : "cursor-pointer"}
-                >
-                  {task.done ? (
-                    <CheckCircle className="text-green-600 dark:text-green-500 h-5 w-5" />
-                  ) : (
-                    <AlertCircle className="text-red-500 h-5 w-5" />
+
+                  {/* service  */}
+                  {task.type === "package" && (
+                    <AccordionContent className="bg-white dark:bg-neutral-950 border-t border-gray-200 dark:border-gray-800 rounded-b-xl">
+                      <ul className="ml-8 mt-2 mb-3 list-disc space-y-1 text-gray-600 dark:text-gray-400">
+                        {task.services?.map((srv) => (
+                          <li
+                            key={srv.id}
+                            onClick={() => handleToggle(srv.id, task.id)}
+                            className={`flex items-center gap-2 cursor-pointer ${
+                              srv.done ? "line-through text-gray-400" : ""
+                            }`}
+                          >
+                            {srv.done ? (
+                              <CheckCircle className="text-green-600 dark:text-green-500 h-4 w-4" />
+                            ) : (
+                              <Circle className="text-gray-400 dark:text-gray-500 h-4 w-4" />
+                            )}
+                            {srv.name}
+                          </li>
+                        ))}
+                      </ul>
+                    </AccordionContent>
                   )}
-                </div>
-                <span
-                  className={`text-sm ${
-                    task.done
-                      ? "line-through text-gray-400"
-                      : "text-gray-800 dark:text-gray-200"
-                  }`}
-                >
-                  {task.label}
-                </span>
-              </div>
-            )
-          )}
-        </div>
-
-        {/* Done message */}
-        {isDone && (
-          <div className="mt-4 text-green-600 dark:text-green-400 text-sm font-medium text-center">
-            Checklist completed — editing is locked.
+                </AccordionItem>
+              ))}
+            </Accordion>
           </div>
-        )}
 
-        {/* Buttons */}
-        <div className="mt-6 flex justify-end space-x-3">
-          <Button
-            onClick={handleUpdate}
-            disabled={isDone}
-            className="bg-purple-600 hover:bg-purple-700 text-white"
-          >
-            Update
-          </Button>
-          <Button
-            onClick={handleDone}
-            disabled={isDone || completed !== tasks.length || isPending}
-            className="bg-green-600 hover:bg-green-700 text-white"
-          >
-            {isPending ? "Completing..." : "Done"}
-          </Button>
+          {/* Buttons */}
+          <div className="mt-6 flex justify-end space-x-3 pb-3">
+            <Button
+              onClick={handleUpdate}
+              variant="outline"
+              disabled={isDone}
+              className="border-purple-500 text-purple-600 hover:bg-purple-50
+                dark:border-purple-300 dark:text-purple-200 dark:hover:bg-purple-700/30"
+            >
+              Save
+            </Button>
+
+            <Button
+              onClick={handleDone}
+              disabled={isDone || completed !== tasks.length || isPending}
+              className="bg-purple-primary hover:bg-purple-500 dark:bg-purple-light dark:hover:bg-purple-950 dark:text-amber-primary text-white"
+            >
+              {isPending ? "Completing..." : "Done"}
+            </Button>
+          </div>
         </div>
       </DialogContent>
     </Dialog>

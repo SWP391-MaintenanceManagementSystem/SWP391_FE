@@ -150,7 +150,7 @@ export const useUnBookingAssignmentMutation = () => {
       ]);
 
       toast.success(
-        `Unassigned technician with email ${variables.employeeEmail} successfully`,
+        `Unassigned technician with email ${variables.employeeEmail} successfully`
       );
     },
     onError: () => {
@@ -159,24 +159,30 @@ export const useUnBookingAssignmentMutation = () => {
   });
 };
 
-export const useCompleteTechnicianBookingMutation = () => {
+// useCompleteTechnicianBookingMutation.ts
+export const useCompleteTechnicianBookingMutation = (handleOnSuccess: () => void) => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (bookingId: string) => {
-      const res = await completeTechnicianBooking(bookingId);
-      return res.data;
+    mutationFn: async ({
+      bookingId,
+      detailIds,
+    }: {
+      bookingId: string;
+      detailIds: string[];
+    }) => {
+      const res = await completeTechnicianBooking(bookingId, detailIds);
+      return res;
     },
-    onSuccess: async (_data, bookingId) => {
+    onSuccess: async (_data, variables) => {
       await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ["technicianBookings"] }),
         queryClient.invalidateQueries({
-          queryKey: ["technicianBookings"],
-        }),
-        queryClient.invalidateQueries({
-          queryKey: ["booking", bookingId],
+          queryKey: ["booking", variables.bookingId],
         }),
       ]);
-      toast.success("Booking marked as completed ");
+      handleOnSuccess();
+      toast.success("Booking marked as completed");
     },
     onError: (error) => {
       let msg = "Failed to mark booking as completed";
