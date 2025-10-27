@@ -14,17 +14,20 @@ import {
   useGetVehicleBrand,
   useGetVehicleModel,
 } from "@/services/manager/queries/index";
+import { AccountRole } from "@/types/enums/role";
 
 export interface ColActionsProps {
   row: Row<Vehicle>;
   currentPage: number;
   currentPageSize: number;
+  currentUserRole: AccountRole;
 }
 
 export default function ColActions({
   row,
   currentPage,
   currentPageSize,
+  currentUserRole,
 }: ColActionsProps) {
   const { data: fetchedBrands } = useGetVehicleBrand();
   const brandId = fetchedBrands?.find(
@@ -57,36 +60,39 @@ export default function ColActions({
           }}
         />
       </TooltipWrapper>
-      <TooltipWrapper content="Edit">
-        <ActionBtn
-          icon={<Pencil size={12} />}
-          onClick={() => {
-            console.log("Row data to edit:", row.original);
-            form.reset({
-              ...vehicle,
-              modelId: String(modelId),
-              brandId: String(brandId),
-            });
-            setOpenEditDialog(true);
-          }}
-        />
-      </TooltipWrapper>
+      {currentUserRole === "ADMIN" && (
+        <>
+          <TooltipWrapper content="Edit">
+            <ActionBtn
+              icon={<Pencil size={12} />}
+              onClick={() => {
+                console.log("Row data to edit:", row.original);
+                form.reset({
+                  ...vehicle,
+                  modelId: String(modelId),
+                  brandId: String(brandId),
+                });
+                setOpenEditDialog(true);
+              }}
+            />
+          </TooltipWrapper>
 
-      <TooltipWrapper content="Delete">
-        <ActionBtn
-          icon={<Trash size={12} />}
-          onClick={() => {
-            console.log("Row data to delete:", row.original);
-            if (row.original.status === "INACTIVE") {
-              toast.error("Can not delete inactive vehicle");
-              setOpenDeleteDialog(false);
-            } else {
-              setOpenDeleteDialog(true);
-            }
-          }}
-        />
-      </TooltipWrapper>
-
+          <TooltipWrapper content="Delete">
+            <ActionBtn
+              icon={<Trash size={12} />}
+              onClick={() => {
+                console.log("Row data to delete:", row.original);
+                if (row.original.status === "INACTIVE") {
+                  toast.error("Can not delete inactive vehicle");
+                  setOpenDeleteDialog(false);
+                } else {
+                  setOpenDeleteDialog(true);
+                }
+              }}
+            />
+          </TooltipWrapper>
+        </>
+      )}
       <ViewDetailDialog
         open={openViewDialog}
         onOpenChange={(open) => setOpenViewDialog(open)}

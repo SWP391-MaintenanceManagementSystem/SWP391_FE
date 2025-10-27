@@ -4,11 +4,13 @@ import VehicleStatusTag from "@/components/tag/VehicleStatusTag";
 import ColActions from "./ColActions";
 import SortHeader from "@/components/table/SortHeader";
 import FilterHeader from "@/components/table/FilterHeader";
+import type { AccountRole } from "@/types/enums/role";
 
 export const getColumns = (
   handleFilterChange: (field: string, value: string) => void,
   currentFilters: { status: string; brandId: string },
   brandList: VehicleBrand[],
+  currentUserRole: AccountRole,
 ) => {
   const columnHelper = createColumnHelper<Vehicle>();
 
@@ -90,7 +92,7 @@ export const getColumns = (
 
     columnHelper.display({
       id: "actions",
-      header: "Actions",
+      header: currentUserRole === "ADMIN" ? "Actions" : "View",
       cell: (props) => {
         const { pageIndex, pageSize } = props.table.getState().pagination;
         return (
@@ -98,6 +100,7 @@ export const getColumns = (
             row={props.row}
             currentPage={pageIndex + 1}
             currentPageSize={pageSize}
+            currentUserRole={currentUserRole}
           />
         );
       },

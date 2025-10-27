@@ -11,17 +11,20 @@ import { encodeBase64 } from "@/utils/base64";
 import { useNavigate } from "react-router-dom";
 import type { CustomerTable } from "../../../libs/table-types";
 import { TooltipWrapper } from "@/components/TooltipWrapper";
+import type { AccountRole } from "@/types/enums/role";
 
 interface ColActionsProps {
   row: Row<CustomerTable>;
   currentPage: number;
   currentPageSize: number;
+  currentUserRole: AccountRole;
 }
 
 export default function ColActions({
   row,
   currentPage,
   currentPageSize,
+  currentUserRole,
 }: ColActionsProps) {
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [openEditDialog, setOpenEditDialog] = useState(false);
@@ -46,38 +49,42 @@ export default function ColActions({
           }}
         />
       </TooltipWrapper>
-      <TooltipWrapper content="Edit">
-        <ActionBtn
-          icon={<Pencil size={12} />}
-          onClick={() => {
-            console.log("Row data to edit:", row.original);
-            form.reset({
-              firstName: row.original.profile?.firstName,
-              lastName: row.original.profile?.lastName,
-              email: row.original.email,
-              status: row.original.status,
-              phone: row.original.phone,
-              address: row.original.profile?.address ?? "",
-            });
-            setOpenEditDialog(true);
-          }}
-        />
-      </TooltipWrapper>
+      {currentUserRole === "ADMIN" && (
+        <>
+          <TooltipWrapper content="Edit">
+            <ActionBtn
+              icon={<Pencil size={12} />}
+              onClick={() => {
+                console.log("Row data to edit:", row.original);
+                form.reset({
+                  firstName: row.original.profile?.firstName,
+                  lastName: row.original.profile?.lastName,
+                  email: row.original.email,
+                  status: row.original.status,
+                  phone: row.original.phone,
+                  address: row.original.profile?.address ?? "",
+                });
+                setOpenEditDialog(true);
+              }}
+            />
+          </TooltipWrapper>
 
-      <TooltipWrapper content="Delete">
-        <ActionBtn
-          icon={<Trash size={12} />}
-          onClick={() => {
-            console.log("Row data to delete:", row.original);
-            if (row.original.status === AccountStatus.DISABLED) {
-              setOpenDeleteDialog(false);
-              toast.error("Cannot delete disabled account");
-            } else {
-              setOpenDeleteDialog(true);
-            }
-          }}
-        />
-      </TooltipWrapper>
+          <TooltipWrapper content="Delete">
+            <ActionBtn
+              icon={<Trash size={12} />}
+              onClick={() => {
+                console.log("Row data to delete:", row.original);
+                if (row.original.status === AccountStatus.DISABLED) {
+                  setOpenDeleteDialog(false);
+                  toast.error("Cannot delete disabled account");
+                } else {
+                  setOpenDeleteDialog(true);
+                }
+              }}
+            />
+          </TooltipWrapper>
+        </>
+      )}
       <DeleteDialog
         open={openDeleteDialog}
         onOpenChange={(open) => setOpenDeleteDialog(open)}

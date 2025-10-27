@@ -6,10 +6,14 @@ import { DataTable } from "@/components/table/DataTable";
 import type { SortingState, ColumnDef } from "@tanstack/react-table";
 import type { CustomerTable } from "../libs/table-types";
 import { useGetAccountList } from "@/services/manager/queries";
-import ChartCustomerStat from ".././admin/customerManagement/ChartCustomerStat";
+import ChartCustomerStat from "./customerManagement/ChartCustomerStat";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useAuth } from "@/contexts/AuthContext";
+import type { AccountRole } from "@/types/enums/role";
+import clsx from "clsx";
 
 export default function AdminVehiclesManagement() {
+  const { auth } = useAuth();
   // pagination + search + sort
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
@@ -41,13 +45,14 @@ export default function AdminVehiclesManagement() {
       id: acc.id,
       email: acc.email,
       phone: acc.phone ?? "",
-      status: acc.status,
+      status: auth.user?.role === "ADMIN" ? acc.status : "VERIFIED",
       role: acc.role,
       profile: {
         firstName: profile && "firstName" in profile ? profile.firstName : "",
         lastName: profile && "lastName" in profile ? profile.lastName : "",
         isPremium: isCustomerProfile ? profile.isPremium === true : false,
-        address: profile && "address" in profile ? (profile.address ?? "") : " ",
+        address:
+          profile && "address" in profile ? (profile.address ?? "") : " ",
       },
     };
   });
@@ -61,15 +66,24 @@ export default function AdminVehiclesManagement() {
       [field]: value,
     }));
   };
-  const columns = getColumns(handleFilterChange, filters);
+  const columns = getColumns(
+    handleFilterChange,
+    filters,
+    auth.user?.role as AccountRole,
+  );
 
   return (
     <div className="w-full h-[calc(100vh-32px)] ">
       <DynamicBreadcrumbs
         pathTitles={{ vehicles: "Customers & Vehicle Management" }}
       />
-      <MainContentLayout className="grid grid-cols-1 lg:grid-cols-[auto_1fr] gap-8 pt-4">
-        <ChartCustomerStat />
+      <MainContentLayout
+        className={clsx(
+          "grid grid-cols-1 gap-8 pt-4",
+          auth.user?.role === "ADMIN" && "lg:grid-cols-[auto_1fr]",
+        )}
+      >
+        {auth.user?.role === "ADMIN" && <ChartCustomerStat />}
         <Card className=" w-full h-full grid grid-rows-[auto_1fr] min-h-[600px]">
           <CardHeader>
             <CardTitle className="text-2xl font-semibold font-inter text-gray-text-header">

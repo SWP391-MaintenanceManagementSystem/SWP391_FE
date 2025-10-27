@@ -5,6 +5,7 @@ import FilterHeader from "@/components/table/FilterHeader";
 import AccountStatusTag from "@/components/tag/AccountStatusTag";
 import ColActions from "./ColActions";
 import type { CustomerTable } from "../../../libs/table-types";
+import type { AccountRole } from "@/types/enums/role";
 
 export const getColumns = (
   handleFilterChange: (
@@ -12,6 +13,7 @@ export const getColumns = (
     value: string | boolean | undefined,
   ) => void,
   currentFilters: { status: string; isPremium: boolean | undefined },
+  currentUserRole: AccountRole,
 ) => {
   const columnHelper = createColumnHelper<CustomerTable>();
   return [
@@ -162,7 +164,7 @@ export const getColumns = (
     // ACTIONS
     columnHelper.display({
       id: "action",
-      header: () => "Action",
+      header: currentUserRole === "ADMIN" ? "Action" : "View",
       size: 20,
       cell: (props) => {
         const { pageIndex, pageSize } = props.table.getState().pagination;
@@ -172,6 +174,7 @@ export const getColumns = (
             row={props.row}
             currentPage={pageIndex + 1}
             currentPageSize={pageSize}
+            currentUserRole={currentUserRole}
           />
         );
       },
