@@ -27,8 +27,8 @@ export function DeleteDialog({
         <AlertDialogHeader>
           <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
           <AlertDialogDescription>
-            This action cannot be undone. This will permanently delete your your
-            data.
+            This action will mark the item as deleted. You can no longer use it
+            once updated.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>

@@ -13,19 +13,25 @@ import { Trash } from "lucide-react";
 import dayjs from "dayjs"
 import { useState } from "react";
 import DeleteAlertDialog from "./DeleteAlertDialog";
-import useVehicle from "@/services/vehicle/hooks/useVehicle";
+import useVehicles from "@/services/vehicle/hooks/useVehicles";
 import Loading from "@/components/Loading";
+import { useNavigate } from "react-router-dom";
 
 type VehicleCardProps = {
     vehicle: Vehicle
 }
 
 export default function VehicleCard({ vehicle }: VehicleCardProps) {
-    const { onDeleteVehicle, isLoading } = useVehicle();
+    const { onDeleteVehicle, isLoading } = useVehicles();
     const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+    const navigate = useNavigate();
 
     const handleDelete = () => {
         onDeleteVehicle(vehicle.id);
+    }
+
+    const handleBookService = () => {
+        navigate('/booking', { state: { vehicleId: vehicle.id } });
     }
 
     if (isLoading) {
@@ -66,7 +72,13 @@ export default function VehicleCard({ vehicle }: VehicleCardProps) {
                     </CardDescription>
                 </CardContent>
                 <CardFooter className="flex gap-2 justify-around flex-wrap">
-                    <Button variant={"outline"} className="flex-1 min-w-[120px] text-purple-primary">Book Service</Button>
+                    <Button 
+                        variant={"outline"} 
+                        className="flex-1 min-w-[120px] text-purple-primary"
+                        onClick={handleBookService}
+                    >
+                        Book Service
+                    </Button>
                     <Button variant={"outline"} className="flex-1 min-w-[120px] text-purple-primary">View History</Button>
                 </CardFooter>
             </Card>

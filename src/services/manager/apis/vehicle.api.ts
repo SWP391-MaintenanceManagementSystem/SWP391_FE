@@ -1,11 +1,26 @@
 import { httpPrivate } from "@/lib/http";
-import type { BaseResponse } from "@/types/models/response";
+import type { BaseResponse, PaginationResponse } from "@/types/models/response";
 import type { Vehicle, VehicleModel } from "@/types/models/vehicle";
 import type { AddVehicleFormData } from "@/pages/vehicle/components/libs/schema";
 
-export const getVehicleByCustomerId = (customerId: string) => {
-  return httpPrivate.get<BaseResponse<{ data: Vehicle[] }>>(
+export const getVehicleByCustomerId = (params: {
+  customerId: string;
+  page: number;
+  pageSize: number;
+  vin?: string;
+  licensePlate?: string;
+  status?: string;
+  modelId?: number;
+  brandId?: number;
+  sortBy?: string;
+  orderBy?: "asc" | "desc";
+}) => {
+  const { customerId, ...rest } = params;
+  return httpPrivate.get<BaseResponse<PaginationResponse<Vehicle>>>(
     `/vehicles/accounts/${customerId}`,
+    {
+      params: rest,
+    },
   );
 };
 

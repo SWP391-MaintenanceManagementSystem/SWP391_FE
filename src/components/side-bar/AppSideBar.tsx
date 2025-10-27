@@ -28,7 +28,12 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useTheme } from "@/components/theme/ThemeProvider";
 import { useState } from "react";
 import { TooltipWrapper } from "../TooltipWrapper";
-import { adminItems, customerItems } from "./sidebarItems";
+import {
+  adminItems,
+  customerItems,
+  technicianItems,
+  staffItems,
+} from "./sidebarItems";
 
 const getMenuItems = (role: AccountRole) => {
   switch (role) {
@@ -36,6 +41,10 @@ const getMenuItems = (role: AccountRole) => {
       return adminItems;
     case AccountRole.CUSTOMER:
       return customerItems;
+    case AccountRole.STAFF:
+      return staffItems;
+    case AccountRole.TECHNICIAN:
+      return technicianItems;
     default:
       return [];
   }

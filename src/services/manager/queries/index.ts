@@ -19,6 +19,14 @@ import {
   getTechnicianById,
   getStatusStatTechnician,
 } from "../apis/technician.api";
+import {
+  getPartStat,
+  getPartList,
+  getCategoryList,
+} from "../apis/inventory.api";
+
+import { getServiceCenterList } from "../apis/center.api";
+
 /**
  * Hook lấy danh sách accounts theo type (STAFF, TECHNICIAN, CUSTOMER)
  * (search + sort + filter + pagination)
@@ -30,6 +38,8 @@ export const useGetAccountList = (params: {
   lastName?: string;
   email?: string;
   status?: string;
+  centerId?: string;
+  hasWorkCenter?: boolean;
   isPremium?: boolean;
   phone?: string;
   sortBy?: string;
@@ -61,6 +71,36 @@ export const useGetAccountList = (params: {
   });
 };
 
+/**
+ * Hook lấy part list (search + sort + filter + pagination)
+ * @param params
+ * @returns
+ */
+export const useGetPartList = (params: {
+  name?: string;
+  categoryName?: string;
+  status?: string;
+  sortBy?: string;
+  orderBy?: "asc" | "desc";
+  page: number;
+  pageSize: number;
+}) => {
+  return useQuery({
+    queryKey: queryKeys.parts(params),
+    queryFn: async () => {
+      try {
+        const res = await getPartList(params);
+        return res.data;
+      } catch (error) {
+        toast.error("Failed to fetch parts list");
+        throw error;
+      }
+    },
+    enabled: !!params.page && !!params.pageSize,
+    placeholderData: (prev) => prev,
+    staleTime: 5 * 60 * 1000,
+  });
+};
 /**
  * Hook lấy thông tin customer theo ID
  */
@@ -109,19 +149,30 @@ export const useGetEmployeeById = (params: {
 /**
  * Hook lấy danh sách vehicles theo customer ID
  */
-export const useGetVehicleList = (customerId: string) => {
+export const useGetVehicleList = (params: {
+  customerId: string;
+  page: number;
+  pageSize: number;
+  vin?: string;
+  licensePlate?: string;
+  status?: string;
+  modelId?: number;
+  brandId?: number;
+  sortBy?: string;
+  orderBy?: "asc" | "desc";
+}) => {
   return useQuery({
-    queryKey: queryKeys.vehiclesList(customerId),
+    queryKey: queryKeys.vehiclesList(params),
     queryFn: async () => {
       try {
-        const response = await getVehicleByCustomerId(customerId);
-        return response.data.data;
-      } catch {
-        toast.error("Failed to fetch vehicles");
-        throw new Error("Fetch vehicles failed");
+        const res = await getVehicleByCustomerId(params);
+        return res.data;
+      } catch (error) {
+        toast.error("Failed to fetch vehicles list");
+        throw error;
       }
     },
-    enabled: !!customerId,
+    enabled: !!params.customerId && !!params.page && !!params.pageSize,
     placeholderData: (prev) => prev,
     staleTime: 5 * 60 * 1000,
   });
@@ -151,7 +202,6 @@ export const useGetVehicleById = (vehicleId: string) => {
 /**
  * Hook lấy brand theo Vehicle ID
  */
-
 export const useGetVehicleBrand = () => {
   return useQuery({
     queryKey: queryKeys.vehicleBrand(),
@@ -211,6 +261,54 @@ export const useGetStatusStat = (type: "STAFF" | "TECHNICIAN" | "CUSTOMER") => {
     },
 
     enabled: !!type,
+    staleTime: 5 * 60 * 1000,
+  });
+};
+
+export const useGetPartStat = () => {
+  return useQuery({
+    queryKey: queryKeys.partStat(),
+    queryFn: async () => {
+      try {
+        const response = await getPartStat();
+        return response.data.data;
+      } catch {
+        toast.error("Fail to fetch part statistics");
+        throw new Error("Fetch stats failed");
+      }
+    },
+    staleTime: 5 * 60 * 1000,
+  });
+};
+
+export const useGetCategoryList = () => {
+  return useQuery({
+    queryKey: queryKeys.category(),
+    queryFn: async () => {
+      try {
+        const response = await getCategoryList();
+        return response.data.data;
+      } catch {
+        toast.error("Fail to fetch category list ");
+        throw new Error("Fetch stats failed");
+      }
+    },
+    staleTime: 5 * 60 * 1000,
+  });
+};
+
+export const useGetServiceCenterList = () => {
+  return useQuery({
+    queryKey: queryKeys.serviceCenter(),
+    queryFn: async () => {
+      try {
+        const response = await getServiceCenterList();
+        return response.data.data;
+      } catch {
+        toast.error("Fail to fetch service center");
+        throw new Error("Fetch stats failed");
+      }
+    },
     staleTime: 5 * 60 * 1000,
   });
 };

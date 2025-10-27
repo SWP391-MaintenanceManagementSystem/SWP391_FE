@@ -1,5 +1,4 @@
 import { useState, useRef, useLayoutEffect } from "react";
-// import { DeleteDialog } from "@/components/dialog/DeleteDialog";
 import { useMemo } from "react";
 import {
   flexRender,
@@ -28,7 +27,6 @@ import { Input } from "@/components/ui/input";
 import {
   Search,
   ChevronDown,
-  // Trash,
   ChevronLeft,
   ChevronRight,
   Loader,
@@ -41,6 +39,7 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import clsx from "clsx";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -64,6 +63,8 @@ interface DataTableProps<TData, TValue> {
   sorting?: SortingState;
   onSortingChange?: (sorting: SortingState) => void;
   manualSorting?: boolean;
+  // ACTION
+  headerActions?: React.ReactNode;
 }
 
 export function DataTable<TData, TValue>({
@@ -88,6 +89,8 @@ export function DataTable<TData, TValue>({
   sorting,
   onSortingChange,
   manualSorting = false,
+  // ACTION
+  headerActions,
 }: DataTableProps<TData, TValue>) {
   /** ------------------ SEARCH DATA ------------------ */
   const [searchText, setSearchText] = useState("");
@@ -126,15 +129,18 @@ export function DataTable<TData, TValue>({
       const containerHeight = el.clientHeight;
       const usableHeight = containerHeight - headerHeight;
       const newSize = Math.max(
-        1, // minimum number of rows (can not be less than 1)
-        Math.floor(usableHeight / rowHeight), // number of rows that fit in the container
-        MIN_ROWS, // newSize >= MIN_ROWS, even container too small
+        1,
+        Math.floor(usableHeight / rowHeight),
+        MIN_ROWS,
       );
       // Update pagination state with new page size
-      setPagination((prev) => ({ ...prev, pageSize: newSize }));
+      setPagination((prev) => {
+        if (prev.pageSize === newSize) return prev; // prevent re-render loop
+        return { ...prev, pageSize: newSize };
+      });
       if (onPageSizeChange) onPageSizeChange(newSize);
     });
-    // Start observing the container element
+
     observer.observe(el);
     // Cleanup: stop observing when the component unmounts to prevent memory leaks
     return () => observer.disconnect();
@@ -193,14 +199,6 @@ export function DataTable<TData, TValue>({
     },
   });
 
-  //const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
-  // const handleDeleteAll = () => {
-  //   console.log("Deleting rows: ", table.getSelectedRowModel().rows);
-  //   if (onDeleteAll) {
-  //     onDeleteAll();
-  //   }
-  // };
-
   // Search handler: update, reset page
   const handleSearchInput = (value: string) => {
     setSearchText(value);
@@ -211,10 +209,17 @@ export function DataTable<TData, TValue>({
   return (
     <div className="grid gap-4 h-full font-inter grid-rows-[auto_1fr_auto]">
       {/* --- TABLE ACTIONS --- */}
-      <div className="flex flex-col md:flex-row w-full gap-2 items-end justify-end">
-        {/* Search input */}
+      <div
+        className={clsx(
+          "grid  gap-2 w-full  grid-cols-1",
+          headerActions
+            ? " xl:grid-cols-[auto_1fr] xl:grid-rows-1"
+            : "lg:grid-cols-[auto_1fr]",
+        )}
+      >
+        {/* Left: search */}
         {isSearch && (
-          <div className="relative w-full">
+          <div className="relative w-full lg:w-[420px]">
             <Search
               size={16}
               className="absolute text-gray-500 top-[10px] left-2"
@@ -223,35 +228,34 @@ export function DataTable<TData, TValue>({
               placeholder={`Search by ${searchPlaceholder}...`}
               value={searchText}
               onChange={(e) => handleSearchInput(e.target.value)}
-              className="pl-8 lg:w-sm w-full "
+              className="pl-8 w-full"
             />
           </div>
         )}
 
-        {/* Delete all button */}
-        {/*{table.getSelectedRowModel().rows.length > 1 && (
-          <Button
-            variant="destructive"
-            className="mr-auto"
-            onClick={() => setOpenDeleteDialog(true)}
-          >
-            Delete All <Trash />
-          </Button>
-        )}*/}
-
-        {/* Visible Column */}
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" className=" !outline-none w-full md:w-28">
-              Columns <ChevronDown />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            {table
-              .getAllColumns()
-              .filter((column) => column.getCanHide())
-              .map((column) => {
-                return (
+        {/* Right: header actions + columns */}
+        <div
+          className={clsx(
+            headerActions
+              ? "grid grid-cols-1 md:grid-cols-[1fr_auto] justify-end items-center gap-2 w-full md:w-auto"
+              : "flex items-end justify-end w-full",
+          )}
+        >
+          {headerActions}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="outline"
+                className="w-full !outline-none lg:w-28"
+              >
+                Columns <ChevronDown />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              {table
+                .getAllColumns()
+                .filter((column) => column.getCanHide())
+                .map((column) => (
                   <DropdownMenuCheckboxItem
                     key={column.id}
                     className="capitalize"
@@ -262,10 +266,10 @@ export function DataTable<TData, TValue>({
                   >
                     {column.columnDef.meta?.title ?? column.id}
                   </DropdownMenuCheckboxItem>
-                );
-              })}
-          </DropdownMenuContent>
-        </DropdownMenu>
+                ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       </div>
 
       {/* --- TABLE --- */}
@@ -390,13 +394,6 @@ export function DataTable<TData, TValue>({
           <span className="text-sm text-accent-foreground">/ Page</span>
         </div>
       </div>
-
-      {/* --- MODALS DELETE ALL --- */}
-      {/*<DeleteDialog
-        open={openDeleteDialog}
-        onOpenChange={setOpenDeleteDialog}
-        onConfirm={handleDeleteAll}
-      />*/}
     </div>
   );
 }

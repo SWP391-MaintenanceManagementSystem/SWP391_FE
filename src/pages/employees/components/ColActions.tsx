@@ -71,11 +71,7 @@ export default function ColActions({
         open={openDeleteDialog}
         onOpenChange={(open) => setOpenDeleteDialog(open)}
         onConfirm={() => {
-          if (row.original.role === "TECHNICIAN") {
-            handleDeleteEmployee(row.original.id);
-          } else if (row.original.role === "STAFF") {
-            handleDeleteEmployee(row.original.id);
-          }
+          handleDeleteEmployee(row.original.id);
           setOpenDeleteDialog(false);
         }}
         isDisabled={row.original.status === "DISABLED"}
@@ -90,15 +86,16 @@ export default function ColActions({
 
       <EditEmployeeInfoForm
         open={openEditDialog}
-        onOpenChange={(open) => setOpenEditDialog(open)}
+        onOpenChange={(open) => {
+          setOpenEditDialog(open);
+          if (!open) {
+            form.reset();
+          }
+        }}
         form={form}
         title={row.original.role === "STAFF" ? "Staff" : "Technician"}
-        onConfirm={() => {
-          if (row.original.role === "STAFF") {
-            handleUpdateEmployeeInfo(row.original.id);
-          } else if (row.original.role === "TECHNICIAN") {
-            handleUpdateEmployeeInfo(row.original.id);
-          }
+        onConfirm={async (data) => {
+          handleUpdateEmployeeInfo(row.original.id, data);
         }}
       />
     </div>
