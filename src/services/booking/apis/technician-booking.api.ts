@@ -12,3 +12,13 @@ export const getTechnicianBookings = async (params: BookingFilters) => {
   console.log('API Response:', response.data);
   return response.data.data;
 };
+
+export const completeTechnicianBooking = async (bookingId: string) => {
+  const response = await axiosPrivate.patch<
+    BaseResponse<TechnicianBooking>
+  >(`/technicians/bookings/${bookingId}/details/complete`);
+  return response.data;
+};
+
+
+

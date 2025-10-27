@@ -18,6 +18,7 @@ import CheckListModal from "./CheckListModal";
 export default function AssignedBookingDetail() {
   const { id } = useParams<{ id: string }>();
   const { data, isLoading } = useBookingDetail(id ?? "");
+  console.log("🚀 ~ AssignedBookingDetail ~ data:", data);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   if (!id) {
@@ -144,7 +145,7 @@ export default function AssignedBookingDetail() {
         <CheckListModal
           open={isModalOpen}
           onOpenChange={setIsModalOpen}
-          bookingId={data?.id}
+          bookingData={data}
         />
       </MainContentLayout>
     </div>
