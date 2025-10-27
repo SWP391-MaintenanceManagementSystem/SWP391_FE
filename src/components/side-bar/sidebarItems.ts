@@ -61,6 +61,7 @@ export const staffItems: SidebarItem[] = [
   { title: "Dashboard", url: "/dashboard", icon: Home },
   { title: "Work Schedule", url: "/viewSchedule", icon: CalendarRange },
   { title: "Booking Management", url: "/booking", icon: BookOpenCheckIcon },
+  { title: "Customers & Vehicles", url: "/vehicles", icon: Users },
 ];
 export const technicianItems: SidebarItem[] = [
   { title: "Dashboard", url: "/dashboard", icon: Home },

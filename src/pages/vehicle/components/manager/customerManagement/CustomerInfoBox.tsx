@@ -8,6 +8,7 @@ import { useState } from "react";
 import useCustomer from "@/services/manager/hooks/useCustomer";
 import type { CustomerTable } from "../../libs/table-types";
 import { Card, CardContent } from "@/components/ui/card";
+import { useAuth } from "@/contexts/AuthContext";
 
 type CustomerInfoBoxProps = {
   customer: CustomerTable;
@@ -21,7 +22,7 @@ const CustomerInfoBox = ({
   currentPageSize,
 }: CustomerInfoBoxProps) => {
   const [openEditDialog, setOpenEditDialog] = useState(false);
-
+  const { auth } = useAuth();
   const { form, handleEditCustomerInfo } = useCustomer(
     customer,
     currentPage,
@@ -74,24 +75,25 @@ const CustomerInfoBox = ({
             </p>
           </InfoSection>
         </div>
-        <Button
-          className="!font-inter w-36 !bg-purple-primary text-white dark:text-amber-primary hover:scale-105 transition-transform duration-300"
-          onClick={() => {
-            form.reset({
-              firstName: customer.profile?.firstName || "",
-              lastName: customer.profile?.lastName || "",
-              email: customer.email || "",
-              phone: customer.phone || "",
-              address: customer.profile?.address || "",
-              status: customer.status,
-            });
-            setOpenEditDialog(true);
-          }}
-        >
-          <PenLine className="mr-2 h-4 w-4" />
-          Edit
-        </Button>
-
+        {auth.user?.role === "ADMIN" && (
+          <Button
+            className="!font-inter w-36 !bg-purple-primary text-white dark:text-amber-primary hover:scale-105 transition-transform duration-300"
+            onClick={() => {
+              form.reset({
+                firstName: customer.profile?.firstName || "",
+                lastName: customer.profile?.lastName || "",
+                email: customer.email || "",
+                phone: customer.phone || "",
+                address: customer.profile?.address || "",
+                status: customer.status,
+              });
+              setOpenEditDialog(true);
+            }}
+          >
+            <PenLine className="mr-2 h-4 w-4" />
+            Edit
+          </Button>
+        )}
         <CustomerInfoForm
           open={openEditDialog}
           onOpenChange={(open) => setOpenEditDialog(open)}

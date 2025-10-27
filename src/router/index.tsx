@@ -15,7 +15,7 @@ import { AccountRole } from "@/types/enums/role";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import ProfilePage from "@/pages/profile";
 import Unauthorized from "@/pages/unauthorized";
-import ViewDetailInfo from "@/pages/vehicle/components/admin/ViewDetailInfo";
+import ViewDetailInfo from "@/pages/vehicle/components/manager/ViewDetailInfo";
 import MembershipPage from "@/pages/membership";
 import StaffsManagementPage from "@/pages/employees/staffs";
 import TechniciansManagementPage from "@/pages/employees/technicians";

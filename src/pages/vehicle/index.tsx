@@ -4,18 +4,18 @@ import { AccountRole } from "@/types/enums/role";
 import Loading from "@/components/Loading";
 
 const AdminVehiclesManagement = lazy(
-  () => import("./components/admin/AdminVehiclesManagement")
+  () => import("./components/manager/CustomersManagement"),
 );
 const CustomerVehiclesManagement = lazy(
-  () => import("./components/customer/CustomerVehiclesManagement")
+  () => import("./components/customer/CustomerVehiclesManagement"),
 );
 
 export default function Vehicle() {
   const { auth } = useAuth();
-
   const getComponent = () => {
     switch (auth.user?.role) {
       case AccountRole.ADMIN:
+      case AccountRole.STAFF:
         return <AdminVehiclesManagement />;
       case AccountRole.CUSTOMER:
         return <CustomerVehiclesManagement />;

@@ -18,8 +18,11 @@ import type { ColumnDef } from "@tanstack/react-table";
 import { useState } from "react";
 import type { SortingState } from "@tanstack/react-table";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useAuth } from "@/contexts/AuthContext";
+import type { AccountRole } from "@/types/enums/role";
 
 export default function ViewDetailInfo() {
+  const { auth } = useAuth();
   const { id } = useParams<{ id: string }>();
   const userId = id ? b64DecodeUnicode(id) : null;
   const { data: user } = useGetCustomerById(userId ?? "");
@@ -74,7 +77,12 @@ export default function ViewDetailInfo() {
       [field]: value,
     }));
   };
-  const columns = getColumns(handleFilterChange, filters, brandList ?? []);
+  const columns = getColumns(
+    handleFilterChange,
+    filters,
+    brandList ?? [],
+    auth.user?.role as AccountRole,
+  );
 
   if (!user) return <Loading />;
   return (
