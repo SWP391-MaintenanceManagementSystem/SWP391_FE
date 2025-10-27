@@ -15,6 +15,7 @@ import {
   createBookingAssignment,
   unBookingAssignment,
 } from "../apis/booking-assignment.api";
+import { completeTechnicianBooking } from "../apis/technician-booking.api";
 
 export const useCreateBookingMutation = () => {
   const queryClient = useQueryClient();
@@ -149,11 +150,46 @@ export const useUnBookingAssignmentMutation = () => {
       ]);
 
       toast.success(
-        `Unassigned technician with email ${variables.employeeEmail} successfully`,
+        `Unassigned technician with email ${variables.employeeEmail} successfully`
       );
     },
     onError: () => {
       toast.error("Failed to unassign technician");
+    },
+  });
+};
+
+// useCompleteTechnicianBookingMutation.ts
+export const useCompleteTechnicianBookingMutation = (handleOnSuccess: () => void) => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({
+      bookingId,
+      detailIds,
+    }: {
+      bookingId: string;
+      detailIds: string[];
+    }) => {
+      const res = await completeTechnicianBooking(bookingId, detailIds);
+      return res;
+    },
+    onSuccess: async (_data, variables) => {
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ["technicianBookings"] }),
+        queryClient.invalidateQueries({
+          queryKey: ["booking", variables.bookingId],
+        }),
+      ]);
+      handleOnSuccess();
+      toast.success("Booking marked as completed");
+    },
+    onError: (error) => {
+      let msg = "Failed to mark booking as completed";
+      if (error instanceof AxiosError) {
+        msg = error.response?.data?.message || msg;
+      }
+      toast.error(msg);
     },
   });
 };

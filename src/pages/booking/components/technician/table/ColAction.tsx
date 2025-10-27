@@ -1,9 +1,12 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import type { Row } from "@tanstack/react-table";
 import { Eye, CheckSquare } from "lucide-react";
 import { TooltipWrapper } from "@/components/TooltipWrapper";
 import ActionBtn from "@/components/table/ActionBtn";
 import type { TechnicianBooking } from "@/types/models/booking";
+import { useBookingDetail } from "@/services/booking/hooks/useBookingDetail";
+import CheckListModal from "../booking-detail/CheckListModal";
 
 interface ColActionsProps {
   row: Row<TechnicianBooking>;
@@ -14,8 +17,13 @@ interface ColActionsProps {
 export default function ColActions({ row }: ColActionsProps) {
   const navigate = useNavigate();
   const booking = row.original;
+  const [openChecklist, setOpenChecklist] = useState(false);
+
+  // ✅ Fetch booking detail (vì table thường chỉ có thông tin ngắn gọn)
+  const { data: bookingDetail } = useBookingDetail(booking.id);
+
   const handleChecklist = () => {
-    navigate(`/bookings/${booking.id}/checklist`);
+    setOpenChecklist(true);
   };
 
   return (
@@ -32,6 +40,12 @@ export default function ColActions({ row }: ColActionsProps) {
       <TooltipWrapper content="Checklist">
         <ActionBtn icon={<CheckSquare size={14} />} onClick={handleChecklist} />
       </TooltipWrapper>
+
+      <CheckListModal
+        open={openChecklist}
+        onOpenChange={setOpenChecklist}
+        bookingData={bookingDetail}
+      />
     </div>
   );
 }
