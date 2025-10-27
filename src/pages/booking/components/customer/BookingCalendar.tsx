@@ -14,6 +14,7 @@ import { CustomEvent, type CalendarEvent } from "./CustomEvent";
 import { Spinner } from "@/components/ui/shadcn-io/spinner";
 import { useNavigate } from "react-router-dom";
 import { BookingStatus } from "@/types/enums/bookingStatus";
+import { encodeBase64 } from "@/utils/base64";
 
 const localizer = dayjsLocalizer(dayjs);
 
@@ -149,7 +150,8 @@ const BookingCalendar = ({ initialVehicleId }: Props) => {
   };
 
   const handleDetailClick = (event: CalendarEvent) => {
-    navigate(`/booking/${event.title}`);
+    const encodedId = encodeBase64(event.title);
+    navigate(`/booking/${encodedId}`);
   };
 
   return (

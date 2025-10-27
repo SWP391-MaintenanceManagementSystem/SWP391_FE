@@ -51,8 +51,9 @@ export default function BookingDetail() {
   };
 
   const handleCheckout = () => {
-    paymentMutation.mutateAsync({
-      referenceId: id,
+
+    paymentMutation.mutate({
+      referenceId: decodedId,
       referenceType: "BOOKING",
       amount: data?.totalCost || 0,
     });
@@ -111,21 +112,21 @@ export default function BookingDetail() {
                   View Services
                 </Button>
 
-              <Button
-                onClick={() => setIsEditModalOpen(true)}
-                variant="default"
-                disabled={!(data?.status && CAN_CANCEL.includes(data.status))}
-                className="bg-purple-600 hover:bg-purple-700 text-white
+                <Button
+                  onClick={() => setIsEditModalOpen(true)}
+                  variant="default"
+                  disabled={!(data?.status && CAN_CANCEL.includes(data.status))}
+                  className="bg-purple-600 hover:bg-purple-700 text-white
             dark:bg-purple-500 dark:hover:bg-purple-600"
                 >
                   Edit
                 </Button>
 
-              <Button
-                onClick={() => setIsCancelModalOpen(true)}
-                variant="destructive"
-                disabled={!(data?.status && CAN_CANCEL.includes(data.status))}
-                className="hover:bg-red-600
+                <Button
+                  onClick={() => setIsCancelModalOpen(true)}
+                  variant="destructive"
+                  disabled={!(data?.status && CAN_CANCEL.includes(data.status))}
+                  className="hover:bg-red-600
             dark:hover:bg-red-700"
                 >
                   Cancel
