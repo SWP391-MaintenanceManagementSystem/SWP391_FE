@@ -23,8 +23,8 @@ import type { AccountRole } from "@/types/enums/role";
 
 export default function ViewDetailInfo() {
   const { auth } = useAuth();
-  const { id } = useParams<{ id: string }>();
-  const userId = id ? b64DecodeUnicode(id) : null;
+  const { customerId } = useParams<{ customerId: string }>();
+  const userId = customerId ? b64DecodeUnicode(customerId) : null;
   const { data: user } = useGetCustomerById(userId ?? "");
   const customer: CustomerTable = {
     id: user?.id ?? "",
@@ -90,7 +90,7 @@ export default function ViewDetailInfo() {
       <DynamicBreadcrumbs
         pathTitles={{
           vehicles: "Customer & Vehicles Management",
-          [id ?? ""]: "Detailed Information",
+          [customerId ?? ""]: "Detailed Information",
         }}
       />
       <MainContentLayout className="grid grid-cols-1 lg:grid-cols-[auto_1fr] gap-8 pt-4">

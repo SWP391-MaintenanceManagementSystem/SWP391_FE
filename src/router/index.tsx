@@ -27,6 +27,7 @@ import AddNewSchedulePage from "@/pages/shifts/admin/schedules/AddNewSchedule";
 import BookingPage from "@/pages/booking";
 import BookingDetailPage from "@/pages/booking/components/BookingDetailPage";
 import ViewSchedule from "@/pages/shifts/employee/ViewSchedule";
+import VehicleDetailPage from "@/pages/vehicle/components/manager/vehicleManagement/VehicleDetailPage";
 
 const RouterComponent = () => {
   const router = createBrowserRouter([
@@ -82,8 +83,13 @@ const RouterComponent = () => {
                 },
 
                 {
-                  path: "/vehicles/:id",
+                  path: "/vehicles/:customerId",
                   element: <ViewDetailInfo />,
+                  hydrateFallbackElement: <CircularIndeterminate />,
+                },
+                {
+                  path: "/vehicles/:customerId/:vehicleId",
+                  element: <VehicleDetailPage />,
                   hydrateFallbackElement: <CircularIndeterminate />,
                 },
                 {

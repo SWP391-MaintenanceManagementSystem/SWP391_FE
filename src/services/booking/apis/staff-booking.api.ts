@@ -9,3 +9,10 @@ export const getBookingManagementList = async (params: BookingFilters) => {
   >("/bookings", { params });
   return response.data;
 };
+
+export const getBookingHistoryList = async (params: BookingFilters) => {
+  const response = await axiosPrivate.get<
+    BaseResponse<PaginationResponse<BookingStaffTable>>
+  >("/bookings/history", { params });
+  return response.data;
+};

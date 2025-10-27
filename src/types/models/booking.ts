@@ -17,6 +17,8 @@ export type Booking = {
 export type BookingFilters = {
   search?: string;
   centerId?: string;
+  vehicleId?: string;
+  customerId?: string;
   status?: BookingStatus | "";
   isPremium?: boolean;
   fromDate?: Date | string;
