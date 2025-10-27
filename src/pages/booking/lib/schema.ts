@@ -28,7 +28,7 @@ export const CreateBookingSchema = z
         },
         {
           message: "Date & time must be in the future",
-        }
+        },
       ),
   })
   .superRefine((data, ctx) => {
@@ -93,3 +93,32 @@ export const EditBookingSchema = CreateBookingSchema.partial()
   });
 
 export type EditBookingFormValues = z.infer<typeof EditBookingSchema>;
+
+export const BookingCheckinsSchema = z.object({
+  bookingId: z.string().min(1, "Booking ID is required"),
+  odometer: z
+    .number({ error: "Odometer must be a number" })
+    .min(0, "Odometer must be positive"),
+  note: z.string().optional(),
+  description: z.array(z.string()).optional(),
+  date: z
+    .string({ error: "Check-in date & time is required" })
+    .refine((val) => dayjs(val, "YYYY-MM-DDTHH:mm", true).isValid(), {
+      message: "Invalid date & time format",
+    })
+    .transform((val) => {
+      const vnDate = dayjs(val).tz("Asia/Ho_Chi_Minh");
+      return vnDate.format();
+    })
+    .refine(
+      (dateStr) => {
+        const date = dayjs(dateStr);
+        return date.isSame(dayjs(), "minute") || date.isAfter(dayjs());
+      },
+      {
+        message: "Date & time must not be in the past",
+      },
+    ),
+});
+
+export type BookingCheckinsFormValues = z.infer<typeof BookingCheckinsSchema>;
