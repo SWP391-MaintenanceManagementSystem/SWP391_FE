@@ -17,28 +17,29 @@ export default function MembershipCard({
   periodType,
   onClick,
 }: MembershipCardProps) {
-  let periodLabel = "";
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  // let periodLabel = "";
   let monthlyEquivalent = 0;
 
   switch (periodType) {
     case PeriodType.DAY:
-      periodLabel = `${duration} day${duration > 1 ? "s" : ""}`;
+      // periodLabel = `${duration} day${duration > 1 ? "s" : ""}`;
       monthlyEquivalent = (price / duration) * 30;
       break;
 
     case PeriodType.MONTH:
-      periodLabel = `${duration} month${duration > 1 ? "s" : ""}`;
+      // periodLabel = `${duration} month${duration > 1 ? "s" : ""}`;
       monthlyEquivalent = price / duration;
       break;
 
     case PeriodType.YEAR:
-      periodLabel = `${duration} year${duration > 1 ? "s" : ""}`;
+      // periodLabel = `${duration} year${duration > 1 ? "s" : ""}`;
       monthlyEquivalent = price / (duration * 12);
       break;
 
     default:
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      periodLabel = "Unknown period";
+      // periodLabel = "Unknown period";
       monthlyEquivalent = price;
   }
 
