@@ -16,6 +16,7 @@ import DeleteAlertDialog from "./DeleteAlertDialog";
 import useVehicles from "@/services/vehicle/hooks/useVehicles";
 import Loading from "@/components/Loading";
 import { useNavigate } from "react-router-dom";
+import { encodeBase64 } from "@/utils/base64";
 
 type VehicleCardProps = {
   vehicle: Vehicle;
@@ -32,6 +33,13 @@ export default function VehicleCard({ vehicle }: VehicleCardProps) {
 
   const handleBookService = () => {
     navigate("/booking", { state: { vehicleId: vehicle.id } });
+  };
+
+  const handleViewHistory = () => {
+    const encodedId = encodeBase64(vehicle.id);
+    navigate(`/vehicles/history/${encodedId}`, {
+      state: { vehicleId: encodedId },
+    });
   };
 
   if (isLoading) {
@@ -98,6 +106,7 @@ export default function VehicleCard({ vehicle }: VehicleCardProps) {
           <Button
             variant={"outline"}
             className="flex-1 min-w-[120px] text-purple-primary"
+            onClick={handleViewHistory}
           >
             View History
           </Button>

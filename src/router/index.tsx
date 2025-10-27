@@ -28,6 +28,7 @@ import BookingPage from "@/pages/booking";
 import BookingDetailPage from "@/pages/booking/components/BookingDetailPage";
 import ViewSchedule from "@/pages/shifts/employee/ViewSchedule";
 import VehicleDetailPage from "@/pages/vehicle/components/manager/vehicleManagement/VehicleDetailPage";
+import HistoryBookingCus from "@/pages/vehicle/components/customer/HistoryBooking";
 
 const RouterComponent = () => {
   const router = createBrowserRouter([
@@ -83,16 +84,6 @@ const RouterComponent = () => {
                 },
 
                 {
-                  path: "/vehicles/:customerId",
-                  element: <ViewDetailInfo />,
-                  hydrateFallbackElement: <CircularIndeterminate />,
-                },
-                {
-                  path: "/vehicles/:customerId/:vehicleId",
-                  element: <VehicleDetailPage />,
-                  hydrateFallbackElement: <CircularIndeterminate />,
-                },
-                {
                   path: "/inventory",
                   element: <InventoryManagement />,
                   hydrateFallbackElement: <CircularIndeterminate />,
@@ -143,6 +134,23 @@ const RouterComponent = () => {
                     },
                   ],
                 },
+                {
+                  element: (
+                    <RequireAuth allowedRoles={[AccountRole.CUSTOMER]} />
+                  ),
+                  children: [
+                    {
+                      path: "/payment-success",
+                      element: <PaymentSuccessPage />,
+                      hydrateFallbackElement: <CircularIndeterminate />,
+                    },
+                    {
+                      path: "/vehicles/history/:vehicleId",
+                      element: <HistoryBookingCus />,
+                      hydrateFallbackElement: <CircularIndeterminate />,
+                    },
+                  ],
+                },
 
                 {
                   element: <RequireAuth allowedRoles={[AccountRole.STAFF]} />,
@@ -168,20 +176,28 @@ const RouterComponent = () => {
                     },
                   ],
                 },
-
+                {
+                  element: (
+                    <RequireAuth
+                      allowedRoles={[AccountRole.STAFF, AccountRole.ADMIN]}
+                    />
+                  ),
+                  children: [
+                    {
+                      path: "/vehicles/:customerId",
+                      element: <ViewDetailInfo />,
+                      hydrateFallbackElement: <CircularIndeterminate />,
+                    },
+                    {
+                      path: "/vehicles/:customerId/:vehicleId",
+                      element: <VehicleDetailPage />,
+                      hydrateFallbackElement: <CircularIndeterminate />,
+                    },
+                  ],
+                },
                 {
                   path: "/profile",
                   element: <ProfilePage />,
-                  hydrateFallbackElement: <CircularIndeterminate />,
-                },
-              ],
-            },
-            {
-              element: <RequireAuth allowedRoles={[AccountRole.CUSTOMER]} />,
-              children: [
-                {
-                  path: "/payment-success",
-                  element: <PaymentSuccessPage />,
                   hydrateFallbackElement: <CircularIndeterminate />,
                 },
               ],
