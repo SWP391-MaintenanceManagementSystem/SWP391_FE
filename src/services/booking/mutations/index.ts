@@ -176,7 +176,7 @@ export const useCompleteTechnicianBookingMutation = (handleOnSuccess: () => void
     },
     onSuccess: async (_data, variables) => {
       await Promise.all([
-        queryClient.invalidateQueries({ queryKey: ["technicianBookings"] }),
+        queryClient.invalidateQueries({ queryKey: ["technician-bookings"] }),
         queryClient.invalidateQueries({
           queryKey: ["booking", variables.bookingId],
         }),
