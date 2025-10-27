@@ -87,12 +87,22 @@ export default function ViewDetailInfo() {
   if (!user) return <Loading />;
   return (
     <div className="w-full h-[calc(100vh-32px)] font-inter">
-      <DynamicBreadcrumbs
-        pathTitles={{
-          vehicles: "Customer & Vehicles Management",
-          [customerId ?? ""]: "Detailed Information",
-        }}
-      />
+      {auth.user?.role === "STAFF" && (
+        <DynamicBreadcrumbs
+          pathTitles={{
+            vehicles: "Customer & Vehicles Management",
+            [customerId ?? ""]: "Customer Detail",
+          }}
+        />
+      )}
+      {auth.user?.role === "ADMIN" && (
+        <DynamicBreadcrumbs
+          pathTitles={{
+            vehicles: "Customer & Vehicles Management",
+            [customerId ?? ""]: "Detailed Information",
+          }}
+        />
+      )}
       <MainContentLayout className="grid grid-cols-1 lg:grid-cols-[auto_1fr] gap-8 pt-4">
         <CustomerInfoBox
           customer={customer}
