@@ -2,7 +2,7 @@ import { b64DecodeUnicode } from "@/utils/base64";
 import DynamicBreadcrumbs from "@/components/DynamicBreadcrumb";
 import MainContentLayout from "@/components/MainContentLayout";
 import { useBookingDetail } from "@/services/booking/hooks/useBookingDetail";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import VehicleInfoCard from "../customer/booking-detail/VehicleInfoCard";
@@ -23,6 +23,7 @@ import UnAssignmentDialog from "./UnAssignmentDialog";
 import useUnAssign from "@/services/booking/hooks/useUnAssign";
 
 export default function ViewBookingDetail() {
+  const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const bookingId = b64DecodeUnicode(id ?? "");
   const { data, isLoading } = useBookingDetail(bookingId ?? "");
@@ -103,6 +104,13 @@ export default function ViewBookingDetail() {
                 variant="default"
                 className="bg-purple-600 hover:bg-purple-700 text-white
             dark:bg-purple-500 dark:hover:bg-purple-600"
+                onClick={() => {
+                  navigate(`/booking/checkin/${id}`, {
+                    state: {
+                      bookingId: id,
+                    },
+                  });
+                }}
               >
                 Vehicle Check-In
               </Button>
