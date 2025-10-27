@@ -13,7 +13,6 @@ const VehicleInfoBox = ({ vehicleId }: VehicleInfoBoxProps) => {
   const { data: vehicle } = useGetVehicleById(vehicleId);
   const { data: customer } = useGetCustomerById(vehicle?.customerId || "");
 
-  console.log(vehicle);
   return (
     <Card className="w-full max-w-sm md:max-w-xs lg:max-w-[368px] h-full">
       <CardHeader>

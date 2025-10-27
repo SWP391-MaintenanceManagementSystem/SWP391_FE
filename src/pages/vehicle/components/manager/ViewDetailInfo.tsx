@@ -13,7 +13,7 @@ import type { CustomerTable } from "../libs/table-types";
 import type { Customer } from "@/types/models/account";
 import type { Vehicle } from "@/types/models/vehicle";
 import { DataTable } from "@/components/table/DataTable";
-import { getColumns } from "./vehicleManagement/table/column";
+import { getColumns } from "./vehicleManagement/vehicleTable/columns";
 import type { ColumnDef } from "@tanstack/react-table";
 import { useState } from "react";
 import type { SortingState } from "@tanstack/react-table";
