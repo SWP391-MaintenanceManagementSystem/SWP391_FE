@@ -1,6 +1,10 @@
 import type { AccountStatus } from "../enums/accountStatus";
 import type { AccountRole } from "../enums/role";
 
+interface WorkCenter {
+  id: string;
+  name: string;
+}
 export interface AccountWithProfile {
   id: string;
   email: string;
@@ -9,6 +13,7 @@ export interface AccountWithProfile {
   phone?: string;
   status: AccountStatus;
   profile?: Profile;
+  workCenter?: WorkCenter;
   createdAt: string;
   updatedAt: string;
 }

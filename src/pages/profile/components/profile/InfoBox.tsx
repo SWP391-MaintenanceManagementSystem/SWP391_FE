@@ -38,36 +38,45 @@ const InfoBox = ({ user, handleLogout }: InfoBoxProps) => {
   return (
     <Card className="h-full ">
       <CardContent className="px-[42px] flex flex-col h-full justify-between gap-6">
-        <div className="gap-5 flex flex-col">
-          <InfoSection title="Information">
+        <div className="gap-5 flex flex-col font-inter">
+          <InfoSection title="Information ">
             {user ? (
               <>
                 {!isAdmin && (
-                  <p className="font-inter">
+                  <p>
                     <strong>Name:</strong>{" "}
                     {user.profile?.firstName + " " + user?.profile?.lastName}
                   </p>
                 )}
-                <p className="font-inter">
+                <p>
                   <strong>Email:</strong> {user.email}
                 </p>
+                <p>
+                  <strong>Role:</strong> {user.role}
+                </p>
                 {!isAdmin && user.phone && (
-                  <p className="font-inter">
+                  <p>
                     <strong>Tel:</strong> {user.phone}
                   </p>
                 )}
                 {customerProfile?.address && (
-                  <p className="font-inter">
+                  <p>
                     <strong>Address:</strong> {customerProfile?.address}
                   </p>
                 )}
+                {user.workCenter && (
+                  <p>
+                    <strong>Center:</strong> {user.workCenter.name}
+                  </p>
+                )}
+
                 {employeeProfile?.certificate && (
-                  <p className="font-inter">
+                  <p>
                     <strong>Certificate:</strong> {employeeProfile?.certificate}
                   </p>
                 )}
                 <p className="font-inter flex flex-row gap-2">
-                  <strong className="font-inter">Status:</strong>
+                  <strong>Status:</strong>
                   <span className="inline-flex">
                     <AccountStatusTag status={user.status} />
                   </span>
