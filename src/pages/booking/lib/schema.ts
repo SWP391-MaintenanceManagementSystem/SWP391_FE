@@ -97,12 +97,18 @@ export type EditBookingFormValues = z.infer<typeof EditBookingSchema>;
 export const BookingCheckinsSchema = z.object({
   bookingId: z.string().min(1, "Booking ID is required"),
   odometer: z
-    .number({ error: "Odometer must be a number" })
-    .min(0, "Odometer must be positive"),
+    .number()
+    .refine((val) => Number.isInteger(val), {
+      message: "Odometer must be an integer",
+    })
+    .refine((val) => val >= 0, {
+      message: "Odometer cannot be negative",
+    })
+    .optional(),
   note: z.string().optional(),
-  description: z.array(z.string()).optional(),
+  description: z.array(z.string()),
   date: z
-    .string({ error: "Check-in date & time is required" })
+    .string({ error: "Checkin date & time is required" })
     .refine((val) => dayjs(val, "YYYY-MM-DDTHH:mm", true).isValid(), {
       message: "Invalid date & time format",
     })
@@ -113,10 +119,10 @@ export const BookingCheckinsSchema = z.object({
     .refine(
       (dateStr) => {
         const date = dayjs(dateStr);
-        return date.isSame(dayjs(), "minute") || date.isAfter(dayjs());
+        return date.isAfter(dayjs());
       },
       {
-        message: "Date & time must not be in the past",
+        message: "Date & time must be in the future",
       },
     ),
 });

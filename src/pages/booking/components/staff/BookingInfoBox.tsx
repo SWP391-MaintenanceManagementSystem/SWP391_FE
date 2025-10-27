@@ -16,7 +16,7 @@ const BookingInfoBox = ({ booking: bookingDetail }: BookingInfoBoxProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
-    <Card className="w-full bg-purple-50 border-purple-200 dark:bg-purple-primary-dark dark:text-amber-primary dark:border-purple-800 max-w-sm md:max-w-xs lg:max-w-[368px] h-full min-w-[340px]">
+    <Card className="w-full bg-purple-50 border-purple-200 dark:bg-purple-primary-dark dark:text-amber-primary dark:border-purple-800 lg:max-w-[368px] h-full min-w-[340px]">
       <CardHeader>
         <CardTitle className="text-3xl font-bold text-gray-900 dark:text-amber-primary flex items-center gap-2">
           Booking Details
@@ -47,7 +47,7 @@ const BookingInfoBox = ({ booking: bookingDetail }: BookingInfoBoxProps) => {
           )}
         </p>
       </CardHeader>
-      <CardContent className="flex flex-col gap-8">
+      <CardContent className="grid sm:grid-cols-2 md:grid-cols-1 gap-8">
         <div className="flex flex-col gap-1">
           <div className="flex gap-1 items-center font-semibold text-xl">
             <User size={20} />
@@ -118,7 +118,7 @@ const BookingInfoBox = ({ booking: bookingDetail }: BookingInfoBoxProps) => {
         <Button
           onClick={() => setIsModalOpen(true)}
           variant="outline"
-          className=" bg-purple-primary border-purple-primary hover:bg-transparent  dark:bg-purple-secondary-dark dark:hover:bg-transparent dark:hover:border-purple-secondary-dark dark:hover:text-purple-secondary-dark text-accent"
+          className=" bg-purple-primary self-end border-purple-primary hover:bg-transparent  dark:bg-purple-secondary-dark dark:hover:bg-transparent dark:hover:border-purple-secondary-dark dark:hover:text-purple-secondary-dark text-accent"
         >
           View Services
         </Button>

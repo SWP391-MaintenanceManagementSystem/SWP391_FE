@@ -18,3 +18,13 @@ export const createVehicleHandover = async (
   >("/vehicle-handovers", vehicleHandoverData);
   return response.data;
 };
+
+export const updateVehicleHandover = async (
+  id: string,
+  data: BookingCheckinsFormValues,
+) => {
+  const response = await axiosPrivate.patch<
+    BaseResponse<{ data: VehicleHandover }>
+  >(`/vehicle-handovers/${id}`, data);
+  return response.data;
+};

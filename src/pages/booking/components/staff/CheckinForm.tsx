@@ -1,5 +1,5 @@
 import { Card, CardContent } from "@/components/ui/card";
-import { Loader } from "lucide-react";
+import { Calendar, Loader } from "lucide-react";
 import "animate.css";
 import { useForm } from "react-hook-form";
 import {
@@ -14,6 +14,8 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import type { BookingCheckinsFormValues } from "../../lib/schema";
 import { Textarea } from "@/components/ui/textarea";
+import dayjs from "dayjs";
+import { cn } from "@/lib/utils";
 
 interface CheckinFormProps {
   form: ReturnType<typeof useForm<BookingCheckinsFormValues>>;
@@ -42,90 +44,111 @@ export default function CheckinForm({
           <Form {...form}>
             <form
               onSubmit={form.handleSubmit(onSubmit)}
-              className="w-full h-full"
+              className="grid grid-cols-1 gap-6"
             >
-              <div className="grid gap-4 w-full">
-                <div className="grid grid-cols-1 gap-4">
-                  <FormField
-                    control={form.control}
-                    name="odometer"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Current Kilometers</FormLabel>
-                        <FormControl>
-                          <Input
-                            {...field}
-                            type="number"
-                            value={field.value ?? ""}
-                            min={0}
-                            onChange={(e) =>
-                              field.onChange(e.target.valueAsNumber)
-                            }
-                            placeholder="Enter current kilometers"
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+              <FormField
+                control={form.control}
+                name="date"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Date *</FormLabel>
+                    <FormControl>
+                      <div className="relative">
+                        <Input
+                          type="datetime-local"
+                          required
+                          value={
+                            field.value
+                              ? dayjs(field.value).format("YYYY-MM-DDTHH:mm")
+                              : ""
+                          }
+                          min={dayjs().format("YYYY-MM-DDTHH:mm")}
+                          className={cn("w-full h-10 pl-8")}
+                          onChange={(e) => field.onChange(e.target.value)}
+                          aria-invalid={!!form.formState.errors.date?.message}
+                        />
+                        <Calendar className="absolute left-2 top-1/2 size-4 -translate-y-1/2 text-muted-foreground pointer-events-none" />
+                      </div>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-                  <FormField
-                    control={form.control}
-                    name="description"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Description</FormLabel>
-                        <FormControl>
-                          <Textarea
-                            {...field}
-                            placeholder="Description (each line = one item)"
-                            value={
-                              Array.isArray(field.value)
-                                ? field.value.join("\n")
-                                : ""
-                            }
-                            onChange={(e) =>
-                              field.onChange(
-                                e.target.value
-                                  .split("\n")
-                                  .filter((line) => line.trim() !== ""),
-                              )
-                            }
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+              <FormField
+                control={form.control}
+                name="odometer"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Odometer *</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        placeholder="Enter odometer value"
+                        min="0"
+                        required
+                        {...field}
+                        value={field.value ?? ""}
+                        onChange={(e) =>
+                          field.onChange(Number(e.target.value) || 0)
+                        }
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-                  <FormField
-                    control={form.control}
-                    name="note"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Note</FormLabel>
-                        <FormControl>
-                          <Textarea
-                            {...field}
-                            placeholder="Note"
-                            value={field.value || ""}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
+              <FormField
+                control={form.control}
+                name="note"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Note</FormLabel>
+                    <FormControl>
+                      <Textarea
+                        placeholder="Optional notes"
+                        {...field}
+                        value={field.value ?? ""}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-                <div className="mt-4 flex justify-start lg:justify-end">
-                  <Button
-                    type="submit"
-                    className="!bg-purple-primary !text-white dark:!text-black cursor-pointer"
-                    disabled={!form.formState.isDirty || isPending}
-                  >
-                    {isPending ? "Saving..." : "Save Check-in"}
-                  </Button>
-                </div>
+              <FormField
+                control={form.control}
+                name="description"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Description</FormLabel>
+                    <FormControl>
+                      <Textarea
+                        placeholder="Enter description (one per line)"
+                        {...field}
+                        value={
+                          Array.isArray(field.value)
+                            ? field.value.join("\n")
+                            : (field.value ?? "")
+                        }
+                        onChange={(e) =>
+                          field.onChange(e.target.value.split("\n"))
+                        }
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <div className="mt-4 flex justify-start lg:justify-end">
+                <Button
+                  type="submit"
+                  disabled={!form.formState.isDirty || isPending}
+                  className="!bg-purple-primary !text-white dark:!text-black cursor-pointer"
+                >
+                  {isPending ? "Saving..." : "Save"}
+                </Button>
               </div>
             </form>
           </Form>
