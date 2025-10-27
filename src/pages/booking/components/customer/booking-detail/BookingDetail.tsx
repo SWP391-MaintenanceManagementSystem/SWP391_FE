@@ -17,19 +17,24 @@ import useCancelBooking from "@/services/booking/hooks/useCancelBooking";
 import BookingTag from "@/components/tag/BookingTag";
 import EditBookingModal from "./EditBookingModal";
 import { BookingStatus } from "@/types/enums/bookingStatus";
+import { b64DecodeUnicode } from "@/utils/base64";
 
+const CAN_CANCEL: BookingStatus[] = [
+  BookingStatus.PENDING,
+  BookingStatus.ASSIGNED,
+];
 export default function BookingDetail() {
   const { id } = useParams<{ id: string }>();
-  const { data, isLoading } = useBookingDetail(id ?? "");
+
+  const decodedId = b64DecodeUnicode(id!);
+  const { data, isLoading } = useBookingDetail(decodedId ?? "");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const { onCancel } = useCancelBooking();
-
   if (!id) {
     return <div className="text-red-500 p-6">Booking ID is missing</div>;
   }
-
   if (isLoading)
     return (
       <div className="text-gray-500 p-6 flex justify-center items-center h-full">
@@ -97,7 +102,7 @@ export default function BookingDetail() {
               <Button
                 onClick={() => setIsEditModalOpen(true)}
                 variant="default"
-                disabled={data?.status !== BookingStatus.PENDING}
+                disabled={!(data?.status && CAN_CANCEL.includes(data.status))}
                 className="bg-purple-600 hover:bg-purple-700 text-white
             dark:bg-purple-500 dark:hover:bg-purple-600"
               >
@@ -107,6 +112,7 @@ export default function BookingDetail() {
               <Button
                 onClick={() => setIsCancelModalOpen(true)}
                 variant="destructive"
+                disabled={!(data?.status && CAN_CANCEL.includes(data.status))}
                 className="hover:bg-red-600
             dark:hover:bg-red-700"
               >
