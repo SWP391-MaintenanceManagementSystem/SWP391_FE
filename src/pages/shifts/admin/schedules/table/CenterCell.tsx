@@ -12,7 +12,7 @@ export const CenterCell = ({ center }: { center: ServiceCenter }) => {
         <ViewDetailDialog
           open={isOpen}
           onOpenChange={(open) => setIsOpen(open)}
-          title="Shift Information"
+          title="Service Center Information"
         >
           <ViewDetailCenter item={center} />
         </ViewDetailDialog>
