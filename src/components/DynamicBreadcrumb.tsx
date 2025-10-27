@@ -11,6 +11,7 @@ import { Link, useLocation } from "react-router-dom";
 type Props = {
   pathTitles?: Record<string, string>;
   hasPage?: boolean;
+  ignorePaths?: string[];
 };
 
 function formatPath(path: string) {
@@ -23,9 +24,15 @@ function formatPath(path: string) {
 export default function DynamicBreadcrumbs({
   pathTitles,
   hasPage = true,
+  ignorePaths = [],
 }: Props) {
   const location = useLocation();
-  const paths = location.pathname.split("/").filter(Boolean);
+  const paths = location.pathname
+    .split("/")
+    .filter(Boolean)
+    .filter(
+      (p) => !ignorePaths.map((x) => x.toLowerCase()).includes(p.toLowerCase()),
+    );
 
   return (
     <Breadcrumb>
