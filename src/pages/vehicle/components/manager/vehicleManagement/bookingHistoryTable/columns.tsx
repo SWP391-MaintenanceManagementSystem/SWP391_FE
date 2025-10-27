@@ -5,8 +5,8 @@ import { Badge } from "@/components/ui/badge";
 import type { BookingStaffTable } from "@/types/models/booking-with-detail";
 import BookingTag from "@/components/tag/BookingTag";
 import dayjs from "dayjs";
-// import { CenterCell } from "@/pages/shifts/admin/schedules/table/CenterCell";
-// import type { ServiceCenter } from "@/types/models/center";
+import { CenterCell } from "@/pages/shifts/admin/schedules/table/CenterCell";
+import type { ServiceCenter } from "@/types/models/center";
 import ColActions from "./ColActions";
 
 export const getColumns = (
@@ -37,14 +37,14 @@ export const getColumns = (
     // Booking date
     columnHelper.accessor("bookingDate", {
       id: "bookingDate",
-      header: (info) => <SortHeader title="Booking Date" info={info} />,
+      header: (info) => <SortHeader title="Booking Time" info={info} />,
       cell: (info) => (
         <Badge variant="outline">
-          {dayjs(info.getValue()).format("DD/MM/YYYY")}
+          {dayjs(info.getValue()).format("HH:mm DD/MM/YYYY")}
         </Badge>
       ),
       meta: {
-        title: "Booking Date",
+        title: "Booking Time",
       },
     }),
 
@@ -78,16 +78,16 @@ export const getColumns = (
         title: "Total Cost",
       },
     }),
-    // columnHelper.accessor("serviceCenter.name", {
-    //   id: "serviceCenter",
-    //   header: (info) => <SortHeader title="Service Center" info={info} />,
-    //   cell: ({ row }) => (
-    //     <CenterCell center={row.original.serviceCenter as ServiceCenter} />
-    //   ),
-    //   meta: {
-    //     title: "Service Center",
-    //   },
-    // }),
+    columnHelper.accessor("serviceCenter.name", {
+      id: "serviceCenter",
+      header: (info) => <SortHeader title="Service Center" info={info} />,
+      cell: ({ row }) => (
+        <CenterCell center={row.original.serviceCenter as ServiceCenter} />
+      ),
+      meta: {
+        title: "Service Center",
+      },
+    }),
 
     columnHelper.display({
       id: "actions",

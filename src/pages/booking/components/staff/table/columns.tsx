@@ -164,14 +164,14 @@ export const getColumns = (
     // Booking date
     columnHelper.accessor("bookingDate", {
       id: "bookingDate",
-      header: (info) => <SortHeader title="Booking Date" info={info} />,
+      header: (info) => <SortHeader title="Booking Time" info={info} />,
       cell: (info) => (
         <Badge variant="outline">
-          {dayjs(info.getValue()).format("DD/MM/YYYY")}
+          {dayjs(info.getValue()).format("HH:mm DD/MM/YYYY")}
         </Badge>
       ),
       meta: {
-        title: "Booking Date",
+        title: "Booking Time",
       },
     }),
 
