@@ -74,7 +74,11 @@ export default function ColActions({
           icon={<MapPinCheck size={12} />}
           onClick={() => {
             const encodedId = encodeBase64(booking.id);
-            console.log(encodedId);
+            navigate(`/booking/checkin/${encodedId}`, {
+              state: {
+                bookingId: encodedId,
+              },
+            });
           }}
         />
       </TooltipWrapper>
