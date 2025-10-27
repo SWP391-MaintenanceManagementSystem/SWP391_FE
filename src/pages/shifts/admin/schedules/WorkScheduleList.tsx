@@ -95,7 +95,7 @@ export default function WorkScheduleList() {
           headerActions={
             <div
               className={clsx(
-                "grid justify-end items-end gap-2 w-full grid-cols-1",
+                "grid lg:justify-end items-end gap-2 w-full grid-cols-1",
                 dateRange?.from
                   ? "md:grid-cols-[auto_auto_auto]"
                   : "md:grid-cols-[auto_auto]",

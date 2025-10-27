@@ -97,7 +97,7 @@ export const useCancelBookingMutation = () => {
     onError: (error) => {
       let msg = "Failed to cancel booking";
       if (error instanceof AxiosError) {
-        msg = error.message || msg;
+        msg = error.response?.data?.message || msg;
       }
       toast.error(msg);
     },

@@ -15,6 +15,8 @@ import {
   useGetVehicleModel,
 } from "@/services/manager/queries/index";
 import { AccountRole } from "@/types/enums/role";
+import { encodeBase64 } from "@/utils/base64";
+import { useNavigate } from "react-router-dom";
 
 export interface ColActionsProps {
   row: Row<Vehicle>;
@@ -48,6 +50,7 @@ export default function ColActions({
   );
 
   const vehicle = row.original;
+  const navigate = useNavigate();
 
   return (
     <div className="flex gap-1">
@@ -55,13 +58,26 @@ export default function ColActions({
         <ActionBtn
           icon={<Maximize2 size={12} />}
           onClick={() => {
-            console.log("View Details");
-            setOpenViewDialog(true);
+            const encodedCustomerId = encodeBase64(row.original.customerId);
+            const encodedVehicleId = encodeBase64(row.original.id);
+
+            navigate(`/vehicles/${encodedCustomerId}/${encodedVehicleId}`, {
+              state: { currentPage, currentPageSize },
+            });
           }}
         />
       </TooltipWrapper>
       {currentUserRole === "ADMIN" && (
         <>
+          <TooltipWrapper content="View Details">
+            <ActionBtn
+              icon={<Maximize2 size={12} />}
+              onClick={() => {
+                console.log("View Details");
+                setOpenViewDialog(true);
+              }}
+            />
+          </TooltipWrapper>
           <TooltipWrapper content="Edit">
             <ActionBtn
               icon={<Pencil size={12} />}

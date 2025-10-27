@@ -125,14 +125,12 @@ export const useDeleteWorkSchedule = () => {
   return useMutation({
     mutationFn: async ({
       id,
-      date,
     }: {
       id: string;
-      date: string;
       currentPage: number;
       currentPageSize: number;
     }) => {
-      const del = await deleteWorkSchedule(id, date);
+      const del = await deleteWorkSchedule(id);
       return del.data;
     },
     onSuccess: async (_data, variables) => {

@@ -93,6 +93,7 @@ export const getColumns = (
     columnHelper.display({
       id: "actions",
       header: currentUserRole === "ADMIN" ? "Actions" : "View",
+      size: currentUserRole === "ADMIN" ? 100 : 10,
       cell: (props) => {
         const { pageIndex, pageSize } = props.table.getState().pagination;
         return (

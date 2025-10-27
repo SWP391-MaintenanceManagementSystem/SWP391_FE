@@ -13,7 +13,7 @@ import type { CustomerTable } from "../libs/table-types";
 import type { Customer } from "@/types/models/account";
 import type { Vehicle } from "@/types/models/vehicle";
 import { DataTable } from "@/components/table/DataTable";
-import { getColumns } from "./vehicleManagement/table/column";
+import { getColumns } from "./vehicleManagement/vehicleTable/columns";
 import type { ColumnDef } from "@tanstack/react-table";
 import { useState } from "react";
 import type { SortingState } from "@tanstack/react-table";
@@ -23,8 +23,8 @@ import type { AccountRole } from "@/types/enums/role";
 
 export default function ViewDetailInfo() {
   const { auth } = useAuth();
-  const { id } = useParams<{ id: string }>();
-  const userId = id ? b64DecodeUnicode(id) : null;
+  const { customerId } = useParams<{ customerId: string }>();
+  const userId = customerId ? b64DecodeUnicode(customerId) : null;
   const { data: user } = useGetCustomerById(userId ?? "");
   const customer: CustomerTable = {
     id: user?.id ?? "",
@@ -87,12 +87,22 @@ export default function ViewDetailInfo() {
   if (!user) return <Loading />;
   return (
     <div className="w-full h-[calc(100vh-32px)] font-inter">
-      <DynamicBreadcrumbs
-        pathTitles={{
-          vehicles: "Customer & Vehicles Management",
-          [id ?? ""]: "Detailed Information",
-        }}
-      />
+      {auth.user?.role === "STAFF" && (
+        <DynamicBreadcrumbs
+          pathTitles={{
+            vehicles: "Customer & Vehicles Management",
+            [customerId ?? ""]: "Customer Detail",
+          }}
+        />
+      )}
+      {auth.user?.role === "ADMIN" && (
+        <DynamicBreadcrumbs
+          pathTitles={{
+            vehicles: "Customer & Vehicles Management",
+            [customerId ?? ""]: "Detailed Information",
+          }}
+        />
+      )}
       <MainContentLayout className="grid grid-cols-1 lg:grid-cols-[auto_1fr] gap-8 pt-4">
         <CustomerInfoBox
           customer={customer}

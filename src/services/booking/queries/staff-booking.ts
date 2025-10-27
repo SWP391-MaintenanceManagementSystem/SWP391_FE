@@ -2,7 +2,10 @@ import type { BookingFilters } from "@/types/models/booking";
 import { useQuery } from "@tanstack/react-query";
 import { queryKeys } from "./keys";
 import { toast } from "sonner";
-import { getBookingManagementList } from "../apis/staff-booking.api";
+import {
+  getBookingManagementList,
+  getBookingHistoryList,
+} from "../apis/staff-booking.api";
 import { getBookingAssignmentById } from "../apis/booking-assignment.api";
 
 export const useBookingsQuery = (filter: BookingFilters) => {
@@ -29,6 +32,21 @@ export const useBookingAssignmentListQuery = (id: string) => {
         return res.data;
       } catch (error) {
         toast.error("Failed to get booking details");
+        throw error;
+      }
+    },
+  });
+};
+
+export const useBookingsHistoryQuery = (filter: BookingFilters) => {
+  return useQuery({
+    queryKey: queryKeys.bookingsHistory(filter),
+    queryFn: async () => {
+      try {
+        const res = await getBookingHistoryList({ ...filter });
+        return res.data;
+      } catch (error) {
+        toast.error("Failed to get booking list");
         throw error;
       }
     },
