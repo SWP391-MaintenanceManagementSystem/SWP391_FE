@@ -16,12 +16,14 @@ import type { BookingCheckinsFormValues } from "../../lib/schema";
 import { Textarea } from "@/components/ui/textarea";
 import dayjs from "dayjs";
 import { cn } from "@/lib/utils";
+import type { BookingStatus } from "@/types/enums/bookingStatus";
 
 interface CheckinFormProps {
   form: ReturnType<typeof useForm<BookingCheckinsFormValues>>;
   onSubmit: (data: BookingCheckinsFormValues) => void;
   isPending: boolean;
   isLoading: boolean;
+  bookingStatus?: BookingStatus;
 }
 
 export default function CheckinForm({
@@ -29,6 +31,7 @@ export default function CheckinForm({
   onSubmit,
   isPending,
   isLoading,
+  bookingStatus,
 }: CheckinFormProps) {
   return (
     <Card className=" min-w-[300px] max-h-full">
@@ -107,7 +110,7 @@ export default function CheckinForm({
                     <FormLabel>Customer Note</FormLabel>
                     <FormControl>
                       <Textarea
-                        placeholder="Optional notes"
+                        placeholder="Customer notes"
                         {...field}
                         value={field.value ?? ""}
                       />
@@ -141,15 +144,17 @@ export default function CheckinForm({
                   </FormItem>
                 )}
               />
-              <div className="mt-4 flex justify-start lg:justify-end">
-                <Button
-                  type="submit"
-                  disabled={!form.formState.isDirty || isPending}
-                  className="!bg-purple-primary !text-white dark:!text-black cursor-pointer"
-                >
-                  {isPending ? "Saving..." : "Save"}
-                </Button>
-              </div>
+              {bookingStatus === "ASSIGNED" && (
+                <div className="mt-4 flex justify-start lg:justify-end">
+                  <Button
+                    type="submit"
+                    disabled={!form.formState.isDirty || isPending}
+                    className="!bg-purple-primary !text-white dark:!text-black cursor-pointer"
+                  >
+                    {isPending ? "Saving..." : "Save"}
+                  </Button>
+                </div>
+              )}
             </form>
           </Form>
         )}

@@ -59,6 +59,7 @@ export default function CheckinPage() {
           onSubmit={onSubmit}
           isPending={isPending}
           isLoading={isLoading}
+          bookingStatus={bookingDetail?.status}
         />
       </MainContentLayout>
     </div>
