@@ -50,6 +50,11 @@ const RouterComponent = () => {
     },
     { path: "/forgot-password", element: <ForgotPasswordPage /> },
     { path: "/auth/success", element: <AuthSuccess /> },
+    {
+      path: "/payment-success",
+      element: <PaymentSuccessPage />,
+      hydrateFallbackElement: <CircularIndeterminate />,
+    },
     { path: "auth/failed", element: <AuthFailed /> },
     { path: "/auth/verify", element: <VerifySuccess /> },
     { path: "/unauthorized", element: <Unauthorized /> },
@@ -141,11 +146,6 @@ const RouterComponent = () => {
                   ),
                   children: [
                     {
-                      path: "/payment-success",
-                      element: <PaymentSuccessPage />,
-                      hydrateFallbackElement: <CircularIndeterminate />,
-                    },
-                    {
                       path: "/vehicles/history/:vehicleId",
                       element: <HistoryBookingCus />,
                       hydrateFallbackElement: <CircularIndeterminate />,
@@ -154,7 +154,11 @@ const RouterComponent = () => {
                 },
 
                 {
-                  element: <RequireAuth allowedRoles={[AccountRole.STAFF, AccountRole.TECHNICIAN]} />,
+                  element: (
+                    <RequireAuth
+                      allowedRoles={[AccountRole.STAFF, AccountRole.TECHNICIAN]}
+                    />
+                  ),
                   children: [
                     {
                       path: "/viewSchedule",
