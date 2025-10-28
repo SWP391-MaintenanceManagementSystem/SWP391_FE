@@ -104,7 +104,7 @@ export default function CheckinForm({
                 name="note"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Note</FormLabel>
+                    <FormLabel>Customer Note</FormLabel>
                     <FormControl>
                       <Textarea
                         placeholder="Optional notes"
@@ -122,7 +122,7 @@ export default function CheckinForm({
                 name="description"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Description</FormLabel>
+                    <FormLabel>Vehicle Condition Details</FormLabel>
                     <FormControl>
                       <Textarea
                         placeholder="Enter description (one per line)"
