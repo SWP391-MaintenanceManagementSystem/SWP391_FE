@@ -106,7 +106,20 @@ export const BookingCheckinsSchema = z.object({
     })
     .optional(),
   note: z.string().optional(),
-  description: z.array(z.string()),
+  description: z.array(z.string()).optional(),
+  images: z
+    .array(
+      z.union([
+        z.instanceof(File),
+        z
+          .string()
+          .url()
+          .or(z.string().min(1).max(6, "Maximum 6 images allowed")),
+      ]),
+      { error: "Images must be valid files or URLs" },
+    )
+    .optional(),
+
   date: z
     .string({ error: "Checkin date & time is required" })
     .refine((val) => dayjs(val, "YYYY-MM-DDTHH:mm", true).isValid(), {

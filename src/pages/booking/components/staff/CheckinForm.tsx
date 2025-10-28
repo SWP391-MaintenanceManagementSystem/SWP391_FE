@@ -1,5 +1,5 @@
 import { Card, CardContent } from "@/components/ui/card";
-import { Calendar, Loader } from "lucide-react";
+import { Calendar, Loader, Unlink } from "lucide-react";
 import "animate.css";
 import { useForm } from "react-hook-form";
 import {
@@ -18,6 +18,8 @@ import dayjs from "dayjs";
 import { cn } from "@/lib/utils";
 import type { BookingStatus } from "@/types/enums/bookingStatus";
 import { useRef } from "react";
+import { FileUploadForm } from "@/pages/booking/components/staff/FileUploadForm";
+import { Label } from "@/components/ui/label";
 
 interface CheckinFormProps {
   form: ReturnType<typeof useForm<BookingCheckinsFormValues>>;
@@ -25,6 +27,7 @@ interface CheckinFormProps {
   isPending: boolean;
   isLoading: boolean;
   bookingStatus?: BookingStatus;
+  images?: string[];
 }
 
 export default function CheckinForm({
@@ -33,20 +36,17 @@ export default function CheckinForm({
   isPending,
   isLoading,
   bookingStatus,
+  images,
 }: CheckinFormProps) {
   const inputRef = useRef<HTMLInputElement>(null);
-  const handleContainerClick = () => {
-    if (inputRef.current) {
-      inputRef.current.showPicker();
-    }
-  };
 
   return (
-    <Card className=" min-w-[300px] max-h-full">
-      <CardContent className=" font-inter flex-1 gap-5 flex flex-col min-h-fit">
-        <h3 className="!font-inter text-3xl font-bold text-gray-900 dark:text-gray-200 items-center">
+    <Card className="min-w-[300px] max-h-full">
+      <CardContent className="font-inter flex-1 gap-5 flex flex-col min-h-fit">
+        <h3 className="text-3xl font-bold text-gray-900 dark:text-gray-200">
           Vehicle Check-In Form
         </h3>
+
         {isLoading ? (
           <div className="flex justify-center items-center h-full">
             <Loader className="animate-spin text-gray-500 mx-auto" />
@@ -55,55 +55,37 @@ export default function CheckinForm({
           <Form {...form}>
             <form
               onSubmit={form.handleSubmit(onSubmit)}
-              className="grid grid-cols-1 gap-6"
+              className="grid grid-cols-1 gap-6 overflow-y-auto h-[calc(100vh - 80px)]"
             >
-              <div
-                className="relative cursor-pointer"
-                onClick={handleContainerClick}
-                role="button"
-                tabIndex={0}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" || e.key === " ") {
-                    handleContainerClick();
-                  }
-                }}
-              >
-                <FormField
-                  control={form.control}
-                  name="date"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Date *</FormLabel>
-                      <FormControl>
-                        <div className="relative">
-                          <Input
-                            ref={inputRef}
-                            type="datetime-local"
-                            required
-                            value={
-                              field.value
-                                ? dayjs(field.value).format("YYYY-MM-DDTHH:mm")
-                                : ""
-                            }
-                            min={dayjs().format("YYYY-MM-DDTHH:mm")}
-                            className={cn(
-                              "w-full h-10 pl-10 flex justify-between [&::-webkit-calendar-picker-indicator]:hidden",
-                            )}
-                            onChange={(e) => field.onChange(e.target.value)}
-                            aria-invalid={!!form.formState.errors.date?.message}
-                            readOnly={bookingStatus !== "ASSIGNED"}
-                          />
-                          <Calendar
-                            className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground"
-                            aria-hidden="true"
-                          />
-                        </div>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
+              <FormField
+                control={form.control}
+                name="date"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Date *</FormLabel>
+                    <FormControl>
+                      <div className="relative">
+                        <Input
+                          ref={inputRef}
+                          type="datetime-local"
+                          required
+                          value={
+                            field.value
+                              ? dayjs(field.value).format("YYYY-MM-DDTHH:mm")
+                              : ""
+                          }
+                          min={dayjs().format("YYYY-MM-DDTHH:mm")}
+                          className={cn("w-full h-10 pl-10")}
+                          onChange={(e) => field.onChange(e.target.value)}
+                          readOnly={bookingStatus !== "ASSIGNED"}
+                        />
+                        <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                      </div>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
               <FormField
                 control={form.control}
@@ -174,12 +156,56 @@ export default function CheckinForm({
                   </FormItem>
                 )}
               />
+
+              {images && images.length > 0 ? (
+                <div className="space-y-2">
+                  <Label>Attachments</Label>
+
+                  <div className="flex gap-6 flex-wrap">
+                    {images.map((item, index) => (
+                      <div
+                        key={index}
+                        className="relative w-24 h-24 border rounded overflow-hidden"
+                      >
+                        <a
+                          href={item}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          <img
+                            src={item}
+                            alt={`handover-${index}`}
+                            className="object-cover w-full h-full"
+                          />
+                        </a>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ) : bookingStatus === "ASSIGNED" ? (
+                <FileUploadForm
+                  form={form}
+                  onUploadSuccess={(files) =>
+                    form.setValue("images", files, { shouldDirty: true })
+                  }
+                />
+              ) : (
+                <div className="space-y-2">
+                  <Label>Attachments</Label>
+                  <div className="flex items-center justify-center w-full h-24 border border-dashed rounded">
+                    <p className="text-gray-400 flex gap-2 items-center">
+                      <Unlink size={18} /> No attachments
+                    </p>
+                  </div>
+                </div>
+              )}
+
               {bookingStatus === "ASSIGNED" && (
-                <div className="mt-4 flex justify-start lg:justify-end">
+                <div className="mt-4 flex justify-end">
                   <Button
                     type="submit"
                     disabled={!form.formState.isDirty || isPending}
-                    className="!bg-purple-primary !text-white dark:!text-black cursor-pointer"
+                    className="!bg-purple-primary !text-white"
                   >
                     {isPending ? "Saving..." : "Save"}
                   </Button>
