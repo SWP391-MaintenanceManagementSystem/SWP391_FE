@@ -17,6 +17,7 @@ import { Textarea } from "@/components/ui/textarea";
 import dayjs from "dayjs";
 import { cn } from "@/lib/utils";
 import type { BookingStatus } from "@/types/enums/bookingStatus";
+import { useRef } from "react";
 
 interface CheckinFormProps {
   form: ReturnType<typeof useForm<BookingCheckinsFormValues>>;
@@ -33,10 +34,17 @@ export default function CheckinForm({
   isLoading,
   bookingStatus,
 }: CheckinFormProps) {
+  const inputRef = useRef<HTMLInputElement>(null);
+  const handleContainerClick = () => {
+    if (inputRef.current) {
+      inputRef.current.showPicker();
+    }
+  };
+
   return (
     <Card className=" min-w-[300px] max-h-full">
       <CardContent className=" font-inter flex-1 gap-5 flex flex-col min-h-fit">
-        <h3 className="!font-inter text-3xl font-bold text-gray-900 items-center">
+        <h3 className="!font-inter text-3xl font-bold text-gray-900 dark:text-gray-200 items-center">
           Vehicle Check-In Form
         </h3>
         {isLoading ? (
@@ -49,41 +57,60 @@ export default function CheckinForm({
               onSubmit={form.handleSubmit(onSubmit)}
               className="grid grid-cols-1 gap-6"
             >
-              <FormField
-                control={form.control}
-                name="date"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Date *</FormLabel>
-                    <FormControl>
-                      <div className="relative">
-                        <Input
-                          type="datetime-local"
-                          required
-                          value={
-                            field.value
-                              ? dayjs(field.value).format("YYYY-MM-DDTHH:mm")
-                              : ""
-                          }
-                          min={dayjs().format("YYYY-MM-DDTHH:mm")}
-                          className={cn("w-full h-10 pl-8")}
-                          onChange={(e) => field.onChange(e.target.value)}
-                          aria-invalid={!!form.formState.errors.date?.message}
-                        />
-                        <Calendar className="absolute left-2 top-1/2 size-4 -translate-y-1/2 text-muted-foreground pointer-events-none" />
-                      </div>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              <div
+                className="relative cursor-pointer"
+                onClick={handleContainerClick}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    handleContainerClick();
+                  }
+                }}
+              >
+                <FormField
+                  control={form.control}
+                  name="date"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Date *</FormLabel>
+                      <FormControl>
+                        <div className="relative">
+                          <Input
+                            ref={inputRef}
+                            type="datetime-local"
+                            required
+                            value={
+                              field.value
+                                ? dayjs(field.value).format("YYYY-MM-DDTHH:mm")
+                                : ""
+                            }
+                            min={dayjs().format("YYYY-MM-DDTHH:mm")}
+                            className={cn(
+                              "w-full h-10 pl-10 flex justify-between [&::-webkit-calendar-picker-indicator]:hidden",
+                            )}
+                            onChange={(e) => field.onChange(e.target.value)}
+                            aria-invalid={!!form.formState.errors.date?.message}
+                            readOnly={bookingStatus !== "ASSIGNED"}
+                          />
+                          <Calendar
+                            className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground"
+                            aria-hidden="true"
+                          />
+                        </div>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
 
               <FormField
                 control={form.control}
                 name="odometer"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Odometer *</FormLabel>
+                    <FormLabel>Odometer (km) *</FormLabel>
                     <FormControl>
                       <Input
                         type="number"
@@ -95,6 +122,7 @@ export default function CheckinForm({
                         onChange={(e) =>
                           field.onChange(Number(e.target.value) || 0)
                         }
+                        readOnly={bookingStatus !== "ASSIGNED"}
                       />
                     </FormControl>
                     <FormMessage />
@@ -113,6 +141,7 @@ export default function CheckinForm({
                         placeholder="Customer notes"
                         {...field}
                         value={field.value ?? ""}
+                        readOnly={bookingStatus !== "ASSIGNED"}
                       />
                     </FormControl>
                     <FormMessage />
@@ -138,6 +167,7 @@ export default function CheckinForm({
                         onChange={(e) =>
                           field.onChange(e.target.value.split("\n"))
                         }
+                        readOnly={bookingStatus !== "ASSIGNED"}
                       />
                     </FormControl>
                     <FormMessage />

@@ -52,12 +52,12 @@ const BookingInfoBox = ({ booking: bookingDetail }: BookingInfoBoxProps) => {
             Customer
           </div>
           <p>
-            <span className="font-bold text-xs">Name: </span>
+            <span className="font-bold text-sm">Name: </span>
             {bookingDetail?.customer.firstName}{" "}
             {bookingDetail?.customer.lastName}
           </p>
           <p>
-            <span className="font-bold text-xs">Email: </span>
+            <span className="font-bold text-sm">Email: </span>
             {bookingDetail?.customer.email}
           </p>
         </div>
@@ -67,19 +67,19 @@ const BookingInfoBox = ({ booking: bookingDetail }: BookingInfoBoxProps) => {
             Vehicle
           </div>
           <p>
-            <span className="font-bold text-xs">License Plate: </span>
+            <span className="font-bold text-sm">License Plate: </span>
             {bookingDetail?.vehicle.licensePlate}
           </p>
           <p>
-            <span className="font-bold text-xs">Brand: </span>
+            <span className="font-bold text-sm">Brand: </span>
             {bookingDetail?.vehicle.brand}
           </p>
           <p>
-            <span className="font-bold text-xs">Model: </span>
+            <span className="font-bold text-sm">Model: </span>
             {bookingDetail?.vehicle.model}
           </p>
           <p>
-            <span className="font-bold text-xs">Production Year: </span>
+            <span className="font-bold text-sm">Production Year: </span>
             {bookingDetail?.vehicle.productionYear}
           </p>
         </div>
@@ -89,11 +89,11 @@ const BookingInfoBox = ({ booking: bookingDetail }: BookingInfoBoxProps) => {
             Service Center
           </div>
           <p>
-            <span className="font-bold text-xs">Name: </span>
+            <span className="font-bold text-sm">Name: </span>
             {bookingDetail?.serviceCenter.name}
           </p>
           <p>
-            <span className="font-bold text-xs">Address: </span>
+            <span className="font-bold text-sm">Address: </span>
             {bookingDetail?.serviceCenter.address}
           </p>
         </div>

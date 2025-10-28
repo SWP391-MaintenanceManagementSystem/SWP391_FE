@@ -9,13 +9,12 @@ import TechnicianSchedule from "./components/TechnicianSchedule";
 export default function ViewSchedule() {
   const { auth } = useAuth();
   const role = auth.user?.role;
-  console.log("🚀 ~ ViewSchedule ~ role:", role)
   const renderPageByRole = () => {
     switch (role) {
       case AccountRole.STAFF:
         return <StaffSchedule />;
       case AccountRole.TECHNICIAN:
-        return <TechnicianSchedule/>;
+        return <TechnicianSchedule />;
       default:
         return (
           <div className="font-inter">
