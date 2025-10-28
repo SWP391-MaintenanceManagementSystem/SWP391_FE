@@ -20,22 +20,19 @@ export default function CheckinPage() {
   const { data: vehicleHandover, isLoading: handoverLoading } =
     useGetVehicleHandover(decodedBookingId);
 
-  const { form, createHandover, updateHandover, isPending } =
-    useVehicleHandoverForm({
-      item: vehicleHandover,
-      bookingDate: bookingDetail?.bookingDate,
-      bookingId: decodedBookingId,
-      note: bookingDetail?.note,
-    });
+  const { form, createHandover, isPending } = useVehicleHandoverForm({
+    item: vehicleHandover,
+    bookingDate: bookingDetail?.bookingDate,
+    bookingId: decodedBookingId,
+    note: bookingDetail?.note,
+  });
 
   const onSubmit = (data: BookingCheckinsFormValues) => {
     const formatted = {
       ...data,
       date: dayjs(data.date).format("YYYY-MM-DDTHH:mm"),
     };
-
-    if (vehicleHandover) updateHandover(formatted);
-    else createHandover(formatted);
+    createHandover(formatted);
   };
 
   const isLoading = bookingLoading || handoverLoading;
@@ -59,7 +56,7 @@ export default function CheckinPage() {
           isPending={isPending}
           isLoading={isLoading}
           bookingStatus={bookingDetail?.status}
-          images={vehicleHandover?.imageUrls ?? []}
+          images={vehicleHandover?.images ?? []}
         />
       </MainContentLayout>
     </div>

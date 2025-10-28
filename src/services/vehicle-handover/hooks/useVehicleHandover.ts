@@ -5,10 +5,7 @@ import { toast } from "sonner";
 import { AxiosError } from "axios";
 import { useEffect } from "react";
 import dayjs from "dayjs";
-import {
-  useCreateVehicleHandoverMutation,
-  useUpdateVehicleHandoverMutation,
-} from "../mutations";
+import { useCreateVehicleHandoverMutation } from "../mutations";
 import {
   BookingCheckinsSchema,
   type BookingCheckinsFormValues,
@@ -25,7 +22,6 @@ type InitialData = {
 export const useVehicleHandoverForm = (initialData?: InitialData) => {
   const queryClient = useQueryClient();
   const createMutation = useCreateVehicleHandoverMutation();
-  const updateMutation = useUpdateVehicleHandoverMutation();
 
   const formatDate = (value?: string | Date): string =>
     value
@@ -128,24 +124,9 @@ export const useVehicleHandoverForm = (initialData?: InitialData) => {
     );
   };
 
-  const updateHandover = async (data: BookingCheckinsFormValues) => {
-    const formData = toFormData(data);
-    return updateMutation.mutateAsync(
-      { id: initialData?.item?.id ?? "", data: formData },
-      {
-        onSuccess: () => {
-          queryClient.invalidateQueries({ queryKey: ["vehicle-handovers"] });
-          toast.success("Vehicle handover updated successfully");
-        },
-        onError: handleServerErrors,
-      },
-    );
-  };
-
   return {
     form,
     createHandover,
-    updateHandover,
-    isPending: createMutation.isPending || updateMutation.isPending,
+    isPending: createMutation.isPending,
   };
 };
