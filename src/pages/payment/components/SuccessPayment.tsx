@@ -7,6 +7,7 @@ import { Separator } from "@/components/ui/separator";
 import { useSearchParams } from "react-router-dom";
 import { usePaymentTransaction } from "@/services/payment/hooks/usePaymentTransaction";
 import FeedbackSection from "./FeedbackSection";
+import { ReferenceType } from "@/types/enums/referenceType";
 
 export default function SuccessPayment() {
   const [searchParams] = useSearchParams();
@@ -123,7 +124,9 @@ export default function SuccessPayment() {
           </div>
 
           {/* Feedback Section */}
-          <FeedbackSection onSubmit={() => setShowBackButton(true)} />
+          {transaction.referenceType === ReferenceType.BOOKING && (
+            <FeedbackSection onSubmit={() => setShowBackButton(true)} />
+          )}
 
           {/* Back button (ẩn/hiện sau khi feedback) */}
           {showBackButton && (
