@@ -10,7 +10,7 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
-import "./calendar.css";
+import "@/pages/shifts/employee/components/calendarView.css";
 import { useGetWorkSchedulesList } from "@/services/shift/queries";
 import type { WorkSchedule } from "@/types/models/shift";
 

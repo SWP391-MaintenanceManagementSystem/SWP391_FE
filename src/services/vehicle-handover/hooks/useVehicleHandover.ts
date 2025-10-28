@@ -5,7 +5,6 @@ import { toast } from "sonner";
 import { AxiosError } from "axios";
 import { useEffect } from "react";
 import dayjs from "dayjs";
-
 import {
   useCreateVehicleHandoverMutation,
   useUpdateVehicleHandoverMutation,
@@ -104,6 +103,15 @@ export const useVehicleHandoverForm = (initialData?: InitialData) => {
       {
         onSuccess: () => {
           queryClient.invalidateQueries({ queryKey: ["vehicle-handovers"] });
+          queryClient.invalidateQueries({
+            queryKey: ["bookings"],
+          });
+          queryClient.invalidateQueries({
+            queryKey: ["booking", data.bookingId],
+          });
+          queryClient.invalidateQueries({
+            queryKey: ["staff-bookings"],
+          });
           toast.success("Vehicle handover created successfully");
         },
         onError: handleServerErrors,
