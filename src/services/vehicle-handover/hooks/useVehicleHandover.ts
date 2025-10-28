@@ -32,6 +32,60 @@ export const useVehicleHandoverForm = (initialData?: InitialData) => {
       ? dayjs(value).format("YYYY-MM-DDTHH:mm")
       : dayjs().format("YYYY-MM-DDTHH:mm");
 
+  const form = useForm<BookingCheckinsFormValues>({
+    resolver: zodResolver(BookingCheckinsSchema),
+    defaultValues: {
+      bookingId: initialData?.item?.bookingId || initialData?.bookingId || "",
+      odometer: Number(initialData?.item?.odometer) || 0,
+      note: initialData?.item?.note || initialData?.note,
+      description: initialData?.item?.description || [],
+      images: undefined,
+      date: initialData?.item?.date
+        ? formatDate(initialData.item.date)
+        : initialData?.bookingDate
+          ? formatDate(initialData.bookingDate)
+          : formatDate(),
+    },
+  });
+
+  useEffect(() => {
+    if (!initialData) return;
+    form.reset({
+      bookingId: initialData.item?.bookingId || initialData.bookingId || "",
+      odometer: Number(initialData.item?.odometer) || 0,
+      note: initialData?.item?.note || initialData?.note,
+      description: initialData.item?.description || [],
+      images: undefined,
+      date: initialData.item?.date
+        ? formatDate(initialData.item.date)
+        : initialData.bookingDate
+          ? formatDate(initialData.bookingDate)
+          : formatDate(),
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initialData?.item?.id, initialData?.bookingDate, initialData?.bookingId]);
+
+  const toFormData = (data: BookingCheckinsFormValues): FormData => {
+    const formData = new FormData();
+
+    formData.append("bookingId", data.bookingId);
+    formData.append("odometer", String(data.odometer ?? 0));
+    formData.append("note", data.note || "");
+    formData.append("date", data.date);
+
+    data.description?.forEach((desc) => formData.append("description", desc));
+
+    if (Array.isArray(data.images)) {
+      data.images.forEach((file) => {
+        if (file instanceof File) {
+          formData.append("images", file);
+        }
+      });
+    }
+
+    return formData;
+  };
+
   const handleServerErrors = (error: unknown) => {
     if (!(error instanceof AxiosError))
       return toast.error("Something went wrong");
@@ -49,70 +103,24 @@ export const useVehicleHandoverForm = (initialData?: InitialData) => {
             type: "server",
             message: err.message,
           });
-        } else {
-          toast.error(err.message);
-        }
+        } else toast.error(err.message);
       });
-    } else if (msg) {
-      toast.error(msg);
-    } else {
-      toast.error("Something went wrong. Please try again.");
-    }
+    } else if (msg) toast.error(msg);
+    else toast.error("Something went wrong. Please try again.");
   };
 
-  const form = useForm<BookingCheckinsFormValues>({
-    resolver: zodResolver(BookingCheckinsSchema),
-    defaultValues: {
-      bookingId: initialData?.item?.bookingId || initialData?.bookingId || "",
-      odometer: Number(initialData?.item?.odometer) || 0,
-      note: initialData?.item?.note || initialData?.note,
-      description: initialData?.item?.description || [],
-      date: initialData?.item?.date
-        ? formatDate(initialData.item.date)
-        : initialData?.bookingDate
-          ? formatDate(initialData.bookingDate)
-          : formatDate(),
-    },
-  });
-
-  useEffect(() => {
-    if (!initialData) return;
-
-    form.reset({
-      bookingId: initialData.item?.bookingId || initialData.bookingId || "",
-      odometer: Number(initialData.item?.odometer) || 0,
-      note: initialData?.item?.note || initialData?.note,
-      description: initialData.item?.description || [],
-      date: initialData.item?.date
-        ? formatDate(initialData.item.date)
-        : initialData.bookingDate
-          ? formatDate(initialData.bookingDate)
-          : formatDate(),
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [initialData?.item?.id, initialData?.bookingDate, initialData?.bookingId]);
-
-  const transformData = (data: BookingCheckinsFormValues) => ({
-    ...data,
-    description: data.description.filter((line) => line.trim() !== ""),
-  });
-
   const createHandover = async (data: BookingCheckinsFormValues) => {
-    const payload = transformData(data);
+    const formData = toFormData(data);
     return createMutation.mutateAsync(
-      { data: payload },
+      { data: formData },
       {
         onSuccess: () => {
           queryClient.invalidateQueries({ queryKey: ["vehicle-handovers"] });
-          queryClient.invalidateQueries({
-            queryKey: ["bookings"],
-          });
+          queryClient.invalidateQueries({ queryKey: ["bookings"] });
           queryClient.invalidateQueries({
             queryKey: ["booking", data.bookingId],
           });
-          queryClient.invalidateQueries({
-            queryKey: ["staff-bookings"],
-          });
+          queryClient.invalidateQueries({ queryKey: ["staff-bookings"] });
           toast.success("Vehicle handover created successfully");
         },
         onError: handleServerErrors,
@@ -121,9 +129,9 @@ export const useVehicleHandoverForm = (initialData?: InitialData) => {
   };
 
   const updateHandover = async (data: BookingCheckinsFormValues) => {
-    const payload = transformData(data);
+    const formData = toFormData(data);
     return updateMutation.mutateAsync(
-      { id: initialData?.item?.id ?? "", data: payload },
+      { id: initialData?.item?.id ?? "", data: formData },
       {
         onSuccess: () => {
           queryClient.invalidateQueries({ queryKey: ["vehicle-handovers"] });

@@ -20,7 +20,6 @@ export default function CheckinPage() {
   const { data: vehicleHandover, isLoading: handoverLoading } =
     useGetVehicleHandover(decodedBookingId);
 
-  console.log(bookingDetail);
   const { form, createHandover, updateHandover, isPending } =
     useVehicleHandoverForm({
       item: vehicleHandover,
@@ -29,7 +28,6 @@ export default function CheckinPage() {
       note: bookingDetail?.note,
     });
 
-  // Handle submit
   const onSubmit = (data: BookingCheckinsFormValues) => {
     const formatted = {
       ...data,
@@ -41,6 +39,7 @@ export default function CheckinPage() {
   };
 
   const isLoading = bookingLoading || handoverLoading;
+  console.log(vehicleHandover);
 
   return (
     <div className="w-full h-[calc(100vh-32px)] font-inter">
@@ -60,6 +59,7 @@ export default function CheckinPage() {
           isPending={isPending}
           isLoading={isLoading}
           bookingStatus={bookingDetail?.status}
+          images={vehicleHandover?.imageUrls ?? []}
         />
       </MainContentLayout>
     </div>

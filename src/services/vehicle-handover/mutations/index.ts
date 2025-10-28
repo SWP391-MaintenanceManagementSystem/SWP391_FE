@@ -1,5 +1,4 @@
-import type { BookingCheckinsFormValues } from "@/pages/booking/lib/schema";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import {
   createVehicleHandover,
   updateVehicleHandover,
@@ -7,24 +6,18 @@ import {
 
 export const useCreateVehicleHandoverMutation = () => {
   return useMutation({
-    mutationFn: async ({ data }: { data: BookingCheckinsFormValues }) => {
-      const updatedCustomerInfo = await createVehicleHandover(data);
-      return updatedCustomerInfo.data;
+    mutationFn: async ({ data }: { data: FormData }) => {
+      const response = await createVehicleHandover(data);
+      return response.data;
     },
   });
 };
 
 export const useUpdateVehicleHandoverMutation = () => {
   return useMutation({
-    mutationFn: async ({
-      id,
-      data,
-    }: {
-      id: string;
-      data: BookingCheckinsFormValues;
-    }) => {
-      const updatedCustomerInfo = await updateVehicleHandover(id, data);
-      return updatedCustomerInfo.data;
+    mutationFn: async ({ id, data }: { id: string; data: FormData }) => {
+      const response = await updateVehicleHandover(id, data);
+      return response.data;
     },
   });
 };

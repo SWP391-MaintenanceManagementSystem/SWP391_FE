@@ -7,6 +7,7 @@ export type VehicleHandover = {
   staffId: string;
   odometer: number;
   note: string;
+  images: string[];
   description: string[];
   date: string;
   createdAt: string;

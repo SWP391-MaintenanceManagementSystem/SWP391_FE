@@ -1,5 +1,4 @@
 import { axiosPrivate } from "@/lib/axios";
-import type { BookingCheckinsFormValues } from "@/pages/booking/lib/schema";
 import type { BaseResponse } from "@/types/models/response";
 import type { VehicleHandover } from "@/types/models/vehicle-handover";
 
@@ -10,21 +9,20 @@ export const getVehicleHandoverByBookingId = async (bookingId: string) => {
   return response.data;
 };
 
-export const createVehicleHandover = async (
-  vehicleHandoverData: BookingCheckinsFormValues,
-) => {
+export const createVehicleHandover = async (formData: FormData) => {
   const response = await axiosPrivate.post<
     BaseResponse<{ data: VehicleHandover }>
-  >("/vehicle-handovers", vehicleHandoverData);
+  >("/vehicle-handovers", formData, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
   return response.data;
 };
 
-export const updateVehicleHandover = async (
-  id: string,
-  data: BookingCheckinsFormValues,
-) => {
+export const updateVehicleHandover = async (id: string, formData: FormData) => {
   const response = await axiosPrivate.patch<
     BaseResponse<{ data: VehicleHandover }>
-  >(`/vehicle-handovers/${id}`, data);
+  >(`/vehicle-handovers/${id}`, formData, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
   return response.data;
 };
