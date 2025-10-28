@@ -60,6 +60,9 @@ export const useUpdateBookingMutation = () => {
         queryClient.invalidateQueries({
           queryKey: ["booking", bookingId],
         }),
+        queryClient.invalidateQueries({
+          queryKey: ["staff-bookings"],
+        }),
       ]);
       toast.success("Booking updated successfully");
     },
@@ -150,7 +153,7 @@ export const useUnBookingAssignmentMutation = () => {
       ]);
 
       toast.success(
-        `Unassigned technician with email ${variables.employeeEmail} successfully`
+        `Unassigned technician with email ${variables.employeeEmail} successfully`,
       );
     },
     onError: () => {
@@ -160,7 +163,9 @@ export const useUnBookingAssignmentMutation = () => {
 };
 
 // useCompleteTechnicianBookingMutation.ts
-export const useCompleteTechnicianBookingMutation = (handleOnSuccess: () => void) => {
+export const useCompleteTechnicianBookingMutation = (
+  handleOnSuccess: () => void,
+) => {
   const queryClient = useQueryClient();
 
   return useMutation({
