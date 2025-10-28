@@ -28,6 +28,9 @@ export const useCreateBookingMutation = () => {
       queryClient.invalidateQueries({
         queryKey: ["bookings"],
       });
+      queryClient.invalidateQueries({
+        queryKey: ["staff-bookings"],
+      });
       toast.success("Booking created successfully");
     },
     onError: () => {

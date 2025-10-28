@@ -19,6 +19,7 @@ type InitialData = {
   item?: VehicleHandover;
   bookingDate?: string | Date;
   bookingId?: string;
+  note?: string;
 };
 
 export const useVehicleHandoverForm = (initialData?: InitialData) => {
@@ -64,7 +65,7 @@ export const useVehicleHandoverForm = (initialData?: InitialData) => {
     defaultValues: {
       bookingId: initialData?.item?.bookingId || initialData?.bookingId || "",
       odometer: Number(initialData?.item?.odometer) || 0,
-      note: initialData?.item?.note || "",
+      note: initialData?.item?.note || initialData?.note,
       description: initialData?.item?.description || [],
       date: initialData?.item?.date
         ? formatDate(initialData.item.date)
@@ -80,7 +81,7 @@ export const useVehicleHandoverForm = (initialData?: InitialData) => {
     form.reset({
       bookingId: initialData.item?.bookingId || initialData.bookingId || "",
       odometer: Number(initialData.item?.odometer) || 0,
-      note: initialData.item?.note || "",
+      note: initialData?.item?.note || initialData?.note,
       description: initialData.item?.description || [],
       date: initialData.item?.date
         ? formatDate(initialData.item.date)

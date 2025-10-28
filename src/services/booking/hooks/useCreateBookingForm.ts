@@ -28,7 +28,9 @@ export const useBookingCreateForm = (initialData?: InitialBookingData) => {
       centerId: "",
       serviceIds: [],
       packageIds: [],
-      bookingDate: initialData?.bookingDate || dayjs().add(1, "hour").format("YYYY-MM-DDTHH:mm"),
+      bookingDate:
+        initialData?.bookingDate ||
+        dayjs().add(1, "hour").format("YYYY-MM-DDTHH:mm"),
       note: "",
     },
   });
@@ -40,7 +42,9 @@ export const useBookingCreateForm = (initialData?: InitialBookingData) => {
       centerId: "",
       serviceIds: [],
       packageIds: [],
-      bookingDate: initialData?.bookingDate || dayjs().add(1, "hour").format("YYYY-MM-DDTHH:mm"),
+      bookingDate:
+        initialData?.bookingDate ||
+        dayjs().add(1, "hour").format("YYYY-MM-DDTHH:mm"),
       note: "",
     });
   }, [initialData?.vehicleId, initialData?.bookingDate, form]);
@@ -54,6 +58,9 @@ export const useBookingCreateForm = (initialData?: InitialBookingData) => {
         onSuccess: () => {
           queryClient.invalidateQueries({
             queryKey: ["bookings"],
+          });
+          queryClient.invalidateQueries({
+            queryKey: ["staff-bookings"],
           });
           toast.success("Booking created successfully");
           form.reset();
@@ -73,7 +80,7 @@ export const useBookingCreateForm = (initialData?: InitialBookingData) => {
           toast.error(msg);
           console.error(error);
         },
-      }
+      },
     );
   };
 

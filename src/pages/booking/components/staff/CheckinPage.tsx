@@ -20,11 +20,13 @@ export default function CheckinPage() {
   const { data: vehicleHandover, isLoading: handoverLoading } =
     useGetVehicleHandover(decodedBookingId);
 
+  console.log(bookingDetail);
   const { form, createHandover, updateHandover, isPending } =
     useVehicleHandoverForm({
       item: vehicleHandover,
       bookingDate: bookingDetail?.bookingDate,
       bookingId: decodedBookingId,
+      note: bookingDetail?.note,
     });
 
   // Handle submit
@@ -57,6 +59,7 @@ export default function CheckinPage() {
           onSubmit={onSubmit}
           isPending={isPending}
           isLoading={isLoading}
+          bookingStatus={bookingDetail?.status}
         />
       </MainContentLayout>
     </div>

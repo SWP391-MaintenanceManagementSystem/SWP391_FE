@@ -73,6 +73,10 @@ export default function ColActions({
         <ActionBtn
           icon={<MapPinCheck size={12} />}
           onClick={() => {
+            if (booking.status === "PENDING") {
+              toast.warning("Please ASSIGN Technician before checked-in");
+              return;
+            }
             const encodedId = encodeBase64(booking.id);
             navigate(`/booking/checkin/${encodedId}`, {
               state: {

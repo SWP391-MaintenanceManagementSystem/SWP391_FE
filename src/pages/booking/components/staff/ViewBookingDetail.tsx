@@ -77,7 +77,7 @@ export default function ViewBookingDetail() {
           [id ?? ""]: "Detailed Information",
         }}
       />
-      <MainContentLayout className="p-6">
+      <MainContentLayout>
         <Card className="mb-6 bg-purple-50 border-purple-200 dark:bg-purple-800 dark:border-purple-800 shadow-md">
           <CardHeader className="flex flex-row items-center justify-between p-4">
             <div>
@@ -127,7 +127,7 @@ export default function ViewBookingDetail() {
               )}
             </div>
           </CardHeader>
-          <CardContent className="p-4 space-y-4 md:space-y-0">
+          <CardContent className=" space-y-4 md:space-y-0">
             <div className="flex flex-col md:flex-row justify-between text-gray-700 dark:text-gray-50 md:space-y-0 space-y-4">
               <p>
                 <strong>Status:</strong>{" "}

@@ -16,32 +16,30 @@ const BookingInfoBox = ({ booking: bookingDetail }: BookingInfoBoxProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
-    <Card className="w-full bg-purple-50 border-purple-200 dark:bg-purple-primary-dark dark:text-amber-primary dark:border-purple-800 lg:max-w-[368px] h-full min-w-[340px]">
+    <Card className="w-full  lg:max-w-[368px] h-full min-w-[340px]">
       <CardHeader>
-        <CardTitle className="text-3xl font-bold text-gray-900 dark:text-amber-primary flex items-center gap-2">
+        <CardTitle className="text-3xl font-bold flex items-center gap-2">
           Booking Details
         </CardTitle>
         <p>
-          <span className="font-mono font-semibold text-gray-800 dark:text-amber-primary text-xs">
+          <span className="font-mono font-semibold text-xs">
             ID: {bookingDetail?.id || "N/A"}
           </span>
         </p>
         <p>
-          <span className="font-mono font-semibold text-gray-800 dark:text-amber-primary text-xs">
+          <span className="font-mono font-semibold text-xs">
             Booking Date:{" "}
             {dayjs(bookingDetail?.bookingDate).format("HH:mm DD MMM YYYY") ||
               "N/A"}
           </span>
         </p>
-        <p className="font-mono font-semibold text-gray-800 dark:text-amber-primary text-xs">
+        <p className="font-mono font-semibold text-xs">
           <strong>Total Cost:</strong> $
           {Number(bookingDetail?.totalCost).toLocaleString("en-US") ||
             "No cost information available."}
         </p>
         <p>
-          <span className="font-mono font-semibold text-gray-800 dark:text-amber-primary text-xs">
-            Status:
-          </span>{" "}
+          <span className="font-mono font-semibold text-xs">Status:</span>{" "}
           {bookingDetail?.status && (
             <BookingTag status={bookingDetail.status} />
           )}
@@ -54,16 +52,12 @@ const BookingInfoBox = ({ booking: bookingDetail }: BookingInfoBoxProps) => {
             Customer
           </div>
           <p>
-            <span className="font-bold text-gray-800 dark:text-amber-primary text-sm">
-              Name:{" "}
-            </span>
+            <span className="font-bold text-sm">Name: </span>
             {bookingDetail?.customer.firstName}{" "}
             {bookingDetail?.customer.lastName}
           </p>
           <p>
-            <span className="font-bold text-gray-800 dark:text-amber-primary text-sm">
-              Email:{" "}
-            </span>
+            <span className="font-bold text-sm">Email: </span>
             {bookingDetail?.customer.email}
           </p>
         </div>
@@ -73,27 +67,19 @@ const BookingInfoBox = ({ booking: bookingDetail }: BookingInfoBoxProps) => {
             Vehicle
           </div>
           <p>
-            <span className="font-bold text-gray-800 dark:text-amber-primary text-sm">
-              License Plate:{" "}
-            </span>
+            <span className="font-bold text-sm">License Plate: </span>
             {bookingDetail?.vehicle.licensePlate}
           </p>
           <p>
-            <span className="font-bold text-gray-800 dark:text-amber-primary text-sm">
-              Brand:{" "}
-            </span>
+            <span className="font-bold text-sm">Brand: </span>
             {bookingDetail?.vehicle.brand}
           </p>
           <p>
-            <span className="font-bold text-gray-800 dark:text-amber-primary text-sm">
-              Model:{" "}
-            </span>
+            <span className="font-bold text-sm">Model: </span>
             {bookingDetail?.vehicle.model}
           </p>
           <p>
-            <span className="font-bold text-gray-800 dark:text-amber-primary text-sm">
-              Production Year:{" "}
-            </span>
+            <span className="font-bold text-sm">Production Year: </span>
             {bookingDetail?.vehicle.productionYear}
           </p>
         </div>
@@ -103,23 +89,15 @@ const BookingInfoBox = ({ booking: bookingDetail }: BookingInfoBoxProps) => {
             Service Center
           </div>
           <p>
-            <span className="font-bold text-gray-800 dark:text-amber-primary text-sm">
-              Name:{" "}
-            </span>
+            <span className="font-bold text-sm">Name: </span>
             {bookingDetail?.serviceCenter.name}
           </p>
           <p>
-            <span className="font-bold text-gray-800 dark:text-amber-primary text-sm">
-              Address:{" "}
-            </span>
+            <span className="font-bold text-sm">Address: </span>
             {bookingDetail?.serviceCenter.address}
           </p>
         </div>
-        <Button
-          onClick={() => setIsModalOpen(true)}
-          variant="outline"
-          className=" bg-purple-primary self-end border-purple-primary hover:bg-transparent  dark:bg-purple-secondary-dark dark:hover:bg-transparent dark:hover:border-purple-secondary-dark dark:hover:text-purple-secondary-dark text-accent"
-        >
+        <Button onClick={() => setIsModalOpen(true)} variant="outline">
           View Services
         </Button>
       </CardContent>
