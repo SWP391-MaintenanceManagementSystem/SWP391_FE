@@ -30,6 +30,7 @@ import ViewSchedule from "@/pages/shifts/employee/ViewSchedule";
 import VehicleDetailPage from "@/pages/vehicle/components/manager/vehicleManagement/VehicleDetailPage";
 import HistoryBookingCus from "@/pages/vehicle/components/customer/HistoryBooking";
 import CheckinPage from "@/pages/booking/components/staff/CheckinPage";
+import HelpAndSupportPage from "@/pages/support/components/HelpAndSupport";
 
 const RouterComponent = () => {
   const router = createBrowserRouter([
@@ -83,6 +84,7 @@ const RouterComponent = () => {
                   element: <Dashboard />,
                   hydrateFallbackElement: <CircularIndeterminate />,
                 },
+
                 {
                   path: "/vehicles",
                   element: <Vehicle />,
@@ -102,6 +104,9 @@ const RouterComponent = () => {
                   path: "/booking/:id",
                   element: <BookingDetailPage />,
                 },
+                {path: "/support",
+                  element: <HelpAndSupportPage />,
+                },
                 {
                   element: (
                     <RequireAuth
@@ -115,6 +120,7 @@ const RouterComponent = () => {
                     },
                   ],
                 },
+              
                 {
                   element: <RequireAuth allowedRoles={[AccountRole.ADMIN]} />,
                   children: [
