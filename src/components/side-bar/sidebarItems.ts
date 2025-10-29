@@ -16,6 +16,7 @@ import {
   CalendarClock,
   BookOpenCheckIcon,
   CalendarRange,
+  MessageSquare,
 } from "lucide-react";
 
 export const adminItems: SidebarItem[] = [
@@ -62,6 +63,7 @@ export const staffItems: SidebarItem[] = [
   { title: "Work Schedule", url: "/viewSchedule", icon: CalendarRange },
   { title: "Booking Management", url: "/booking", icon: BookOpenCheckIcon },
   { title: "Customers & Vehicles", url: "/vehicles", icon: Users },
+  { title: "Chat Box", url: "/chat", icon: MessageSquare },
 ];
 export const technicianItems: SidebarItem[] = [
   { title: "Dashboard", url: "/dashboard", icon: Home },
