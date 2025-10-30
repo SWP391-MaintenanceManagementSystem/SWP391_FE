@@ -94,33 +94,39 @@ export const useInventory = (
   };
 
   const handleAddPartItem = async (data: PartItemFormData) => {
-    addPartItemMutation.mutate(
-      {
-        data,
-        currentPage,
-        currentPageSize,
-      },
-      {
-        onError: (error) => {
-          if (error instanceof AxiosError) {
-            const apiErrors = error.response?.data?.errors;
-            const msg = error.response?.data.message;
-            if (apiErrors && typeof apiErrors === "object") {
-              Object.entries(apiErrors).forEach(([field, msg]) => {
-                form.setError(field as keyof PartItemFormData, {
-                  type: "server",
-                  message: msg as string,
-                });
-              });
-            } else if (msg) {
-              toast.error(msg);
-            } else {
-              toast.error("Something went wrong. Please try again.");
-            }
-          }
+    return new Promise<boolean>((resolve) => {
+      addPartItemMutation.mutate(
+        {
+          data,
+          currentPage,
+          currentPageSize,
         },
-      },
-    );
+        {
+          onSuccess: () => {
+            resolve(true);
+          },
+          onError: (error) => {
+            if (error instanceof AxiosError) {
+              const apiErrors = error.response?.data?.errors;
+              const msg = error.response?.data.message;
+              if (apiErrors && typeof apiErrors === "object") {
+                Object.entries(apiErrors).forEach(([field, msg]) => {
+                  form.setError(field as keyof PartItemFormData, {
+                    type: "server",
+                    message: msg as string,
+                  });
+                });
+              } else if (msg) {
+                toast.error(msg);
+              } else {
+                toast.error("Something went wrong. Please try again.");
+              }
+            }
+            resolve(false);
+          },
+        },
+      );
+    });
   };
 
   return {
@@ -128,5 +134,9 @@ export const useInventory = (
     form,
     handleEditPartItem,
     handleAddPartItem,
+    isPending:
+      addPartItemMutation.isPending ||
+      editPartItemMutation.isPending ||
+      deletePartMutaion.isPending,
   };
 };
