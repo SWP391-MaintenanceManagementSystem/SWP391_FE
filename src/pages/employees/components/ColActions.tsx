@@ -25,12 +25,13 @@ export default function ColActions({
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [openEditDialog, setOpenEditDialog] = useState(false);
   const [openViewDetailDialog, setOpenViewDetailDialog] = useState(false);
-  const { handleDeleteEmployee, form, handleUpdateEmployeeInfo } = useEmployee(
-    row.original,
-    row.original.role as "STAFF" | "TECHNICIAN",
-    currentPage,
-    currentPageSize,
-  );
+  const { handleDeleteEmployee, form, handleUpdateEmployeeInfo, isPending } =
+    useEmployee(
+      row.original,
+      row.original.role as "STAFF" | "TECHNICIAN",
+      currentPage,
+      currentPageSize,
+    );
 
   return (
     <div className="flex gap-1">
@@ -97,6 +98,7 @@ export default function ColActions({
         onConfirm={async (data) => {
           handleUpdateEmployeeInfo(row.original.id, data);
         }}
+        isPending={isPending}
       />
     </div>
   );

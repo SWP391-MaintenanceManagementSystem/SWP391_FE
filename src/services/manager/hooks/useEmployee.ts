@@ -124,5 +124,9 @@ export const useEmployee = (
     handleDeleteEmployee,
     handleUpdateEmployeeInfo,
     handleAddEmployee,
+    isPending:
+      addEmployeeMutation.isPending ||
+      updateEmployeeInfoMutation.isPending ||
+      deleteEmployeeMutation.isPending,
   };
 };
