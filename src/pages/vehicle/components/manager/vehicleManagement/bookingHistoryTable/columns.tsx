@@ -2,7 +2,7 @@ import { createColumnHelper } from "@tanstack/react-table";
 import SortHeader from "@/components/table/SortHeader";
 import FilterHeader from "@/components/table/FilterHeader";
 import { Badge } from "@/components/ui/badge";
-import type { BookingStaffTable } from "@/types/models/booking-with-detail";
+import type { BookingTable } from "@/types/models/booking-with-detail";
 import BookingTag from "@/components/tag/BookingTag";
 import dayjs from "dayjs";
 import { CenterCell } from "@/pages/shifts/admin/schedules/table/CenterCell";
@@ -18,7 +18,7 @@ export const getColumns = (
     status: string;
   },
 ) => {
-  const columnHelper = createColumnHelper<BookingStaffTable>();
+  const columnHelper = createColumnHelper<BookingTable>();
 
   return [
     columnHelper.display({

@@ -2,12 +2,12 @@ import type { Row } from "@tanstack/react-table";
 import { Maximize2 } from "lucide-react";
 import ActionBtn from "@/components/table/ActionBtn";
 import { TooltipWrapper } from "@/components/TooltipWrapper";
-import type { BookingStaffTable } from "@/types/models/booking-with-detail";
+import type { BookingTable } from "@/types/models/booking-with-detail";
 import { encodeBase64 } from "@/utils/base64";
 import { useNavigate } from "react-router-dom";
 
 export interface ColActionsProps {
-  row: Row<BookingStaffTable>;
+  row: Row<BookingTable>;
   currentPage: number;
   currentPageSize: number;
 }
