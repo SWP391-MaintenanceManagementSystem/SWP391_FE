@@ -136,6 +136,7 @@ export default function BookingDetail() {
               <div className="flex gap-2">
                 <Button
                   onClick={handleCheckout}
+                  disabled={paymentMutation.isPending}
                   variant="outline"
                   className="border-green-500 text-green-600 hover:bg-purple-50 hover:text-green-700
             dark:border-purple-300 dark:text-purple-200 dark:hover:bg-purple-700/30"

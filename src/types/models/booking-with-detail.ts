@@ -93,7 +93,7 @@ export type BookingDetail = {
   updatedAt: Date;
 };
 
-export type BookingStaffTable = {
+export type BookingTable = {
   id: string;
   customerId: string;
   vehicleId: string;
