@@ -54,45 +54,49 @@ export default function ColActions({
 
   return (
     <div className="flex gap-1">
-      <TooltipWrapper content="View Details">
-        <ActionBtn
-          icon={<Maximize2 size={12} />}
-          onClick={() => {
-            console.log("View Details");
-            setOpenViewDialog(true);
-          }}
-        />
-      </TooltipWrapper>
-      <TooltipWrapper content="Edit">
-        <ActionBtn
-          icon={<Pencil size={12} />}
-          onClick={() => {
-            console.log("Row data to edit:", row.original);
-            form.reset({
-              ...vehicle,
-              modelId: String(modelId),
-              brandId: String(brandId),
-            });
-            setOpenEditDialog(true);
-          }}
-        />
-      </TooltipWrapper>
+      {currentUserRole === "ADMIN" && (
+        <>
+          <TooltipWrapper content="View Details">
+            <ActionBtn
+              icon={<Maximize2 size={12} />}
+              onClick={() => {
+                console.log("View Details");
+                setOpenViewDialog(true);
+              }}
+            />
+          </TooltipWrapper>
+          <TooltipWrapper content="Edit">
+            <ActionBtn
+              icon={<Pencil size={12} />}
+              onClick={() => {
+                console.log("Row data to edit:", row.original);
+                form.reset({
+                  ...vehicle,
+                  modelId: String(modelId),
+                  brandId: String(brandId),
+                });
+                setOpenEditDialog(true);
+              }}
+            />
+          </TooltipWrapper>
 
-      <TooltipWrapper content="Delete">
-        <ActionBtn
-          icon={<Trash size={12} />}
-          onClick={() => {
-            console.log("Row data to delete:", row.original);
-            if (row.original.status === "INACTIVE") {
-              toast.error("Can not delete inactive vehicle");
-              setOpenDeleteDialog(false);
-            } else {
-              setOpenDeleteDialog(true);
-            }
-          }}
-        />
-      </TooltipWrapper>
-      {currentUserRole !== "ADMIN" && (
+          <TooltipWrapper content="Delete">
+            <ActionBtn
+              icon={<Trash size={12} />}
+              onClick={() => {
+                console.log("Row data to delete:", row.original);
+                if (row.original.status === "INACTIVE") {
+                  toast.error("Can not delete inactive vehicle");
+                  setOpenDeleteDialog(false);
+                } else {
+                  setOpenDeleteDialog(true);
+                }
+              }}
+            />
+          </TooltipWrapper>
+        </>
+      )}
+      {currentUserRole === "STAFF" && (
         <TooltipWrapper content="View Details">
           <ActionBtn
             icon={<Maximize2 size={12} />}

@@ -11,6 +11,7 @@ import {
   type BookingCheckinsFormValues,
 } from "@/pages/booking/lib/schema";
 import type { VehicleHandover } from "@/types/models/vehicle-handover";
+import { queryKeys } from "../queries/keys";
 
 type InitialData = {
   item?: VehicleHandover;
@@ -111,8 +112,8 @@ export const useVehicleHandoverForm = (initialData?: InitialData) => {
       { data: formData },
       {
         onSuccess: () => {
-          queryClient.refetchQueries({
-            queryKey: ["vehicle-handovers", data.bookingId],
+          queryClient.invalidateQueries({
+            queryKey: queryKeys.vehicleHandoverByBookingId(data.bookingId),
           });
           queryClient.invalidateQueries({ queryKey: ["bookings"] });
           queryClient.invalidateQueries({
