@@ -39,8 +39,6 @@ export const adminItems: SidebarItem[] = [
   },
   { title: "Inventory", url: "/inventory", icon: PackageOpen },
   { title: "Memberships", url: "/membership", icon: UserStar },
-  { title: "Service Process", url: "/service-process", icon: Sparkles },
-  { title: "Appointments", url: "/appointments", icon: NotebookPen },
   { title: "Finance & Reports", url: "/finance", icon: CreditCard },
 ];
 
