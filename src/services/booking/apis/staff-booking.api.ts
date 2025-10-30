@@ -9,13 +9,9 @@ export const getBookingManagementList = async (params: BookingFilters) => {
   >("/bookings", { params });
   return response.data;
 };
-<<<<<<< Updated upstream
-=======
-
 export const getBookingHistoryList = async (params: BookingFilters) => {
   const response = await axiosPrivate.get<
     BaseResponse<PaginationResponse<BookingTable>>
   >("/bookings/history", { params });
   return response.data;
 };
->>>>>>> Stashed changes
