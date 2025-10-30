@@ -28,10 +28,6 @@ export const useCreateBookingMutation = () => {
       queryClient.invalidateQueries({
         queryKey: ["bookings"],
       });
-      queryClient.invalidateQueries({
-        queryKey: ["staff-bookings"],
-      });
-      toast.success("Booking created successfully");
     },
     onError: () => {
       toast.error("Failed to create booking");
@@ -167,7 +163,7 @@ export const useUnBookingAssignmentMutation = () => {
 
 // useCompleteTechnicianBookingMutation.ts
 export const useCompleteTechnicianBookingMutation = (
-  handleOnSuccess: () => void,
+  handleOnSuccess: () => void
 ) => {
   const queryClient = useQueryClient();
 
