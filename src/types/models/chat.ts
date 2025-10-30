@@ -1,4 +1,4 @@
-import type { ChatStatus } from "../enums/chatStatus";
+import type { ConversationStatus } from "../enums/conversationStatus";
 
 export type Message = {
   id: string;
@@ -13,5 +13,5 @@ export type Conversation = {
   id: string;
   customerId: string;
   staffId?: string | null;
-  status: ChatStatus;
+  status: ConversationStatus;
 };

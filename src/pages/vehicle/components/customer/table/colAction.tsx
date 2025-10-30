@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import { Eye } from "lucide-react";
 import { TooltipWrapper } from "@/components/TooltipWrapper";
 import ActionBtn from "@/components/table/ActionBtn";
@@ -13,11 +12,7 @@ export interface ColActionsProps {
   currentPageSize: number;
 }
 
-export default function ColActions({
-  row,
-  currentPage,
-  currentPageSize,
-}: ColActionsProps) {
+export default function ColActions({ row }: ColActionsProps) {
   const booking = row.original;
   const navigate = useNavigate();
   const handleViewDetail = () => {
@@ -27,7 +22,7 @@ export default function ColActions({
 
   return (
     <div className="flex gap-1">
-      {/* Nút xem chi tiết */}
+      {/* View Detail */}
       <TooltipWrapper content="View Details">
         <ActionBtn icon={<Eye size={12} />} onClick={handleViewDetail} />
       </TooltipWrapper>

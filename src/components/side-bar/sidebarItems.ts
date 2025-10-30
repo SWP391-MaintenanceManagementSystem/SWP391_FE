@@ -55,6 +55,7 @@ export const customerItems: SidebarItem[] = [
   { title: "Payments", url: "/payments", icon: CreditCard },
   { title: "Settings", url: "/settings", icon: Settings },
   { title: "Help & Support", url: "/support", icon: CircleQuestionMark },
+  { title: "Chat Box", url: "/chat", icon: MessageSquare },
   { title: "Feedback", url: "/feedback", icon: Sparkles },
 ];
 
