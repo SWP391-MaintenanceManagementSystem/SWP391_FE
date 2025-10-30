@@ -26,6 +26,7 @@ interface AddEmployeeFormProps {
   onConfirm: (data: EditEmployeeFormData) => void;
   form: ReturnType<typeof useForm<EditEmployeeFormData>>;
   title: string;
+  isPending: boolean;
 }
 
 export default function AddEmployeeForm({
@@ -34,6 +35,7 @@ export default function AddEmployeeForm({
   onConfirm,
   form,
   title,
+  isPending,
 }: AddEmployeeFormProps) {
   const { data: centerListData } = useGetServiceCenterList();
   const centerList = centerListData ?? [];
@@ -47,6 +49,7 @@ export default function AddEmployeeForm({
       title={title}
       styleFormLayout="grid-rows-6 grid-cols-1 md:grid-cols-2 md:grid-rows-5"
       styleLayoutFooter="md:col-start-2 md:row-start-5"
+      isPending={isPending}
     >
       <FormField
         control={form.control}

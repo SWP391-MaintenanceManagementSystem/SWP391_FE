@@ -14,12 +14,14 @@ interface DeleteDialogProps {
   onOpenChange: (open: boolean) => void;
   onConfirm: () => void;
   isDisabled?: boolean;
+  isPending?: boolean;
 }
 export function DeleteDialog({
   open,
   onOpenChange,
   onConfirm,
   isDisabled,
+  isPending,
 }: DeleteDialogProps) {
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
@@ -49,9 +51,9 @@ export function DeleteDialog({
                 onConfirm();
                 onOpenChange(false);
               }}
-              disabled={isDisabled}
+              disabled={isDisabled || isPending}
             >
-              Delete
+              {isPending ? "Deleting..." : "Delete"}
             </Button>
           </AlertDialogAction>
         </AlertDialogFooter>

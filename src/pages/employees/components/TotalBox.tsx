@@ -35,7 +35,7 @@ export default function TotalBox({
   const { data, isLoading } = useGetStatusStat(role);
   const total = data?.total;
   const [openAddForm, setOpenAddForm] = useState(false);
-  const { form, handleAddEmployee } = useEmployee(
+  const { form, handleAddEmployee, isPending } = useEmployee(
     {} as EmployeeTable,
     role,
     page,
@@ -138,6 +138,7 @@ export default function TotalBox({
           }
         }}
         title="Employee"
+        isPending={isPending}
       />
     </Card>
   );

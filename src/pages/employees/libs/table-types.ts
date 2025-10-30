@@ -9,7 +9,7 @@ export type EmployeeTable = {
   status: AccountStatus | undefined;
   profile?: Employee;
   role: AccountRole | undefined;
-  workCenter?: ServiceCenter & {
+  workCenter?: Partial<ServiceCenter> & {
     startDate?: string;
     endDate?: string;
   };
