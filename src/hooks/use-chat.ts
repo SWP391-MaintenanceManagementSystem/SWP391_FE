@@ -37,10 +37,12 @@ export function useChat(userId: string, role: "CUSTOMER" | "STAFF") {
       if (!msg.conversationId) return;
       console.log("[Socket] Message received:", msg);
 
-      setMessages((prev) => ({
-        ...prev,
-        [msg.conversationId]: [...(prev[msg.conversationId] || []), msg],
-      }));
+      setMessages((prev) => {
+        const list = prev[msg.conversationId] || [];
+        const exists = list.some((m) => m.id === msg.id);
+        if (exists) return prev;
+        return { ...prev, [msg.conversationId]: [...list, msg] };
+      });
     });
 
     // ✅ Confirmation for sent message
@@ -48,10 +50,12 @@ export function useChat(userId: string, role: "CUSTOMER" | "STAFF") {
       if (!msg.conversationId) return;
       console.log("[Socket] Message sent:", msg);
 
-      setMessages((prev) => ({
-        ...prev,
-        [msg.conversationId]: [...(prev[msg.conversationId] || []), msg],
-      }));
+      setMessages((prev) => {
+        const list = prev[msg.conversationId] || [];
+        const exists = list.some((m) => m.id === msg.id);
+        if (exists) return prev;
+        return { ...prev, [msg.conversationId]: [...list, msg] };
+      });
     });
 
     // ✅ Handle ticket claimed event (for STAFF)
@@ -118,7 +122,7 @@ export function useChat(userId: string, role: "CUSTOMER" | "STAFF") {
     (conversationId: string) => {
       if (role === "STAFF" && connected) {
         console.log("[Socket] Claiming ticket:", conversationId);
-        socket.emit("claim_ticket", conversationId );
+        socket.emit("claim_ticket", conversationId);
       } else {
         toast.error("Not connected or wrong user role");
       }
