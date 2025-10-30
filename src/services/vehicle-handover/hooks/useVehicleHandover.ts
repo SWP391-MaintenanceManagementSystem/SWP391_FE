@@ -111,7 +111,9 @@ export const useVehicleHandoverForm = (initialData?: InitialData) => {
       { data: formData },
       {
         onSuccess: () => {
-          queryClient.invalidateQueries({ queryKey: ["vehicle-handovers"] });
+          queryClient.refetchQueries({
+            queryKey: ["vehicle-handovers", data.bookingId],
+          });
           queryClient.invalidateQueries({ queryKey: ["bookings"] });
           queryClient.invalidateQueries({
             queryKey: ["booking", data.bookingId],

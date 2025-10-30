@@ -3,7 +3,7 @@ import { MapPinCheck, Maximize2, UserCheck } from "lucide-react";
 import ActionBtn from "@/components/table/ActionBtn";
 import { TooltipWrapper } from "@/components/TooltipWrapper";
 import type {
-  BookingStaffTable,
+  BookingTable,
   CustomerBookingDetails,
 } from "@/types/models/booking-with-detail";
 import { encodeBase64 } from "@/utils/base64";
@@ -15,7 +15,7 @@ import { toast } from "sonner";
 import { useBookingDetail } from "@/services/booking/hooks/useBookingDetail";
 
 export interface ColActionsProps {
-  row: Row<BookingStaffTable>;
+  row: Row<BookingTable>;
   currentPage: number;
   currentPageSize: number;
 }
@@ -74,11 +74,13 @@ export default function ColActions({
           icon={<MapPinCheck size={12} />}
           onClick={() => {
             if (booking.status === "PENDING") {
-              toast.warning("Please ASSIGN Technician before checked-in");
+              toast.warning(
+                "Vehicle check-in is not allowed for pending bookings. Please assign a technician first.",
+              );
               return;
             }
             const encodedId = encodeBase64(booking.id);
-            navigate(`/booking/checkin/${encodedId}`, {
+            navigate(`/booking/${encodedId}/checkin`, {
               state: {
                 bookingId: encodedId,
               },

@@ -21,6 +21,7 @@ import AssignmentDialog from "./AssignmentDialog";
 import { useAssignBooking } from "@/services/booking/hooks/useAssignBooking";
 import UnAssignmentDialog from "./UnAssignmentDialog";
 import useUnAssign from "@/services/booking/hooks/useUnAssign";
+import { toast } from "sonner";
 
 export default function ViewBookingDetail() {
   const navigate = useNavigate();
@@ -105,11 +106,17 @@ export default function ViewBookingDetail() {
                 className="bg-purple-600 hover:bg-purple-700 text-white
             dark:bg-purple-500 dark:hover:bg-purple-600"
                 onClick={() => {
-                  navigate(`/booking/checkin/${id}`, {
-                    state: {
-                      bookingId: id,
-                    },
-                  });
+                  if (data?.status === "PENDING") {
+                    toast.warning(
+                      "Vehicle check-in is not allowed for pending bookings. Please assign a technician first.",
+                    );
+                  } else {
+                    navigate(`/booking/${id}/checkin`, {
+                      state: {
+                        bookingId: id,
+                      },
+                    });
+                  }
                 }}
               >
                 Vehicle Check-In

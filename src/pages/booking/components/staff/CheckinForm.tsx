@@ -20,6 +20,7 @@ import type { BookingStatus } from "@/types/enums/bookingStatus";
 import { useRef } from "react";
 import { FileUploadForm } from "@/pages/booking/components/staff/FileUploadForm";
 import { Label } from "@/components/ui/label";
+import { TooltipWrapper } from "@/components/TooltipWrapper";
 
 interface CheckinFormProps {
   form: ReturnType<typeof useForm<BookingCheckinsFormValues>>;
@@ -46,7 +47,6 @@ export default function CheckinForm({
         <h3 className="text-3xl font-bold text-gray-900 dark:text-gray-200">
           Vehicle Check-In Form
         </h3>
-
         {isLoading ? (
           <div className="flex justify-center items-center h-full">
             <Loader className="animate-spin text-gray-500 mx-auto" />
@@ -120,7 +120,9 @@ export default function CheckinForm({
                     <FormLabel>Customer Note</FormLabel>
                     <FormControl>
                       <Textarea
-                        placeholder="Customer notes"
+                        placeholder={
+                          bookingStatus === "ASSIGNED" ? "Customer notes" : ""
+                        }
                         {...field}
                         value={field.value ?? ""}
                         readOnly={bookingStatus !== "ASSIGNED"}
@@ -139,7 +141,11 @@ export default function CheckinForm({
                     <FormLabel>Vehicle Condition Details</FormLabel>
                     <FormControl>
                       <Textarea
-                        placeholder="Enter description (one per line)"
+                        placeholder={
+                          bookingStatus === "ASSIGNED"
+                            ? "Enter description (one per line)"
+                            : ""
+                        }
                         {...field}
                         value={
                           Array.isArray(field.value)
@@ -167,17 +173,19 @@ export default function CheckinForm({
                         key={index}
                         className="relative w-24 h-24 border rounded overflow-hidden"
                       >
-                        <a
-                          href={item}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          <img
-                            src={item}
-                            alt={`handover-${index}`}
-                            className="object-cover w-full h-full"
-                          />
-                        </a>
+                        <TooltipWrapper content="View Image">
+                          <a
+                            href={item}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            <img
+                              src={item}
+                              alt={`handover-${index}`}
+                              className="object-cover w-full h-full"
+                            />
+                          </a>
+                        </TooltipWrapper>
                       </div>
                     ))}
                   </div>
