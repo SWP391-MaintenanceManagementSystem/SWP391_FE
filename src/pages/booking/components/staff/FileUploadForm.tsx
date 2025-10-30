@@ -16,6 +16,7 @@ import {
 import type { BookingCheckinsFormValues } from "@/pages/booking/lib/schema";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { TooltipWrapper } from "@/components/TooltipWrapper";
 
 interface FileUploadFormProps {
   form: ReturnType<typeof useForm<BookingCheckinsFormValues>>;
@@ -99,11 +100,19 @@ export function FileUploadForm({ form, onUploadSuccess }: FileUploadFormProps) {
                           key={index}
                           className="relative w-24 h-24 border rounded overflow-hidden"
                         >
-                          <img
-                            src={src}
-                            alt={`preview-${index}`}
-                            className="object-cover w-full h-full"
-                          />
+                          <TooltipWrapper content="View Image">
+                            <a
+                              href={src}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              <img
+                                src={src}
+                                alt={`preview-${index}`}
+                                className="object-cover w-full h-full"
+                              />
+                            </a>
+                          </TooltipWrapper>
                           <button
                             type="button"
                             onClick={() => handleRemoveFile(index)}

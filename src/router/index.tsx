@@ -166,7 +166,7 @@ const RouterComponent = () => {
                       hydrateFallbackElement: <CircularIndeterminate />,
                     },
                     {
-                      path: "/booking/checkin/:bookingId",
+                      path: "/booking/:bookingId/checkin",
                       element: <CheckinPage />,
                       hydrateFallbackElement: <CircularIndeterminate />,
                     },
