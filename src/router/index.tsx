@@ -30,6 +30,8 @@ import ViewSchedule from "@/pages/shifts/employee/ViewSchedule";
 import VehicleDetailPage from "@/pages/vehicle/components/manager/vehicleManagement/VehicleDetailPage";
 import HistoryBookingCus from "@/pages/vehicle/components/customer/HistoryBooking";
 import CheckinPage from "@/pages/booking/components/staff/CheckinPage";
+import StaffChat from "@/pages/chat/components/staff/StaffChatbox";
+import ChatPage from "@/pages/chat";
 
 const RouterComponent = () => {
   const router = createBrowserRouter([
@@ -101,6 +103,10 @@ const RouterComponent = () => {
                 {
                   path: "/booking/:id",
                   element: <BookingDetailPage />,
+                },
+                {
+                  path: "/chat",
+                  element: <ChatPage />,
                 },
                 {
                   element: (
