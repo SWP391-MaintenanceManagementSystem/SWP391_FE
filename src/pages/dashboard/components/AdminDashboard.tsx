@@ -2,8 +2,8 @@ import DynamicBreadcrumbs from "@/components/DynamicBreadcrumb";
 import MainContentLayout from "@/components/MainContentLayout";
 import TotalCard from "./TotalCard";
 import { HandCoinsIcon, Hotel, IdCardLanyard, Users2 } from "lucide-react";
-import { RevenueChart } from "./RevenueChart";
-
+import { RevenueChart } from "./chart/RevenueChart";
+import { LowStockProgressBar } from "./chart/LowStockChart";
 export default function AdminDashboard() {
   // Fake data
   const dashboardData = {
@@ -13,7 +13,7 @@ export default function AdminDashboard() {
     totalMembershipPackages: 8,
   };
 
-  // Fake revenue data (90 ngày gần nhất)
+  // Fake revenue data (90 days)
   const revenueData = Array.from({ length: 90 }, (_, i) => {
     const date = new Date();
     date.setDate(date.getDate() - (89 - i));
@@ -23,10 +23,28 @@ export default function AdminDashboard() {
     };
   });
 
+  // Fake inventory data (12 products)
+  const inventoryData = [
+    { name: "Engine Oil", quantity: 8, minRequired: 30 },
+    { name: "Brake Fluid", quantity: 4, minRequired: 20 },
+    { name: "Air Filter", quantity: 15, minRequired: 40 },
+    { name: "Spark Plug", quantity: 5, minRequired: 25 },
+    { name: "Coolant", quantity: 2, minRequired: 15 },
+    { name: "Tire", quantity: 22, minRequired: 30 },
+    { name: "Battery", quantity: 3, minRequired: 10 },
+    { name: "Wiper Blade", quantity: 7, minRequired: 20 },
+    { name: "Headlight", quantity: 9, minRequired: 25 },
+    { name: "Transmission Fluid", quantity: 1, minRequired: 12 },
+    { name: "Battery", quantity: 3, minRequired: 10 },
+    { name: "Wiper Blade", quantity: 7, minRequired: 20 },
+    { name: "Headlight", quantity: 9, minRequired: 25 },
+    { name: "Transmission Fluid", quantity: 1, minRequired: 12 },
+  ];
+
   return (
     <div className="w-full h-[calc(100vh-32px)] font-inter">
       <DynamicBreadcrumbs pathTitles={{ dashboard: "Dashboard" }} />
-      <MainContentLayout className="flex flex-col md:gap-8 gap-6">
+      <MainContentLayout className="grid grid-cols-1 md:gap-6 gap-4 overflow-y-auto">
         <div className="grid lg:grid-cols-4 grid-cols-2 gap-3 md:gap-4 font-inter h-auto">
           <TotalCard
             title="Total Revenue"
@@ -51,9 +69,10 @@ export default function AdminDashboard() {
             numberValue={dashboardData.totalServiceCenters}
           />
         </div>
-
-        {/* Truyền fake revenue data */}
         <RevenueChart data={revenueData} />
+        <div className="grid grid-cols-[auto_1fr]">
+          <LowStockProgressBar data={inventoryData} />
+        </div>
       </MainContentLayout>
     </div>
   );
