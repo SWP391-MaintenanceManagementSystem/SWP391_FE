@@ -1,5 +1,4 @@
 import MainContentLayout from "@/components/MainContentLayout";
-import React from "react";
 import StaffChatbox from "./StaffChatbox";
 import { useAuth } from "@/contexts/AuthContext";
 

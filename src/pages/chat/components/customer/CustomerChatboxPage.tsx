@@ -7,7 +7,7 @@ export default function CustomerChatboxPage() {
 
   return (
     <div>
-      <MainContentLayout className=" ">
+      <MainContentLayout className=" font-inter">
         <CustomerChatbox userId={auth.user?.id ?? null} />
       </MainContentLayout>
     </div>

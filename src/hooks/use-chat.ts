@@ -8,7 +8,7 @@ export function useChat(userId: string, role: "CUSTOMER" | "STAFF") {
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [connected, setConnected] = useState(false);
 
-  // ✅ Connect socket + register user
+  // Connect socket + register user
   useEffect(() => {
     if (!userId) return;
 
@@ -32,7 +32,7 @@ export function useChat(userId: string, role: "CUSTOMER" | "STAFF") {
       toast.error("Failed to connect to chat");
     });
 
-    // 🧩 Handle real-time message reception
+    // Handle real-time message reception
     socket.on("message", (msg: Message) => {
       if (!msg.conversationId) return;
       console.log("[Socket] Message received:", msg);
@@ -45,7 +45,7 @@ export function useChat(userId: string, role: "CUSTOMER" | "STAFF") {
       });
     });
 
-    // ✅ Confirmation for sent message
+    //Confirmation for sent message
     socket.on("message_sent", (msg: Message) => {
       if (!msg.conversationId) return;
       console.log("[Socket] Message sent:", msg);
@@ -58,7 +58,7 @@ export function useChat(userId: string, role: "CUSTOMER" | "STAFF") {
       });
     });
 
-    // ✅ Handle ticket claimed event (for STAFF)
+    //Handle ticket claimed event (for STAFF)
     socket.on("ticket_claimed", (updatedConversation: Conversation) => {
       console.log("[Socket] Ticket claimed:", updatedConversation);
 
@@ -69,7 +69,7 @@ export function useChat(userId: string, role: "CUSTOMER" | "STAFF") {
       );
     });
 
-    // ✅ Handle ticket updated event (for both CUSTOMER and STAFF)
+    //Handle ticket updated event (for both CUSTOMER and STAFF)
     socket.on("ticket_updated", (updatedConversation: Conversation) => {
       console.log("[Socket] Ticket updated:", updatedConversation);
 
@@ -80,7 +80,7 @@ export function useChat(userId: string, role: "CUSTOMER" | "STAFF") {
       );
     });
 
-    // ✅ Handle ticket closed event (for both CUSTOMER and STAFF)
+    //Handle ticket closed event (for both CUSTOMER and STAFF)
     socket.on("ticket_closed", (closedConversation: Conversation) => {
       console.log("[Socket] Ticket closed:", closedConversation);
 
@@ -101,7 +101,7 @@ export function useChat(userId: string, role: "CUSTOMER" | "STAFF") {
     };
   }, [userId]);
 
-  // ✅ Send message to server
+  // Send message to server
   const sendMessage = useCallback(
     (content: string, conversationId?: string) => {
       if (!connected) {
@@ -117,7 +117,7 @@ export function useChat(userId: string, role: "CUSTOMER" | "STAFF") {
     [connected]
   );
 
-  // ✅ Claim a ticket (for STAFF only)
+  //Claim a ticket (for STAFF only)
   const claimTicket = useCallback(
     (conversationId: string) => {
       if (role === "STAFF" && connected) {
@@ -130,7 +130,7 @@ export function useChat(userId: string, role: "CUSTOMER" | "STAFF") {
     [role, connected]
   );
 
-  // ✅ Close a ticket (for STAFF only)
+  //Close a ticket (for STAFF only)
   const closeTicket = useCallback(
     (conversationId: string) => {
       if (role === "STAFF" && connected) {
@@ -143,23 +143,23 @@ export function useChat(userId: string, role: "CUSTOMER" | "STAFF") {
     [role, connected]
   );
 
-  // ✅ Get conversations (for both CUSTOMER and STAFF)
+  //Get conversations (for both CUSTOMER and STAFF)
   const getConversations = useCallback(() => {
     socket.emit("get_conversations");
   }, []);
 
-  // ✅ Get messages for a specific conversation
+  //Get messages for a specific conversation
   const getMessages = useCallback((conversationId: string) => {
     socket.emit("get_messages", conversationId);
   }, []);
 
   return {
-    conversations, // List of conversations (with updated statuses)
-    messages, // Realtime messages only
+    conversations,
+    messages,
     connected,
     sendMessage,
-    claimTicket, // Expose claimTicket method
-    closeTicket, // Expose closeTicket method
+    claimTicket,
+    closeTicket,
     getConversations,
     getMessages,
   };
