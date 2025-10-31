@@ -44,7 +44,7 @@ export default function ItemsListSection() {
 
   const columns = getColumns(hanldeFilterChange, filters, categoryList);
 
-  const { handleAddPartItem, form } = useInventory(page, pageSize);
+  const { handleAddPartItem, form, isPending } = useInventory(page, pageSize);
 
   return (
     <>
@@ -94,10 +94,14 @@ export default function ItemsListSection() {
           }
         }}
         onConfirm={async (data) => {
-          await handleAddPartItem(data);
+          const success = await handleAddPartItem(data);
+          if (success) {
+            setOpenAddModal(false);
+          }
         }}
         form={form}
         categories={categoryList}
+        isPending={isPending}
       />
     </>
   );

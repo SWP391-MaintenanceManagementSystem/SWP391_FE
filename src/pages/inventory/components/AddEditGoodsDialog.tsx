@@ -1,4 +1,3 @@
-// import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -37,6 +36,7 @@ interface AddEditGoodsDialogProps {
   item?: Part | null;
   categories: Category[];
   form: ReturnType<typeof useForm<PartItemFormData>>;
+  isPending: boolean;
 }
 
 export function AddEditGoodsDialog({
@@ -46,6 +46,7 @@ export function AddEditGoodsDialog({
   item,
   categories,
   form,
+  isPending,
 }: AddEditGoodsDialogProps) {
   const { setValue, watch } = form;
 
@@ -271,7 +272,7 @@ export function AddEditGoodsDialog({
               <Button
                 type="submit"
                 className="!outline-none bg-purple-primary"
-                disabled={!form.formState.isDirty}
+                disabled={!form.formState.isDirty || isPending}
               >
                 {item ? "Update Item" : "Add Item"}
               </Button>

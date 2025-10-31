@@ -32,6 +32,7 @@ import HistoryBookingCus from "@/pages/vehicle/components/customer/HistoryBookin
 import CheckinPage from "@/pages/booking/components/staff/CheckinPage";
 import StaffChat from "@/pages/chat/components/staff/StaffChatbox";
 import ChatPage from "@/pages/chat";
+import HelpAndSupportPage from "@/pages/support/components/HelpAndSupport";
 
 const RouterComponent = () => {
   const router = createBrowserRouter([
@@ -85,6 +86,7 @@ const RouterComponent = () => {
                   element: <Dashboard />,
                   hydrateFallbackElement: <CircularIndeterminate />,
                 },
+
                 {
                   path: "/vehicles",
                   element: <Vehicle />,
@@ -108,6 +110,9 @@ const RouterComponent = () => {
                   path: "/chat",
                   element: <ChatPage />,
                 },
+                {path: "/support",
+                  element: <HelpAndSupportPage />,
+                },
                 {
                   element: (
                     <RequireAuth
@@ -121,6 +126,7 @@ const RouterComponent = () => {
                     },
                   ],
                 },
+              
                 {
                   element: <RequireAuth allowedRoles={[AccountRole.ADMIN]} />,
                   children: [
@@ -172,7 +178,7 @@ const RouterComponent = () => {
                       hydrateFallbackElement: <CircularIndeterminate />,
                     },
                     {
-                      path: "/booking/checkin/:bookingId",
+                      path: "/booking/:bookingId/checkin",
                       element: <CheckinPage />,
                       hydrateFallbackElement: <CircularIndeterminate />,
                     },

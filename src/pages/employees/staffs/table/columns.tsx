@@ -99,17 +99,12 @@ export const getColumns = (
         />
       ),
       size: 50,
-      cell: (info) => (
-        <Badge variant="outline">{info.getValue() ?? "Not assigned"}</Badge>
-      ),
+      cell: (info) => <Badge variant="outline">{info.getValue()}</Badge>,
       meta: {
         title: "Work Center",
         filterVariant: "filterWorkCenter",
-        filterOptions: ["not_assigned", ...centerList.map((c) => c.id)],
-        labelOptions: {
-          not_assigned: "Not assigned",
-          ...Object.fromEntries(centerList.map((c) => [c.id, c.name])),
-        },
+        filterOptions: centerList.map((c) => c.id),
+        labelOptions: Object.fromEntries(centerList.map((c) => [c.id, c.name])),
       },
     }),
 

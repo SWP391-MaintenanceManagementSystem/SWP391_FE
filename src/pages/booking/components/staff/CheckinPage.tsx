@@ -36,16 +36,15 @@ export default function CheckinPage() {
   };
 
   const isLoading = bookingLoading || handoverLoading;
-  console.log(vehicleHandover);
 
   return (
     <div className="w-full h-[calc(100vh-32px)] font-inter">
       <DynamicBreadcrumbs
         pathTitles={{
           booking: "Booking Management",
-          [bookingId ?? ""]: "Check-In Detail",
+          [bookingId ?? ""]: "Booking Detail",
+          checkin: "Check-In",
         }}
-        ignorePaths={["checkin"]}
       />
 
       <MainContentLayout className="grid grid-cols-1 lg:grid-cols-[auto_1fr] gap-4">
