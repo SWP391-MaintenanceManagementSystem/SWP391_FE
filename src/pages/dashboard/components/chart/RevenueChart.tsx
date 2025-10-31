@@ -31,7 +31,7 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 type RevenueData = {
-  date: string; // e.g. "2025-10-01"
+  date: string;
   totalRevenue: number;
 };
 

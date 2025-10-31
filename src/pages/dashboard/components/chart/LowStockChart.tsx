@@ -14,7 +14,7 @@ type Props = {
 
 export function LowStockProgressBar({ data }: Props) {
   return (
-    <Card className="w-[380px] shadow-sm">
+    <Card className="w-full lg:w-[380px] md:max-h-[480px]">
       <CardHeader>
         <CardTitle className="flex items-center gap-3 font-semibold">
           <div className="flex h-10 w-10 items-center justify-center rounded-full bg-destructive/10">
@@ -24,7 +24,7 @@ export function LowStockProgressBar({ data }: Props) {
         </CardTitle>
       </CardHeader>
 
-      <CardContent className="flex flex-col gap-6 md:max-h-[400px] overflow-y-auto">
+      <CardContent className="flex flex-col gap-6 md:max-h-[380px] overflow-y-auto">
         {data.map((item) => {
           const percent = Math.round((item.quantity / item.minRequired) * 100);
           const color =

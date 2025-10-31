@@ -4,6 +4,7 @@ import TotalCard from "./TotalCard";
 import { HandCoinsIcon, Hotel, IdCardLanyard, Users2 } from "lucide-react";
 import { RevenueChart } from "./chart/RevenueChart";
 import { LowStockProgressBar } from "./chart/LowStockChart";
+import { ChartBarLabelCustom } from "@/components/charts/ChartBarLabelCustom";
 export default function AdminDashboard() {
   // Fake data
   const dashboardData = {
@@ -41,6 +42,15 @@ export default function AdminDashboard() {
     { name: "Transmission Fluid", quantity: 1, minRequired: 12 },
   ];
 
+  const serviceCentersData = [
+    { centerName: "Center A", bookings: Math.floor(Math.random() * 50 + 10) },
+    { centerName: "Center B", bookings: Math.floor(Math.random() * 50 + 10) },
+    { centerName: "Center C", bookings: Math.floor(Math.random() * 50 + 10) },
+    { centerName: "Center D", bookings: Math.floor(Math.random() * 50 + 10) },
+    { centerName: "Center E", bookings: Math.floor(Math.random() * 50 + 10) },
+    { centerName: "Center F", bookings: Math.floor(Math.random() * 50 + 10) },
+  ];
+
   return (
     <div className="w-full h-[calc(100vh-32px)] font-inter">
       <DynamicBreadcrumbs pathTitles={{ dashboard: "Dashboard" }} />
@@ -70,8 +80,23 @@ export default function AdminDashboard() {
           />
         </div>
         <RevenueChart data={revenueData} />
-        <div className="grid grid-cols-[auto_1fr]">
+        <div className="grid grid-cols-1 lg:grid-cols-[auto_1fr] gap-6">
           <LowStockProgressBar data={inventoryData} />
+          <ChartBarLabelCustom
+            title="Bookings per Service Center"
+            description="Total bookings for each service center"
+            data={serviceCentersData}
+            dataKey="bookings"
+            labelKey="centerName"
+            config={{
+              bookings: {
+                label: "Bookings",
+                color: "var(--color-purple-primary)",
+              },
+              label: { color: "var(--background)" },
+            }}
+            showXAxis
+          />
         </div>
       </MainContentLayout>
     </div>
