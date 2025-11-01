@@ -129,7 +129,7 @@ export function RevenueChart({ data }: Props) {
                   }
                   indicator="dot"
                   formatter={(value) => [
-                    `Revenue`,
+                    `Revenue `,
                     `$${Number(value).toLocaleString()}`,
                   ]}
                 />

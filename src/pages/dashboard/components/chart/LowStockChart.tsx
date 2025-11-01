@@ -14,7 +14,7 @@ type Props = {
 
 export function LowStockProgressBar({ data }: Props) {
   return (
-    <Card className="w-full lg:w-[380px] md:max-h-[480px]">
+    <Card className="w-full lg:w-[380px]">
       <CardHeader>
         <CardTitle className="flex items-center gap-3 font-semibold">
           <div className="flex h-10 w-10 items-center justify-center rounded-full bg-destructive/10">
