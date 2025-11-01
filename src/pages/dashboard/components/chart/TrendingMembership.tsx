@@ -1,56 +1,69 @@
-import { ChartPieDonutActive } from "@/components/charts/ChartPieDonutActive";
+import { ChartPieDonutText } from "@/components/charts/ChartPieDonutText";
 import { type ChartConfig } from "@/components/ui/chart";
-
-type MembershipData = { name: string; value: number };
+import type { ServiceData } from "@/types/models/dashboard";
 
 interface TrendingMembershipDonutChartProps {
-  data?: MembershipData[];
+  data?: ServiceData[];
 }
 
-const mapMembershipKey: Record<string, string> = {
-  "Silver Plan": "silverPlan",
-  "Gold Plan": "goldPlan",
-  "Platinum Plan": "platinumPlan",
-  "Elite Plan": "elitePlan",
-};
-
-const membershipChartConfig: ChartConfig = {
-  silverPlan: { label: "Silver Plan", color: "#94A3B8" }, // silver
-  goldPlan: { label: "Gold Plan", color: "#EAB308" }, // gold
-  platinumPlan: { label: "Platinum Plan", color: "#A1A1AA" }, // platinum
-  elitePlan: { label: "Elite Plan", color: "#6B7280" }, // dark premium
-};
-
-const defaultMembershipData: MembershipData[] = [
-  { name: "Silver Plan", value: 85 },
-  { name: "Gold Plan", value: 142 },
-  { name: "Platinum Plan", value: 98 },
-  { name: "Elite Plan", value: 56 },
+const colorPalette = [
+  "#8B5CF6", // violet
+  "#6366F1", // indigo
+  "#3B82F6", // blue
+  "#06B6D4", // cyan
+  "#10B981", // emerald
+  "#F59E0B", // amber
+  "#EF4444", // red
+  "#A855F7", // purple
+  "#0EA5E9", // sky
+  "#14B8A6", // teal
 ];
 
 export function TrendingMembershipDonutChart({
   data,
 }: TrendingMembershipDonutChartProps) {
-  const chartData = (data ?? defaultMembershipData).map((m) => {
-    const key =
-      mapMembershipKey[m.name] ?? m.name.toLowerCase().replace(/\s+/g, "");
-    return {
-      membership: key,
-      count: m.value,
-      fill: membershipChartConfig[key]?.color ?? "#d4d4d8",
-    };
-  });
+  if (!data || data.length === 0) return null;
 
-  const total = chartData.length;
+  const sortedData = [...data].sort((a, b) => b.value - a.value);
+  const topData =
+    sortedData.length > 5
+      ? [
+          ...sortedData.slice(0, 5),
+          {
+            name: "Other Memberships",
+            value: sortedData.slice(5).reduce((sum, s) => sum + s.value, 0),
+          },
+        ]
+      : sortedData;
+
+  const chartData = topData.map((m, index) => ({
+    membership: m.name,
+    count: m.value,
+    fill:
+      m.name === "Other Memberships"
+        ? "oklch(92% 0.004 286.32)"
+        : colorPalette[index % colorPalette.length],
+  }));
+
+  const chartConfig: ChartConfig = chartData.reduce(
+    (acc, s) => ({
+      ...acc,
+      [s.membership]: { label: s.membership, color: s.fill },
+    }),
+    {},
+  );
+
+  const total = data.length;
 
   return (
-    <ChartPieDonutActive
+    <ChartPieDonutText
       chartData={chartData}
-      chartConfig={membershipChartConfig}
+      chartConfig={chartConfig}
       total={total}
-      title="membership"
+      title="memberships"
       nameKey="membership"
       dataKey="count"
+      isLegendVisible={false}
     />
   );
 }

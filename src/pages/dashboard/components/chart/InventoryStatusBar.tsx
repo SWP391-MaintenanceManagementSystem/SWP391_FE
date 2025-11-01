@@ -4,10 +4,10 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import type { InventoryStatusData } from "../card/InventoryStatusCard";
+import type { InventoryStatusData } from "@/types/models/dashboard";
 
 export function InventoryBar({ data }: { data: InventoryStatusData }) {
-  const inStockPercent = Math.round((data.instock / data.totalItems) * 100);
+  const inStockPercent = Math.round((data.inStock / data.totalItems) * 100);
   const lowStockPercent = Math.round((data.lowStock / data.totalItems) * 100);
   const discontinuedPercent = Math.max(
     0,
@@ -23,12 +23,12 @@ export function InventoryBar({ data }: { data: InventoryStatusData }) {
             <TooltipTrigger asChild>
               <div
                 style={{ width: `${inStockPercent}%` }}
-                className="bg-green-500 cursor-pointer"
+                className="bg-green-600 cursor-pointer"
               />
             </TooltipTrigger>
             <TooltipContent>
               <p>
-                In Stock: {data.instock} items ({inStockPercent}%)
+                In Stock: {data.inStock} items ({inStockPercent}%)
               </p>
             </TooltipContent>
           </Tooltip>
@@ -56,7 +56,7 @@ export function InventoryBar({ data }: { data: InventoryStatusData }) {
             </TooltipTrigger>
             <TooltipContent>
               <p>
-                Discontinued: {data.outStock} items ({discontinuedPercent}%)
+                Discontinued: {data.discontinued} items ({discontinuedPercent}%)
               </p>
             </TooltipContent>
           </Tooltip>
@@ -65,7 +65,7 @@ export function InventoryBar({ data }: { data: InventoryStatusData }) {
         {/* Legend */}
         <div className="flex items-center gap-6 text-xs">
           <div className="flex items-center gap-1">
-            <span className="w-2.5 h-2.5 bg-green-500" />
+            <span className="w-2.5 h-2.5 bg-green-600" />
             In Stock
           </div>
           <div className="flex items-center gap-1">

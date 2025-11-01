@@ -1,19 +1,8 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { OctagonAlert, Package } from "lucide-react";
-import {
-  LowStockProgressBar,
-  type LowStockItem,
-} from "../chart/LowStockProgressBarList";
+import { LowStockProgressBar } from "../chart/LowStockProgressBarList";
 import { InventoryBar } from "../chart/InventoryStatusBar";
-
-export type InventoryStatusData = {
-  instock: number;
-  lowStock: number;
-  outStock: number;
-  totalItems: number;
-  totalValue: number;
-  lowStockItems: LowStockItem[];
-};
+import type { InventoryStatusData } from "@/types/models/dashboard";
 
 interface InventoryStatusProps {
   data: InventoryStatusData;

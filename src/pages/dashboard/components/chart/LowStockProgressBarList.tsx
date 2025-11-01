@@ -1,10 +1,5 @@
 import { Progress } from "@/components/ui/progress";
-
-export type LowStockItem = {
-  name: string;
-  quantity: number;
-  minRequired: number;
-};
+import type { LowStockItem } from "@/types/models/dashboard";
 
 type Props = {
   data: LowStockItem[];

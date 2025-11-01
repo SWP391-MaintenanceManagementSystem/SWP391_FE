@@ -20,6 +20,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import type { RevenueData } from "@/types/models/dashboard";
 
 export const description = "Dynamic revenue area chart";
 
@@ -29,11 +30,6 @@ const chartConfig = {
     color: "var(--chart-premium)",
   },
 } satisfies ChartConfig;
-
-type RevenueData = {
-  date: string;
-  totalRevenue: number;
-};
 
 type Props = {
   data: RevenueData[];

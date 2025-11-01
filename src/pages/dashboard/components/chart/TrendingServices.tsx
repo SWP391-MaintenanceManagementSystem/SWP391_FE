@@ -1,65 +1,68 @@
-import { ChartPieDonutActive } from "@/components/charts/ChartPieDonutActive";
-import { type ChartConfig } from "@/components/ui/chart";
+import { ChartPieDonutText } from "@/components/charts/ChartPieDonutText";
+import type { ChartConfig } from "@/components/ui/chart";
+import type { ServiceData } from "@/types/models/dashboard";
 
-type ServiceData = {
-  name: string;
-  value: number;
-};
-
-interface TrendingServicesDonutChartProps {
-  data?: ServiceData[];
-}
-const mapServiceKey: Record<string, string> = {
-  "Engine Repair": "engineRepair",
-  "Tire Change": "tireChange",
-  "Oil Change": "oilChange",
-  "Battery Service": "batteryService",
-  "AC Repair": "acRepair",
-  "Brake Service": "brakeService",
-};
-
-const chartConfig: ChartConfig = {
-  engineRepair: { label: "Engine Repair", color: "#7C3AED" },
-  tireChange: { label: "Tire Change", color: "#A78BFA" },
-  oilChange: { label: "Oil Change", color: "#6366F1" },
-  batteryService: { label: "Battery Service", color: "#38BDF8" },
-  acRepair: { label: "AC Repair", color: "#4F46E5" },
-  brakeService: { label: "Brake Service", color: "#818CF8" },
-};
-
-const defaultServiceData: ServiceData[] = [
-  { name: "Engine Repair", value: 120 },
-  { name: "Tire Change", value: 98 },
-  { name: "Oil Change", value: 165 },
-  { name: "Battery Service", value: 87 },
-  { name: "AC Repair", value: 76 },
-  { name: "Brake Service", value: 142 },
+const colorPalette = [
+  "#7C3AED",
+  "#A78BFA",
+  "#6366F1",
+  "#38BDF8",
+  "#4F46E5",
+  "#818CF8",
+  "#06B6D4",
+  "#60A5FA",
+  "#F59E0B",
+  "#10B981",
+  "#EF4444",
 ];
 
-export function TrendingServicesDonutChart({
+interface TrendingServicesRadialChartProps {
+  data: ServiceData[];
+}
+
+export function TrendingServicesRadialChart({
   data,
-}: TrendingServicesDonutChartProps) {
-  const chartData = (data ?? defaultServiceData).map((s) => {
-    const key =
-      mapServiceKey[s.name] ?? s.name.toLowerCase().replace(/\s+/g, "");
+}: TrendingServicesRadialChartProps) {
+  if (!data || data.length === 0) return null;
+  const sortedData = [...data].sort((a, b) => b.value - a.value);
 
-    return {
-      service: key,
-      count: s.value,
-      fill: chartConfig[key]?.color ?? "#d1d5db",
-    };
-  });
+  const topData =
+    sortedData.length > 5
+      ? [
+          ...sortedData.slice(0, 5),
+          {
+            name: "Other Services",
+            value: sortedData.slice(5).reduce((sum, s) => sum + s.value, 0),
+          },
+        ]
+      : sortedData;
 
-  const totalServices = chartData.length;
+  const chartData = topData.map((s, index) => ({
+    name: s.name,
+    value: s.value,
+    fill:
+      s.name === "Other Services"
+        ? "oklch(92% 0.004 286.32)"
+        : colorPalette[index % colorPalette.length],
+  }));
+
+  const chartConfig: ChartConfig = chartData.reduce(
+    (acc, s) => ({
+      ...acc,
+      [s.name]: { label: s.name, color: s.fill },
+    }),
+    {},
+  );
 
   return (
-    <ChartPieDonutActive
+    <ChartPieDonutText
       chartData={chartData}
       chartConfig={chartConfig}
-      total={totalServices}
+      nameKey="name"
+      dataKey="value"
       title="services"
-      nameKey="service"
-      dataKey="count"
+      total={data.length}
+      isLegendVisible={false}
     />
   );
 }

@@ -1,59 +1,69 @@
-import { ChartPieDonutActive } from "@/components/charts/ChartPieDonutActive";
+import { ChartPieDonutText } from "@/components/charts/ChartPieDonutText";
 import { type ChartConfig } from "@/components/ui/chart";
-
-type PackageData = { name: string; value: number };
+import type { ServiceData } from "@/types/models/dashboard";
 
 interface TrendingPackagesDonutChartProps {
-  data?: PackageData[];
+  data: ServiceData[];
 }
 
-const mapPackageKey: Record<string, string> = {
-  "Basic Maintenance": "basicMaintenance",
-  "Standard Care": "standardCare",
-  "Premium Care": "premiumCare",
-  "Performance Upgrade": "performanceUpgrade",
-  "Complete Protection": "completeProtection",
-};
-
-const packageChartConfig: ChartConfig = {
-  basicMaintenance: { label: "Basic Maintenance", color: "#0EA5E9" },
-  standardCare: { label: "Standard Care", color: "#38BDF8" },
-  premiumCare: { label: "Premium Care", color: "#22D3EE" },
-  performanceUpgrade: { label: "Performance Upgrade", color: "#06B6D4" },
-  completeProtection: { label: "Complete Protection", color: "#0891B2" },
-};
-
-const defaultPackageData: PackageData[] = [
-  { name: "Basic Maintenance", value: 210 },
-  { name: "Standard Care", value: 165 },
-  { name: "Premium Care", value: 132 },
-  { name: "Performance Upgrade", value: 95 },
-  { name: "Complete Protection", value: 72 },
+const colorPalette = [
+  "#0EA5E9", // blue-500
+  "#38BDF8", // sky-400
+  "#22D3EE", // cyan-400
+  "#06B6D4", // cyan-500
+  "#0891B2", // cyan-600
+  "#F59E0B", // amber-500
+  "#10B981", // emerald-500
+  "#EF4444", // red-500
+  "#6366F1", // indigo-500
+  "#8B5CF6", // violet-500
 ];
 
 export function TrendingPackagesDonutChart({
   data,
 }: TrendingPackagesDonutChartProps) {
-  const chartData = (data ?? defaultPackageData).map((p) => {
-    const key =
-      mapPackageKey[p.name] ?? p.name.toLowerCase().replace(/\s+/g, "");
-    return {
-      package: key,
-      count: p.value,
-      fill: packageChartConfig[key]?.color ?? "#d4d4d8", // fallback gray-300
-    };
-  });
+  if (!data || data.length === 0) return null;
 
-  const total = chartData.length;
+  const sortedData = [...data].sort((a, b) => b.value - a.value);
+  const topData =
+    sortedData.length > 5
+      ? [
+          ...sortedData.slice(0, 5),
+          {
+            name: "Other Packages",
+            value: sortedData.slice(5).reduce((sum, s) => sum + s.value, 0),
+          },
+        ]
+      : sortedData;
+
+  const chartData = topData.map((p, index) => ({
+    package: p.name,
+    count: p.value,
+    fill:
+      p.name === "Other Packages"
+        ? "oklch(92% 0.004 286.32)"
+        : colorPalette[index % colorPalette.length],
+  }));
+
+  const chartConfig: ChartConfig = chartData.reduce(
+    (acc, s) => ({
+      ...acc,
+      [s.package]: { label: s.package, color: s.fill },
+    }),
+    {},
+  );
+
+  const total = data.length;
 
   return (
-    <ChartPieDonutActive
+    <ChartPieDonutText
       chartData={chartData}
-      chartConfig={packageChartConfig}
+      chartConfig={chartConfig}
       total={total}
       title="packages"
       nameKey="package"
       dataKey="count"
+      isLegendVisible={false}
     />
   );
 }
