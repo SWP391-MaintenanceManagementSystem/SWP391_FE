@@ -19,6 +19,7 @@ import {
   type ChartConfig,
   ChartContainer,
   ChartTooltipContent,
+  ChartTooltip,
 } from "@/components/ui/chart";
 
 interface ChartBarFlexibleProps {
@@ -58,10 +59,15 @@ export function ChartBarFlexible({
               <XAxis dataKey={labelKey} tickLine={false} axisLine={false} />
             )}
             {showYAxis && <YAxis tickLine={false} axisLine={false} />}
-            <Tooltip content={<ChartTooltipContent hideLabel />} />
+            <ChartTooltip
+              cursor={false}
+              content={<ChartTooltipContent indicator="dashed" />}
+            />
             <Legend
               formatter={(value) => (
-                <span style={{ color: "#000" }}>{value}</span>
+                <span className="text-neutral-900 dark:text-neutral-100">
+                  {value}
+                </span>
               )}
               wrapperStyle={{ gap: 40 }}
             />

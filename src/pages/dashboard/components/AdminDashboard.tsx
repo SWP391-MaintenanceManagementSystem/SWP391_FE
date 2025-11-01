@@ -6,6 +6,7 @@ import { RevenueChart } from "./chart/RevenueChart";
 import { LowStockProgressBar } from "./chart/LowStockChart";
 //import { ChartBarLabelCustom } from "@/components/charts/ChartBarLabelCustom";
 import { ChartBarFlexible } from "@/components/charts/ChartBarFlexible";
+import { NavLink } from "react-router-dom";
 export default function AdminDashboard() {
   // Fake data
   const dashboardData = {
@@ -62,18 +63,27 @@ export default function AdminDashboard() {
             icon={HandCoinsIcon}
             numberValue={revenueData
               .reduce((acc, item) => acc + item.totalRevenue, 0)
-              .toLocaleString("en-US", { style: "currency", currency: "USD" })}
+              .toLocaleString("en-US", {
+                style: "currency",
+                currency: "USD",
+              })}
           />
-          <TotalCard
-            title="Total Customer"
-            icon={Users2}
-            numberValue={dashboardData.totalCustomers}
-          />
-          <TotalCard
-            title="Total Employee"
-            icon={IdCardLanyard}
-            numberValue={dashboardData.totalEmployees}
-          />
+          <NavLink to={"/vehicles"}>
+            <TotalCard
+              title="Total Customer"
+              icon={Users2}
+              numberValue={dashboardData.totalCustomers}
+            />
+          </NavLink>
+
+          <NavLink to={"/employees/staffs"}>
+            <TotalCard
+              title="Total Employee"
+              icon={IdCardLanyard}
+              numberValue={dashboardData.totalEmployees}
+            />
+          </NavLink>
+
           <TotalCard
             title="Total Service Center"
             icon={Hotel}
@@ -86,7 +96,7 @@ export default function AdminDashboard() {
           <LowStockProgressBar data={inventoryData} />
           <ChartBarFlexible
             title="Service Center Performance"
-            description="Bookings vs Revenue per Center"
+            description="Booking volume and revenue across service centers"
             data={serviceCentersData}
             dataKeys={["bookings", "revenue"]}
             labelKey="centerName"
@@ -95,11 +105,11 @@ export default function AdminDashboard() {
             config={{
               bookings: {
                 label: "Bookings",
-                color: "var(--color-purple-landing)",
+                color: "#c4b5fd",
               },
               revenue: {
                 label: "Revenue",
-                color: "var(--color-purple-primary)",
+                color: "#8b5cf6",
               },
             }}
           />
