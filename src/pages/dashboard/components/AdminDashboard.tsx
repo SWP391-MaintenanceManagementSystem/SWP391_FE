@@ -4,7 +4,8 @@ import TotalCard from "./TotalCard";
 import { HandCoinsIcon, Hotel, IdCardLanyard, Users2 } from "lucide-react";
 import { RevenueChart } from "./chart/RevenueChart";
 import { LowStockProgressBar } from "./chart/LowStockChart";
-import { ChartBarLabelCustom } from "@/components/charts/ChartBarLabelCustom";
+//import { ChartBarLabelCustom } from "@/components/charts/ChartBarLabelCustom";
+import { ChartBarFlexible } from "@/components/charts/ChartBarFlexible";
 export default function AdminDashboard() {
   // Fake data
   const dashboardData = {
@@ -43,12 +44,12 @@ export default function AdminDashboard() {
   ];
 
   const serviceCentersData = [
-    { centerName: "Center A", bookings: Math.floor(Math.random() * 50 + 10) },
-    { centerName: "Center B", bookings: Math.floor(Math.random() * 50 + 10) },
-    { centerName: "Center C", bookings: Math.floor(Math.random() * 50 + 10) },
-    { centerName: "Center D", bookings: Math.floor(Math.random() * 50 + 10) },
-    { centerName: "Center E", bookings: Math.floor(Math.random() * 50 + 10) },
-    { centerName: "Center F", bookings: Math.floor(Math.random() * 50 + 10) },
+    { centerName: "Center A", bookings: 45, revenue: 1500 },
+    { centerName: "Center B", bookings: 30, revenue: 1200 },
+    { centerName: "Center C", bookings: 50, revenue: 1800 },
+    { centerName: "Center D", bookings: 25, revenue: 900 },
+    { centerName: "Center E", bookings: 40, revenue: 1300 },
+    { centerName: "Center F", bookings: 35, revenue: 1100 },
   ];
 
   return (
@@ -80,22 +81,27 @@ export default function AdminDashboard() {
           />
         </div>
         <RevenueChart data={revenueData} />
+
         <div className="grid grid-cols-1 lg:grid-cols-[auto_1fr] gap-6">
           <LowStockProgressBar data={inventoryData} />
-          <ChartBarLabelCustom
-            title="Bookings per Service Center"
-            description="Total bookings for each service center"
+          <ChartBarFlexible
+            title="Service Center Performance"
+            description="Bookings vs Revenue per Center"
             data={serviceCentersData}
-            dataKey="bookings"
+            dataKeys={["bookings", "revenue"]}
             labelKey="centerName"
+            showXAxis
+            showYAxis
             config={{
               bookings: {
                 label: "Bookings",
+                color: "var(--color-purple-landing)",
+              },
+              revenue: {
+                label: "Revenue",
                 color: "var(--color-purple-primary)",
               },
-              label: { color: "var(--background)" },
             }}
-            showXAxis
           />
         </div>
       </MainContentLayout>
