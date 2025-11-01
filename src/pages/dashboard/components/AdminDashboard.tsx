@@ -1,9 +1,8 @@
 import DynamicBreadcrumbs from "@/components/DynamicBreadcrumb";
 import MainContentLayout from "@/components/MainContentLayout";
-import TotalCard from "./TotalCard";
+import TotalCard from "./card/TotalCard";
 import { HandCoinsIcon, Hotel, IdCardLanyard, Users2 } from "lucide-react";
 import { RevenueChart } from "./chart/RevenueChart";
-import { LowStockProgressBar } from "./chart/LowStockChart";
 import { ChartBarFlexible } from "@/components/charts/ChartBarFlexible";
 import { NavLink } from "react-router-dom";
 import { TrendingServicesDonutChart } from "./chart/TrendingServices";
@@ -16,6 +15,7 @@ import {
 } from "@/components/ui/card";
 import { TrendingPackagesDonutChart } from "./chart/TrendingPackages";
 import { TrendingMembershipDonutChart } from "./chart/TrendingMembership";
+import { InventoryStatusCard } from "./card/InventoryStatusCard";
 export default function AdminDashboard() {
   const dashboardData = {
     totalCustomers: 3240,
@@ -35,18 +35,25 @@ export default function AdminDashboard() {
     };
   });
 
-  const inventoryData = [
-    { name: "Engine Oil", quantity: 8, minRequired: 30 },
-    { name: "Brake Fluid", quantity: 4, minRequired: 20 },
-    { name: "Air Filter", quantity: 15, minRequired: 40 },
-    { name: "Spark Plug", quantity: 5, minRequired: 25 },
-    { name: "Coolant", quantity: 2, minRequired: 15 },
-    { name: "Tire", quantity: 22, minRequired: 30 },
-    { name: "Battery", quantity: 3, minRequired: 10 },
-    { name: "Wiper Blade", quantity: 7, minRequired: 20 },
-    { name: "Headlight", quantity: 9, minRequired: 25 },
-    { name: "Transmission Fluid", quantity: 1, minRequired: 12 },
-  ];
+  const inventoryData = {
+    instock: 100,
+    lowStock: 10,
+    outStock: 15,
+    totalItems: 115,
+    totalValue: 111110,
+    lowStockItems: [
+      { name: "Engine Oil", quantity: 8, minRequired: 30 },
+      { name: "Brake Fluid", quantity: 4, minRequired: 20 },
+      { name: "Air Filter", quantity: 15, minRequired: 40 },
+      { name: "Spark Plug", quantity: 5, minRequired: 25 },
+      { name: "Coolant", quantity: 2, minRequired: 15 },
+      { name: "Tire", quantity: 22, minRequired: 30 },
+      { name: "Battery", quantity: 3, minRequired: 10 },
+      { name: "Wiper Blade", quantity: 7, minRequired: 20 },
+      { name: "Headlight", quantity: 9, minRequired: 25 },
+      { name: "Transmission Fluid", quantity: 1, minRequired: 12 },
+    ],
+  };
 
   const serviceCentersData = [
     { centerName: "Center A", bookings: 45, revenue: 1500 },
@@ -150,7 +157,8 @@ export default function AdminDashboard() {
         </Card>
 
         <div className="grid grid-cols-1 lg:grid-cols-[auto_1fr] gap-6">
-          <LowStockProgressBar data={inventoryData} />
+          <InventoryStatusCard data={inventoryData} />
+          {/*SERVICE CENTER*/}
           <ChartBarFlexible
             title="Service Center Performance"
             description="Booking volume and revenue across service centers"
