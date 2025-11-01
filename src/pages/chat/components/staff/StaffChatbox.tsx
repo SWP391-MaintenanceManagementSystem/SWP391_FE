@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useMemo } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useChat } from "@/hooks/use-chat";
@@ -32,9 +32,13 @@ const StaffChatbox: React.FC<Props> = ({ userId }) => {
     }
   }, [conversations, currentConversationId]);
 
-  const mergedMessages: Message[] = currentConversationId
-    ? [...(oldMessages || []), ...(rtMessages[currentConversationId] || [])]
-    : [];
+  const mergedMessages: Message[] = useMemo(
+    () =>
+      currentConversationId
+        ? [...(oldMessages || []), ...(rtMessages[currentConversationId] || [])]
+        : [],
+    [currentConversationId, oldMessages, rtMessages]
+  );
 
   const bottomRef = useRef<HTMLDivElement>(null);
 

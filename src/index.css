@@ -54,16 +54,10 @@
   --color-warning-dark: #f59e0b;
   --color-disable-dark: #6b7280;
 
-  --color-gray-dark-bg: #27272a;
-  --color-bg-app: #121212;
-  --bg-app: #121212;
-  --bg-sidebar: #1f1f1f;
-  --bg-chat-hover: #2a2a2e;
-  --bg-card: #1e1e1e;
-  --bg-input: #2c2c2f;
-  --bg-bubble-user: #2563eb;
-  --bg-bubble-staff: #333333;
-  
+  --color-dark-hover-bg: #2a2a2a;
+  --color-dark-bg: #111113;
+  --color-dark-surface: #2b2b2f;
+
   --color-membership-light: #e7ebff;
 }
 
