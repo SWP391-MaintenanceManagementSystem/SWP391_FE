@@ -2,11 +2,13 @@ import { useEffect, useState, useCallback } from "react";
 import { socket } from "@/lib/socket";
 import type { Message, Conversation } from "@/types/models/chat";
 import { toast } from "sonner";
-
+import { useQueryClient } from "@tanstack/react-query";
+import { queryKeys } from "@/services/chat/queries/keys";
 export function useChat(userId: string, role: "CUSTOMER" | "STAFF") {
   const [messages, setMessages] = useState<Record<string, Message[]>>({});
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [connected, setConnected] = useState(false);
+  const queryClient = useQueryClient();
 
   // Connect socket + register user
   useEffect(() => {
@@ -61,12 +63,14 @@ export function useChat(userId: string, role: "CUSTOMER" | "STAFF") {
     //Handle ticket claimed event (for STAFF)
     socket.on("ticket_claimed", (updatedConversation: Conversation) => {
       console.log("[Socket] Ticket claimed:", updatedConversation);
-
       setConversations((prev) =>
         prev.map((conv) =>
           conv.id === updatedConversation.id ? updatedConversation : conv
         )
       );
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.conversations,
+      });
     });
 
     //Handle ticket updated event (for both CUSTOMER and STAFF)
@@ -78,6 +82,9 @@ export function useChat(userId: string, role: "CUSTOMER" | "STAFF") {
           conv.id === updatedConversation.id ? updatedConversation : conv
         )
       );
+      // queryClient.invalidateQueries({
+      //   queryKey: queryKeys.conversations,
+      // });
     });
 
     //Handle ticket closed event (for both CUSTOMER and STAFF)
@@ -89,14 +96,13 @@ export function useChat(userId: string, role: "CUSTOMER" | "STAFF") {
           conv.id === closedConversation.id ? closedConversation : conv
         )
       );
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.conversations,
+      });
     });
 
     return () => {
-      socket.off("message");
-      socket.off("message_sent");
-      socket.off("ticket_claimed");
-      socket.off("ticket_updated");
-      socket.off("ticket_closed");
+      socket.removeAllListeners();
       socket.disconnect();
     };
   }, [userId]);
@@ -120,7 +126,7 @@ export function useChat(userId: string, role: "CUSTOMER" | "STAFF") {
   //Claim a ticket (for STAFF only)
   const claimTicket = useCallback(
     (conversationId: string) => {
-      if (role === "STAFF" && connected) {
+      if (role === "STAFF") {
         console.log("[Socket] Claiming ticket:", conversationId);
         socket.emit("claim_ticket", conversationId);
       } else {
@@ -133,9 +139,9 @@ export function useChat(userId: string, role: "CUSTOMER" | "STAFF") {
   //Close a ticket (for STAFF only)
   const closeTicket = useCallback(
     (conversationId: string) => {
-      if (role === "STAFF" && connected) {
+      if (role === "STAFF") {
         console.log("[Socket] Closing ticket:", conversationId);
-        socket.emit("close_ticket", { conversationId });
+        socket.emit("close_ticket", conversationId);
       } else {
         toast.error("Not connected or wrong user role");
       }

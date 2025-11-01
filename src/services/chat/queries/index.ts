@@ -11,7 +11,8 @@ export const useGetMessages = (conversationId: string) => {
         const res = await getMessages(conversationId);
         return res.data;
       } catch (error) {
-        toast.error("Fail to connect");
+        // toast.error("Fail to connect");
+        console.log(error);
         throw error;
       }
     },

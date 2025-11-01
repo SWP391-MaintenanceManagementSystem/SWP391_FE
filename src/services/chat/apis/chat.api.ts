@@ -15,3 +15,10 @@ export const getConversations = async () => {
   );
   return res.data;
 };
+
+export const createConversation = async () => {
+  const res = await httpPrivate.post<BaseResponse<{ data: Conversation }>>(
+    `/chats/conversations`
+  );
+  return res.data;
+};

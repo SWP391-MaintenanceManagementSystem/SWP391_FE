@@ -1,14 +1,25 @@
 import MainContentLayout from "@/components/MainContentLayout";
-import StaffChatbox from "./StaffChatbox";
-import { useAuth } from "@/contexts/AuthContext";
+import { useState } from "react";
+import StaffChatWindowContainer from "./StaffChatWindowContainer";
+import StaffSidebarContainer from "./StaffSidebarContainer";
+import DynamicBreadcrumbs from "@/components/DynamicBreadcrumb";
 
 export default function StaffChatboxPage() {
-  const { auth } = useAuth();
+  const [currentConversationId, setCurrentConversationId] = useState<string>();
 
   return (
-    <div>
-      <MainContentLayout className=" ">
-        <StaffChatbox userId={auth.user?.id ?? null} />
+    <div className="w-full h-[calc(100vh-32px)] font-inter">
+      <DynamicBreadcrumbs pathTitles={{ staffChat: "Staff Inbox" }} />
+      <MainContentLayout>
+        <div className="flex h-full rounded-xl border overflow-hidden bg-white dark:bg-[#101418]">
+          <StaffSidebarContainer
+            currentConversationId={currentConversationId}
+            onSelectConversation={setCurrentConversationId}
+          />
+          <StaffChatWindowContainer
+            currentConversationId={currentConversationId}
+          />
+        </div>
       </MainContentLayout>
     </div>
   );

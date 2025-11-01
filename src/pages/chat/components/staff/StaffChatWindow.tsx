@@ -1,36 +1,41 @@
+import { useEffect, useRef, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import type { Message } from "@/types/models/chat";
 import { SendHorizonal } from "lucide-react";
-import { useRef, useEffect } from "react";
+import type { Message } from "@/types/models/chat";
 
-export default function ChatWindow({
-  connected,
-  input,
-  setInput,
-  mergedMessages,
-  handleSend,
-  userId,
-  isActive,
-}: {
+interface Props {
   connected: boolean;
-  input: string;
-  setInput: (v: string) => void;
   mergedMessages: Message[];
-  handleSend: () => void;
+  sendMessage: (content: string, conversationId?: string) => void;
   userId: string | null;
-  isActive: boolean;
-}) {
+  currentConversationId?: string;
+}
+
+export default function StaffChatWindow({
+  connected,
+  mergedMessages,
+  sendMessage,
+  userId,
+  currentConversationId,
+}: Props) {
+  const [input, setInput] = useState("");
   const bottomRef = useRef<HTMLDivElement>(null);
+
+  const handleSend = () => {
+    if (!input.trim() || !currentConversationId) return;
+    sendMessage(input, currentConversationId);
+    setInput("");
+  };
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [mergedMessages]);
 
-  if (!isActive) {
+  if (!currentConversationId) {
     return (
       <div className="flex-1 flex items-center justify-center text-gray-500 dark:text-gray-400">
-        Select a conversation to start chatting or create new ticket
+        Select a ticket to start chatting.
       </div>
     );
   }
@@ -44,7 +49,7 @@ export default function ChatWindow({
             connected ? "bg-green-500" : "bg-red-500"
           }`}
         />
-        {connected ? "Connected to support" : "Disconnected..."}
+        {connected ? "Connected as Staff" : "Disconnected..."}
       </div>
 
       {/* Message List */}
@@ -84,7 +89,6 @@ export default function ChatWindow({
           className="flex-1 dark:bg-[#1c1c20] dark:text-gray-200 dark:border-[#3a3a42] dark:placeholder-gray-500"
         />
 
-        {/* Icon Send */}
         <Button
           onClick={handleSend}
           disabled={!connected || !input.trim()}

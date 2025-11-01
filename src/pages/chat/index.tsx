@@ -2,19 +2,17 @@ import { lazy, Suspense } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { AccountRole } from "@/types/enums/role";
 import Loading from "@/components/Loading";
-import StaffChatboxPage from "./components/staff/StaffChatboxPage";
-import CustomerChatboxPage from "./components/customer/CustomerChatboxPage";
 
-const StaffChatbox = lazy(() => import("./components/staff/StaffChatboxPage"));
-
-// const CustomerChatbox = lazy(
-//   () => import("")
-// );
+const StaffChatboxPage = lazy(
+  () => import("./components/staff/StaffChatboxPage")
+);
+const CustomerChatboxPage = lazy(
+  () => import("./components/customer/CustomerChatboxPage")
+);
 
 export default function ChatPage() {
   const { auth } = useAuth();
 
-  // Hàm trả về component phù hợp theo role
   const getComponentByRole = () => {
     switch (auth.user?.role) {
       case AccountRole.STAFF:
@@ -22,7 +20,9 @@ export default function ChatPage() {
       case AccountRole.CUSTOMER:
         return <CustomerChatboxPage />;
       default:
-        return <div>Unauthorized</div>;
+        return (
+          <div className="p-4 text-center text-gray-500">Unauthorized</div>
+        );
     }
   };
 
