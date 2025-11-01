@@ -46,12 +46,11 @@ export default function BookingDetail() {
     );
 
   const handleCancelBooking = () => {
-    onCancel(id);
+    onCancel(decodedId);
     setIsCancelModalOpen(false);
   };
 
   const handleCheckout = () => {
-
     paymentMutation.mutate({
       referenceId: decodedId,
       referenceType: "BOOKING",
