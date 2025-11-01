@@ -4,15 +4,19 @@ import { AccountRole } from "@/types/enums/role";
 import { lazy, Suspense } from "react";
 
 const AdminDashboadComponent = lazy(
-  () => import("./components/AdminDashboard")
+  () => import("./components/AdminDashboard"),
 );
 const CustomerDashboadComponent = lazy(
-  () => import("./components/CustomerDashboard")
+  () => import("./components/CustomerDashboard"),
+);
+const StaffDashboardComponent = lazy(
+  () => import("./components/StaffDashboard"),
 );
 
 const roleComponents = {
   admin: AdminDashboadComponent,
   user: CustomerDashboadComponent,
+  staff: StaffDashboardComponent,
 };
 
 export default function Dashboard() {
@@ -23,6 +27,8 @@ export default function Dashboard() {
         return roleComponents.admin;
       case AccountRole.CUSTOMER:
         return roleComponents.user;
+      case AccountRole.STAFF:
+        return roleComponents.staff;
       default:
         return roleComponents.user;
     }
