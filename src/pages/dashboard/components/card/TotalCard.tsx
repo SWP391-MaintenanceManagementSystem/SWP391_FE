@@ -19,7 +19,7 @@ export default function TotalCard({
         <CardTitle className="text-sm font-medium">{title}</CardTitle>
       </CardHeader>
 
-      <CardContent>
+      <CardContent className="max-h-[260px]">
         {numberValue !== undefined && (
           <div className="text-xl font-bold overflow-hidden text-ellipsis whitespace-nowrap">
             {numberValue}
