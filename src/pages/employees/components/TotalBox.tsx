@@ -1,7 +1,7 @@
 import { useTheme } from "@/components/theme/ThemeProvider";
 import { ChartPieLegend } from "@/components/charts/ChartPieLegend";
 import { Button } from "@/components/ui/button";
-import { PlusCircleIcon, Loader } from "lucide-react";
+import { PlusCircleIcon } from "lucide-react";
 import { useWindowSize } from "@uidotdev/usehooks";
 import { useMemo, useState } from "react";
 import { useGetStatusStat } from "@/services/manager/queries";
@@ -11,6 +11,7 @@ import AddEmployeeForm from "./AddEmployeeForm";
 import { useEmployee } from "@/services/manager/hooks/useEmployee";
 import type { EmployeeTable } from "../libs/table-types";
 import { Card } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 
 type Props = {
   iconDark: string;
@@ -41,6 +42,7 @@ export default function TotalBox({
     page,
     pageSize,
   );
+
   const chartData = useMemo(() => {
     const stats = data?.data || [];
     const mapStatus: Record<string, string> = {
@@ -58,25 +60,11 @@ export default function TotalBox({
   }, [data]);
 
   const chartConfig = {
-    count: {
-      label: title,
-    },
-    verified: {
-      label: "Verified",
-      color: "var(--chart-verified)",
-    },
-    notVerified: {
-      label: "Not Verified",
-      color: "var(--chart-notVerified)",
-    },
-    banned: {
-      label: "Banned",
-      color: "var(--chart-banned)",
-    },
-    disable: {
-      label: "Disable",
-      color: "var(--chart-disabled)",
-    },
+    count: { label: title },
+    verified: { label: "Verified", color: "var(--chart-verified)" },
+    notVerified: { label: "Not Verified", color: "var(--chart-notVerified)" },
+    banned: { label: "Banned", color: "var(--chart-banned)" },
+    disable: { label: "Disable", color: "var(--chart-disabled)" },
   } satisfies ChartConfig;
 
   const iconSrc = useMemo(
@@ -96,14 +84,24 @@ export default function TotalBox({
   );
 
   return (
-    <Card className="flex flex-col sm:flex-row lg:flex-col items-center gap-12 md:min-w-[298px] font-inter  p-8">
+    <Card className="flex flex-col sm:flex-row lg:flex-col items-center gap-12 md:min-w-[298px] font-inter p-8">
       <div className="flex flex-col gap-3 w-full items-center">
-        <div className="flex relative items-center justify-center w-26 h-26 p-4 rounded-full bg-purple-primary dark:bg-purple-light">
-          <img src={iconSrc} alt={`${title} Icon`} className="w-16 h-16" />
-        </div>
-        <h3 className="text-lg font-semibold">
-          Total {title}: <span className="text-2xl">{total}</span>
-        </h3>
+        {isLoading ? (
+          <Skeleton className="w-16 h-16 rounded-full" />
+        ) : (
+          <div className="flex relative items-center justify-center w-26 h-26 p-4 rounded-full bg-purple-primary dark:bg-purple-light">
+            <img src={iconSrc} alt={`${title} Icon`} className="w-16 h-16" />
+          </div>
+        )}
+
+        {isLoading ? (
+          <Skeleton className="w-30 h-6 inline-block" />
+        ) : (
+          <h3 className="text-lg font-semibold">
+            Total {title}: <span className="text-2xl">{total}</span>
+          </h3>
+        )}
+
         {isMobile && <AddNewButton />}
       </div>
 
@@ -116,26 +114,27 @@ export default function TotalBox({
           maxHeight="max-h-[250px]"
         />
       ) : (
-        <div className="animate__animated animate__fadeIn">
-          <Loader className="animate-spin" />
+        <div className="flex justify-center items-center w-full h-[250px]">
+          <Skeleton className="w-full h-full" />
         </div>
       )}
 
-      {!isMobile && <AddNewButton />}
+      {!isMobile &&
+        (isLoading ? (
+          <Skeleton className="w-30 h-6 inline-block" />
+        ) : (
+          <AddNewButton />
+        ))}
       <AddEmployeeForm
         open={openAddForm}
         onOpenChange={(open) => {
           setOpenAddForm(open);
-          if (!open) {
-            form.reset();
-          }
+          if (!open) form.reset();
         }}
         form={form}
         onConfirm={async (data) => {
           const result = await handleAddEmployee(data);
-          if (result) {
-            setOpenAddForm(false);
-          }
+          if (result) setOpenAddForm(false);
         }}
         title="Employee"
         isPending={isPending}
