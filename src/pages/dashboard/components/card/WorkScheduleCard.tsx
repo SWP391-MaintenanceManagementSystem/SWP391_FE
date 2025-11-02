@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
-import { CalendarCheck, Clock, MapPin } from "lucide-react";
+import { CalendarClock, Clock, MapPin } from "lucide-react";
 import { useGetWorkScheduleByEmpId } from "@/services/shift/queries";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -30,7 +30,7 @@ export default function WeeklyWorkSchedule({
   );
 
   return (
-    <Card className="shadow-sm gap-4 border border-gray-200 dark:border-[#2b2b2b] rounded-xl lg:w-[300px]">
+    <Card className="shadow-sm h-full gap-4 border border-gray-200 dark:border-[#2b2b2b] rounded-xl xl:w-[300px]">
       {isLoading ? (
         <>
           <CardHeader className="flex items-center space-x-3">
@@ -51,11 +51,11 @@ export default function WeeklyWorkSchedule({
       ) : (
         <>
           <CardHeader className="flex items-center gap-1.5">
-            <CalendarCheck size={20} />
+            <CalendarClock size={20} />
             <CardTitle>Work Schedule</CardTitle>
           </CardHeader>
 
-          <CardContent className="grid grid-cols-1 gap-6 items-start">
+          <CardContent className="grid grid-cols-[auto_1fr] xl:grid-cols-1 gap-6 items-start">
             <div className="relative">
               <Calendar
                 mode="single"
@@ -87,7 +87,7 @@ export default function WeeklyWorkSchedule({
               </h3>
 
               {selectedEvents.length > 0 ? (
-                <div className="space-y-2 overflow-y-auto max-h-[100px]">
+                <div className="space-y-2 overflow-y-auto max-h-[120px]">
                   {selectedEvents.map((event, idx) => (
                     <div
                       key={idx}

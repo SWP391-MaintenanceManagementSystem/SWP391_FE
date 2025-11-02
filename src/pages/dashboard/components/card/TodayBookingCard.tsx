@@ -12,13 +12,13 @@ export default function TodayBookingCard() {
   const { bookingData, isLoading } = useBooking({
     page: 1,
     pageSize: 100,
-    bookingDate: dayjs().format("YYYY-MM-DD"),
+    bookingDate: "2025-10-29",
     sortBy: "bookingDate",
     orderBy: "asc",
   });
 
   return (
-    <Card className="shadow-sm rounded-xl gap-1.5 border border-gray-200 dark:border-[#2b2b2b]">
+    <Card className="shadow-sm rounded-xl min-h-[200px] border border-gray-200 dark:border-[#2b2b2b]">
       <CardHeader>
         {isLoading ? (
           <div className="space-y-2">
@@ -36,7 +36,7 @@ export default function TodayBookingCard() {
         )}
       </CardHeader>
 
-      <CardContent className="divide-y max-h-[180px] h-[160px] overflow-y-auto flex flex-col">
+      <CardContent className="divide-y max-h-[180px] lg:max-h-full lg:h-full h-[160px] overflow-y-auto flex flex-col">
         {isLoading ? (
           <>
             {[1, 2, 3].map((i) => (
