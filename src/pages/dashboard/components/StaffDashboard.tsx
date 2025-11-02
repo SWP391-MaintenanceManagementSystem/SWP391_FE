@@ -9,7 +9,7 @@ import {
   Users,
 } from "lucide-react";
 import WeeklyWorkSchedule from "./card/ WeeklyWorkSchedule";
-import { Card } from "@/components/ui/card";
+import TodayBookingCard from "./card/TodayBookingCard";
 
 export default function StaffDashboard() {
   const { auth } = useAuth();
@@ -40,7 +40,9 @@ export default function StaffDashboard() {
           />
         </div>
         <div className="grid grid-cols-[1fr_auto] gap-6">
-          <Card></Card>
+          <div>
+            <TodayBookingCard />
+          </div>
           <WeeklyWorkSchedule employeeId={auth?.user?.id ?? ""} />
         </div>
       </MainContentLayout>
