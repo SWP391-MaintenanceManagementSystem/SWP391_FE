@@ -13,6 +13,7 @@ import {
 import "@/pages/shifts/employee/components/calendarView.css";
 import { useGetWorkSchedulesList } from "@/services/shift/queries";
 import type { WorkSchedule } from "@/types/models/shift";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const localizer = dayjsLocalizer(dayjs);
 
@@ -22,7 +23,7 @@ export default function CalendarView({ employeeId }: { employeeId: string }) {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedEvent, setSelectedEvent] = useState<WorkSchedule | null>(null);
 
-  const { data: apiData } = useGetWorkSchedulesList({
+  const { data: apiData, isLoading } = useGetWorkSchedulesList({
     page: 1,
     pageSize: 1000,
     employeeId,
@@ -72,30 +73,34 @@ export default function CalendarView({ employeeId }: { employeeId: string }) {
       <Card className="w-full h-full grid min-h-[600px]">
         <CardContent className="p-2">
           <div className="h-[600px] w-full overflow-hidden">
-            <Calendar
-              localizer={localizer}
-              events={events}
-              startAccessor="start"
-              endAccessor="end"
-              titleAccessor="title"
-              style={{ height: "100%" }}
-              view={view}
-              date={currentDate}
-              onView={setView}
-              onNavigate={(newDate) => {
-                setDate(newDate);
-                setCurrentDate(newDate);
-              }}
-              views={[Views.DAY, Views.WEEK, Views.MONTH]}
-              onSelectEvent={(event) => setSelectedEvent(event.raw)}
-              components={{
-                event: ({ event }) => (
-                  <div className="truncate px-1 text-[13px] font-medium cursor-pointer">
-                    {event.title}
-                  </div>
-                ),
-              }}
-            />
+            {isLoading ? (
+              <Skeleton className="h-full w-full rounded-lg" />
+            ) : (
+              <Calendar
+                localizer={localizer}
+                events={events}
+                startAccessor="start"
+                endAccessor="end"
+                titleAccessor="title"
+                style={{ height: "100%" }}
+                view={view}
+                date={currentDate}
+                onView={setView}
+                onNavigate={(newDate) => {
+                  setDate(newDate);
+                  setCurrentDate(newDate);
+                }}
+                views={[Views.DAY, Views.WEEK, Views.MONTH]}
+                onSelectEvent={(event) => setSelectedEvent(event.raw)}
+                components={{
+                  event: ({ event }) => (
+                    <div className="truncate px-1 text-[13px] font-medium cursor-pointer">
+                      {event.title}
+                    </div>
+                  ),
+                }}
+              />
+            )}
           </div>
         </CardContent>
       </Card>
