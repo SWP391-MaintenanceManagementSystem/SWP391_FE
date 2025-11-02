@@ -11,7 +11,7 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import "@/pages/shifts/employee/components/calendarView.css";
-import { useGetWorkSchedulesList } from "@/services/shift/queries";
+import { useGetWorkScheduleByEmpId } from "@/services/shift/queries";
 import type { WorkSchedule } from "@/types/models/shift";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -23,16 +23,12 @@ export default function CalendarView({ employeeId }: { employeeId: string }) {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedEvent, setSelectedEvent] = useState<WorkSchedule | null>(null);
 
-  const { data: apiData, isLoading } = useGetWorkSchedulesList({
-    page: 1,
-    pageSize: 1000,
-    employeeId,
-  });
+  const { data: apiData, isLoading } = useGetWorkScheduleByEmpId(employeeId);
 
   const events = useMemo(() => {
-    if (!apiData?.data) return [];
+    if (!apiData) return [];
 
-    return apiData.data.map((item: WorkSchedule) => ({
+    return apiData.map((item: WorkSchedule) => ({
       id: item.id,
       title: `${item.shift.name} (${item.shift.serviceCenter.name})`,
       start: new Date(`${item.date}T${item.shift.startTime}`),

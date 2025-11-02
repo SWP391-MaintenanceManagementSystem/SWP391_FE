@@ -8,7 +8,7 @@ import {
   TriangleAlert,
   Users,
 } from "lucide-react";
-import WeeklyWorkSchedule from "./card/ WeeklyWorkSchedule";
+import WeeklyWorkSchedule from "./card/WorkScheduleCard";
 import TodayBookingCard from "./card/TodayBookingCard";
 
 export default function StaffDashboard() {

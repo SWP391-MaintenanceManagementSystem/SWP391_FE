@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
 import { CalendarCheck, Clock, MapPin } from "lucide-react";
-import { useGetWorkSchedulesList } from "@/services/shift/queries";
+import { useGetWorkScheduleByEmpId } from "@/services/shift/queries";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -13,20 +13,16 @@ export default function WeeklyWorkSchedule({
   employeeId: string;
 }) {
   const [date, setDate] = useState(new Date());
-  const { data: apiData, isLoading } = useGetWorkSchedulesList({
-    page: 1,
-    pageSize: 1000,
-    employeeId,
-  });
+  const { data, isLoading } = useGetWorkScheduleByEmpId(employeeId);
 
   const events = useMemo(() => {
-    const raw = apiData?.data ?? [];
+    const raw = data ?? [];
     return raw.map((item) => ({
       date: item.date,
       time: `${item.shift.startTime.slice(0, 5)} - ${item.shift.endTime.slice(0, 5)}`,
       centerName: item.shift.serviceCenter.name,
     }));
-  }, [apiData]);
+  }, [data]);
 
   const eventDates = events.map((e) => e.date);
   const selectedEvents = events.filter(
