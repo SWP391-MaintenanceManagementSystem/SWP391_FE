@@ -5,11 +5,12 @@ import MainContentLayout from "@/components/MainContentLayout";
 import BookingInfoBox from "./BookingInfoBox";
 import CheckinForm from "./CheckinForm";
 import { useBookingDetail } from "@/services/booking/hooks/useBookingDetail";
-import type { CustomerBookingDetails } from "@/types/models/booking-with-detail";
 import { useVehicleHandoverForm } from "@/services/vehicle-handover/hooks/useVehicleHandover";
 import { useGetVehicleHandover } from "@/services/vehicle-handover/hooks/useGetVehicleHandover";
 import type { BookingCheckinsFormValues } from "../../lib/schema";
 import dayjs from "dayjs";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Card, CardContent } from "@/components/ui/card";
 
 export default function CheckinPage() {
   const { bookingId } = useParams<{ bookingId: string }>();
@@ -48,15 +49,36 @@ export default function CheckinPage() {
       />
 
       <MainContentLayout className="grid grid-cols-1 lg:grid-cols-[auto_1fr] gap-4">
-        <BookingInfoBox booking={bookingDetail as CustomerBookingDetails} />
-        <CheckinForm
-          form={form}
-          onSubmit={onSubmit}
-          isPending={isPending}
-          isLoading={isLoading}
-          bookingStatus={bookingDetail?.status}
-          images={vehicleHandover?.images ?? []}
-        />
+        {isLoading ? (
+          <>
+            <Card>
+              <CardContent className="flex flex-col gap-3">
+                <Skeleton className="h-6 w-40" />
+                <Skeleton className="h-4 w-60" />
+                <Skeleton className="h-32 w-[300px]" />
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent className="flex flex-col gap-3">
+                <Skeleton className="h-8 w-full" />
+                <Skeleton className="h-8 w-full" />
+                <Skeleton className="h-[300px] w-full" />
+              </CardContent>
+            </Card>
+          </>
+        ) : (
+          <>
+            {bookingDetail && <BookingInfoBox booking={bookingDetail} />}
+            <CheckinForm
+              form={form}
+              onSubmit={onSubmit}
+              isPending={isPending}
+              isLoading={isLoading}
+              bookingStatus={bookingDetail?.status}
+              images={vehicleHandover?.images ?? []}
+            />
+          </>
+        )}
       </MainContentLayout>
     </div>
   );

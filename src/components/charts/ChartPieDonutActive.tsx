@@ -1,33 +1,38 @@
-import { Label, Pie, PieChart } from "recharts";
+import { Label, Pie, PieChart, Sector } from "recharts";
 
 import {
   type ChartConfig,
   ChartContainer,
   ChartTooltip,
-  ChartLegend,
-  ChartLegendContent,
+  ChartTooltipContent,
 } from "@/components/ui/chart";
+import type { PieSectorDataItem } from "recharts/types/polar/Pie";
 
-export const description = "A donut chart with text";
-type ChartPieDonutTextProps = {
+export const description = "A donut chart with an active sector";
+type ChartPieDonutActiveProps = {
   chartData: Record<string, string | number>[];
   chartConfig: ChartConfig;
   total: number;
   nameKey?: string;
   dataKey?: string;
   title: string;
-  isLegendVisible?: boolean;
 };
 
-export function ChartPieDonutText({
+export function ChartPieDonutActive({
   chartData,
   chartConfig,
   nameKey = "name",
   dataKey = "value",
   total,
   title,
-  isLegendVisible = true,
-}: ChartPieDonutTextProps) {
+}: ChartPieDonutActiveProps) {
+  const maxIndex = chartData.reduce(
+    (maxIdx, item, idx, arr) =>
+      (item[dataKey] as number) > (arr[maxIdx][dataKey] as number)
+        ? idx
+        : maxIdx,
+    0,
+  );
   return (
     <ChartContainer
       config={chartConfig}
@@ -36,31 +41,18 @@ export function ChartPieDonutText({
       <PieChart>
         <ChartTooltip
           cursor={false}
-          content={({ payload }) => {
-            if (!payload?.length) return null;
-            const { name, value, payload: item } = payload[0];
-            const color = item.fill || payload[0].color;
-
-            return (
-              <div className="flex items-center gap-2 rounded-md bg-background px-2 py-1 shadow-sm text-sm">
-                <span
-                  className="inline-block h-3 w-3"
-                  style={{ backgroundColor: color }}
-                />
-                <span className="text-xs">
-                  {name} {value}
-                </span>
-              </div>
-            );
-          }}
+          content={<ChartTooltipContent hideLabel />}
         />
-
         <Pie
           data={chartData}
           dataKey={dataKey}
           nameKey={nameKey}
           innerRadius={50}
           strokeWidth={5}
+          activeIndex={maxIndex}
+          activeShape={({ outerRadius = 0, ...props }: PieSectorDataItem) => (
+            <Sector {...props} outerRadius={outerRadius + 10} />
+          )}
         >
           <Label
             content={({ viewBox }) => {
@@ -92,12 +84,6 @@ export function ChartPieDonutText({
             }}
           />
         </Pie>
-        {isLegendVisible && (
-          <ChartLegend
-            content={<ChartLegendContent nameKey={nameKey} />}
-            className="-translate-y-1 flex-wrap gap-2 *:h-1/8 *:justify-center"
-          />
-        )}
       </PieChart>
     </ChartContainer>
   );

@@ -11,7 +11,6 @@ import BookingTag from "@/components/tag/BookingTag";
 import dayjs from "dayjs";
 import CustomerInfoCard from "../customer/booking-detail/CustomerInfoCard";
 import TechnicianCard from "../customer/booking-detail/TechnicianCard";
-import { Spinner } from "@/components/ui/shadcn-io/spinner";
 import { useState } from "react";
 import { BookingServicesDialog } from "../customer/booking-detail/BookingServicesDialog";
 import { CancelBookingDialog } from "../customer/booking-detail/CancelBookingDialog";
@@ -22,6 +21,7 @@ import { useAssignBooking } from "@/services/booking/hooks/useAssignBooking";
 import UnAssignmentDialog from "./UnAssignmentDialog";
 import useUnAssign from "@/services/booking/hooks/useUnAssign";
 import { toast } from "sonner";
+import Loading from "@/components/Loading";
 
 export default function ViewBookingDetail() {
   const navigate = useNavigate();
@@ -48,7 +48,7 @@ export default function ViewBookingDetail() {
   if (isLoading)
     return (
       <div className="text-gray-500 p-6 flex justify-center items-center h-full">
-        <Spinner />
+        <Loading />
       </div>
     );
 

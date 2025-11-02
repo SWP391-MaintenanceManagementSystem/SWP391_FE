@@ -11,6 +11,7 @@ import StaffBlackIcon from "@/assets/staff-black.png";
 import StaffWhiteIcon from "@/assets/staff-white.png";
 import { Card } from "@/components/ui/card";
 import { useGetServiceCenterList } from "@/services/manager/queries";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function StaffsManagementPage() {
   const [page, setPage] = useState(1);
@@ -82,25 +83,33 @@ export default function StaffsManagementPage() {
           <h3 className="text-2xl font-semibold mb-4 text-gray-text-header">
             Staffs List
           </h3>
-          <DataTable<EmployeeTable, unknown>
-            columns={columns as ColumnDef<EmployeeTable, unknown>[]}
-            data={staffs}
-            pageIndex={(data?.page ?? 1) - 1}
-            pageSize={data?.pageSize ?? 10}
-            totalPage={data?.totalPages ?? 1}
-            isLoading={isLoading}
-            isFetching={isFetching}
-            onPageChange={(newPage) => setPage(newPage + 1)}
-            onPageSizeChange={setPageSize}
-            onSearchChange={setSearchValue}
-            searchPlaceholder="email"
-            sorting={sorting}
-            onSortingChange={setSorting}
-            manualPagination
-            manualSorting
-            manualSearch
-            isSearch
-          />
+          {isLoading ? (
+            <div className="flex flex-col gap-2">
+              {Array.from({ length: 8 }).map((_, i) => (
+                <Skeleton key={i} className="h-10 w-full rounded-md" />
+              ))}
+            </div>
+          ) : (
+            <DataTable<EmployeeTable, unknown>
+              columns={columns as ColumnDef<EmployeeTable, unknown>[]}
+              data={staffs}
+              pageIndex={(data?.page ?? 1) - 1}
+              pageSize={data?.pageSize ?? 10}
+              totalPage={data?.totalPages ?? 1}
+              isLoading={isLoading}
+              isFetching={isFetching}
+              onPageChange={(newPage) => setPage(newPage + 1)}
+              onPageSizeChange={setPageSize}
+              onSearchChange={setSearchValue}
+              searchPlaceholder="email"
+              sorting={sorting}
+              onSortingChange={setSorting}
+              manualPagination
+              manualSorting
+              manualSearch
+              isSearch
+            />
+          )}
         </Card>
       </MainContentLayout>
     </div>
