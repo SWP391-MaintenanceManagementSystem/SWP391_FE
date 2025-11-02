@@ -6,7 +6,6 @@ import { useGetMessages } from "@/services/chat/queries";
 import type { Message } from "@/types/models/chat";
 import ChatWindow from "./ChatWindown";
 
-
 interface ChatWindowContainerProps {
   currentConversationId?: string;
 }
@@ -19,12 +18,15 @@ export default function ChatWindowContainer({
   const navigate = useNavigate();
   const [input, setInput] = useState("");
 
-  const { sendMessage, connected, messages: rtMessages } = useChat(
-    userId ?? "",
-    "CUSTOMER"
-  );
+  const {
+    sendMessage,
+    connected,
+    messages: rtMessages,
+  } = useChat(userId ?? "", "CUSTOMER");
 
-  const { data: oldMessages = [] } = useGetMessages(currentConversationId || "");
+  const { data: oldMessages = [] } = useGetMessages(
+    currentConversationId || ""
+  );
 
   useEffect(() => {
     if (!userId) navigate("/login", { replace: true });

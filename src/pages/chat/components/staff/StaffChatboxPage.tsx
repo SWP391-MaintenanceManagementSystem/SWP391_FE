@@ -11,7 +11,7 @@ export default function StaffChatboxPage() {
     <div className="w-full h-[calc(100vh-32px)] font-inter">
       <DynamicBreadcrumbs pathTitles={{ staffChat: "Chat" }} />
       <MainContentLayout>
-        <div className="flex h-full rounded-xl border overflow-hidden bg-white dark:bg-[#101418]">
+        <div className="flex h-full rounded-xl border overflow-hidden ">
           <StaffSidebarContainer
             currentConversationId={currentConversationId}
             onSelectConversation={setCurrentConversationId}

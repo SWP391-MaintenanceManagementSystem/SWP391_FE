@@ -1,9 +1,11 @@
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
-import { Search } from "lucide-react";
+import { RotateCcw, Search } from "lucide-react";
 import { ConversationStatus } from "@/types/enums/conversationStatus";
 import type { Conversation } from "@/types/models/chat";
+import { TooltipWrapper } from "@/components/TooltipWrapper";
+import ActionBtn from "@/components/table/ActionBtn";
 
 interface StaffSidebarProps {
   conversations: Conversation[];
@@ -12,6 +14,7 @@ interface StaffSidebarProps {
   isLoading?: boolean;
   claimTicket: (id: string) => void;
   closeTicket: (id: string) => void;
+  refetchTicket: () => void;
 }
 
 const TABS = [
@@ -27,13 +30,15 @@ export default function StaffSidebar({
   isLoading,
   claimTicket,
   closeTicket,
+  refetchTicket,
 }: StaffSidebarProps) {
   const [searchTerm, setSearchTerm] = useState("");
   const [activeTab, setActiveTab] = useState("OPEN");
 
   const counts = {
     OPEN: conversations.filter((c) => c.staffId && c.status === "OPEN").length,
-    PENDING: conversations.filter((c) => !c.staffId && c.status === "OPEN").length,
+    PENDING: conversations.filter((c) => !c.staffId && c.status === "OPEN")
+      .length,
     CLOSED: conversations.filter((c) => c.status === "CLOSED").length,
   };
 
@@ -51,6 +56,14 @@ export default function StaffSidebar({
       {/* Header */}
       <div className="flex items-center justify-between p-3 text-gray-800 dark:text-gray-200">
         <span className="font-medium text-lg">Tickets</span>
+        <TooltipWrapper content="Reload tickets">
+          <ActionBtn
+            icon={<RotateCcw size={16} />}
+            onClick={refetchTicket}
+            className="rounded-full p-2 border-none shadow-sm transition-all hover:scale-105
+            bg-white hover:bg-gray-100 dark:bg-dark-surface dark:hover:bg-[#3a3a42]"
+          />
+        </TooltipWrapper>
       </div>
 
       {/* Tabs */}
@@ -70,15 +83,18 @@ export default function StaffSidebar({
             <span
               className={`w-2 h-2 rounded-full ${
                 tab.key === "OPEN"
-                  ? activeTab === "OPEN" ? "bg-green-500" : "bg-green-300"
+                  ? activeTab === "OPEN"
+                    ? "bg-green-500"
+                    : "bg-green-300"
                   : tab.key === "PENDING"
-                  ? activeTab === "PENDING" ? "bg-yellow-500" : "bg-yellow-300"
+                  ? activeTab === "PENDING"
+                    ? "bg-yellow-500"
+                    : "bg-yellow-300"
                   : activeTab === "CLOSED"
                   ? "bg-red-500"
                   : "bg-red-300"
               }`}
             />
-
             {/* Label + Count */}
             {tab.label} ({counts[tab.key]})
           </button>
@@ -88,7 +104,10 @@ export default function StaffSidebar({
       {/* Search */}
       <div className="p-2 border-b bg-white dark:bg-dark-sidebar">
         <div className="relative">
-          <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+          <Search
+            size={14}
+            className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+          />
           <Input
             placeholder="Search ticket ID..."
             value={searchTerm}
@@ -119,7 +138,9 @@ export default function StaffSidebar({
               <p className="font-semibold text-sm text-gray-800 truncate dark:text-gray-100">
                 Ticket #{c.id.slice(0, 6)}
               </p>
-              <p className="text-xs text-gray-500 dark:text-gray-400">{c.status}</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400">
+                {c.status}
+              </p>
 
               {!c.staffId && c.status === ConversationStatus.OPEN && (
                 <Button

@@ -11,7 +11,7 @@ export default function CustomerChatboxPage() {
     <div className="w-full h-[calc(100vh-32px)] font-inter">
     <DynamicBreadcrumbs pathTitles={{ chat: "Inbox Support" }} />
       <MainContentLayout>
-        <div className="flex  h-full rounded-xl border overflow-hidden white dark:bg-bg-app">
+        <div className="flex  h-full rounded-xl border overflow-hidden ">
           <ChatSidebarContainer
             currentConversationId={currentConversationId}
             onSelectConversation={setCurrentConversationId}
