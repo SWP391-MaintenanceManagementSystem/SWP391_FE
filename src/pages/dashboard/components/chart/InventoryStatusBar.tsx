@@ -56,7 +56,7 @@ export function InventoryBar({ data }: { data: InventoryStatusData }) {
             </TooltipTrigger>
             <TooltipContent>
               <p>
-                Discontinued: {data.discontinued} items ({discontinuedPercent}%)
+                Discontinued: {data.disStock} items ({discontinuedPercent}%)
               </p>
             </TooltipContent>
           </Tooltip>

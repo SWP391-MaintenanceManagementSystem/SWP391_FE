@@ -3,7 +3,7 @@ import { type ChartConfig } from "@/components/ui/chart";
 import type { ServiceData } from "@/types/models/dashboard";
 
 interface TrendingMembershipDonutChartProps {
-  data?: ServiceData[];
+  data: ServiceData[];
 }
 
 const colorPalette = [

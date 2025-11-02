@@ -20,7 +20,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import type { RevenueData } from "@/types/models/dashboard";
+import { useGetRevenueByRange } from "@/services/dashboard/queries/admin";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export const description = "Dynamic revenue area chart";
 
@@ -31,27 +32,28 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-type Props = {
-  data: RevenueData[];
-};
+export function RevenueChart() {
+  const [timeRange, setTimeRange] = React.useState("3m");
 
-export function RevenueChart({ data }: Props) {
-  const [timeRange, setTimeRange] = React.useState("90d");
+  const { data, isLoading } = useGetRevenueByRange(timeRange);
 
-  const referenceDate = React.useMemo(() => {
-    const lastItem = data[data.length - 1];
-    return lastItem ? new Date(lastItem.date) : new Date();
-  }, [data]);
+  if (isLoading) {
+    return (
+      <Card className="pt-0">
+        <CardHeader className="flex flex-wrap items-center justify-between gap-4 border-b py-5 sm:flex-row">
+          <div className="grid flex-1 gap-1">
+            <Skeleton className="h-6 w-1/3" />
+            <Skeleton className="h-4 w-2/3" />
+          </div>
+          <Skeleton className="h-10 w-[160px] rounded-lg" />
+        </CardHeader>
 
-  const filteredData = React.useMemo(() => {
-    const daysMap = { "7d": 7, "30d": 30, "90d": 90 };
-    const daysToSubtract = daysMap[timeRange as keyof typeof daysMap] ?? 90;
-
-    const startDate = new Date(referenceDate);
-    startDate.setDate(startDate.getDate() - daysToSubtract);
-
-    return data.filter((item) => new Date(item.date) >= startDate);
-  }, [data, timeRange, referenceDate]);
+        <CardContent className="px-2 pt-4 sm:px-6 sm:pt-6">
+          <div className="aspect-auto h-[250px] w-full bg-gray-100 rounded-xl animate-pulse" />
+        </CardContent>
+      </Card>
+    );
+  }
 
   return (
     <Card className="pt-0">
@@ -63,20 +65,16 @@ export function RevenueChart({ data }: Props) {
           </CardDescription>
         </div>
 
-        {/* Tổng doanh thu */}
-        <div className="flex items-center gap-3">
-          {/* Dropdown chọn khoảng thời gian */}
-          <Select value={timeRange} onValueChange={setTimeRange}>
-            <SelectTrigger className="w-[160px] rounded-lg">
-              <SelectValue placeholder="Select period" />
-            </SelectTrigger>
-            <SelectContent className="rounded-xl">
-              <SelectItem value="7d">Last 7 days</SelectItem>
-              <SelectItem value="30d">Last 30 days</SelectItem>
-              <SelectItem value="90d">Last 3 months</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
+        <Select value={timeRange} onValueChange={setTimeRange}>
+          <SelectTrigger className="w-[160px] rounded-lg">
+            <SelectValue placeholder="Select period" />
+          </SelectTrigger>
+          <SelectContent className="rounded-xl">
+            <SelectItem value="1w">Last 7 days</SelectItem>
+            <SelectItem value="1m">Last 30 days</SelectItem>
+            <SelectItem value="3m">Last 3 months</SelectItem>
+          </SelectContent>
+        </Select>
       </CardHeader>
 
       <CardContent className="px-2 pt-4 sm:px-6 sm:pt-6">
@@ -84,7 +82,7 @@ export function RevenueChart({ data }: Props) {
           config={chartConfig}
           className="aspect-auto h-[250px] w-full"
         >
-          <AreaChart data={filteredData}>
+          <AreaChart data={data?.data}>
             <defs>
               <linearGradient id="fillRevenue" x1="0" y1="0" x2="0" y2="1">
                 <stop

@@ -16,13 +16,13 @@ const colorPalette = [
   "#EF4444",
 ];
 
-interface TrendingServicesRadialChartProps {
+interface TrendingServicesDonutChartProps {
   data: ServiceData[];
 }
 
-export function TrendingServicesRadialChart({
+export function TrendingServicesDonutChart({
   data,
-}: TrendingServicesRadialChartProps) {
+}: TrendingServicesDonutChartProps) {
   if (!data || data.length === 0) return null;
   const sortedData = [...data].sort((a, b) => b.value - a.value);
 

@@ -1,21 +1,24 @@
 export type InventoryStatusData = {
   inStock: number;
   lowStock: number;
-  discontinued: number;
+  disStock: number;
   totalItems: number;
   totalValue: number;
-  lowStockItems: LowStockItem[];
+  lowStockItems: LowStockItems[];
 };
 
-export type LowStockItem = {
+export type LowStockItems = {
   name: string;
   quantity: number;
   minRequired: number;
 };
 
 export type RevenueData = {
-  date: string;
-  totalRevenue: number;
+  range: "1d" | "3d" | "1w" | "1m" | "3m";
+  data: {
+    date: string;
+    totalRevenue: number;
+  }[];
 };
 
 export type ServiceData = {
@@ -23,39 +26,30 @@ export type ServiceData = {
   value: number;
 };
 
-export type AdminDashboardData = {
-  summary: {
-    totalRevenue: number;
-    totalCustomers: number;
-    totalEmployees: number;
-    totalServiceCenters: number;
-    revenueGrowthRate: number;
-    customerGrowthRate: number;
-    employeeGrowthRate: number;
-  };
+export type AdminOverview = {
+  totalRevenue: number;
+  totalCustomers: number;
+  totalEmployees: number;
+  totalServiceCenters: number;
+  revenueGrowthRate: number;
+  customerGrowthRate: number;
+  employeeGrowthRate: number;
+};
 
-  revenueStats: {
-    range: string;
-    data: RevenueData[];
-  };
+export type TrendingPurchase = {
+  mostPopularMembership: string;
+  mostPopularService: string;
+  mostPopularPackage: string;
+  totalPackages: number;
+  totalServices: number;
+  totalMemberships: number;
+  services: ServiceData[];
+  packages: ServiceData[];
+  memberships: ServiceData[];
+};
 
-  trendingPurchases: {
-    mostPopularMembership: string;
-    mostPopularService: string;
-    mostPopularPackage: string;
-    totalPackages: number;
-    totalServices: number;
-    totalMemberships: number;
-    services: ServiceData[];
-    packages: ServiceData[];
-    memberships: ServiceData[];
-  };
-
-  inventoryStatus: InventoryStatusData;
-
-  serviceCenters: {
-    centerName: string;
-    bookings: number;
-    revenue: number;
-  }[];
+export type ServiceCenterStat = {
+  centerName: string;
+  bookings: number;
+  revenue: number;
 };
