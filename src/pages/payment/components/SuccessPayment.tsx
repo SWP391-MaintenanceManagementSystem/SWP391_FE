@@ -1,18 +1,39 @@
 import { useState } from "react";
-import { CheckCircle2, ArrowLeft, Mail } from "lucide-react";
+import { CheckCircle2, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { useSearchParams } from "react-router-dom";
-import { usePaymentTransaction } from "@/services/payment/hooks/usePaymentTransaction";
+import {
+  usePaymentTransaction,
+  usePaymentTransactionSession,
+} from "@/services/payment/hooks/usePaymentTransaction";
 import FeedbackSection from "./FeedbackSection";
 import { ReferenceType } from "@/types/enums/referenceType";
+import { b64DecodeUnicode } from "@/utils/base64";
 
 export default function SuccessPayment() {
   const [searchParams] = useSearchParams();
+
+  const isFree = searchParams.get("free") === "true";
+  const encodedId = searchParams.get("transaction_id") ?? "";
   const sessionId = searchParams.get("session_id") ?? "";
-  const { data, isLoading, isError } = usePaymentTransaction(sessionId);
+
+  const freeTransactionQuery = usePaymentTransaction(
+    isFree ? b64DecodeUnicode(encodedId) : "",
+    isFree && !!encodedId
+  );
+
+  const paidTransactionQuery = usePaymentTransactionSession(
+    !isFree ? sessionId : "",
+    !isFree && !!sessionId
+  );
+
+  const { data, isLoading, isError } = isFree
+    ? freeTransactionQuery
+    : paidTransactionQuery;
+
   const [showBackButton, setShowBackButton] = useState(false);
 
   if (isLoading)
@@ -35,7 +56,6 @@ export default function SuccessPayment() {
     <div className="min-h-screen w-full flex items-center justify-center p-4 font-inter bg-gray-50 dark:bg-gray-900 transition-colors">
       <Card className="w-full max-w-sm sm:max-w-md md:max-w-lg mx-auto shadow-md border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 transition-colors">
         <CardContent className="p-8 text-center space-y-6 bg-white dark:bg-gray-800 rounded-2xl">
-          {/* Success Icon */}
           <div className="flex justify-center">
             <div className="w-24 h-24 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center">
               <CheckCircle2 className="w-12 h-12 text-green-600 dark:text-green-400" />
@@ -52,7 +72,6 @@ export default function SuccessPayment() {
             </p>
           </div>
 
-          {/* Transaction Details */}
           <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4 space-y-3 text-left border border-gray-200 dark:border-gray-700">
             <div className="flex justify-between items-center">
               <span className="text-gray-500 dark:text-gray-400">Amount</span>
@@ -67,10 +86,7 @@ export default function SuccessPayment() {
               <span className="text-gray-500 dark:text-gray-400">
                 Transaction ID
               </span>
-              <Badge
-                variant="outline"
-                className="text-xs bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 border border-gray-300 dark:border-gray-600"
-              >
+              <Badge variant="outline" className="text-xs">
                 {transaction.id}
               </Badge>
             </div>
@@ -80,8 +96,8 @@ export default function SuccessPayment() {
               <Badge
                 className={`text-xs ${
                   transaction.status === "SUCCESS"
-                    ? "bg-green-50 text-green-700 border-green-200 dark:bg-green-900/30 dark:text-green-400 dark:border-green-800"
-                    : "bg-yellow-50 text-yellow-700 border-yellow-200 dark:bg-yellow-900/30 dark:text-yellow-400 dark:border-yellow-800"
+                    ? "bg-green-50 text-green-700 border-green-200"
+                    : "bg-yellow-50 text-yellow-700 border-yellow-200"
                 }`}
               >
                 {transaction.status}
@@ -106,51 +122,19 @@ export default function SuccessPayment() {
                 })}
               </span>
             </div>
-
-            <div className="flex justify-between items-center">
-              <span className="text-gray-500 dark:text-gray-400">
-                Reference Type
-              </span>
-              <span className="text-gray-700 dark:text-gray-200">
-                {transaction.referenceType}
-              </span>
-            </div>
           </div>
 
-          {/* Email Confirmation */}
-          <div className="flex items-center justify-center gap-2 text-sm text-green-700 dark:text-green-400 bg-green-50 dark:bg-green-900/20 p-3 rounded-lg border border-green-100 dark:border-green-800">
-            <Mail className="w-4 h-4" />
-            <span>Receipt sent to your registered email</span>
-          </div>
-
-          {/* Feedback Section */}
           {transaction.referenceType === ReferenceType.BOOKING && (
             <FeedbackSection onSubmit={() => setShowBackButton(true)} />
           )}
 
-          {/* Back button (ẩn/hiện sau khi feedback) */}
           {showBackButton && (
-            <div className="space-y-3 pt-4">
-              <Button
-                variant="outline"
-                className="w-full text-gray-700 dark:text-gray-200 dark:border-gray-600"
-                size="lg"
-                asChild
-              >
-                <a href="/">
-                  <ArrowLeft className="w-4 h-4 mr-2" />
-                  Back to Dashboard
-                </a>
-              </Button>
-            </div>
+            <Button variant="outline" className="w-full mt-4">
+              <a href="/">
+                <ArrowLeft className="w-4 h-4 mr-2" /> Back to Dashboard
+              </a>
+            </Button>
           )}
-
-          <p className="text-xs text-gray-500 dark:text-gray-400 pt-4">
-            Need help? Contact our support team at{" "}
-            <span className="text-green-600 dark:text-green-400">
-              support@charged.com
-            </span>
-          </p>
         </CardContent>
       </Card>
     </div>

@@ -12,6 +12,12 @@ export const postPaymentInfo = async (data: Payment) => {
 
 export const getPaymentTransaction = async (sessionId: string) => {
   return await httpPrivate.get<BaseResponse<{ data: PaymentTransaction }>>(
-    `/payment/transaction/${sessionId}`
+    `/payment/transactions/sessions/${sessionId}`
+  );
+};
+
+export const getPaymentTransactionById = async (transactionId: string) => {
+  return await httpPrivate.get<BaseResponse<{ data: PaymentTransaction }>>(
+    `/payment/transactions/${transactionId}`
   );
 };
