@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { useInventory } from "@/services/manager/hooks/useInvetory";
 import { AddEditGoodsDialog } from "./AddEditGoodsDialog";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function ItemsListSection() {
   const [openAddModal, setOpenAddModal] = useState(false);
@@ -50,39 +51,52 @@ export default function ItemsListSection() {
     <>
       <Card className="h-full flex-1 md:min-h-[500px] min-h-[600px]">
         <CardContent className="font-inter flex flex-col gap-4 h-full">
-          <h3 className="font-semibold text-gray-text-header h-fit">
-            Inventory Items
-          </h3>
-          <DataTable<Part, unknown>
-            data={rawList}
-            columns={columns as ColumnDef<Part, unknown>[]}
-            pageIndex={(data?.page ?? 1) - 1}
-            pageSize={data?.pageSize ?? 10}
-            totalPage={data?.totalPages ?? 1}
-            isLoading={isLoading}
-            isFetching={isFetching}
-            onPageChange={(newPage) => setPage(newPage + 1)}
-            onPageSizeChange={setPageSize}
-            manualPagination
-            isSearch={true}
-            searchPlaceholder="Name, Category"
-            onSearchChange={setSearchValue}
-            manualSearch
-            sorting={sorting}
-            onSortingChange={setSorting}
-            manualSorting
-            headerActions={
-              <Button
-                onClick={() => setOpenAddModal(true)}
-                className=" w-full md:w-[150px] justify-self-end"
-                variant="outline"
-                autoFocus={false}
-              >
-                Add New Item
-                <Plus className="h-4 w-4" />
-              </Button>
-            }
-          />
+          {isLoading || isFetching ? (
+            <>
+              <Skeleton className="h-10 w-30 rounded-md" />
+              <div className="flex flex-col gap-2">
+                {Array.from({ length: 8 }).map((_, i) => (
+                  <Skeleton key={i} className="h-10 w-full rounded-md" />
+                ))}
+              </div>
+            </>
+          ) : (
+            <>
+              <h3 className="font-semibold text-gray-text-header h-fit">
+                Inventory Items
+              </h3>
+              <DataTable<Part, unknown>
+                data={rawList}
+                columns={columns as ColumnDef<Part, unknown>[]}
+                pageIndex={(data?.page ?? 1) - 1}
+                pageSize={data?.pageSize ?? 10}
+                totalPage={data?.totalPages ?? 1}
+                isLoading={isLoading}
+                isFetching={isFetching}
+                onPageChange={(newPage) => setPage(newPage + 1)}
+                onPageSizeChange={setPageSize}
+                manualPagination
+                isSearch={true}
+                searchPlaceholder="Name, Category"
+                onSearchChange={setSearchValue}
+                manualSearch
+                sorting={sorting}
+                onSortingChange={setSorting}
+                manualSorting
+                headerActions={
+                  <Button
+                    onClick={() => setOpenAddModal(true)}
+                    className=" w-full md:w-[150px] justify-self-end"
+                    variant="outline"
+                    autoFocus={false}
+                  >
+                    Add New Item
+                    <Plus className="h-4 w-4" />
+                  </Button>
+                }
+              />
+            </>
+          )}
         </CardContent>
       </Card>
       <AddEditGoodsDialog
