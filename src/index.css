@@ -53,11 +53,10 @@
   --color-banned-dark: #ef4444;
   --color-warning-dark: #f59e0b;
   --color-disable-dark: #6b7280;
-
-  --color-dark-hover-bg: #2a2a2a;
+  
   --color-dark-bg: #111113;
   --color-dark-surface: #2b2b2f;
-
+  --color-dark-sidebar: #1f1f1f;
   --color-membership-light: #e7ebff;
 }
 

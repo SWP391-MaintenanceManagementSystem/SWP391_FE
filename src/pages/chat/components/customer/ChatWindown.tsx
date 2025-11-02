@@ -69,7 +69,7 @@ export default function ChatWindow({
       </div>
 
       {/* Input + Send */}
-      <div className="border-t p-3 bg-white flex gap-2 dark:bg-[#121212] dark:border-[#2b2b2b]">
+      <div className="border-t p-3 bg-white flex gap-2 dark:bg-[#121212] ">
         <Input
           placeholder="Type a message..."
           disabled={!connected}
@@ -92,8 +92,8 @@ export default function ChatWindow({
             p-2 rounded-full transition-all duration-200
             ${
               !connected || !input.trim()
-                ? " text-gray-500 cursor-not-allowed bg-purple-300 dark:bg-purple-300 opacity-70"
-                : "bg-purple-700  dark:bg-purple-300  hover:brightness-110 active:scale-[0.97]"
+                ? " text-gray-500 cursor-not-allowed bg-purple-300 dark:bg-purple-300 "
+                : "bg-purple-landing  dark:bg-purple-300  hover:brightness-110 active:scale-[0.97]"
             }
           `}
         >
@@ -103,8 +103,8 @@ export default function ChatWindow({
               transition-transform duration-200
               ${
                 connected && input.trim()
-                  ? "text-white hover:translate-x-[1px] hover:-translate-y-[1px]"
-                  : "text-gray-500"
+                  ? "text-white dark:text-amber-primary "
+                  : "text-gray-500 dark:text-gray-800"
               }
             `}
           />
