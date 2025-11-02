@@ -29,6 +29,7 @@ export default function TechnicianAssignedBookingTable() {
     sortBy: sorting[0]?.id ?? "createdAt",
     orderBy: sorting[0]?.desc ? "desc" : "asc",
   });
+  console.log("🚀 ~ TechnicianAssignedBookingTable ~ bookingData:", bookingData)
 
   const bookings = bookingData?.data;
 

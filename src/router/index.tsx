@@ -30,6 +30,7 @@ import ViewSchedule from "@/pages/shifts/employee/ViewSchedule";
 import VehicleDetailPage from "@/pages/vehicle/components/manager/vehicleManagement/VehicleDetailPage";
 import HistoryBookingCus from "@/pages/vehicle/components/customer/HistoryBooking";
 import CheckinPage from "@/pages/booking/components/staff/CheckinPage";
+import ChatPage from "@/pages/chat";
 import HelpAndSupportPage from "@/pages/support/components/HelpAndSupport";
 
 const RouterComponent = () => {
@@ -103,6 +104,10 @@ const RouterComponent = () => {
                 {
                   path: "/booking/:id",
                   element: <BookingDetailPage />,
+                },
+                {
+                  path: "/chat",
+                  element: <ChatPage />,
                 },
                 {path: "/support",
                   element: <HelpAndSupportPage />,
