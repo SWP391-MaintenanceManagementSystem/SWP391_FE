@@ -37,9 +37,9 @@ export type AdminOverview = {
 };
 
 export type TrendingPurchase = {
-  mostPopularMembership: string;
-  mostPopularService: string;
-  mostPopularPackage: string;
+  mostPopularMembership: string[];
+  mostPopularService: string[];
+  mostPopularPackage: string[];
   totalPackages: number;
   totalServices: number;
   totalMemberships: number;

@@ -37,14 +37,14 @@ export function OverviewAdmin() {
       />
       <NavLink to="/vehicles">
         <TotalCard
-          title="Total Customer"
+          title="Verified Customers"
           icon={User2}
           numberValue={data?.totalCustomers ?? "N/A"}
         />
       </NavLink>
       <NavLink to="/employees/staffs">
         <TotalCard
-          title="Total Employee"
+          title="Verified Employees"
           icon={IdCardLanyard}
           numberValue={data?.totalEmployees ?? "N/A"}
         />

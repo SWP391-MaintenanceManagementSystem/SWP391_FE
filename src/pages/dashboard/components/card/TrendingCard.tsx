@@ -153,15 +153,18 @@ export function TrendingPurchaseCard() {
               </Badge>
             </TooltipWrapper>
             <p className="text-xs text-gray-500 dark:text-gray-400">
-              Top service:{" "}
+              Top{" "}
+              {data?.mostPopularService && data.mostPopularService.length > 1
+                ? "services:"
+                : "service:"}{" "}
               <span className="font-medium text-gray-800 dark:text-gray-200">
-                {data?.mostPopularService}
+                {data?.mostPopularService?.join(", ")}
               </span>
             </p>
           </div>
 
           {/* Packages */}
-          <div className="flex flex-col gap-1 items-center border-l border-r border-gray-200 dark:border-gray-700 px-4">
+          <div className="flex flex-col gap-1 items-center text-center border-l border-r border-gray-200 dark:border-gray-700 px-4">
             <TrendingPackagesDonutChart data={data?.packages ?? []} />
             <TooltipWrapper content="View List">
               <Badge
@@ -172,10 +175,11 @@ export function TrendingPurchaseCard() {
                 Maintenance Packages
               </Badge>
             </TooltipWrapper>
+
             <p className="text-xs text-gray-500 dark:text-gray-400">
               Most chosen:{" "}
               <span className="font-medium text-gray-800 dark:text-gray-200">
-                {data?.mostPopularPackage}
+                {data?.mostPopularPackage.join(", ")}
               </span>
             </p>
           </div>
@@ -195,7 +199,7 @@ export function TrendingPurchaseCard() {
             <p className="text-xs text-gray-500 dark:text-gray-400">
               Top tier:{" "}
               <span className="font-medium text-gray-800 dark:text-gray-200">
-                {data?.mostPopularMembership}
+                {data?.mostPopularMembership.join(", ")}
               </span>
             </p>
           </div>
