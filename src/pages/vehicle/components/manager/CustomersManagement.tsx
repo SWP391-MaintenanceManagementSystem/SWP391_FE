@@ -11,6 +11,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAuth } from "@/contexts/AuthContext";
 import type { AccountRole } from "@/types/enums/role";
 import clsx from "clsx";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function AdminVehiclesManagement() {
   const { auth } = useAuth();
@@ -84,6 +85,7 @@ export default function AdminVehiclesManagement() {
         )}
       >
         {auth.user?.role === "ADMIN" && <ChartCustomerStat />}
+
         <Card className=" w-full h-full grid grid-rows-[auto_1fr] min-h-[600px]">
           <CardHeader>
             <CardTitle className="text-2xl font-semibold font-inter text-gray-text-header">
@@ -91,25 +93,41 @@ export default function AdminVehiclesManagement() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <DataTable<CustomerTable, unknown>
-              columns={columns as ColumnDef<CustomerTable, unknown>[]}
-              data={customers}
-              pageIndex={(data?.page ?? 1) - 1}
-              pageSize={data?.pageSize ?? 10}
-              totalPage={data?.totalPages ?? 1}
-              isLoading={isLoading}
-              isFetching={isFetching}
-              onPageChange={(newPage) => setPage(newPage + 1)}
-              onPageSizeChange={setPageSize}
-              onSearchChange={setSearchValue}
-              searchPlaceholder="email"
-              sorting={sorting}
-              onSortingChange={setSorting}
-              manualPagination
-              manualSorting
-              manualSearch
-              isSearch
-            />
+            {isLoading || isFetching ? (
+              <div className="space-y-4">
+                {Array.from({ length: pageSize }).map((_, idx) => (
+                  <div
+                    key={idx}
+                    className="flex space-x-4 items-center animate-pulse"
+                  >
+                    <Skeleton className="h-6 w-16 rounded" />
+                    <Skeleton className="h-6 w-32 rounded" />
+                    <Skeleton className="h-6 w-48 rounded" />
+                    <Skeleton className="h-6 w-24 rounded" />
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <DataTable<CustomerTable, unknown>
+                columns={columns as ColumnDef<CustomerTable, unknown>[]}
+                data={customers}
+                pageIndex={(data?.page ?? 1) - 1}
+                pageSize={data?.pageSize ?? 10}
+                totalPage={data?.totalPages ?? 1}
+                isLoading={isLoading}
+                isFetching={isFetching}
+                onPageChange={(newPage) => setPage(newPage + 1)}
+                onPageSizeChange={setPageSize}
+                onSearchChange={setSearchValue}
+                searchPlaceholder="email"
+                sorting={sorting}
+                onSortingChange={setSorting}
+                manualPagination
+                manualSorting
+                manualSearch
+                isSearch
+              />
+            )}
           </CardContent>
         </Card>
       </MainContentLayout>
