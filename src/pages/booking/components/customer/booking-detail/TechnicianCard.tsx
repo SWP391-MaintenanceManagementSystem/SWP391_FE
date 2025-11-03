@@ -14,6 +14,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
+import { TooltipWrapper } from "@/components/TooltipWrapper";
 
 interface TechnicianProps {
   technicians?: { firstName?: string; lastName?: string }[];
@@ -40,29 +41,37 @@ export default function TechnicianCard({
             Technician Information
           </CardTitle>
         </div>
-        {role === "STAFF" && !disabled && (
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon">
-                <Ellipsis
-                  size={24}
-                  className=" text-purple-600 dark:text-purple-100"
-                />
+        {role === "STAFF" &&
+          !disabled &&
+          (technicians?.length ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="icon">
+                  <Ellipsis
+                    size={24}
+                    className="text-purple-600 dark:text-purple-100"
+                  />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem onClick={onAssign}>
+                  <UserPlus className="h-4 w-4 mr-2" /> Assign
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={onUnAssign}
+                  className="text-destructive"
+                >
+                  <UserMinus className="h-4 w-4 mr-2" /> Unassign
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : (
+            <TooltipWrapper content="Assign Technician">
+              <Button variant="outline" size="icon" onClick={onAssign}>
+                <UserPlus className="h-5 w-5" />
               </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={onAssign}>
-                <UserPlus className="h-4 w-4 mr-2" /> Assign
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={onUnAssign}
-                className="text-destructive"
-              >
-                <UserMinus className="h-4 w-4 mr-2" /> Unassign
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        )}
+            </TooltipWrapper>
+          ))}
       </CardHeader>
       <CardContent className="p-4 space-y-4 text-gray-700 dark:text-gray-200">
         {/* Technicians Grid */}

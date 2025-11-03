@@ -46,7 +46,7 @@ export default function AdminVehiclesManagement() {
       id: acc.id,
       email: acc.email,
       phone: acc.phone ?? "",
-      status: auth.user?.role === "ADMIN" ? acc.status : "VERIFIED",
+      status: acc.status,
       role: acc.role,
       profile: {
         firstName: profile && "firstName" in profile ? profile.firstName : "",
@@ -93,17 +93,14 @@ export default function AdminVehiclesManagement() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            {isLoading || isFetching ? (
+            {isLoading ? (
               <div className="space-y-4">
                 {Array.from({ length: pageSize }).map((_, idx) => (
                   <div
                     key={idx}
-                    className="flex space-x-4 items-center animate-pulse"
+                    className="flex space-x-4 items-center animate-pulse pl-8"
                   >
-                    <Skeleton className="h-6 w-16 rounded" />
-                    <Skeleton className="h-6 w-32 rounded" />
-                    <Skeleton className="h-6 w-48 rounded" />
-                    <Skeleton className="h-6 w-24 rounded" />
+                    <Skeleton className="h-6 w-[90%] rounded" />
                   </div>
                 ))}
               </div>

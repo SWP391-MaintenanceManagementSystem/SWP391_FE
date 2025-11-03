@@ -14,7 +14,7 @@ export default function TotalCard({
 }: TotalCardProps) {
   return (
     <Card className="gap-4 hover:shadow-lg dark:hover:shadow-gray-700 transition-shadow duration-300 border border-gray-200 dark:border-[#262626] rounded-lg bg-gradient-to-r from-purple-100 to-gray-50 dark:from-purple-800 dark:to-purple-500">
-      <CardHeader className="flex flex-row items-center gap-2 ">
+      <CardHeader className="flex flex-row items-center gap-2 px-3">
         <Icon className="h-4 w-4 text-muted-foreground" />
         <CardTitle className="text-sm font-medium">{title}</CardTitle>
       </CardHeader>

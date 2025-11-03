@@ -55,3 +55,9 @@ export const getWorkScheduleById = (id: string) => {
 export const addSchedule = (data: AddWorkScheduleFormData) => {
   return httpPrivate.post<BaseResponse<WorkSchedule>>(`/work-schedules`, data);
 };
+
+export const getWorkScheduleByEmployeeId = (employeeId: string) => {
+  return httpPrivate.get<BaseResponse<{ data: WorkSchedule[] }>>(
+    `/work-schedules/employee/${employeeId}`,
+  );
+};

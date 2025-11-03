@@ -266,9 +266,6 @@ export const useDeleteEmployee = () => {
         }),
       ]);
     },
-    onError: () => {
-      toast.error("Failed to delete employee");
-    },
   });
 };
 
@@ -330,10 +327,6 @@ export const useUpdateEmployeeInfo = () => {
           }),
         }),
       ]);
-    },
-
-    onError: () => {
-      toast.error("Failed to update employee information");
     },
   });
 };

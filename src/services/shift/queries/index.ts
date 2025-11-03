@@ -6,6 +6,7 @@ import {
   getWorkScheduleList,
   getAllEmployees,
   getWorkScheduleById,
+  getWorkScheduleByEmployeeId,
 } from "../apis/work-schedules.api";
 
 export const useGetWorkSchedulesList = (params: {
@@ -109,6 +110,22 @@ export const useGetWorkScheduleById = (id: string) => {
         console.error("Error fetching work schedule:", error);
         toast.error("Failed to fetch work schedule");
         return null;
+      }
+    },
+  });
+};
+
+export const useGetWorkScheduleByEmpId = (employeeId: string) => {
+  return useQuery({
+    queryKey: queryKeys.workScheduleByEmployeeId(employeeId),
+    queryFn: async () => {
+      try {
+        const res = await getWorkScheduleByEmployeeId(employeeId);
+        return res.data.data;
+      } catch (error) {
+        console.error("Error fetching work schedule:", error);
+        toast.error("Failed to fetch work schedule");
+        return [];
       }
     },
   });
