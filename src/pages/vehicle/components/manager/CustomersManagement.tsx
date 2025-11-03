@@ -46,7 +46,7 @@ export default function AdminVehiclesManagement() {
       id: acc.id,
       email: acc.email,
       phone: acc.phone ?? "",
-      status: auth.user?.role === "ADMIN" ? acc.status : "VERIFIED",
+      status: acc.status,
       role: acc.role,
       profile: {
         firstName: profile && "firstName" in profile ? profile.firstName : "",
