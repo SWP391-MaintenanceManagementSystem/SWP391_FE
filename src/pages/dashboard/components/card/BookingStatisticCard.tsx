@@ -6,30 +6,64 @@ import {
   CardTitle,
   CardDescription,
 } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
+import type { StaffDashboardData } from "@/types/models/dashboard";
 
-export default function BookingStatisticCard() {
-  // fake data
-  const chartData = [
-    { name: "Pending", value: 20, fill: "#fcd34d" },
-    { name: "Assigned", value: 10, fill: "#a78bfa" },
-    { name: "In Progress", value: 4, fill: "#f59e0b" },
-    { name: "Cancelled", value: 8, fill: "#f87171" },
-    { name: "Checked In", value: 12, fill: "#38bdf8" },
-    { name: "Checked Out", value: 6, fill: "#0d9488" },
-    { name: "Completed", value: 40, fill: "#4ade80" },
-  ];
-
-  const chartConfig = {
-    Pending: { label: "Pending", color: "#facc15" },
-    Assigned: { label: "Assigned", color: "#a5b4fc" },
-    Cancelled: { label: "Cancelled", color: "#f87171" },
-    Completed: { label: "Completed", color: "#4ade80" },
-    "Checked In": { label: "Checked In", color: "#7dd3fc" },
-    "Checked Out": { label: "Checked Out", color: "#5eead4" },
-    "In Progress": { label: "In Progress", color: "#f59e0b" },
+export default function BookingStatisticCard({
+  data,
+}: {
+  data?: StaffDashboardData;
+}) {
+  const colorMap: Record<string, string> = {
+    Pending: "#fcd34d",
+    Assigned: "#a78bfa",
+    "In Progress": "#f59e0b",
+    Cancelled: "#f87171",
+    "Checked In": "#38bdf8",
+    "Checked Out": "#0d9488",
+    Completed: "#4ade80",
   };
 
-  const total = chartData.reduce((sum, item) => sum + item.value, 0);
+  // --- SKELETON LOADING ---
+  if (!data?.bookingOverview) {
+    return (
+      <Card className="shadow-sm rounded-xl w-full xl:w-[340px] border border-gray-200 dark:border-[#2b2b2b] p-4">
+        <CardHeader>
+          <Skeleton className="h-5 w-36 mb-2" />
+          <Skeleton className="h-3 w-48" />
+        </CardHeader>
+
+        <CardContent className="grid grid-cols-1 lg:grid-cols-[auto_1fr] xl:grid-cols-1 items-start gap-6 mt-4">
+          <div className="flex justify-center">
+            <Skeleton className="h-28 w-28 rounded-full" />
+          </div>
+          <div className="space-y-3">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <div key={i} className="flex items-center gap-3">
+                <Skeleton className="h-3 w-20" />
+                <Skeleton className="h-3 flex-1" />
+                <Skeleton className="h-3 w-10" />
+              </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  const chartData = data.bookingOverview.bookingStatistics.map((item) => ({
+    ...item,
+    fill: colorMap[item.name] ?? "#d1d5db",
+  }));
+
+  const total = data.bookingOverview.total;
+
+  const chartConfig = Object.fromEntries(
+    chartData.map((item) => [
+      item.name,
+      { label: item.name, color: colorMap[item.name] },
+    ]),
+  );
 
   return (
     <Card className="shadow-sm rounded-xl w-full xl:w-[340px] border border-gray-200 dark:border-[#2b2b2b]">
@@ -39,6 +73,7 @@ export default function BookingStatisticCard() {
           Visual summary of current bookings and their statuses.
         </CardDescription>
       </CardHeader>
+
       <CardContent className="grid grid-cols-1 lg:grid-cols-[auto_1fr] xl:grid-cols-1 items-center gap-8 justify-center">
         <ChartPieDonutText
           chartData={chartData}
@@ -47,6 +82,7 @@ export default function BookingStatisticCard() {
           title="Bookings"
           isLegendVisible={false}
         />
+
         <div className="space-y-2">
           {chartData.map((item) => (
             <div key={item.name} className="flex items-center gap-2">
@@ -60,7 +96,7 @@ export default function BookingStatisticCard() {
                     width: `${(item.value / total) * 100}%`,
                     backgroundColor: item.fill,
                   }}
-                ></div>
+                />
               </div>
               <span className="text-xs text-gray-400">
                 ({((item.value / total) * 100).toFixed(1)}%)

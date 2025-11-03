@@ -53,3 +53,26 @@ export type ServiceCenterStat = {
   bookings: number;
   revenue: number;
 };
+
+export type StaffDashboardData = {
+  totalCustomers: number;
+  newTickets: number;
+  bookingOverview: BookingOverview;
+};
+
+export type BookingOverview = {
+  total: number;
+  bookingStatistics: BookingStatistic[];
+};
+
+export type BookingStatistic = {
+  name:
+    | "Pending"
+    | "Assigned"
+    | "In Progress"
+    | "Cancelled"
+    | "Checked In"
+    | "Checked Out"
+    | "Completed";
+  value: number;
+};

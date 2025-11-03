@@ -12,7 +12,7 @@ export default function TodayBookingCard() {
   const { bookingData, isLoading } = useBooking({
     page: 1,
     pageSize: 100,
-    bookingDate: "2025-10-29",
+    bookingDate: dayjs().format("YYYY-MM-DD"),
     sortBy: "bookingDate",
     orderBy: "asc",
   });
