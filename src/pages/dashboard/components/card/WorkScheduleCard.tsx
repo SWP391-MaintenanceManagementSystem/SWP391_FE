@@ -63,20 +63,29 @@ export default function WeeklyWorkSchedule({
                 onSelect={setDate}
                 required
                 className="
-                   rounded-md border
-                   [&_[data-selected-single='true']]:bg-purple-primary-dark
-                   [&_[data-selected-single='true']]:text-amber-primary
-                   [&_[data-selected-single='true']]:border-2
-                   [&_[data-selected-single='true']:hover]:bg-purple-primary
-                   [&_[data-selected-single='true']:hover]:text-white
-                 "
+                  rounded-md border
+                  [&_[data-selected-single='true']]:bg-purple-primary-dark
+                  [&_[data-selected-single='true']]:text-amber-primary
+                  [&_[data-selected-single='true']]:border-2
+                  [&_[data-selected-single='true']:hover]:bg-purple-primary
+                  [&_[data-selected-single='true']:hover]:text-white
+                "
                 modifiers={{
-                  eventDay: (day) =>
-                    eventDates.includes(format(day, "yyyy-MM-dd")),
+                  oneShift: (day) => {
+                    const dayStr = format(day, "yyyy-MM-dd");
+                    return events.filter((e) => e.date === dayStr).length === 1;
+                  },
+                  twoShifts: (day) => {
+                    const dayStr = format(day, "yyyy-MM-dd");
+                    return events.filter((e) => e.date === dayStr).length >= 2;
+                  },
                 }}
                 modifiersClassNames={{
-                  eventDay:
-                    "relative after:content-[''] after:w-1 after:h-1 after:bg-red-500 after:rounded-full after:absolute after:bottom-1/10 after:left-1/2 after:-translate-x-1/2",
+                  oneShift:
+                    "relative after:content-[''] after:w-1 after:h-1 after:bg-yellow-500 after:rounded-full after:absolute after:bottom-[3px] after:left-1/2 after:-translate-x-1/2",
+                  twoShifts:
+                    "relative after:content-[''] after:w-1 after:h-1 after:bg-yellow-500 after:rounded-full after:absolute after:bottom-[3px] after:left-[45%] after:-translate-x-1/2 " +
+                    "before:content-[''] before:w-1 before:h-1 before:bg-red-500 before:rounded-full before:absolute before:bottom-[3px] before:left-[55%] before:-translate-x-1/2",
                 }}
               />
             </div>
@@ -87,7 +96,7 @@ export default function WeeklyWorkSchedule({
               </h3>
 
               {selectedEvents.length > 0 ? (
-                <div className="space-y-2 overflow-y-auto max-h-[120px]">
+                <div className="space-y-2 overflow-y-auto">
                   {selectedEvents.map((event, idx) => (
                     <div
                       key={idx}
