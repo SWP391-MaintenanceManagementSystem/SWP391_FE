@@ -44,12 +44,26 @@ export const useEmployee = (
   });
 
   const handleDeleteEmployee = (id: string) => {
-    deleteEmployeeMutation.mutate({
-      id,
-      role,
-      currentPage,
-      currentPageSize,
-    });
+    deleteEmployeeMutation.mutate(
+      {
+        id,
+        role,
+        currentPage,
+        currentPageSize,
+      },
+      {
+        onError: (error) => {
+          if (error instanceof AxiosError) {
+            const msg = error.response?.data.message;
+            if (msg) {
+              toast.error(msg);
+            } else {
+              toast.error("Something went wrong. Please try again.");
+            }
+          }
+        },
+      },
+    );
   };
 
   const handleUpdateEmployeeInfo = (id: string, data: EditEmployeeFormData) => {
