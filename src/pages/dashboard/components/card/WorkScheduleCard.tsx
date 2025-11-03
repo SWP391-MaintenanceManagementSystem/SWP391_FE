@@ -24,7 +24,6 @@ export default function WeeklyWorkSchedule({
     }));
   }, [data]);
 
-  const eventDates = events.map((e) => e.date);
   const selectedEvents = events.filter(
     (e) => e.date === format(date, "yyyy-MM-dd"),
   );
