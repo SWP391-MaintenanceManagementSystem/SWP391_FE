@@ -131,8 +131,9 @@ export const BookingCheckinsSchema = z.object({
     })
     .refine(
       (dateStr) => {
-        const date = dayjs(dateStr);
-        return date.isAfter(dayjs());
+        const selectedDate = dayjs(dateStr).startOf("day");
+        const today = dayjs().startOf("day");
+        return selectedDate.isAfter(today) || selectedDate.isSame(today);
       },
       {
         message: "Date & time must be in the future",

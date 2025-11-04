@@ -22,12 +22,12 @@ export default function SuccessPayment() {
 
   const freeTransactionQuery = usePaymentTransaction(
     isFree ? b64DecodeUnicode(encodedId) : "",
-    isFree && !!encodedId
+    isFree && !!encodedId,
   );
 
   const paidTransactionQuery = usePaymentTransactionSession(
     !isFree ? sessionId : "",
-    !isFree && !!sessionId
+    !isFree && !!sessionId,
   );
 
   const { data, isLoading, isError } = isFree

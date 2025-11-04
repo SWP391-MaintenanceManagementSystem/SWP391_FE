@@ -74,7 +74,6 @@ export default function CheckinForm({
                               ? dayjs(field.value).format("YYYY-MM-DDTHH:mm")
                               : ""
                           }
-                          min={dayjs().format("YYYY-MM-DDTHH:mm")}
                           className={cn("w-full h-10 pl-10")}
                           onChange={(e) => field.onChange(e.target.value)}
                           readOnly={bookingStatus !== "ASSIGNED"}
