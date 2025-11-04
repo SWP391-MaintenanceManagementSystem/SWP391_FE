@@ -77,7 +77,7 @@ export default function TechnicianCard({
         {/* Technicians Grid */}
         <div className="space-y-2">
           {technicians?.length ? (
-            <div className="grid grid-cols-1 sm:grid-cols-[auto_auto]  gap-4">
+            <div className="grid grid-cols-1 gap-4">
               {technicians.map((tech, index) => (
                 <Card
                   key={index}

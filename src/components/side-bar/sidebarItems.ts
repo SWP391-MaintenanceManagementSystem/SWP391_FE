@@ -41,7 +41,6 @@ export const adminItems: SidebarItem[] = [
   },
   { title: "Inventory", url: "/inventory", icon: PackageOpen },
   { title: "Memberships", url: "/membership", icon: UserStar },
-  { title: "Finance & Reports", url: "/finance", icon: CreditCard },
 ];
 
 export const customerItems: SidebarItem[] = [
