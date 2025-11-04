@@ -1,3 +1,4 @@
+import { useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { useForm } from "react-hook-form";
 import {
@@ -42,6 +43,27 @@ export default function EmployeeInfoForm({
   const { data: centerListData } = useGetServiceCenterList();
   const centerList = centerListData ?? [];
 
+  const originalCenterId = useRef(form.getValues("workCenter.centerId"));
+  const originalStartDate = useRef(form.getValues("workCenter.startDate"));
+
+  useEffect(() => {
+    const subscription = form.watch((value, { name }) => {
+      if (name === "workCenter.centerId") {
+        const selectedCenter = value.workCenter?.centerId;
+
+        if (!selectedCenter) return;
+
+        if (selectedCenter === originalCenterId.current) {
+          form.setValue("workCenter.startDate", originalStartDate.current);
+        } else {
+          form.setValue("workCenter.startDate", new Date());
+        }
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, [form]);
+
   return (
     <EditDialog
       open={open}
@@ -49,7 +71,7 @@ export default function EmployeeInfoForm({
       onConfirm={onConfirm}
       form={form}
       title={title}
-      styleFormLayout="grid-rows-6 md:grid-cols-2 md:grid-rows-5 "
+      styleFormLayout="grid-rows-6 md:grid-cols-2 md:grid-rows-5"
       styleLayoutFooter="md:col-start-2 md:row-start-5"
       isPending={isPending}
     >
@@ -80,12 +102,13 @@ export default function EmployeeInfoForm({
           </FormItem>
         )}
       />
+
       <FormField
         control={form.control}
         name="email"
         disabled
         render={({ field }) => (
-          <FormItem>
+          <FormItem className="md:col-span-2">
             <FormLabel className="text-gray-500">Email</FormLabel>
             <FormControl>
               <Input placeholder="email@example.com" {...field} />
@@ -127,17 +150,11 @@ export default function EmployeeInfoForm({
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="w-56" align="end">
-                  <DropdownMenuItem
-                    onSelect={() => {
-                      field.onChange("VERIFIED");
-                    }}
-                  >
+                  <DropdownMenuItem onSelect={() => field.onChange("VERIFIED")}>
                     <AccountStatusTag status="VERIFIED" />
                   </DropdownMenuItem>
                   <DropdownMenuItem
-                    onSelect={() => {
-                      field.onChange("NOT_VERIFY");
-                    }}
+                    onSelect={() => field.onChange("NOT_VERIFY")}
                   >
                     <AccountStatusTag status="NOT_VERIFY" />
                   </DropdownMenuItem>
@@ -175,7 +192,7 @@ export default function EmployeeInfoForm({
                     variant="outline"
                     className="w-full !outline-none flex justify-between"
                   >
-                    <span>
+                    <span className="truncate">
                       {centerList.find((c) => c.id === field.value)?.name ??
                         "Select Center"}
                     </span>
@@ -198,6 +215,7 @@ export default function EmployeeInfoForm({
           </FormItem>
         )}
       />
+
       <FormField
         control={form.control}
         name="workCenter.startDate"
@@ -208,26 +226,8 @@ export default function EmployeeInfoForm({
                 label="Start Date"
                 value={field.value ?? undefined}
                 onChange={field.onChange}
-                disabled={!form.watch("workCenter.centerId")}
+                disabled
                 ariaInvalid={!!form.formState.errors.workCenter?.startDate}
-              />
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
-      <FormField
-        control={form.control}
-        name="workCenter.endDate"
-        render={({ field }) => (
-          <FormItem>
-            <FormControl>
-              <DatePickerInput
-                label="End Date"
-                value={field.value ?? undefined}
-                onChange={field.onChange}
-                disabled={!form.watch("workCenter.centerId")}
-                ariaInvalid={!!form.formState.errors.workCenter?.endDate}
               />
             </FormControl>
             <FormMessage />

@@ -9,9 +9,10 @@ import { useGetAccountList } from "@/services/manager/queries";
 import ChartCustomerStat from "./customerManagement/ChartCustomerStat";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAuth } from "@/contexts/AuthContext";
-import type { AccountRole } from "@/types/enums/role";
+import { AccountRole } from "@/types/enums/role";
 import clsx from "clsx";
 import { Skeleton } from "@/components/ui/skeleton";
+import { AccountStatus } from "@/types/enums/accountStatus";
 
 export default function AdminVehiclesManagement() {
   const { auth } = useAuth();
@@ -29,7 +30,10 @@ export default function AdminVehiclesManagement() {
     page,
     pageSize,
     email: searchValue || undefined,
-    status: filters.status || undefined,
+    status:
+      auth.user?.role === AccountRole.ADMIN
+        ? filters.status || undefined
+        : AccountStatus.VERIFIED,
     isPremium: filters.isPremium,
     sortBy: sorting[0]?.id ?? "createdAt",
     orderBy: sorting[0]?.desc ? "desc" : "asc",
