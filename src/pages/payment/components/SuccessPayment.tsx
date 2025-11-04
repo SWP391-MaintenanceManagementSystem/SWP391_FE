@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { useSearchParams } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import {
   usePaymentTransaction,
   usePaymentTransactionSession,
@@ -22,12 +22,12 @@ export default function SuccessPayment() {
 
   const freeTransactionQuery = usePaymentTransaction(
     isFree ? b64DecodeUnicode(encodedId) : "",
-    isFree && !!encodedId,
+    isFree && !!encodedId
   );
 
   const paidTransactionQuery = usePaymentTransactionSession(
     !isFree ? sessionId : "",
-    !isFree && !!sessionId,
+    !isFree && !!sessionId
   );
 
   const { data, isLoading, isError } = isFree
@@ -128,11 +128,16 @@ export default function SuccessPayment() {
             <FeedbackSection onSubmit={() => setShowBackButton(true)} />
           )}
 
-          {showBackButton && (
-            <Button variant="outline" className="w-full mt-4">
-              <a href="/">
-                <ArrowLeft className="w-4 h-4 mr-2" /> Back to Dashboard
-              </a>
+          {(transaction.referenceType !== ReferenceType.BOOKING ||
+            showBackButton) && (
+            <Button variant="outline" className="w-full mt-4" asChild>
+              <Link
+                to="/dashboard"
+                className="flex items-center justify-center gap-2"
+              >
+                <ArrowLeft className="w-4 h-4" />
+                Back to Dashboard
+              </Link>
             </Button>
           )}
         </CardContent>
