@@ -169,6 +169,7 @@ export default function CheckListModal({
           <Progress
             value={progress}
             className="h-2 bg-gray-200 dark:bg-gray-700 [&>div]:bg-green-600"
+            color="oklch(62.7% 0.194 149.214)"
           />
           <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
             {completed} / {tasks.length} tasks completed

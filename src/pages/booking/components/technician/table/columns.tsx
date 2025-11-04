@@ -3,6 +3,9 @@ import SortHeader from "@/components/table/SortHeader";
 import FilterHeader from "@/components/table/FilterHeader";
 import ColActions from "./ColAction";
 import type { TechnicianBooking } from "@/types/models/booking";
+import { Badge } from "@/components/ui/badge";
+import dayjs from "dayjs";
+import BookingTag from "@/components/tag/BookingTag";
 
 export const getColumns = () => {
   const columnHelper = createColumnHelper<TechnicianBooking>();
@@ -35,7 +38,7 @@ export const getColumns = () => {
 
     // Customer
     columnHelper.accessor("customer", {
-      id: "fullName",
+      id: "customerName",
       header: (info) => <SortHeader title="Customer" info={info} />,
       size: 180,
       cell: (info) => {
@@ -69,38 +72,27 @@ export const getColumns = () => {
     }),
 
     // Booking Time
-    columnHelper.accessor(
-      (row) => (row.bookingDate ? new Date(row.bookingDate).getTime() : 0),
-      {
-        id: "bookingDate",
-        header: (info) => <SortHeader title="Booking Time" info={info} />,
-        cell: ({ row }) => {
-          const { bookingDate, shift } = row.original;
-          if (!bookingDate || !shift) return "—";
-
-          const date = new Date(bookingDate);
-          const formattedDate = date.toLocaleString();
-
-          return (
-            <div className="flex flex-col text-xs text-gray-700 dark:text-gray-300">
-              <span className="font-medium font-inter">{formattedDate}</span>
-            </div>
-          );
-        },
-        enableSorting: true,
-        size: 180,
-        meta: { title: "Booking Time" },
-      }
-    ),
+    columnHelper.accessor("bookingDate", {
+      id: "bookingDate",
+      header: (info) => <SortHeader title="Booking Time" info={info} />,
+      cell: (info) => (
+        <Badge variant="outline">
+          {dayjs(info.getValue()).format("HH:mm DD/MM/YYYY")}
+        </Badge>
+      ),
+      meta: {
+        title: "Booking Time",
+      },
+    }),
 
     // Service Center
     columnHelper.accessor((row) => row.serviceCenter?.name ?? "", {
       id: "center",
       header: (info) => <SortHeader title="Service Center" info={info} />,
       cell: (info) => (
-        <span className="text-gray-700 dark:text-gray-300 font-inter font-medium">
+        <Badge variant="outline">
           {info.getValue() || "—"}
-        </span>
+        </Badge>
       ),
       enableSorting: true,
       sortingFn: "alphanumeric",
@@ -110,59 +102,28 @@ export const getColumns = () => {
 
     // Status (filter dropdown)
     columnHelper.accessor("status", {
-      id: "status",
-      header: ({ column }) => (
-        <FilterHeader
-          column={column}
-          title="Status"
-          selectedValue={column.getFilterValue() as string}
-          onFilterChange={(v) => column.setFilterValue(v || undefined)}
-        />
-      ),
-      meta: {
-        filterOptions: [
-          "ASSIGNED",
-          "COMPLETED",
-          "IN_PROGRESS",
-          "PENDING",
-          "CANCELLED",
-        ],
-        labelOptions: {
-          ASSIGNED: "ASSIGNED",
-          COMPLETED: "COMPLETED",
-          IN_PROGRESS: "IN PROGRESS",
-          PENDING: "PENDING",
-          CANCELLED: "CANCELLED",
-        },
-      },
-      cell: (info) => {
-        const status = info.getValue();
-        const colorMap: Record<string, string> = {
-          ASSIGNED:
-            "bg-indigo-100 text-indigo-700 dark:bg-indigo-900/40 dark:text-indigo-300",
-          COMPLETED:
-            "bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-300",
-          IN_PROGRESS:
-            "bg-yellow-100 text-yellow-800 dark:bg-yellow-800/40 dark:text-yellow-200",
-          PENDING:
-            "bg-gray-300 text-gray-700 dark:bg-gray-900/40 dark:text-gray-300",
-          CANCELLED:
-            "bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300",
-        };
-        return (
-          <span
-            className={`px-2 py-1 rounded-md text-xs font-medium ${
-              colorMap[status] ||
-              "bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300"
-            }`}
-          >
-            {status}
-          </span>
-        );
-      },
-      size: 120,
-      // meta: { title: "Status" },
-    }),
+  id: "status",
+  header: ({ column }) => (
+    <FilterHeader
+      column={column}
+      title="Status"
+      selectedValue={column.getFilterValue() as string}
+      onFilterChange={(v) => column.setFilterValue(v || undefined)}
+    />
+  ),
+  meta: {
+    filterOptions: ["ASSIGNED", "COMPLETED", "CANCELLED", "CHECKED_OUT"],
+    labelOptions: {
+      ASSIGNED: "Assigned",
+      COMPLETED: "Completed",
+      CANCELLED: "Cancelled",
+      CHECKED_OUT: "Checked Out",
+    },
+  },
+  cell: (info) => <BookingTag status={info.getValue()} />,
+  size: 120
+}),
+
 
     // Assigner
     columnHelper.accessor("assigner", {

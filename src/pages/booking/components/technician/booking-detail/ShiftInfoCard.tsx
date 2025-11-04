@@ -37,7 +37,7 @@ export default function ShiftInfoCard({ shift }: ShiftInfoCardProps) {
             </span>
             <span className="text-gray-900 dark:text-gray-200">
               {shift?.startTime
-                ? dayjs(shift.startTime).format("DD/MM/YYYY HH:mm")
+                ? dayjs(shift.startTime).format(" HH:mm")
                 : "N/A"}
             </span>
           </div>
@@ -47,9 +47,7 @@ export default function ShiftInfoCard({ shift }: ShiftInfoCardProps) {
               End Time:
             </span>
             <span className="text-gray-900 dark:text-gray-200">
-              {shift?.endTime
-                ? dayjs(shift.endTime).format("DD/MM/YYYY HH:mm")
-                : "N/A"}
+              {shift?.endTime ? dayjs(shift.endTime).format("HH:mm") : "N/A"}
             </span>
           </div>
         </CardDescription>
