@@ -17,7 +17,7 @@ import {
 import { TooltipWrapper } from "@/components/TooltipWrapper";
 
 interface TechnicianProps {
-  technicians?: { firstName?: string; lastName?: string }[];
+  technicians?: { firstName?: string; lastName?: string; email?: string }[];
   onAssign?: () => void;
   onUnAssign?: () => void;
   disabled?: boolean;
@@ -83,15 +83,22 @@ export default function TechnicianCard({
                   key={index}
                   className="border border-gray-100 transition-colors duration-200 rounded-lg p-2"
                 >
-                  <CardContent className="p-2 flex items-center gap-2 my-auto">
+                  <CardContent className="p-2 flex items-center gap-3 my-auto">
                     <span className="font-medium text-purple-600 dark:text-purple-100">
                       <IdCardLanyard />
                     </span>
-                    <span className="text-gray-900 dark:text-gray-200">
-                      {`${tech.firstName || ""} ${
-                        tech.lastName || ""
-                      }`.trim() || "N/A"}
-                    </span>
+                    <div className="flex flex-col justify-center">
+                      <span className="text-gray-900 dark:text-gray-200">
+                        {`${tech.firstName || ""} ${
+                          tech.lastName || ""
+                        }`.trim() || "N/A"}
+                      </span>
+                      {auth.user?.role === "STAFF" && tech.email && (
+                        <span className="text-gray-500 dark:text-gray-400 text-sm">
+                          {tech.email}
+                        </span>
+                      )}
+                    </div>
                   </CardContent>
                 </Card>
               ))}
