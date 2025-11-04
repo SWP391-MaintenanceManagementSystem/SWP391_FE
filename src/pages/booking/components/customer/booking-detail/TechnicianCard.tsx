@@ -83,7 +83,7 @@ export default function TechnicianCard({
                   key={index}
                   className="border border-gray-100 transition-colors duration-200 rounded-lg p-2"
                 >
-                  <CardContent className="p-2 flex items-center gap-3 my-auto">
+                  <CardContent className="px-2 flex items-center gap-3 my-auto">
                     <span className="font-medium text-purple-600 dark:text-purple-100">
                       <IdCardLanyard />
                     </span>
