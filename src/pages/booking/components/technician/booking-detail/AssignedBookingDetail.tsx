@@ -11,20 +11,33 @@ import { Spinner } from "@/components/ui/shadcn-io/spinner";
 import { Button } from "@/components/ui/button";
 import CustomerInfoCard from "./CustomerInfoCard";
 import VehicleInfoCard from "./VehicleInfoCard";
-import ShiftInfoCard from "./ShiftInfoCard";
 import AssignerInfoCard from "./AssignerInfoCard";
 import CheckListModal from "./CheckListModal";
+import { useGetVehicleHandover } from "@/services/vehicle-handover/hooks/useGetVehicleHandover";
+import ShiftInfoCard from "./ShiftInfoCard";
+import CheckInModal from "./CheckInModal";
+import { toast } from "sonner";
 
 export default function AssignedBookingDetail() {
   const { id } = useParams<{ id: string }>();
   const { data, isLoading } = useBookingDetail(id ?? "");
+  const { data: handoverData, isLoading: handoverLoading } =
+    useGetVehicleHandover(id ?? "");
+  const [isHandoverOpen, setIsHandoverOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const handleViewHandover = () => {
+    if (!handoverData) {
+      toast.warning("No checkin form available");
+      return;
+    }
+    setIsHandoverOpen(true);
+  };
 
   if (!id) {
     return <div className="text-red-500 p-6">Booking ID is missing</div>;
   }
 
-  if (isLoading) {
+  if (isLoading || handoverLoading) {
     return (
       <div className="text-gray-500 p-6 flex justify-center items-center h-full">
         <Spinner />
@@ -41,7 +54,7 @@ export default function AssignedBookingDetail() {
         }}
       />
 
-      <MainContentLayout className="p-6">
+      <MainContentLayout className="p-6 font-inter">
         <Card className="mb-6 bg-purple-50 border-purple-200 dark:bg-purple-800 dark:border-purple-800 shadow-md">
           <CardHeader className="flex flex-row items-center justify-between p-4">
             <div>
@@ -64,6 +77,14 @@ export default function AssignedBookingDetail() {
                   dark:border-purple-300 dark:text-purple-200 dark:hover:bg-purple-700/30"
               >
                 View Task
+              </Button>
+              <Button
+                onClick={handleViewHandover}
+                variant="outline"
+                className="border-purple-500 text-purple-600 hover:bg-purple-50
+                  dark:border-purple-300 dark:text-purple-200 dark:hover:bg-purple-700/30"
+              >
+                View Checkin Form
               </Button>
             </div>
           </CardHeader>
@@ -145,6 +166,15 @@ export default function AssignedBookingDetail() {
           onOpenChange={setIsModalOpen}
           bookingData={data}
         />
+
+        {/* Modal */}
+        {handoverData && (
+          <CheckInModal
+            open={isHandoverOpen}
+            onOpenChange={setIsHandoverOpen}
+            handover={handoverData}
+          />
+        )}
       </MainContentLayout>
     </div>
   );
