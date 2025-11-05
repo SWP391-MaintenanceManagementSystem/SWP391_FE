@@ -17,6 +17,7 @@ import { Button } from "@/components/ui/button";
 import { useShift } from "@/services/shift/hooks/useShift";
 import { AddEditShiftDialog } from "./AddEditShiftForm";
 import { type ShiftFormData } from "../../libs/schema";
+import { useDebounce } from "@uidotdev/usehooks";
 
 export default function ShiftsManagementPage() {
   const [page, setPage] = useState(1);
@@ -27,6 +28,7 @@ export default function ShiftsManagementPage() {
     status: "",
     centerId: "",
   });
+  const debouncedSearch = useDebounce(searchValue, 500);
   const { data: centerListData } = useGetServiceCenterList();
   const centerList = centerListData ?? [];
   const {
@@ -36,7 +38,7 @@ export default function ShiftsManagementPage() {
   } = useGetShiftList({
     page,
     pageSize,
-    name: searchValue || undefined,
+    name: debouncedSearch || undefined,
     status: filters.status || undefined,
     centerId: filters.centerId || undefined,
     sortBy: sorting[0]?.id ?? "createdAt",

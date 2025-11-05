@@ -13,6 +13,7 @@ import { AccountRole } from "@/types/enums/role";
 import clsx from "clsx";
 import { Skeleton } from "@/components/ui/skeleton";
 import { AccountStatus } from "@/types/enums/accountStatus";
+import { useDebounce } from "@uidotdev/usehooks";
 
 export default function AdminVehiclesManagement() {
   const { auth } = useAuth();
@@ -25,11 +26,11 @@ export default function AdminVehiclesManagement() {
     status: "",
     isPremium: undefined as boolean | undefined,
   });
-
+  const debouncedSearch = useDebounce(searchValue, 500);
   const { data, isLoading, isFetching } = useGetAccountList({
     page,
     pageSize,
-    email: searchValue || undefined,
+    email: debouncedSearch || undefined,
     status:
       auth.user?.role === AccountRole.ADMIN
         ? filters.status || undefined
