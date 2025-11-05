@@ -9,7 +9,7 @@ import type { SortingState } from "@tanstack/react-table";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { DataTable } from "@/components/table/DataTable";
 import useBookingHistory from "@/services/booking/hooks/useBookingHistory";
-import type { BookingStaffTable } from "@/types/models/booking-with-detail";
+import type { BookingTable } from "@/types/models/booking-with-detail";
 import type { BookingStatus } from "@/types/enums/bookingStatus";
 import { Button } from "@/components/ui/button";
 import { CalendarRange, X } from "lucide-react";
@@ -80,8 +80,8 @@ export default function VehicleDetailPage() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <DataTable<BookingStaffTable, unknown>
-              columns={columns as ColumnDef<BookingStaffTable, unknown>[]}
+            <DataTable<BookingTable, unknown>
+              columns={columns as ColumnDef<BookingTable, unknown>[]}
               data={historyData?.data ?? []}
               pageIndex={(historyData?.page ?? 1) - 1}
               pageSize={historyData?.pageSize ?? 10}

@@ -20,6 +20,7 @@ import type { SortingState } from "@tanstack/react-table";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAuth } from "@/contexts/AuthContext";
 import type { AccountRole } from "@/types/enums/role";
+import { useDebounce } from "@uidotdev/usehooks";
 
 export default function ViewDetailInfo() {
   const { auth } = useAuth();
@@ -53,7 +54,7 @@ export default function ViewDetailInfo() {
     status: "",
     brandId: "",
   });
-
+  const debouncedSearch = useDebounce(searchValue, 500);
   const {
     data: apiResponse,
     isLoading,
@@ -62,7 +63,7 @@ export default function ViewDetailInfo() {
     customerId: userId || "",
     page,
     pageSize,
-    licensePlate: searchValue || undefined,
+    licensePlate: debouncedSearch || undefined,
     status: filters.status || undefined,
     brandId: filters.brandId ? Number(filters.brandId) : undefined,
     sortBy: sorting[0]?.id ?? "createdAt",

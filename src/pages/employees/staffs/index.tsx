@@ -12,6 +12,7 @@ import StaffWhiteIcon from "@/assets/staff-white.png";
 import { Card } from "@/components/ui/card";
 import { useGetServiceCenterList } from "@/services/manager/queries";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useDebounce } from "@uidotdev/usehooks";
 
 export default function StaffsManagementPage() {
   const [page, setPage] = useState(1);
@@ -19,10 +20,11 @@ export default function StaffsManagementPage() {
   const [searchValue, setSearchValue] = useState("");
   const [sorting, setSorting] = useState<SortingState>([]);
   const [filters, setFilters] = useState({ status: "", centerId: "" });
+  const debouncedSearch = useDebounce(searchValue, 300);
   const { data, isLoading, isFetching } = useGetAccountList({
     page,
     pageSize,
-    email: searchValue || undefined,
+    email: debouncedSearch || undefined,
     status: filters.status || undefined,
     centerId: filters.centerId || undefined,
     sortBy: sorting[0]?.id ?? "createdAt",

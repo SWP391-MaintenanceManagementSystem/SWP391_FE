@@ -21,6 +21,7 @@ import dayjs from "dayjs";
 import type { DateRange } from "react-day-picker";
 import clsx from "clsx";
 import { NavLink } from "react-router-dom";
+import { useDebounce } from "@uidotdev/usehooks";
 
 export default function WorkScheduleList() {
   const [page, setPage] = useState(1);
@@ -33,7 +34,7 @@ export default function WorkScheduleList() {
     role: "",
   });
   const [dateRange, setDateRange] = useState<DateRange | undefined>(undefined);
-
+  const debouncedSearch = useDebounce(searchValue, 500);
   const { data: centerListData } = useGetServiceCenterList();
   const centerList = centerListData ?? [];
   const { data: shiftsData } = useGetShiftsQuery();
@@ -47,7 +48,7 @@ export default function WorkScheduleList() {
     pageSize,
     centerId: filters.centerId || undefined,
     shiftId: filters.shiftId || undefined,
-    search: searchValue,
+    search: debouncedSearch,
     role: filters.role || undefined,
     dateFrom: dateRange?.from
       ? dayjs(dateRange.from).format("YYYY-MM-DD")

@@ -10,6 +10,7 @@ import { Plus } from "lucide-react";
 import { useInventory } from "@/services/manager/hooks/useInvetory";
 import { AddEditGoodsDialog } from "./AddEditGoodsDialog";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useDebounce } from "@uidotdev/usehooks";
 
 export default function ItemsListSection() {
   const [openAddModal, setOpenAddModal] = useState(false);
@@ -21,14 +22,13 @@ export default function ItemsListSection() {
     status: "",
     categoryName: "",
   });
-
   const { data: apiGetCategory } = useGetCategoryList();
   const categoryList: Category[] = Array.isArray(apiGetCategory)
     ? apiGetCategory
     : [];
-
+  const debouncedSearch = useDebounce(searchValue, 300);
   const { data, isLoading, isFetching } = useGetPartList({
-    name: searchValue || undefined,
+    name: debouncedSearch || undefined,
     status: filters.status || undefined,
     categoryName: filters.categoryName || undefined,
     sortBy: sorting[0]?.id ?? "createdAt",
@@ -51,7 +51,7 @@ export default function ItemsListSection() {
     <>
       <Card className="h-full flex-1 md:min-h-[500px] min-h-[600px]">
         <CardContent className="font-inter flex flex-col gap-4 h-full">
-          {isLoading || isFetching ? (
+          {isLoading ? (
             <>
               <Skeleton className="h-10 w-30 rounded-md" />
               <div className="flex flex-col gap-2">

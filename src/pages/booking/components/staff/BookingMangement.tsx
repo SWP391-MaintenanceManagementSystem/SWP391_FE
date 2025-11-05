@@ -7,7 +7,6 @@ import { useState } from "react";
 import type { SortingState, ColumnDef } from "@tanstack/react-table";
 import type { BookingTable } from "@/types/models/booking-with-detail";
 import { BookingStatus } from "@/types/enums/bookingStatus";
-import useBooking from "@/services/booking/hooks/useStaffBooking";
 import { Button } from "@/components/ui/button";
 import { CalendarRange, X } from "lucide-react";
 import {
@@ -19,6 +18,8 @@ import Calendar04 from "@/components/calendar-04";
 import dayjs from "dayjs";
 import type { DateRange } from "react-day-picker";
 import clsx from "clsx";
+import { useDebounce } from "@uidotdev/usehooks";
+import useStaffBooking from "@/services/booking/hooks/useStaffBooking";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export default function BookingManagement() {
@@ -30,11 +31,12 @@ export default function BookingManagement() {
     status: "" as "" | BookingStatus,
     isPremium: undefined as boolean | undefined,
   });
+  const debouncedSearch = useDebounce(searchValue, 300);
   const [dateRange, setDateRange] = useState<DateRange | undefined>(undefined);
-  const { bookingData, isLoading } = useBooking({
+  const { bookingData, isLoading, isFetching } = useStaffBooking({
     page,
     pageSize,
-    search: searchValue || undefined,
+    search: debouncedSearch || undefined,
     status: filters.status || undefined,
     isPremium: filters.isPremium,
     fromDate: dateRange?.from
@@ -57,7 +59,7 @@ export default function BookingManagement() {
   };
 
   const columns = getColumns(handleFilterChange, filters);
-  const skeletonRows = Array.from({ length: 10 });
+
   return (
     <div className="w-full h-[calc(100vh-32px)] font-inter">
       <DynamicBreadcrumbs pathTitles={{ booking: "Booking Management" }} />
@@ -72,7 +74,7 @@ export default function BookingManagement() {
 
                 {/* Table skeleton */}
                 <div className="mt-4 space-y-2">
-                  {skeletonRows.map((_, i) => (
+                  {Array.from({ length: 10 }).map((_, i) => (
                     <div
                       key={i}
                       className="grid grid-cols-[1fr_1fr_1fr_1fr] gap-4 items-center"
@@ -93,6 +95,7 @@ export default function BookingManagement() {
                 pageSize={bookingData?.pageSize ?? 10}
                 totalPage={bookingData?.totalPages ?? 1}
                 isLoading={isLoading}
+                isFetching={isFetching}
                 manualPagination
                 onPageChange={(newPage) => setPage(newPage + 1)}
                 onPageSizeChange={setPageSize}
