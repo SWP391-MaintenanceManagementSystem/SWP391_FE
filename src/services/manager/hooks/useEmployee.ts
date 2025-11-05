@@ -88,7 +88,15 @@ export const useEmployee = (
                 });
               });
             } else if (msg) {
-              toast.error(msg);
+              if (msg.includes("center")) {
+                form.setError("workCenter.centerId", {
+                  type: "server",
+                  message: msg,
+                });
+                toast.error(msg);
+              } else {
+                toast.error(msg);
+              }
             } else {
               toast.error("Something went wrong. Please try again.");
             }

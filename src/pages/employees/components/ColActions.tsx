@@ -9,7 +9,7 @@ import { useEmployee } from "@/services/manager/hooks/useEmployee";
 import { ViewDetailDialog } from "@/components/dialog/ViewDetailDialog";
 import ViewDetailEmployeeInfo from "@/pages/employees/components/ViewDetail";
 import { toast } from "sonner";
-import EditEmployeeInfoForm from "./EditEmployeeInfoForm";
+import { AddEditEmployeeDialog } from "./AddEditEmployeeDialog";
 
 interface ColActionsProps {
   row: Row<EmployeeTable>;
@@ -84,8 +84,7 @@ export default function ColActions({
         children={<ViewDetailEmployeeInfo employee={row.original} />}
         styleContent="md:max-w-[560px]"
       />
-
-      <EditEmployeeInfoForm
+      <AddEditEmployeeDialog
         open={openEditDialog}
         onOpenChange={(open) => {
           setOpenEditDialog(open);
@@ -94,7 +93,7 @@ export default function ColActions({
           }
         }}
         form={form}
-        title={row.original.role === "STAFF" ? "Staff" : "Technician"}
+        item={row.original}
         onConfirm={async (data) => {
           handleUpdateEmployeeInfo(row.original.id, data);
         }}

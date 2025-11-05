@@ -7,11 +7,11 @@ import { useMemo, useState } from "react";
 import { useGetStatusStat } from "@/services/manager/queries";
 import type { ChartConfig } from "@/components/ui/chart";
 import "animate.css";
-import AddEmployeeForm from "./AddEmployeeForm";
 import { useEmployee } from "@/services/manager/hooks/useEmployee";
 import type { EmployeeTable } from "../libs/table-types";
 import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { AddEditEmployeeDialog } from "./AddEditEmployeeDialog";
 
 type Props = {
   iconDark: string;
@@ -125,7 +125,7 @@ export default function TotalBox({
         ) : (
           <AddNewButton />
         ))}
-      <AddEmployeeForm
+      <AddEditEmployeeDialog
         open={openAddForm}
         onOpenChange={(open) => {
           setOpenAddForm(open);
@@ -136,7 +136,6 @@ export default function TotalBox({
           const result = await handleAddEmployee(data);
           if (result) setOpenAddForm(false);
         }}
-        title="Employee"
         isPending={isPending}
       />
     </Card>
