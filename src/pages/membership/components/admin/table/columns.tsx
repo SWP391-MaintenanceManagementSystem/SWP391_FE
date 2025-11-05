@@ -78,11 +78,11 @@ export const getColumns = () => {
 
         const a = toDays(
           rowA.getValue<number>(columnId),
-          rowA.original.periodType
+          rowA.original.periodType,
         );
         const b = toDays(
           rowB.getValue<number>(columnId),
-          rowB.original.periodType
+          rowB.original.periodType,
         );
 
         return a - b;

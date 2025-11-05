@@ -22,6 +22,46 @@ import type { DateRange } from "react-day-picker";
 import clsx from "clsx";
 import { NavLink } from "react-router-dom";
 import { useDebounce } from "@uidotdev/usehooks";
+import { Skeleton } from "@/components/ui/skeleton";
+
+function WorkScheduleListSkeleton() {
+  return (
+    <Card className="w-full h-full">
+      <CardContent className="space-y-6 mt-6">
+        {/* Header actions skeleton */}
+        <div className="flex flex-wrap justify-end gap-3">
+          <Skeleton className="h-9 w-[120px]" />
+          <Skeleton className="h-9 w-[150px]" />
+          <Skeleton className="h-9 w-[130px]" />
+        </div>
+
+        {/* Table header skeleton */}
+        <div className="grid grid-cols-6 gap-3">
+          {[...Array(6)].map((_, i) => (
+            <Skeleton key={i} className="h-6 w-full" />
+          ))}
+        </div>
+
+        {/* Table rows skeleton */}
+        <div className="space-y-3">
+          {[...Array(8)].map((_, rowIndex) => (
+            <div key={rowIndex} className="grid grid-cols-6 gap-3">
+              {[...Array(6)].map((_, colIndex) => (
+                <Skeleton key={colIndex} className="h-6 w-full" />
+              ))}
+            </div>
+          ))}
+        </div>
+
+        {/* Pagination skeleton */}
+        <div className="flex justify-between items-center pt-4">
+          <Skeleton className="h-8 w-24" />
+          <Skeleton className="h-8 w-40" />
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
 
 export default function WorkScheduleList() {
   const [page, setPage] = useState(1);
@@ -35,10 +75,13 @@ export default function WorkScheduleList() {
   });
   const [dateRange, setDateRange] = useState<DateRange | undefined>(undefined);
   const debouncedSearch = useDebounce(searchValue, 500);
+
   const { data: centerListData } = useGetServiceCenterList();
   const centerList = centerListData ?? [];
+
   const { data: shiftsData } = useGetShiftsQuery();
   const shiftsList = shiftsData ?? [];
+
   const {
     data: apiData,
     isLoading,
@@ -56,22 +99,26 @@ export default function WorkScheduleList() {
     dateTo: dateRange?.to
       ? dayjs(dateRange.to).format("YYYY-MM-DD")
       : undefined,
-
     sortBy: sorting[0]?.id ?? "createdAt",
     orderBy: sorting[0]?.desc ? "desc" : "asc",
   });
+
   const handleFilterChange = (field: string, value: string) => {
     setFilters((prevFilters) => ({
       ...prevFilters,
       [field]: value,
     }));
   };
+
   const columns = getColumns(
     handleFilterChange,
     filters,
     centerList,
     shiftsList,
   );
+
+  if (isLoading) return <WorkScheduleListSkeleton />;
+
   return (
     <Card className="w-full h-full">
       <CardContent className="h-full">
@@ -116,7 +163,7 @@ export default function WorkScheduleList() {
                 <PopoverTrigger asChild>
                   <Button
                     variant="secondary"
-                    className=" justify-self-end w-full lg:w-auto"
+                    className="justify-self-end w-full lg:w-auto"
                   >
                     <CalendarRange className="w-4 h-4 mr-2" />
                     {dateRange?.from
@@ -142,7 +189,7 @@ export default function WorkScheduleList() {
                 <Button
                   variant="outline"
                   autoFocus={false}
-                  className=" justify-self-end w-full lg:w-auto"
+                  className="justify-self-end w-full lg:w-auto"
                 >
                   New Schedule
                   <Plus className="h-4 w-4 ml-2" />
