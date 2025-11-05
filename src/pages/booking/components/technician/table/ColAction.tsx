@@ -19,7 +19,6 @@ export default function ColActions({ row }: ColActionsProps) {
   const booking = row.original;
   const [openChecklist, setOpenChecklist] = useState(false);
 
-  // ✅ Fetch booking detail (vì table thường chỉ có thông tin ngắn gọn)
   const { data: bookingDetail } = useBookingDetail(booking.id);
 
   const handleChecklist = () => {
@@ -32,13 +31,18 @@ export default function ColActions({ row }: ColActionsProps) {
       <TooltipWrapper content="View Details">
         <ActionBtn
           icon={<Eye size={14} />}
+          className="dark:bg-dark-surface"
           onClick={() => navigate(`/booking/${booking.id}`)}
         />
       </TooltipWrapper>
 
       {/* Checklist */}
       <TooltipWrapper content="Checklist">
-        <ActionBtn icon={<CheckSquare size={14} />} onClick={handleChecklist} />
+        <ActionBtn
+          icon={<CheckSquare size={14} />}
+          className="dark:bg-dark-surface"
+          onClick={handleChecklist}
+        />
       </TooltipWrapper>
 
       <CheckListModal

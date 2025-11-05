@@ -22,3 +22,11 @@ export const completeTechnicianBooking = async (
 
   return response.data;
 };
+
+export const startTechnicianBooking = async (bookingId: string) => {
+  const response = await axiosPrivate.patch<BaseResponse<TechnicianBooking>>(
+    `/technicians/bookings/${bookingId}/details/start`
+  );
+
+  return response.data;
+};

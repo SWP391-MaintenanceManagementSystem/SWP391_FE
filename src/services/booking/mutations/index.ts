@@ -15,7 +15,10 @@ import {
   createBookingAssignment,
   unBookingAssignment,
 } from "../apis/booking-assignment.api";
-import { completeTechnicianBooking } from "../apis/technician-booking.api";
+import {
+  completeTechnicianBooking,
+  startTechnicianBooking,
+} from "../apis/technician-booking.api";
 
 export const useCreateBookingMutation = () => {
   const queryClient = useQueryClient();
@@ -152,7 +155,7 @@ export const useUnBookingAssignmentMutation = () => {
       ]);
 
       toast.success(
-        `Unassigned technician with email ${variables.employeeEmail} successfully`,
+        `Unassigned technician with email ${variables.employeeEmail} successfully`
       );
     },
     onError: () => {
@@ -190,6 +193,33 @@ export const useCompleteTechnicianBookingMutation = (
     },
     onError: (error) => {
       let msg = "Failed to mark booking as completed";
+      if (error instanceof AxiosError) {
+        msg = error.response?.data?.message || msg;
+      }
+      toast.error(msg);
+    },
+  });
+};
+
+export const useStartTechnicianBookingMutation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (bookingId: string) => {
+      const res = await startTechnicianBooking(bookingId);
+      return res;
+    },
+    onSuccess: async (_data, variables) => {
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ["technician-bookings"] }),
+        queryClient.invalidateQueries({
+          queryKey: ["booking", variables],
+        }),
+      ]);
+      toast.success("Starting task successfully");
+    },
+    onError: (error) => {
+      let msg = "Failed to start task";
       if (error instanceof AxiosError) {
         msg = error.response?.data?.message || msg;
       }

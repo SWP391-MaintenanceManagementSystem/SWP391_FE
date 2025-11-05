@@ -80,7 +80,7 @@ export default function AddVehicleFormModal({
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(handleAddVehicle)}
-            className="flex flex-col gap-4"
+            className="flex flex-col gap-4 font-inter"
           >
             <FormField
               control={form.control}
