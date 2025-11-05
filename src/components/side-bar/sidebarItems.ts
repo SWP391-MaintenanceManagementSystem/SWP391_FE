@@ -17,6 +17,7 @@ import {
   BookOpenCheckIcon,
   CalendarRange,
   MessageCircle,
+  Bell,
 } from "lucide-react";
 
 export const adminItems: SidebarItem[] = [
@@ -41,6 +42,7 @@ export const adminItems: SidebarItem[] = [
   },
   { title: "Inventory", url: "/inventory", icon: PackageOpen },
   { title: "Memberships", url: "/membership", icon: UserStar },
+  { title: "Notifications", url: "/notification", icon: Bell },
 ];
 
 export const customerItems: SidebarItem[] = [

@@ -32,6 +32,7 @@ import HistoryBookingCus from "@/pages/vehicle/components/customer/HistoryBookin
 import CheckinPage from "@/pages/booking/components/staff/CheckinPage";
 import ChatPage from "@/pages/chat";
 import HelpAndSupportPage from "@/pages/support/components/HelpAndSupport";
+import NotificationSystem from "@/pages/notification";
 
 const RouterComponent = () => {
   const router = createBrowserRouter([
@@ -87,6 +88,12 @@ const RouterComponent = () => {
                 },
 
                 {
+                  path: "/notification",
+                  element: <NotificationSystem />,
+                  hydrateFallbackElement: <CircularIndeterminate />,
+                },
+
+                {
                   path: "/vehicles",
                   element: <Vehicle />,
                   hydrateFallbackElement: <CircularIndeterminate />,
@@ -109,9 +116,7 @@ const RouterComponent = () => {
                   path: "/chat",
                   element: <ChatPage />,
                 },
-                {path: "/support",
-                  element: <HelpAndSupportPage />,
-                },
+                { path: "/support", element: <HelpAndSupportPage /> },
                 {
                   element: (
                     <RequireAuth
@@ -125,7 +130,7 @@ const RouterComponent = () => {
                     },
                   ],
                 },
-              
+
                 {
                   element: <RequireAuth allowedRoles={[AccountRole.ADMIN]} />,
                   children: [
