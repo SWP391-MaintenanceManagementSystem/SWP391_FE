@@ -55,7 +55,7 @@ export const getColumns = () => {
     // Vehicle
     columnHelper.accessor("vehicle", {
       id: "licensePlate",
-      header: (info) => <SortHeader title="Vehicle" info={info} />,
+      header: (info) => <SortHeader title="License Plate" info={info} />,
       size: 200,
       cell: (info) => {
         const v = info.getValue();
@@ -68,7 +68,7 @@ export const getColumns = () => {
           </div>
         );
       },
-      meta: { title: "Vehicle" },
+      meta: { title: "License Plate" },
     }),
 
     // Booking Time

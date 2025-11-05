@@ -62,6 +62,15 @@ export default function CheckListModal({
   useEffect(() => {
     if (!bookingData) return;
 
+    const saved = localStorage.getItem(`booking-progress-${bookingData.id}`);
+    if (saved) {
+      const parsed = JSON.parse(saved) as { tasks: TaskItem[]; note: string };
+      setTasks(parsed.tasks);
+      setNote(parsed.note);
+      setIsDone(parsed.tasks.every((t) => t.done));
+      return;
+    }
+
     const newTasks: TaskItem[] = [];
 
     bookingData.bookingDetails?.packages?.forEach((pkg) => {
@@ -130,7 +139,16 @@ export default function CheckListModal({
   const progress = tasks.length > 0 ? (completed / tasks.length) * 100 : 0;
 
   const handleUpdate = () => {
-    toast.info("Saved successfully");
+    const data = {
+      tasks,
+      note,
+      bookingId: bookingData?.id,
+    };
+    localStorage.setItem(
+      `booking-progress-${bookingData?.id}`,
+      JSON.stringify(data)
+    );
+    toast.success("Saved successfully");
   };
 
   const handleDone = () => {
