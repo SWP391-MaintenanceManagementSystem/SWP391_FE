@@ -115,7 +115,7 @@ export default function CheckListModal({
   }, [bookingData]);
 
   const handleToggle = (id: string, parentId?: string) => {
-    if (!canCheck) return; // ❌ Nếu chưa Start hoặc đã xong → không cho tick
+    if (!canCheck) return; 
 
     setTasks((prev) =>
       prev.map((t) => {

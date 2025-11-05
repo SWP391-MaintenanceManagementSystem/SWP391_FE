@@ -21,9 +21,6 @@ export default function TechnicianAssignedBookingTable() {
     sortBy: sorting[0]?.id ?? "createdAt",
     orderBy: sorting[0]?.desc ? "desc" : "asc",
   });
-  console.log("🚀 ~ TechnicianAssignedBookingTable ~ bookingData:", bookingData)
-console.log("Technician first booking:", bookingData?.data?.[0]);
-
   const bookings = bookingData?.data;
 
   const columns = getColumns();
