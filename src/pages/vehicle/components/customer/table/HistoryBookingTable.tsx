@@ -5,19 +5,19 @@ import type { CustomerBookingHistory } from "@/types/models/booking";
 import type { ColumnDef, SortingState } from "@tanstack/react-table";
 import { getColumns } from "./columns";
 import useCustomerBookingHistory from "@/services/booking/hooks/useCustomerBookingHistory";
+import { useDebounce } from "@uidotdev/usehooks";
 
 interface HistoryBookingTableProps {
-  vehicleId: string; 
+  vehicleId: string;
 }
 
 export default function HistoryBookingTable({
   vehicleId,
 }: HistoryBookingTableProps) {
-  console.log("🚀 ~ HistoryBookingTable ~ vehicleId:", vehicleId);
-  // pagination + filter state
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [searchValue, setSearchValue] = useState("");
+  const debouncedSearchValue = useDebounce(searchValue, 300);
   const [sorting, setSorting] = useState<SortingState>([]);
 
   const { historyData, isLoading } = useCustomerBookingHistory({
@@ -25,7 +25,7 @@ export default function HistoryBookingTable({
     pageSize,
     sortBy: sorting[0]?.id ?? "createdAt",
     orderBy: sorting[0]?.desc ? "desc" : "asc",
-    search: searchValue || undefined,
+    search: debouncedSearchValue || undefined,
     status: undefined,
     vehicleId,
   });
@@ -51,7 +51,7 @@ export default function HistoryBookingTable({
           onPageSizeChange={setPageSize}
           manualPagination
           isSearch={true}
-          searchPlaceholder="Search by vehicle or status..."
+          searchPlaceholder="Booking ID ..."
           onSearchChange={setSearchValue}
           manualSearch
           sorting={sorting}
