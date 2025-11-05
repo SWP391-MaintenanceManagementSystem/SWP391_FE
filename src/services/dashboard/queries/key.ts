@@ -5,4 +5,5 @@ export const queryKeys = {
   inventoryStatus: () => ["inventoryStatus"] as const,
   serviceCenterStat: () => ["serviceCenterStat"] as const,
   staffDashboard: () => ["staffDashboard"] as const,
+  customerDashboard: () => ["customerDashboard"] as const,
 };
