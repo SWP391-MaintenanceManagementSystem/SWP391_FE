@@ -51,7 +51,7 @@ export default function ItemsListSection() {
     <>
       <Card className="h-full flex-1 md:min-h-[500px] min-h-[600px]">
         <CardContent className="font-inter flex flex-col gap-4 h-full">
-          {isLoading || isFetching ? (
+          {isLoading ? (
             <>
               <Skeleton className="h-10 w-30 rounded-md" />
               <div className="flex flex-col gap-2">
