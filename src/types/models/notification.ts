@@ -1,6 +1,6 @@
 import type { NotificationType } from "../enums/notificationType";
 
-export type Notification = {
+export type NotificationItem = {
   id: string;
   accountId: string;
   title: string;
@@ -10,4 +10,14 @@ export type Notification = {
   sent_at: string;
   read_at?: string | null;
   created_at?: string;
+};
+
+export type NotificationFilter = {
+  search?: string;
+  notification_type?: NotificationType;
+  is_read?: boolean;
+  page?: number;
+  pageSize?: number;
+  sortBy?: string;
+  orderBy?: "asc" | "desc";
 };
