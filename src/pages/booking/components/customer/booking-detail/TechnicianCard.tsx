@@ -77,13 +77,13 @@ export default function TechnicianCard({
         {/* Technicians Grid */}
         <div className="space-y-2">
           {technicians?.length ? (
-            <div className="grid grid-cols-1 sm:grid-cols-[auto_auto]  gap-4">
+            <div className="grid grid-cols-1 gap-4">
               {technicians.map((tech, index) => (
                 <Card
                   key={index}
                   className="border border-gray-100 transition-colors duration-200 rounded-lg p-2"
                 >
-                  <CardContent className="p-2 flex items-center gap-3 my-auto">
+                  <CardContent className="px-2 flex items-center gap-3 my-auto">
                     <span className="font-medium text-purple-600 dark:text-purple-100">
                       <IdCardLanyard />
                     </span>

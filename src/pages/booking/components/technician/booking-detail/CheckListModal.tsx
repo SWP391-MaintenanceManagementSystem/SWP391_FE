@@ -51,7 +51,7 @@ export default function CheckListModal({
         ...t,
         done: true,
         services: t.services?.map((s) => ({ ...s, done: true })) || t.services,
-      }))
+      })),
     );
     setIsDone(true);
   };
@@ -100,7 +100,7 @@ export default function CheckListModal({
       prev.map((t) => {
         if (parentId && t.id === parentId && t.services) {
           const updatedServices = t.services.map((srv) =>
-            srv.id === id ? { ...srv, done: !srv.done } : srv
+            srv.id === id ? { ...srv, done: !srv.done } : srv,
           );
           const allDone = updatedServices.every((srv) => srv.done);
           return { ...t, services: updatedServices, done: allDone };
@@ -122,7 +122,7 @@ export default function CheckListModal({
         }
 
         return t;
-      })
+      }),
     );
   };
 
@@ -237,8 +237,8 @@ export default function CheckListModal({
 
                     {task.type === "package" && (
                       <AccordionTrigger
-                        className="ml-auto w-auto p-0 h-[20px] [&>svg]:h-4 [&>svg]:w-4 
-                           [&>svg]:text-gray-500 hover:[&>svg]:text-gray-900 
+                        className="ml-auto w-auto p-0 h-[20px] [&>svg]:h-4 [&>svg]:w-4
+                           [&>svg]:text-gray-500 hover:[&>svg]:text-gray-900
                            dark:[&>svg]:text-gray-400 dark:hover:[&>svg]:text-white"
                       />
                     )}
