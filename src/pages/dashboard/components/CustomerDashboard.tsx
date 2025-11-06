@@ -4,6 +4,8 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useGetCustomerDashboardData } from "@/services/dashboard/queries/customer";
 import type { CustomerDashboardData } from "@/types/models/dashboard";
 import OverviewCardCustomer from "./card/OverviewCardCustomer";
+import { CustomerBookingStatusChart } from "./chart/BookingStatusChart";
+import { CustomerBookingsByCenterChart } from "./chart/BookingCenterChart";
 
 
 
@@ -18,15 +20,17 @@ export default function CustomerDashboard() {
           dashboard: `👋 Welcome back, ${auth?.user?.profile?.firstName} ${auth?.user?.profile?.lastName}`,
         }}
       />
-      <MainContentLayout className="grid grid-cols-1 xl:grid-cols-[1fr_auto] gap-4 overflow-y-auto">
-        <div className="grid grid-cols-1 xl:grid-cols-[1fr_auto] gap-4">
-          <div className="grid lg:grid-rows-[auto_1fr]  gap-4">
-            <OverviewCardCustomer
-              data={data as CustomerDashboardData}
-              isLoading={isLoading}
-            />
+       <MainContentLayout className="flex-1 overflow-y-auto p-6">
+        <div className="flex flex-col gap-6">
+          <OverviewCardCustomer
+            data={data as CustomerDashboardData}
+            isLoading={isLoading}
+          />
+
+          <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+            <CustomerBookingStatusChart data={data as CustomerDashboardData} />
+            <CustomerBookingsByCenterChart data={data as CustomerDashboardData} />
           </div>
-         
         </div>
       </MainContentLayout>
     </div>
