@@ -1,13 +1,9 @@
 import type { SidebarItem } from "@/types/models/sidebar-item";
 import {
   Home,
-  Settings,
   Car,
   NotebookPen,
-  BookOpen,
-  CreditCard,
   CircleQuestionMark,
-  Sparkles,
   IdCardLanyard,
   PackageOpen,
   UserStar,
