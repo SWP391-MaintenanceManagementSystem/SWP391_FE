@@ -76,3 +76,33 @@ export type BookingStatistic = {
     | "Completed";
   value: number;
 };
+
+export type SpendingEntry = {
+  key: string; 
+  amount: number;
+};
+
+export type CustomerDashboardData = {
+  bookingTotal: number;
+  bookingStatusSummary: {
+    status: "PENDING" | "IN_PROGRESS" | "FINISHED";
+    count: number;
+    percentage: number;
+  }[];
+  bookingsByCenter: {
+    center: string;
+    count: number;
+    percentage: number;
+  }[];
+  totalSpending: {
+    week: SpendingEntry[];
+    month: SpendingEntry[];
+    year: SpendingEntry[];
+    total: number; 
+    average: number; 
+    peak: {
+      key: string;
+      amount: number;
+    };
+  };
+};

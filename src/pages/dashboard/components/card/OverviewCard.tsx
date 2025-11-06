@@ -6,11 +6,13 @@ import {
   IdCardLanyard,
   MessageCircleMore,
   User2,
-  Users,
+  Users
 } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import { Skeleton } from "@/components/ui/skeleton";
-import type { StaffDashboardData } from "@/types/models/dashboard";
+import type {
+  StaffDashboardData,
+} from "@/types/models/dashboard";
 
 export function OverviewAdmin() {
   const { data, isLoading } = useGetAdminOverview();
@@ -102,3 +104,4 @@ export function OverviewStaff({
     </div>
   );
 }
+
