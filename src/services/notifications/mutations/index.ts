@@ -1,4 +1,4 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   markNotificationAsRead,
   markNotificationAsReadAll,
@@ -6,6 +6,7 @@ import {
 import { toast } from "sonner";
 
 export const useMarkAsReadMutation = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (id: string) => {
       try {
@@ -15,10 +16,25 @@ export const useMarkAsReadMutation = () => {
         throw error;
       }
     },
+    onSuccess: async () => {
+      await Promise.all([
+        queryClient.invalidateQueries({
+          queryKey: ["notifications"],
+        }),
+
+        queryClient.invalidateQueries({
+          queryKey: ["notificationsCount"],
+        }),
+      ]);
+    },
+    onError: () => {
+      toast.error("Failed to mark notification as read");
+    },
   });
 };
 
 export const useMarkAsReadAllMutation = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async () => {
       try {
@@ -27,6 +43,20 @@ export const useMarkAsReadAllMutation = () => {
         toast.error("Failed to mark all notifications as read");
         throw error;
       }
+    },
+    onSuccess: async () => {
+      await Promise.all([
+        queryClient.invalidateQueries({
+          queryKey: ["notifications"],
+        }),
+
+        queryClient.invalidateQueries({
+          queryKey: ["notificationsCount"],
+        }),
+      ]);
+    },
+    onError: () => {
+      toast.error("Failed to mark all notifications as read");
     },
   });
 };
