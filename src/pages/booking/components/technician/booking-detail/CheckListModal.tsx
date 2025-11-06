@@ -324,7 +324,7 @@ export default function CheckListModal({
                 <Button
                   onClick={handleUpdate}
                   variant="outline"
-                  disabled={isDone}
+                  disabled={isDone || !canCheck}
                   className="border-purple-500 text-purple-600 hover:bg-purple-50
           dark:border-purple-300 dark:text-purple-200 dark:hover:bg-purple-700/30"
                 >
@@ -333,7 +333,7 @@ export default function CheckListModal({
 
                 <Button
                   onClick={handleDone}
-                  disabled={isDone || completed !== tasks.length || isPending}
+                  disabled={isDone || completed !== tasks.length || isPending || !canCheck}
                   className="bg-purple-primary hover:bg-purple-500 dark:bg-purple-light dark:hover:bg-purple-950 dark:text-amber-primary text-white"
                 >
                   {isPending ? "Completing..." : "Done"}
