@@ -102,11 +102,11 @@ export default function WeeklyWorkSchedule({
                       className="p-3 rounded-xl space-y-1.5 bg-purple-50 dark:bg-purple-900/40 border border-purple-100 dark:border-purple-700 text-sm font-medium"
                     >
                       <div className="flex items-center">
-                        <Clock className="mr-2 text-gray-500" size={16} />
+                        <Clock className="mr-2 " size={16} />
                         <Badge variant="outline">{event.time}</Badge>
                       </div>
                       <div className="flex items-center">
-                        <MapPin className="mr-2 text-gray-500" size={18} />
+                        <MapPin className="mr-2" size={18} />
                         {event.centerName}
                       </div>
                     </div>

@@ -49,7 +49,7 @@ export function RevenueChart() {
         </CardHeader>
 
         <CardContent className="px-2 pt-4 sm:px-6 sm:pt-6">
-          <div className="aspect-auto h-[250px] w-full bg-gray-100 rounded-xl animate-pulse" />
+          <Skeleton className="aspect-auto h-[250px] w-full rounded-xl" />
         </CardContent>
       </Card>
     );

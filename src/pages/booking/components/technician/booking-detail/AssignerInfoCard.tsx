@@ -21,8 +21,8 @@ export default function AssignerInfoCard({
   email,
 }: AssignerInfoCardProps) {
   return (
-    <Card className="hover:shadow-lg dark:hover:shadow-gray-700 transition-shadow duration-300 border border-gray-200 dark:border-[#262626] rounded-lg">
-      <CardHeader className="flex flex-row items-center gap-2 p-4 bg-gradient-to-r from-purple-50 to-gray-50 dark:from-purple-800 dark:to-purple-500">
+    <Card className="hover:shadow-lg p-0 dark:hover:shadow-gray-700 transition-shadow duration-300 border border-gray-200 dark:border-[#262626] rounded-lg">
+      <CardHeader className="flex rounded-t-lg flex-row items-center  gap-2 p-4 bg-gradient-to-r from-purple-50 to-gray-50 dark:from-purple-800 dark:to-purple-500">
         <UserCheck className="w-6 h-6 text-purple-500 dark:text-white" />
         <CardTitle className="text-lg font-semibold text-gray-900 dark:text-white">
           Assigner Information
