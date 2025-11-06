@@ -76,7 +76,7 @@ export default function NotificationsPopover() {
       (entries) => {
         if (entries[0].isIntersecting && hasNextPage) {
           clearTimeout(timeout);
-          timeout = setTimeout(() => fetchNextPage(), 100); // debounce
+          timeout = setTimeout(() => fetchNextPage(), 100);
         }
       },
       { threshold: 1 },
@@ -88,10 +88,51 @@ export default function NotificationsPopover() {
     };
   }, [hasNextPage, fetchNextPage]);
 
+  // Group notifications by Today / Yesterday
+  const groupedNotifications = useMemo(() => {
+    const today: typeof notifications = [];
+    const yesterday: typeof notifications = [];
+    const now = new Date();
+    const yest = new Date();
+    yest.setDate(now.getDate() - 1);
+
+    notifications.forEach((n) => {
+      const sent = new Date(n.sent_at);
+      if (sent.toDateString() === now.toDateString()) today.push(n);
+      else if (sent.toDateString() === yest.toDateString()) yesterday.push(n);
+    });
+
+    return { today, yesterday };
+  }, [notifications]);
+
+  const renderNotificationSection = (
+    title: string,
+    list: typeof notifications,
+  ) => {
+    if (list.length === 0) return null;
+    return (
+      <div>
+        <h3 className="font-semibold text-gray-600 dark:text-gray-400 mb-2">
+          {title}
+        </h3>
+        <div className="space-y-2">
+          {list.map((notification) => (
+            <NotificationItem
+              key={notification.id}
+              notification={notification}
+              onMarkAsRead={() => onMarkAsRead(notification.id)}
+              type="SMALL"
+            />
+          ))}
+        </div>
+      </div>
+    );
+  };
+
   return (
     <Popover>
       <TooltipWrapper content="View Notifications">
-        <PopoverTrigger asChild className=" absolute right-8 hidden md:flex">
+        <PopoverTrigger asChild className="absolute right-8 hidden md:flex">
           <div className="cursor-pointer">
             <Bell />
             {unreadCount > 0 && (
@@ -129,33 +170,38 @@ export default function NotificationsPopover() {
         <Tabs
           value={activeTab}
           onValueChange={setActiveTab}
-          className="flex flex-col h-full mt-4"
+          className="flex flex-col h-full"
         >
-          {/* Tabs header */}
           <TabsList className="grid w-full grid-cols-3 max-w-md mb-4">
             <TabsTrigger value="all">All ({totalCount})</TabsTrigger>
             <TabsTrigger value="unread">Unread ({unreadCount})</TabsTrigger>
             <TabsTrigger value="read">Read ({readCount})</TabsTrigger>
           </TabsList>
 
-          {/* Notifications list */}
-          <div className="flex-1 overflow-y-auto max-h-[50vh] min-h-[40vh]">
-            <TabsContent value={activeTab} className="space-y-4">
+          <div className="flex-1 overflow-y-auto max-h-[50vh] min-h-[40vh] space-y-4">
+            <TabsContent value={activeTab}>
               {isLoadingNotifications ? (
                 <div className="w-full h-full flex justify-center items-center">
                   <Spinner />
                 </div>
-              ) : notifications.length > 0 ? (
+              ) : (
                 <>
-                  {notifications.map((notification) => (
-                    <NotificationItem
-                      key={notification.id}
-                      notification={notification}
-                      onMarkAsRead={() => onMarkAsRead(notification.id)}
-                      type="SMALL"
-                    />
-                  ))}
-                  {/* Infinite scroll sentinel */}
+                  {renderNotificationSection(
+                    "Today",
+                    groupedNotifications.today,
+                  )}
+                  {renderNotificationSection(
+                    "Yesterday",
+                    groupedNotifications.yesterday,
+                  )}
+
+                  {groupedNotifications.today.length === 0 &&
+                    groupedNotifications.yesterday.length === 0 && (
+                      <div className="flex justify-center items-center h-full">
+                        <p className="text-gray-500">No notifications</p>
+                      </div>
+                    )}
+
                   {hasNextPage && (
                     <div
                       ref={loadMoreRef}
@@ -165,10 +211,6 @@ export default function NotificationsPopover() {
                     </div>
                   )}
                 </>
-              ) : (
-                <div className="flex justify-center items-center h-full">
-                  <p className="text-gray-500">No notifications</p>
-                </div>
               )}
             </TabsContent>
           </div>
