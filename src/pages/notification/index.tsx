@@ -16,6 +16,10 @@ import {
   useGetNotifications,
   useGetNotificationsCount,
 } from "@/services/notifications/queries";
+import {
+  useMarkAsRead,
+  useMarkAsReadAll,
+} from "@/services/notifications/hooks/useMarkAsRead";
 
 export default function NotificationSystem() {
   const { auth } = useAuth();
@@ -71,6 +75,9 @@ export default function NotificationSystem() {
 
   const clearSearch = () => setSearchValue("");
 
+  const { onMarkAsRead } = useMarkAsRead();
+  const { onMarkAsReadAll } = useMarkAsReadAll();
+
   return (
     <div className="w-full h-screen font-inter">
       <MainContentLayout className="mt-0 grid grid-rows-[auto_auto_1fr] h-full overflow-visible pb-0">
@@ -95,6 +102,7 @@ export default function NotificationSystem() {
                   variant="outline"
                   size="sm"
                   className="flex items-center gap-2"
+                  onClick={onMarkAsReadAll}
                 >
                   <CheckCheck className="w-4 h-4" /> Mark all as read
                 </Button>
@@ -149,7 +157,7 @@ export default function NotificationSystem() {
                   <NotificationItem
                     key={notification.id}
                     notification={notification}
-                    onMarkAsRead={() => console.log(notification)}
+                    onMarkAsRead={() => onMarkAsRead(notification.id)}
                   />
                 ))
               ) : isLoading || isFetchingNextPage ? (

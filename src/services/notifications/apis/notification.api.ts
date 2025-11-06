@@ -20,3 +20,11 @@ export const getNotificationsCount = async () => {
     "/notifications/count",
   );
 };
+
+export const markNotificationAsRead = async (id: string) => {
+  return httpPrivate.patch<BaseResponse<void>>(`/notifications/${id}/read`);
+};
+
+export const markNotificationAsReadAll = async () => {
+  return httpPrivate.patch<BaseResponse<void>>(`/notifications/read-all`);
+};
