@@ -14,10 +14,16 @@ export type NotificationItem = {
 
 export type NotificationFilter = {
   search?: string;
-  notification_type?: NotificationType;
+  notification_type?: NotificationType | NotificationType[];
   is_read?: boolean;
   page?: number;
   pageSize?: number;
   sortBy?: string;
   orderBy?: "asc" | "desc";
+};
+
+export type NotificationCount = {
+  total: number;
+  unreadCount: number;
+  readCount: number;
 };

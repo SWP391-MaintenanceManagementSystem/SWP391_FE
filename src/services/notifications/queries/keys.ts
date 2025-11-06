@@ -4,5 +4,5 @@ export const queryKeys = {
   notifications: (params: NotificationFilter) =>
     ["notifications", params] as const,
 
-  unreadNotificationsCount: () => ["unreadNotificationsCount"] as const,
+  notificationsCount: () => ["unreadNotificationsCount"] as const,
 };

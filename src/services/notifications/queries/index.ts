@@ -7,7 +7,7 @@ import { toast } from "sonner";
 import { queryKeys } from "./keys";
 import {
   getNotifications,
-  getUnreadNotifications,
+  getNotificationsCount,
 } from "../apis/notification.api";
 import type {
   NotificationFilter,
@@ -28,7 +28,7 @@ export const useGetNotifications = (
   return useInfiniteQuery<
     NotificationResponse, // TQueryFnData
     Error, // TError
-    InfiniteData<NotificationResponse>, // TData → có .pages
+    InfiniteData<NotificationResponse>, // TData → have .pages
     ReturnType<typeof queryKeys.notifications>, // TQueryKey
     number // TPageParam
   >({
@@ -50,15 +50,15 @@ export const useGetNotifications = (
   });
 };
 
-export const useGetUnreadNotificationsCount = () => {
+export const useGetNotificationsCount = () => {
   return useQuery({
-    queryKey: queryKeys.unreadNotificationsCount(),
+    queryKey: queryKeys.notificationsCount(),
     queryFn: async () => {
       try {
-        const res = await getUnreadNotifications();
-        return res.data.count;
+        const res = await getNotificationsCount();
+        return res.data;
       } catch (error) {
-        toast.error("Failed to get unread notifications count");
+        toast.error("Failed to get notifications count");
         throw error;
       }
     },

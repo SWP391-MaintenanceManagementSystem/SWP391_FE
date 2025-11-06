@@ -1,7 +1,7 @@
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { NotificationType } from "@/types/enums/notificationType";
-import type { Notification } from "@/types/models/notification";
+import type { NotificationItem } from "@/types/models/notification";
 import {
   CalendarClock,
   CreditCard,
@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 
 interface NotificationItemProps {
-  notification: Notification;
+  notification: NotificationItem;
   onMarkAsRead: (id: string) => void;
 }
 

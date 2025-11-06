@@ -2,6 +2,7 @@ import { httpPrivate } from "@/lib/http";
 import type {
   NotificationItem,
   NotificationFilter,
+  NotificationCount,
 } from "@/types/models/notification";
 import type { BaseResponse, PaginationResponse } from "@/types/models/response";
 
@@ -14,8 +15,8 @@ export const getNotifications = async (params: NotificationFilter) => {
   );
 };
 
-export const getUnreadNotifications = async () => {
-  return httpPrivate.get<BaseResponse<{ count: number }>>(
-    "/notifications/unread-count",
+export const getNotificationsCount = async () => {
+  return httpPrivate.get<BaseResponse<NotificationCount>>(
+    "/notifications/count",
   );
 };
