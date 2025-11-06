@@ -162,6 +162,7 @@ export default function NotificationSystem() {
                     key={notification.id}
                     notification={notification}
                     onMarkAsRead={() => onMarkAsRead(notification.id)}
+                    type="LARGE"
                   />
                 ))
               ) : isLoading || isFetchingNextPage ? (

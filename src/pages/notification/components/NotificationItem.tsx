@@ -1,7 +1,7 @@
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { NotificationType } from "@/types/enums/notificationType";
-import type { NotificationItem } from "@/types/models/notification";
+import type { NotificationItem as NotificationItemType } from "@/types/models/notification";
 import {
   CalendarClock,
   CreditCard,
@@ -11,13 +11,15 @@ import {
 } from "lucide-react";
 
 interface NotificationItemProps {
-  notification: NotificationItem;
+  notification: NotificationItemType;
   onMarkAsRead: (id: string) => void;
+  type: "SMALL" | "LARGE";
 }
 
 export function NotificationItem({
   notification,
   onMarkAsRead,
+  type,
 }: NotificationItemProps) {
   const getIcon = () => {
     switch (notification.notification_type) {
@@ -38,7 +40,6 @@ export function NotificationItem({
           <CalendarClock className="w-5 h-5 text-purple-600 dark:text-purple-400" />
         );
       case NotificationType.SYSTEM:
-        return <Info className="w-5 h-5 text-blue-600 dark:text-blue-400" />;
       default:
         return <Info className="w-5 h-5 text-blue-600 dark:text-blue-400" />;
     }
@@ -51,12 +52,61 @@ export function NotificationItem({
     const hours = Math.floor(diff / (1000 * 60 * 60));
     const days = Math.floor(hours / 24);
 
-    if (mins < 60) return `${mins} minute${mins > 2 ? "s" : ""} ago`;
+    if (mins < 60) return `${mins} minute${mins > 1 ? "s" : ""} ago`;
     if (hours < 24) return `${hours} hour${hours > 1 ? "s" : ""} ago`;
     if (days > 0) return `${days} day${days > 1 ? "s" : ""} ago`;
     return "Just now";
   };
 
+  // SMALL type
+  if (type === "SMALL") {
+    return (
+      <Card
+        className={`p-3 cursor-pointer transition-all hover:shadow-md flex flex-col gap-1 ${
+          !notification.is_read
+            ? "bg-purple-50 border-purple-200 dark:bg-purple-950 dark:border-purple-800"
+            : "bg-white dark:bg-gray-900"
+        }`}
+        onClick={() => !notification.is_read && onMarkAsRead(notification.id)}
+      >
+        {/* Row icon + title + badge */}
+        <div className="flex items-center gap-2">
+          <div className="flex-shrink-0">{getIcon()}</div>
+          <p
+            className={`flex-1 truncate text-sm ${!notification.is_read ? "font-medium" : ""}`}
+          >
+            {notification.title}
+          </p>
+          <Badge
+            variant="outline"
+            className="text-xs capitalize dark:border-gray-700 flex-shrink-0"
+          >
+            {notification.notification_type.toLowerCase()}
+          </Badge>
+        </div>
+
+        {/* Row phụ: content */}
+        <div className="text-sm text-muted-foreground mt-1">
+          {notification.content}
+        </div>
+
+        {/* Row phụ: date */}
+        <div className="flex justify-between text-xs text-muted-foreground mt-1">
+          <span>{formatDate(new Date(notification.sent_at))}</span>
+          <span>
+            {new Date(notification.sent_at).toLocaleDateString("en-US", {
+              month: "short",
+              day: "numeric",
+              hour: "2-digit",
+              minute: "2-digit",
+            })}
+          </span>
+        </div>
+      </Card>
+    );
+  }
+
+  // LARGE type: full view
   return (
     <Card
       className={`p-4 cursor-pointer transition-all hover:shadow-md ${
