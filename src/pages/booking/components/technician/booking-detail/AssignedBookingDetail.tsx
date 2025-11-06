@@ -54,7 +54,7 @@ export default function AssignedBookingDetail() {
         }}
       />
 
-      <MainContentLayout className="p-6 font-inter">
+      <MainContentLayout>
         <Card className="mb-6 bg-purple-50 border-purple-200 dark:bg-purple-800 dark:border-purple-800 shadow-md">
           <CardHeader className="flex flex-row items-center justify-between p-4">
             <div>
@@ -67,7 +67,6 @@ export default function AssignedBookingDetail() {
                 </span>
               </p>
             </div>
-
             {/* Action buttons */}
             <div className="flex gap-2">
               <Button
