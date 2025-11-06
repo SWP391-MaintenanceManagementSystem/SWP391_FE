@@ -7,12 +7,14 @@ interface TotalCardProps {
   numberValue: string | number;
   bgColor?: string;
   iconColor?: string;
+  description?: string;
 }
 
 export default function TotalCardCustomer({
   icon: Icon,
   title,
   numberValue,
+  description = "",
   bgColor = "bg-blue-100",
   iconColor = "text-blue-600",
 }: TotalCardProps) {
@@ -22,11 +24,11 @@ export default function TotalCardCustomer({
         p-4 rounded-xl border bg-white dark:bg-[#1a1a1a]
         border-gray-200 dark:border-[#2a2a2a]
         shadow-sm
-        flex flex-col gap-3 hover:shadow-lg dark:hover:shadow-gray-700 
+        flex flex-col gap-3 hover:shadow-lg dark:hover:shadow-gray-700
       "
     >
       {/* Icon box */}
-      <div 
+      <div
         className={`
           w-10 h-10 rounded-lg flex items-center justify-center 
           ${bgColor}
@@ -43,6 +45,10 @@ export default function TotalCardCustomer({
       {/* Number */}
       <p className="text-2xl font-bold text-black dark:text-white">
         {numberValue}
+      </p>
+      {/* Sub title */}
+      <p className="text-xs text-muted-foreground dark:text-white">
+        {description}
       </p>
     </Card>
   );

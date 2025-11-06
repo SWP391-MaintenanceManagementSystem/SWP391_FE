@@ -16,8 +16,7 @@ export default function OverviewCardCustomer({
   const pending = statusList.find((s) => s.status === "PENDING")?.count ?? 0;
   const inProgress =
     statusList.find((s) => s.status === "IN_PROGRESS")?.count ?? 0;
-  const completed =
-    statusList.find((s) => s.status === "COMPLETED")?.count ?? 0;
+  const finished = statusList.find((s) => s.status === "FINISHED")?.count ?? 0;
 
   return (
     <div className="grid lg:grid-cols-4 grid-cols-2 gap-3 md:gap-4 font-inter">
@@ -54,14 +53,16 @@ export default function OverviewCardCustomer({
             iconColor="text-teal-600"
             numberValue={inProgress}
           />
-          <TooltipWrapper content="Finished bookings include those that have already been paid for.">
-            <TotalCardCustomer
-              title="Finished"
-              icon={CheckCircle}
-              bgColor="bg-green-100"
-              iconColor="text-green-600"
-              numberValue={completed}
-            />
+          <TooltipWrapper content="Includes Completed (unpaid) and Checked Out (paid) bookings">
+            <div>
+              <TotalCardCustomer
+                title="Finished"
+                icon={CheckCircle}
+                bgColor="bg-green-100"
+                iconColor="text-green-600"
+                numberValue={finished}
+              />
+            </div>
           </TooltipWrapper>
         </>
       )}

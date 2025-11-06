@@ -20,10 +20,12 @@ interface CustomerBookingStatusChartProps {
 const statusColors = {
   PENDING: "#F59E0B", // amber
   IN_PROGRESS: "#3B82F6", // blue
-  COMPLETED: "#8B5CF6", // violet
+  FINISHED: "#8B5CF6", // violet
 };
 
-export function CustomerBookingStatusChart({ data }: CustomerBookingStatusChartProps) {
+export function CustomerBookingStatusChart({
+  data,
+}: CustomerBookingStatusChartProps) {
   const [open, setOpen] = React.useState(false);
 
   if (!data?.bookingStatusSummary || data.bookingStatusSummary.length === 0) {
@@ -45,18 +47,17 @@ export function CustomerBookingStatusChart({ data }: CustomerBookingStatusChartP
   const chartConfig: ChartConfig = {
     PENDING: { label: "Pending", color: statusColors.PENDING },
     IN_PROGRESS: { label: "In Progress", color: statusColors.IN_PROGRESS },
-    COMPLETED: { label: "Completed", color: statusColors.COMPLETED },
+    FINISHED: { label: "Finished", color: statusColors.FINISHED },
   };
 
   const total = data.bookingStatusSummary.reduce((sum, s) => sum + s.count, 0);
 
   return (
     <>
-      <Card className="w-full max-w-md mx-auto shadow-sm border rounded-2xl">
+      <Card className="w-full">
         <CardHeader className="flex flex-row items-start justify-between space-y-0 pb-0">
           <div>
             <CardTitle>Booking Status</CardTitle>
-
           </div>
         </CardHeader>
 
@@ -99,7 +100,8 @@ export function CustomerBookingStatusChart({ data }: CustomerBookingStatusChartP
                 className="flex justify-between text-sm border-b pb-1 border-gray-200 dark:border-gray-700"
               >
                 <span className="font-medium text-gray-800 dark:text-gray-200">
-                  {chartConfig[item.status as keyof ChartConfig]?.label ?? item.status}
+                  {chartConfig[item.status as keyof ChartConfig]?.label ??
+                    item.status}
                 </span>
                 <span className="text-gray-500 dark:text-gray-400">
                   {item.count}

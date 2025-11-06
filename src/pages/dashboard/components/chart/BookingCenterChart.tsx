@@ -63,7 +63,7 @@ export function CustomerBookingsByCenterChart({
 
   return (
     <>
-      <Card className="w-full">
+      <Card className="w-full ">
         <CardHeader className="flex flex-row items-start justify-between space-y-0 pb-0">
           <div>
             <CardTitle>Bookings by Center</CardTitle>

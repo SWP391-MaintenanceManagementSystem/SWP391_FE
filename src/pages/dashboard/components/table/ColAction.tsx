@@ -4,6 +4,7 @@ import { Eye } from "lucide-react";
 import { TooltipWrapper } from "@/components/TooltipWrapper";
 import ActionBtn from "@/components/table/ActionBtn";
 import type { Booking } from "@/types/models/booking";
+import { encodeBase64 } from "@/utils/base64";
 
 interface ColActionsProps {
   row: Row<Booking>;
@@ -16,7 +17,7 @@ export default function ColActions({ row }: ColActionsProps) {
   const booking = row.original;
 
   const handleViewDetail = () => {
-    navigate(`/booking/${booking.id}`);
+    navigate(`/booking/${encodeBase64(booking.id)}`);
   };
 
   return (

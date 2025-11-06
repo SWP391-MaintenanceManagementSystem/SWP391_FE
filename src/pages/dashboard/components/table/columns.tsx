@@ -79,8 +79,9 @@ export const getColumns = () => {
         />
       ),
       meta: {
-        filterOptions: ["ASSIGNED", "CHECKED_IN", "COMPLETED"],
+        filterOptions: ["PENDING", "ASSIGNED", "CHECKED_IN", "COMPLETED"],
         labelOptions: {
+          PENDING: "Pending",
           ASSIGNED: "Assigned",
           CHECKED_IN: "Checked In",
           COMPLETED: "Completed",

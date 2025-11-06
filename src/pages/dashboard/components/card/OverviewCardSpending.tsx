@@ -12,24 +12,16 @@ export default function OverviewCardSpending({
 }) {
   if (!data) return null;
 
-  const totalSpendingYear = data.totalSpending?.year ?? 0;
-  const totalSpendingMonth = data.totalSpending?.month ?? 0;
-  const totalSpendingWeek = data.totalSpending?.week ?? 0;
-
-  const totalSpending = totalSpendingYear;
-  const averageSpending = totalSpendingYear / 12;
-  const peakSpending = Math.max(
-    totalSpendingWeek,
-    totalSpendingMonth,
-    totalSpendingYear
-  );
+  const totalSpending = data.totalSpending?.total ?? 0;
+  const averageSpending = data.totalSpending?.average ?? 0;
+  const peakSpending = data.totalSpending?.peak?.amount ?? 0;
 
   const cards = [
     {
       title: "Total Spending",
       icon: CircleDollarSign,
       iconColor: "text-emerald-500",
-      bgColor: "bg-emerald-50",
+      bgColor: "bg-emerald-50 dark:bg-emerald-900/30",
       value: totalSpending,
       description: "Your total spending this year.",
     },
@@ -37,17 +29,17 @@ export default function OverviewCardSpending({
       title: "Average Spending",
       icon: BarChart3,
       iconColor: "text-sky-500",
-      bgColor: "bg-sky-50",
+      bgColor: "bg-sky-50 dark:bg-sky-900/30",
       value: averageSpending,
-      description: "Your average monthly spending.",
+      description: "Your average spending per transaction.",
     },
     {
       title: "Peak Spending",
       icon: TrendingUp,
-      iconColor: "text-orange-500",
-      bgColor: "bg-orange-50",
+      iconColor: "text-violet-500",
+      bgColor: "bg-violet-50 dark:bg-violet-900/30",
       value: peakSpending,
-      description: "Your highest spending during the period.",
+      description: "Your highest spending in a single period.",
     },
   ];
 
