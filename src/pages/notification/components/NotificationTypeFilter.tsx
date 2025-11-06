@@ -1,4 +1,5 @@
 import { FacetedFilter } from "@/components/FacetedFilter";
+import { useAuth } from "@/contexts/AuthContext";
 import { NotificationType } from "@/types/enums/notificationType";
 
 interface NotificationTypeFilterProps {
@@ -10,10 +11,17 @@ export function NotificationTypeFilter({
   value,
   setValue,
 }: NotificationTypeFilterProps) {
-  const options = Object.values(NotificationType).map((type) => ({
+  const { auth } = useAuth();
+  let options = Object.values(NotificationType).map((type) => ({
     value: type,
     label: type.charAt(0) + type.slice(1).toLowerCase(),
   }));
+
+  if (auth.user?.role === "CUSTOMER") {
+    options = options.filter(
+      (option) => option.value !== NotificationType.SHIFT,
+    );
+  }
 
   return (
     <FacetedFilter<NotificationType>
