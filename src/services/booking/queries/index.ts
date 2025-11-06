@@ -43,7 +43,6 @@ export const useBookingsHistoryQuery = (filter: BookingFilters) => {
     queryKey: ["booking-history", filter],
     queryFn: async () => {
       try {
-    
         const res = await getBookingHistory(filter);
         return res;
       } catch (error) {
@@ -51,6 +50,6 @@ export const useBookingsHistoryQuery = (filter: BookingFilters) => {
         throw error;
       }
     },
-    // enabled: !!filter.page && !!filter.pageSize
+    enabled: !!filter.page && !!filter.pageSize,
   });
 };
