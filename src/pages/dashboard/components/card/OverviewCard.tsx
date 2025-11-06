@@ -21,7 +21,7 @@ export function OverviewAdmin() {
         {Array.from({ length: 4 }).map((_, i) => (
           <div
             key={i}
-            className="flex flex-col gap-2 p-4 rounded-2xl bg-white shadow-sm border animate-pulse"
+            className="flex flex-col gap-2 p-4 rounded-2xl shadow-sm border animate-pulse"
           >
             <Skeleton className="h-5 w-1/3" />
             <Skeleton className="h-8 w-2/3" />
@@ -79,7 +79,7 @@ export function OverviewStaff({
         Array.from({ length: 2 }).map((_, i) => (
           <div
             key={i}
-            className="flex flex-col gap-2 p-4 rounded-2xl bg-white dark:bg-[#1e1e1e] shadow-sm border border-gray-200 dark:border-[#2b2b2b]"
+            className="flex flex-col gap-2 p-4 rounded-2xl dark:bg-[#1e1e1e] shadow-sm border border-gray-200 dark:border-[#2b2b2b]"
           >
             <Skeleton className="h-5 w-1/3" />
             <Skeleton className="h-8 w-2/3" />

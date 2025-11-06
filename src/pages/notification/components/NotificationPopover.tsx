@@ -111,7 +111,7 @@ export default function NotificationsPopover() {
   ) => {
     if (list.length === 0) return null;
     return (
-      <div>
+      <div className="mb-3">
         <h3 className="font-semibold text-gray-600 dark:text-gray-400 mb-2">
           {title}
         </h3>
