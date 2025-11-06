@@ -77,6 +77,11 @@ export type BookingStatistic = {
   value: number;
 };
 
+export type SpendingEntry = {
+  key: string;
+  amount: number;
+};
+
 export type CustomerDashboardData = {
   bookingTotal: number;
   bookingStatusSummary: {
@@ -90,9 +95,10 @@ export type CustomerDashboardData = {
     percentage: number;
   }[];
   totalSpending: {
-    week: number;
-    month: number;
-    year: number;
+    week: SpendingEntry[];
+    month: SpendingEntry[];
+    year: SpendingEntry[];
   };
 };
+
 

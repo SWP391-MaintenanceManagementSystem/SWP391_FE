@@ -67,10 +67,6 @@ export function CustomerBookingsByCenterChart({
         <CardHeader className="flex flex-row items-start justify-between space-y-0 pb-0">
           <div>
             <CardTitle>Bookings by Center</CardTitle>
-            <p className="text-3xl font-semibold text-sky-600 mt-2">
-              {total.toLocaleString()}
-            </p>
-            {/* <p className="text-sm text-gray-500">{total} Orders</p> */}
           </div>
         </CardHeader>
 
