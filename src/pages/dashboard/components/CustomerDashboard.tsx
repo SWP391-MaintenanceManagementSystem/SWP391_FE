@@ -6,6 +6,7 @@ import type { CustomerDashboardData } from "@/types/models/dashboard";
 import OverviewCardCustomer from "./card/OverviewCardCustomer";
 import { CustomerBookingStatusChart } from "./chart/BookingStatusChart";
 import { CustomerBookingsByCenterChart } from "./chart/BookingCenterChart";
+import OverviewCardSpending from "./card/OverviewCardSpending";
 
 
 
@@ -31,6 +32,7 @@ export default function CustomerDashboard() {
             <CustomerBookingStatusChart data={data as CustomerDashboardData} />
             <CustomerBookingsByCenterChart data={data as CustomerDashboardData} />
           </div>
+          <OverviewCardSpending data = {data as CustomerDashboardData}  isLoading={isLoading}/>
         </div>
       </MainContentLayout>
     </div>

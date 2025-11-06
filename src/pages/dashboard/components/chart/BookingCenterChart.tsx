@@ -85,7 +85,7 @@ export function CustomerBookingsByCenterChart({
             isLegendVisible={true}
           />
 
-          <TooltipWrapper content="View detailed list">
+          <TooltipWrapper content="View list">
             <Badge
               variant="outline"
               className="text-xs font-medium cursor-pointer mt-3"
