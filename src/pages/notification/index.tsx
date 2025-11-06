@@ -5,43 +5,52 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Spinner } from "@/components/ui/shadcn-io/spinner";
+import { Input } from "@/components/ui/input";
+import { useDebounce } from "@uidotdev/usehooks";
+import { NotificationItem } from "./components/NotificationItem";
+import { NotificationTypeFilter } from "./components/NotificationTypeFilter";
+import type { NotificationType } from "@/types/enums/notificationType";
+import { useAuth } from "@/contexts/AuthContext";
+import { usePersistentNotificationSocket } from "@/services/notifications/hooks/useNotificationSocket";
 import {
   useGetNotifications,
   useGetNotificationsCount,
 } from "@/services/notifications/queries";
-import { Input } from "@/components/ui/input";
-import { NotificationItem } from "./components/NotificationItem";
-import { useDebounce } from "@uidotdev/usehooks";
-import { NotificationTypeFilter } from "./components/NotificationTypeFilter";
-import type { NotificationType } from "@/types/enums/notificationType";
 
 export default function NotificationSystem() {
+  const { auth } = useAuth();
   const [activeTab, setActiveTab] = useState<string>("all");
   const [searchValue, setSearchValue] = useState<string>("");
   const [typeFilter, setTypeFilter] = useState<NotificationType[]>([]);
   const debouncedSearchValue = useDebounce(searchValue, 500);
   const loadMoreRef = useRef<HTMLDivElement | null>(null);
 
+  // Query params
+  const notificationQueryParams = {
+    pageSize: 10,
+    search: debouncedSearchValue,
+    notification_type: typeFilter.length > 0 ? typeFilter : undefined,
+    is_read:
+      activeTab === "unread" ? false : activeTab === "read" ? true : undefined,
+  };
+
+  const notificationsQueryKey = [
+    "notifications",
+    notificationQueryParams,
+  ] as const;
+
+  // Connect socket
+  usePersistentNotificationSocket(auth?.user?.id, notificationsQueryKey);
+
   // Notifications query
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
-    useGetNotifications({
-      pageSize: 10,
-      search: debouncedSearchValue,
-      notification_type: typeFilter.length > 0 ? typeFilter : undefined,
-      is_read:
-        activeTab === "unread"
-          ? false
-          : activeTab === "read"
-            ? true
-            : undefined,
-    });
+    useGetNotifications(notificationQueryParams);
+  const notifications = useMemo(
+    () => (data?.pages ?? []).flatMap((p) => p.data),
+    [data?.pages],
+  );
 
-  const notifications = useMemo(() => {
-    const pages = data?.pages ?? [];
-    return pages.flatMap((page) => page.data);
-  }, [data?.pages]);
-
-  // Count query
+  // Notifications count
   const { data: notificationCount } = useGetNotificationsCount();
   const unreadCount = notificationCount?.unreadCount ?? 0;
   const totalCount = notificationCount?.total ?? 0;
@@ -54,7 +63,7 @@ export default function NotificationSystem() {
       (entries) => {
         if (entries[0].isIntersecting && hasNextPage) fetchNextPage();
       },
-      { threshold: 1.0 },
+      { threshold: 1 },
     );
     observer.observe(loadMoreRef.current);
     return () => observer.disconnect();
@@ -87,8 +96,7 @@ export default function NotificationSystem() {
                   size="sm"
                   className="flex items-center gap-2"
                 >
-                  <CheckCheck className="w-4 h-4" />
-                  Mark all as read
+                  <CheckCheck className="w-4 h-4" /> Mark all as read
                 </Button>
               </>
             )}
@@ -122,7 +130,6 @@ export default function NotificationSystem() {
           onValueChange={setActiveTab}
           className="flex flex-col h-full"
         >
-          {/* Tabs List */}
           <div className="flex gap-4">
             <TabsList className="grid w-full grid-cols-3 max-w-md">
               <TabsTrigger value="all">All ({totalCount})</TabsTrigger>
@@ -135,13 +142,12 @@ export default function NotificationSystem() {
             />
           </div>
 
-          {/* Scrollable tab content */}
           <div className="max-h-[calc(100vh-260px)] overflow-y-auto mt-6">
             <TabsContent value={activeTab} className="space-y-4">
               {notifications.length > 0 ? (
-                notifications.map((notification, index) => (
+                notifications.map((notification) => (
                   <NotificationItem
-                    key={`${notification.id}-${index}`}
+                    key={notification.id}
                     notification={notification}
                     onMarkAsRead={() => console.log(notification)}
                   />
@@ -172,7 +178,6 @@ export default function NotificationSystem() {
                   </p>
                 </div>
               )}
-              {/* Infinite scroll sentinel */}
               <div ref={loadMoreRef}></div>
             </TabsContent>
           </div>

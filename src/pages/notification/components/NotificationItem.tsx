@@ -47,11 +47,13 @@ export function NotificationItem({
   const formatDate = (date: Date) => {
     const now = new Date();
     const diff = now.getTime() - date.getTime();
+    const mins = Math.floor(diff / (1000 * 60));
     const hours = Math.floor(diff / (1000 * 60 * 60));
     const days = Math.floor(hours / 24);
 
+    if (mins < 60) return `${mins} minute${mins > 2 ? "s" : ""} ago`;
+    if (hours < 24) return `${hours} hour${hours > 1 ? "s" : ""} ago`;
     if (days > 0) return `${days} day${days > 1 ? "s" : ""} ago`;
-    if (hours > 0) return `${hours} hour${hours > 1 ? "s" : ""} ago`;
     return "Just now";
   };
 
