@@ -16,7 +16,7 @@ export function NotificationTypeFilter({
   }));
 
   return (
-    <FacetedFilter
+    <FacetedFilter<NotificationType>
       title="Notification Type"
       options={options}
       value={value}
