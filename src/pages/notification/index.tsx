@@ -65,14 +65,21 @@ export default function NotificationSystem() {
   // Infinite scroll
   useEffect(() => {
     if (!loadMoreRef.current) return;
+    let timeout: NodeJS.Timeout;
     const observer = new IntersectionObserver(
       (entries) => {
-        if (entries[0].isIntersecting && hasNextPage) fetchNextPage();
+        if (entries[0].isIntersecting && hasNextPage) {
+          clearTimeout(timeout);
+          timeout = setTimeout(() => fetchNextPage(), 100);
+        }
       },
       { threshold: 1 },
     );
     observer.observe(loadMoreRef.current);
-    return () => observer.disconnect();
+    return () => {
+      observer.disconnect();
+      clearTimeout(timeout);
+    };
   }, [hasNextPage, fetchNextPage]);
 
   const clearSearch = () => setSearchValue("");
