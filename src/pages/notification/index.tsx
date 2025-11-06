@@ -20,6 +20,7 @@ import {
   useMarkAsRead,
   useMarkAsReadAll,
 } from "@/services/notifications/hooks/useMarkAsRead";
+import NotificationSkeleton from "./components/NotificationSkeleton";
 
 export default function NotificationSystem() {
   const { auth } = useAuth();
@@ -55,7 +56,8 @@ export default function NotificationSystem() {
   );
 
   // Notifications count
-  const { data: notificationCount } = useGetNotificationsCount();
+  const { data: notificationCount, isLoading: isNotificationCountLoading } =
+    useGetNotificationsCount();
   const unreadCount = notificationCount?.unreadCount ?? 0;
   const totalCount = notificationCount?.total ?? 0;
   const readCount = notificationCount?.readCount ?? 0;
@@ -77,6 +79,8 @@ export default function NotificationSystem() {
 
   const { onMarkAsRead } = useMarkAsRead();
   const { onMarkAsReadAll } = useMarkAsReadAll();
+
+  if (isNotificationCountLoading && isLoading) return <NotificationSkeleton />;
 
   return (
     <div className="w-full h-screen font-inter">
