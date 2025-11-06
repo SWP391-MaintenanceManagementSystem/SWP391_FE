@@ -13,7 +13,7 @@ export default function MainLayout() {
         <AppSidebar />
         <SidebarTrigger
           size={"icon"}
-          className="md:hidden fixed top-3 right-5 h-8 w-8"
+          className="md:hidden fixed top-3 right-5 h-8 w-8 z-50"
         />
         <main className="mt-4 w-full mx-auto relative">
           {!isNotificationPage && <NotificationsPopover />}
