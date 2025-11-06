@@ -7,6 +7,8 @@ import OverviewCardCustomer from "./card/OverviewCardCustomer";
 import { CustomerBookingStatusChart } from "./chart/BookingStatusChart";
 import { CustomerBookingsByCenterChart } from "./chart/BookingCenterChart";
 import OverviewCardSpending from "./card/OverviewCardSpending";
+import SpendingSummaryBarChart from "./chart/SpendingSummaryBarChart";
+import RecentBookingTable from "./table/RecentBookingTable";
 
 
 
@@ -33,6 +35,9 @@ export default function CustomerDashboard() {
             <CustomerBookingsByCenterChart data={data as CustomerDashboardData} />
           </div>
           <OverviewCardSpending data = {data as CustomerDashboardData}  isLoading={isLoading}/>
+          <SpendingSummaryBarChart/>
+          <RecentBookingTable/>
+
         </div>
       </MainContentLayout>
     </div>

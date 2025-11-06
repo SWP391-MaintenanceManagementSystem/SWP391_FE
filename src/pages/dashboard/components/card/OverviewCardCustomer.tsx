@@ -2,6 +2,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import type { CustomerDashboardData } from "@/types/models/dashboard";
 import { Calendar, PlayCircle, Clock, CheckCircle } from "lucide-react";
 import TotalCardCustomer from "./TotalCardCustomer";
+import { TooltipWrapper } from "@/components/TooltipWrapper";
 
 export default function OverviewCardCustomer({
   data,
@@ -53,13 +54,15 @@ export default function OverviewCardCustomer({
             iconColor="text-teal-600"
             numberValue={inProgress}
           />
-          <TotalCardCustomer
-            title="Completed"
-            icon={CheckCircle}
-             bgColor="bg-green-100"
-            iconColor="text-green-600"
-            numberValue={completed}
-          />
+          <TooltipWrapper content="Finished bookings include those that have already been paid for.">
+            <TotalCardCustomer
+              title="Finished"
+              icon={CheckCircle}
+              bgColor="bg-green-100"
+              iconColor="text-green-600"
+              numberValue={completed}
+            />
+          </TooltipWrapper>
         </>
       )}
     </div>
