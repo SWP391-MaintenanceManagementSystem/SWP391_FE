@@ -139,9 +139,9 @@ export default function NotificationSystem() {
           <div className="max-h-[calc(100vh-260px)] overflow-y-auto mt-6">
             <TabsContent value={activeTab} className="space-y-4">
               {notifications.length > 0 ? (
-                notifications.map((notification) => (
+                notifications.map((notification, index) => (
                   <NotificationItem
-                    key={notification.id}
+                    key={`${notification.id}-${index}`}
                     notification={notification}
                     onMarkAsRead={() => console.log(notification)}
                   />
