@@ -6,4 +6,6 @@ export const queryKeys = {
   serviceCenterStat: () => ["serviceCenterStat"] as const,
   staffDashboard: () => ["staffDashboard"] as const,
   customerDashboard: () => ["customerDashboard"] as const,
+  technicianDashboard: () => ["technicianDashboard"] as const,
+  technicianCurrentBooking: () => ["technicianCurrentBooking"] as const,
 };
