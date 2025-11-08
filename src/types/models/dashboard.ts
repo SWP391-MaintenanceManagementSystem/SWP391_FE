@@ -1,3 +1,5 @@
+import type { CustomerBookingDetails } from "./booking-with-detail";
+
 export type InventoryStatusData = {
   inStock: number;
   lowStock: number;
@@ -78,7 +80,7 @@ export type BookingStatistic = {
 };
 
 export type SpendingEntry = {
-  key: string; 
+  key: string;
   amount: number;
 };
 
@@ -98,8 +100,8 @@ export type CustomerDashboardData = {
     week: SpendingEntry[];
     month: SpendingEntry[];
     year: SpendingEntry[];
-    total: number; 
-    average: number; 
+    total: number;
+    average: number;
     peak: {
       key: string;
       amount: number;
@@ -108,78 +110,10 @@ export type CustomerDashboardData = {
 };
 
 export type TechnicianDashboardData = {
-  totalBookings: number;      
-  completed: number;          
-  inProgress: number;     
-  pending: number;            
+  totalBookings: number;
+  completed: number;
+  inProgress: number;
+  pending: number;
 };
 
-export type TechnicianCurrentBooking = {
-  id: string;
-  bookingDate: string;
-  status: string;
-  totalCost: number;
-  note: string;
-  customer: {
-    firstName: string;
-    lastName: string;
-    email: string;
-    phone: string;
-    isPremium: boolean;
-  };
-  vehicle: {
-    id: string;
-    licensePlate: string;
-    vin: string;
-    model: string;
-    brand: string;
-    productionYear: number;
-  };
-  serviceCenter: {
-    id: string;
-    name: string;
-    address: string;
-  };
-  shift: {
-    id: string;
-    name: string;
-    startTime: string;
-    endTime: string;
-  };
-  staff: {
-    firstName: string;
-    lastName: string;
-    email: string;
-  };
-  technicians: {
-    email: string;
-    firstName: string;
-    lastName: string;
-  }[];
-  bookingDetails: {
-    services: {
-      id: string;
-      name: string;
-      price: number;
-    }[];
-    packages: {
-      id: string;
-      bookingDetailId: string;
-      name: string;
-      price: number;
-      status: string;
-      services: {
-        id: string;
-        name: string;
-        price: number;
-      }[];
-    }[];
-  };
-  feedback: string | null;
-  rating: number | null;
-  createdAt: string;
-  updatedAt: string;
-};
-
-
-
+export type TechnicianCurrentBooking = CustomerBookingDetails;

@@ -1,10 +1,10 @@
-import { InventoryStatisticCard } from "./card/InventoryStatisticCard";
 import MainContentLayout from "@/components/MainContentLayout";
 import CurrentBookingCard from "./card/CurrentBookingCard";
 import DynamicBreadcrumbs from "@/components/DynamicBreadcrumb";
 import { useAuth } from "@/contexts/AuthContext";
 import TechnicianBookingStatisticCard from "./chart/BookingStatisticPieChart";
 import TechnicianWorkSchedule from "./card/TechnicianWorkSchedule";
+import { InventoryStatusCard } from "./card/InventoryStatusCard";
 
 export default function TechnicianDashboard() {
   const { auth } = useAuth();
@@ -31,7 +31,7 @@ export default function TechnicianDashboard() {
         </div>
 
         <div>
-          <InventoryStatisticCard />
+          <InventoryStatusCard/> 
         </div>
       </MainContentLayout>
     </div>
