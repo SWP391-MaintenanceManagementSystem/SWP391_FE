@@ -8,24 +8,45 @@ import {
 } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { StaffDashboardData } from "@/types/models/dashboard";
+import { ChartColumnBig } from "lucide-react";
+import { useMemo } from "react";
+const COLOR_MAP: Record<string, string> = {
+  Pending: "#fcd34d",
+  Assigned: "#a78bfa",
+  "In Progress": "#f59e0b",
+  Cancelled: "#f87171",
+  "Checked In": "#38bdf8",
+  "Checked Out": "#0d9488",
+  Completed: "#4ade80",
+};
 
 export default function BookingStatisticCard({
   data,
 }: {
   data?: StaffDashboardData;
 }) {
-  const colorMap: Record<string, string> = {
-    Pending: "#fcd34d",
-    Assigned: "#a78bfa",
-    "In Progress": "#f59e0b",
-    Cancelled: "#f87171",
-    "Checked In": "#38bdf8",
-    "Checked Out": "#0d9488",
-    Completed: "#4ade80",
-  };
+  const { chartData, chartConfig, total, hasOverview } = useMemo(() => {
+    const overview = data?.bookingOverview;
+    const stats = overview?.bookingStatistics ?? [];
+    const processed = stats.map((item) => ({
+      ...item,
+      fill: COLOR_MAP[item.name] ?? "#d1d5db",
+    }));
+    return {
+      chartData: processed,
+      chartConfig: Object.fromEntries(
+        processed.map((item) => [
+          item.name,
+          { label: item.name, color: COLOR_MAP[item.name] },
+        ]),
+      ),
+      total: overview?.total || 0,
+      hasOverview: !!overview,
+    };
+  }, [data]);
 
   // --- SKELETON LOADING ---
-  if (!data?.bookingOverview) {
+  if (!hasOverview) {
     return (
       <Card className="shadow-sm rounded-xl w-full xl:w-[340px] border border-gray-200 dark:border-[#2b2b2b] p-4">
         <CardHeader>
@@ -51,20 +72,20 @@ export default function BookingStatisticCard({
     );
   }
 
-  const chartData = data.bookingOverview.bookingStatistics.map((item) => ({
-    ...item,
-    fill: colorMap[item.name] ?? "#d1d5db",
-  }));
+  // --- EMPTY STATE ---
+  if (total === 0) {
+    return (
+      <Card className="shadow-sm rounded-xl w-full xl:w-[340px] border border-gray-200 dark:border-[#2b2b2b] flex flex-col items-center justify-center py-10">
+        <ChartColumnBig size={54} />
+        <CardTitle>No Bookings Yet</CardTitle>
+        <CardDescription className="text-center mt-2">
+          Once bookings appear, you’ll see a visual summary here.
+        </CardDescription>
+      </Card>
+    );
+  }
 
-  const total = data.bookingOverview.total;
-
-  const chartConfig = Object.fromEntries(
-    chartData.map((item) => [
-      item.name,
-      { label: item.name, color: colorMap[item.name] },
-    ]),
-  );
-
+  // --- MAIN RENDER ---
   return (
     <Card className="shadow-sm rounded-xl w-full xl:w-[340px] border border-gray-200 dark:border-[#2b2b2b]">
       <CardHeader>
@@ -84,25 +105,30 @@ export default function BookingStatisticCard({
         />
 
         <div className="space-y-2">
-          {chartData.map((item) => (
-            <div key={item.name} className="flex items-center gap-2">
-              <div className="w-24 text-xs font-medium text-gray-600 dark:text-gray-300">
-                {item.name}
+          {chartData.map((item) => {
+            const percent = total > 0 ? (item.value / total) * 100 : 0;
+            return (
+              <div key={item.name} className="flex items-center gap-2">
+                <div className="w-24 text-xs font-medium text-gray-600 dark:text-gray-300">
+                  {item.name}
+                </div>
+
+                <div className="flex-1 h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                  <div
+                    className="h-2 rounded-full transition-all duration-700 ease-in-out"
+                    style={{
+                      width: `${percent}%`,
+                      backgroundColor: item.fill,
+                    }}
+                  />
+                </div>
+
+                <span className="text-xs text-gray-400">
+                  ({percent.toFixed(1)}%)
+                </span>
               </div>
-              <div className="flex-1 h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
-                <div
-                  className="h-2 rounded-full"
-                  style={{
-                    width: `${(item.value / total) * 100}%`,
-                    backgroundColor: item.fill,
-                  }}
-                />
-              </div>
-              <span className="text-xs text-gray-400">
-                ({((item.value / total) * 100).toFixed(1)}%)
-              </span>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </CardContent>
     </Card>
