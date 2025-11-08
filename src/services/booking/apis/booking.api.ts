@@ -66,3 +66,4 @@ export const getBookingHistory = async (params: BookingFilters) => {
   >("/bookings/history", { params });
   return response.data;
 };
+

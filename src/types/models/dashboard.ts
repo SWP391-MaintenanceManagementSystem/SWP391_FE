@@ -1,3 +1,5 @@
+import type { CustomerBookingDetails } from "./booking-with-detail";
+
 export type InventoryStatusData = {
   inStock: number;
   lowStock: number;
@@ -78,7 +80,7 @@ export type BookingStatistic = {
 };
 
 export type SpendingEntry = {
-  key: string; 
+  key: string;
   amount: number;
 };
 
@@ -98,11 +100,20 @@ export type CustomerDashboardData = {
     week: SpendingEntry[];
     month: SpendingEntry[];
     year: SpendingEntry[];
-    total: number; 
-    average: number; 
+    total: number;
+    average: number;
     peak: {
       key: string;
       amount: number;
     };
   };
 };
+
+export type TechnicianDashboardData = {
+  totalBookings: number;
+  completed: number;
+  inProgress: number;
+  pending: number;
+};
+
+export type TechnicianCurrentBooking = CustomerBookingDetails;
