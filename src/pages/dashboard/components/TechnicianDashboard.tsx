@@ -1,30 +1,37 @@
-import DynamicBreadcrumbs from "@/components/DynamicBreadcrumb";
+import { InventoryStatisticCard } from "./card/InventoryStatisticCard";
 import MainContentLayout from "@/components/MainContentLayout";
-import { useAuth } from "@/contexts/AuthContext";
 import CurrentBookingCard from "./card/CurrentBookingCard";
-import WeeklyWorkSchedule from "./card/WorkScheduleCard";
-import BookingStatisticPieChart from "./chart/BookingStatisticPieChart";
+import DynamicBreadcrumbs from "@/components/DynamicBreadcrumb";
+import { useAuth } from "@/contexts/AuthContext";
+import TechnicianBookingStatisticCard from "./chart/BookingStatisticPieChart";
+import TechnicianWorkSchedule from "./card/TechnicianWorkSchedule";
 
 export default function TechnicianDashboard() {
   const { auth } = useAuth();
+
+
   return (
-    <div className="w-full h-[calc(100vh-32px)] font-inter space-y-6 p-4">
+    <div className="w-full min-h-[calc(100vh-32px)] font-inter p-3 space-y-4">
       <DynamicBreadcrumbs
         pathTitles={{
-          dashboard: `👋 Welcome back, ${auth?.user?.profile?.firstName} ${auth?.user?.profile?.lastName}`,
+          dashboard: `👋 Welcome back, ${
+            auth?.user?.profile?.firstName ?? ""
+          } ${auth?.user?.profile?.lastName ?? ""}`,
         }}
       />
 
-      <MainContentLayout>
-        {/* Current Booking - full width */}
-        <div className="w-full">
+      <MainContentLayout className="space-y-4">
+        <div>
           <CurrentBookingCard />
         </div>
 
-        {/* Two columns: Work Schedule + Booking Statistic */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
-          <WeeklyWorkSchedule employeeId={auth?.user?.id ?? ""} />
-          <BookingStatisticPieChart />
+        <div className="grid xl:grid-cols-[1fr_2fr] items-start  gap-4">
+          <TechnicianBookingStatisticCard />
+          <TechnicianWorkSchedule technicianId={auth?.user?.id ?? ""} />
+        </div>
+
+        <div>
+          <InventoryStatisticCard />
         </div>
       </MainContentLayout>
     </div>

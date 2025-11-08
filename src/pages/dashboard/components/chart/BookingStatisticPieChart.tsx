@@ -20,7 +20,8 @@ export default function TechnicianBookingStatisticCard() {
 
   if (isLoading || !data) {
     return (
-      <Card className="shadow-sm rounded-xl w-full xl:w-[340px] border border-gray-200 dark:border-[#2b2b2b] p-4">
+   <Card className="shadow-sm rounded-xl w-full h-full border border-gray-200 dark:border-[#2b2b2b]">
+
         <CardHeader>
           <Skeleton className="h-5 w-36 mb-2" />
           <Skeleton className="h-3 w-48" />
