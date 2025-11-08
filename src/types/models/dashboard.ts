@@ -111,8 +111,7 @@ export type TechnicianDashboardData = {
   totalBookings: number;      
   completed: number;          
   inProgress: number;     
-  pending: number;           
-  completionRate: number;     
+  pending: number;            
 };
 
 export type TechnicianCurrentBooking = {
