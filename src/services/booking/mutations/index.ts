@@ -238,19 +238,12 @@ export const useSubmitBookingFeedbackMutation = () => {
       return res.data;
     },
     onSuccess: async (_data, variables) => {
-      const bookingId = variables.bookingId; 
+      const bookingId = variables.bookingId;
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: ["bookings"] }),
         queryClient.invalidateQueries({ queryKey: ["booking", bookingId] }),
       ]);
-      toast.success("Booking feedback submitted successfully");
     },
-    onError: (error) => {
-      let msg = "Failed to submit feedback";
-      if (error instanceof AxiosError) {
-        msg = error.response?.data?.message || msg;
-      }
-      toast.error(msg);
-    },
+    onError: () => {},
   });
 };

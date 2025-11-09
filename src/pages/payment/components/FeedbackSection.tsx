@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
-import { toast } from "sonner"; // nếu em có dùng sonner để hiển thị thông báo
+import { toast } from "sonner";
 import { useSubmitBookingFeedbackMutation } from "@/services/booking/mutations";
 
 interface FeedbackSectionProps {
@@ -16,7 +16,8 @@ export default function FeedbackSection({ bookingId }: FeedbackSectionProps) {
   const [isSubmitted, setIsSubmitted] = useState(false);
 
   const navigate = useNavigate();
-  const { mutate: submitFeedback, isPending } = useSubmitBookingFeedbackMutation();
+  const { mutate: submitFeedback, isPending } =
+    useSubmitBookingFeedbackMutation();
 
   const handleSubmit = () => {
     if (!rating) return toast.error("Please select a rating first!");
@@ -32,10 +33,7 @@ export default function FeedbackSection({ bookingId }: FeedbackSectionProps) {
           toast.success("Thank you for your feedback!");
           setIsSubmitted(true);
         },
-        onError: () => {
-          toast.error("Failed to submit feedback, please try again.");
-        },
-      },
+      }
     );
   };
 
