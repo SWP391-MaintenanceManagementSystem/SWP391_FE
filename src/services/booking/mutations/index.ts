@@ -7,6 +7,7 @@ import {
   cancelBookingById,
   createBooking,
   customerUpdateBooking,
+  submitBookingFeedback,
 } from "../apis/booking.api";
 import { toast } from "sonner";
 import { AxiosError } from "axios";
@@ -19,6 +20,7 @@ import {
   completeTechnicianBooking,
   startTechnicianBooking,
 } from "../apis/technician-booking.api";
+import type { BookingFeedbackPayload } from "@/types/models/booking";
 
 export const useCreateBookingMutation = () => {
   const queryClient = useQueryClient();
@@ -164,7 +166,6 @@ export const useUnBookingAssignmentMutation = () => {
   });
 };
 
-// useCompleteTechnicianBookingMutation.ts
 export const useCompleteTechnicianBookingMutation = (
   handleOnSuccess: () => void
 ) => {
@@ -220,6 +221,32 @@ export const useStartTechnicianBookingMutation = () => {
     },
     onError: (error) => {
       let msg = "Failed to start task";
+      if (error instanceof AxiosError) {
+        msg = error.response?.data?.message || msg;
+      }
+      toast.error(msg);
+    },
+  });
+};
+
+export const useSubmitBookingFeedbackMutation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (payload: BookingFeedbackPayload) => {
+      const res = await submitBookingFeedback(payload);
+      return res.data;
+    },
+    onSuccess: async (_data, variables) => {
+      const bookingId = variables.bookingId; 
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ["bookings"] }),
+        queryClient.invalidateQueries({ queryKey: ["booking", bookingId] }),
+      ]);
+      toast.success("Booking feedback submitted successfully");
+    },
+    onError: (error) => {
+      let msg = "Failed to submit feedback";
       if (error instanceof AxiosError) {
         msg = error.response?.data?.message || msg;
       }

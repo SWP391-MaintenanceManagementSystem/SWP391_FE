@@ -100,3 +100,10 @@ export type CustomerBookingHistory = Omit<
   CustomerBookingDetails,
   "bookingDetails"
 >;
+
+export type BookingFeedbackPayload = {
+  bookingId: string;
+  feedback: string;
+  rating: number;
+  note?: string;
+}
