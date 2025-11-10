@@ -2,12 +2,16 @@ import {
   defaultBookingFilter,
   type BookingFilters,
 } from "@/types/models/booking";
-import { useBookingsQuery } from "../queries/staff-booking";
+import { useStaffBookingsQuery } from "../queries/staff-booking";
 
-export default function useBooking(
+export default function useStaffBooking(
   filter: BookingFilters = defaultBookingFilter,
 ) {
-  const { data: bookingData, isLoading } = useBookingsQuery(filter);
+  const {
+    data: bookingData,
+    isLoading,
+    isFetching,
+  } = useStaffBookingsQuery(filter);
 
-  return { bookingData, isLoading };
+  return { bookingData, isLoading, isFetching };
 }

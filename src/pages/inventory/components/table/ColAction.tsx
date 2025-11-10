@@ -27,11 +27,8 @@ export default function ColActions({
   const [openViewDialog, setOpenViewDialog] = useState(false);
   const [openEditDialog, setOpenEditDialog] = useState(false);
   const part = row.original;
-  const { handleDeletePart, form, handleEditPartItem } = useInventory(
-    currentPage,
-    currentPageSize,
-    part,
-  );
+  const { handleDeletePart, form, handleEditPartItem, isPending } =
+    useInventory(currentPage, currentPageSize, part);
 
   return (
     <div className="flex gap-1">
@@ -70,6 +67,7 @@ export default function ColActions({
         onConfirm={() => {
           handleDeletePart(part.id);
         }}
+        isPending={isPending}
       />
 
       <ViewDetailDialog
@@ -94,6 +92,7 @@ export default function ColActions({
         onConfirm={async (data) => {
           await handleEditPartItem(part.id, data);
         }}
+        isPending={isPending}
       />
     </div>
   );

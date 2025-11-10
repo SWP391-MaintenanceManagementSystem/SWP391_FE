@@ -3,9 +3,8 @@ import { useMemo } from "react";
 import type { ChartConfig } from "@/components/ui/chart";
 import { ChartPieDonutText } from "@/components/charts/ChartPieDonutText";
 import { ChartPieLabel } from "@/components/charts/ChartPieLabel";
-import "animate.css";
-import { Loader } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function StatCustomerBox() {
   const { data, isLoading } = useGetStatusStat("CUSTOMER");
@@ -28,33 +27,13 @@ export default function StatCustomerBox() {
   }, [data]);
 
   const chartConfig = {
-    count: {
-      label: "Customer",
-    },
-    verified: {
-      label: "Verified",
-      color: "var(--chart-verified)",
-    },
-    notVerified: {
-      label: "Not Verified",
-      color: "var(--chart-notVerified)",
-    },
-    banned: {
-      label: "Banned",
-      color: "var(--chart-banned)",
-    },
-    disable: {
-      label: "Disable",
-      color: "var(--chart-disabled)",
-    },
-    premium: {
-      label: "Premium",
-      color: "oklch(82.7% 0.119 306.383)",
-    },
-    others: {
-      label: "Others",
-      color: "oklch(28.3% 0.141 291.089)",
-    },
+    count: { label: "Customer" },
+    verified: { label: "Verified", color: "var(--chart-verified)" },
+    notVerified: { label: "Not Verified", color: "var(--chart-notVerified)" },
+    banned: { label: "Banned", color: "var(--chart-banned)" },
+    disable: { label: "Disable", color: "var(--chart-disabled)" },
+    premium: { label: "Premium", color: "oklch(82.7% 0.119 306.383)" },
+    others: { label: "Others", color: "oklch(28.3% 0.141 291.089)" },
   } satisfies ChartConfig;
 
   return (
@@ -99,8 +78,9 @@ export default function StatCustomerBox() {
           </div>
         </CardContent>
       ) : (
-        <div className="animate__animated animate__fadeIn">
-          <Loader className="animate-spin" />
+        <div className="flex flex-col items-center justify-center space-y-4 w-full animate__animated animate__fadeIn">
+          <Skeleton className="h-48 w-48 rounded-full" />
+          <Skeleton className="h-6 w-32 rounded" />
         </div>
       )}
     </Card>

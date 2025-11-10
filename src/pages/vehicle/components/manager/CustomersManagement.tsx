@@ -9,8 +9,11 @@ import { useGetAccountList } from "@/services/manager/queries";
 import ChartCustomerStat from "./customerManagement/ChartCustomerStat";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAuth } from "@/contexts/AuthContext";
-import type { AccountRole } from "@/types/enums/role";
+import { AccountRole } from "@/types/enums/role";
 import clsx from "clsx";
+import { Skeleton } from "@/components/ui/skeleton";
+import { AccountStatus } from "@/types/enums/accountStatus";
+import { useDebounce } from "@uidotdev/usehooks";
 
 export default function AdminVehiclesManagement() {
   const { auth } = useAuth();
@@ -23,12 +26,15 @@ export default function AdminVehiclesManagement() {
     status: "",
     isPremium: undefined as boolean | undefined,
   });
-
+  const debouncedSearch = useDebounce(searchValue, 500);
   const { data, isLoading, isFetching } = useGetAccountList({
     page,
     pageSize,
-    email: searchValue || undefined,
-    status: filters.status || undefined,
+    email: debouncedSearch || undefined,
+    status:
+      auth.user?.role === AccountRole.ADMIN
+        ? filters.status || undefined
+        : AccountStatus.VERIFIED,
     isPremium: filters.isPremium,
     sortBy: sorting[0]?.id ?? "createdAt",
     orderBy: sorting[0]?.desc ? "desc" : "asc",
@@ -45,7 +51,7 @@ export default function AdminVehiclesManagement() {
       id: acc.id,
       email: acc.email,
       phone: acc.phone ?? "",
-      status: auth.user?.role === "ADMIN" ? acc.status : "VERIFIED",
+      status: acc.status,
       role: acc.role,
       profile: {
         firstName: profile && "firstName" in profile ? profile.firstName : "",
@@ -84,6 +90,7 @@ export default function AdminVehiclesManagement() {
         )}
       >
         {auth.user?.role === "ADMIN" && <ChartCustomerStat />}
+
         <Card className=" w-full h-full grid grid-rows-[auto_1fr] min-h-[600px]">
           <CardHeader>
             <CardTitle className="text-2xl font-semibold font-inter text-gray-text-header">
@@ -91,25 +98,38 @@ export default function AdminVehiclesManagement() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <DataTable<CustomerTable, unknown>
-              columns={columns as ColumnDef<CustomerTable, unknown>[]}
-              data={customers}
-              pageIndex={(data?.page ?? 1) - 1}
-              pageSize={data?.pageSize ?? 10}
-              totalPage={data?.totalPages ?? 1}
-              isLoading={isLoading}
-              isFetching={isFetching}
-              onPageChange={(newPage) => setPage(newPage + 1)}
-              onPageSizeChange={setPageSize}
-              onSearchChange={setSearchValue}
-              searchPlaceholder="email"
-              sorting={sorting}
-              onSortingChange={setSorting}
-              manualPagination
-              manualSorting
-              manualSearch
-              isSearch
-            />
+            {isLoading ? (
+              <div className="space-y-4">
+                {Array.from({ length: pageSize }).map((_, idx) => (
+                  <div
+                    key={idx}
+                    className="flex space-x-4 items-center animate-pulse pl-8"
+                  >
+                    <Skeleton className="h-6 w-[90%] rounded" />
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <DataTable<CustomerTable, unknown>
+                columns={columns as ColumnDef<CustomerTable, unknown>[]}
+                data={customers}
+                pageIndex={(data?.page ?? 1) - 1}
+                pageSize={data?.pageSize ?? 10}
+                totalPage={data?.totalPages ?? 1}
+                isLoading={isLoading}
+                isFetching={isFetching}
+                onPageChange={(newPage) => setPage(newPage + 1)}
+                onPageSizeChange={setPageSize}
+                onSearchChange={setSearchValue}
+                searchPlaceholder="email"
+                sorting={sorting}
+                onSortingChange={setSorting}
+                manualPagination
+                manualSorting
+                manualSearch
+                isSearch
+              />
+            )}
           </CardContent>
         </Card>
       </MainContentLayout>

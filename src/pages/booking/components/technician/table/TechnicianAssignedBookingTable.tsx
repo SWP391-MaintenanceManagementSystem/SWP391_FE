@@ -10,17 +10,9 @@ export default function TechnicianAssignedBookingTable() {
   const [pageSize, setPageSize] = useState(10);
   const [searchValue, setSearchValue] = useState("");
   const [sorting, setSorting] = useState<SortingState>([]);
-  // const [filters, setFilters] = useState(defaultBookingFilter);
+
   const debouncedSearch = useDebounce(searchValue, 300);
-  // const handleFilterChange = useCallback(
-  //   (field: string, value: string | boolean | undefined) => {
-  //     setFilters((prevFilters) => ({
-  //       ...prevFilters,
-  //       [field]: value,
-  //     }));
-  //   },
-  //   []
-  // );
+  
 
   const { bookingData, isLoading } = useTechnicianBooking({
     page,
@@ -29,9 +21,8 @@ export default function TechnicianAssignedBookingTable() {
     sortBy: sorting[0]?.id ?? "createdAt",
     orderBy: sorting[0]?.desc ? "desc" : "asc",
   });
-
-  const bookings = bookingData?.data;
-
+  
+  const bookings = bookingData?.data ?? [];
   const columns = getColumns();
 
   return (

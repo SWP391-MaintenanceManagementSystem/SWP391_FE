@@ -31,7 +31,6 @@ export const getColumns = (
           className="!outline-none"
         />
       ),
-      size: 50,
       cell: ({ row }) => (
         <Checkbox
           checked={row.getIsSelected()}
@@ -135,14 +134,17 @@ export const getColumns = (
     // STATUS
     columnHelper.accessor("status", {
       id: "status",
-      header: (info) => (
-        <FilterHeader
-          column={info.column}
-          title="Status"
-          selectedValue={currentFilters.status}
-          onFilterChange={(value) => handleFilterChange("status", value)}
-        />
-      ),
+      header: (info) =>
+        currentUserRole === "ADMIN" ? (
+          <FilterHeader
+            column={info.column}
+            title="Status"
+            selectedValue={currentFilters.status}
+            onFilterChange={(value) => handleFilterChange("status", value)}
+          />
+        ) : (
+          "Status"
+        ),
       size: 50,
       cell: (info) => (
         <AccountStatusTag status={info.getValue() || "NOT_VERIFY"} />

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import type { Row } from "@tanstack/react-table";
-import { Eye, CheckSquare } from "lucide-react";
+import { Maximize2, CheckSquare } from "lucide-react";
 import { TooltipWrapper } from "@/components/TooltipWrapper";
 import ActionBtn from "@/components/table/ActionBtn";
 import type { TechnicianBooking } from "@/types/models/booking";
@@ -19,7 +19,6 @@ export default function ColActions({ row }: ColActionsProps) {
   const booking = row.original;
   const [openChecklist, setOpenChecklist] = useState(false);
 
-  // ✅ Fetch booking detail (vì table thường chỉ có thông tin ngắn gọn)
   const { data: bookingDetail } = useBookingDetail(booking.id);
 
   const handleChecklist = () => {
@@ -31,14 +30,19 @@ export default function ColActions({ row }: ColActionsProps) {
       {/* View Details */}
       <TooltipWrapper content="View Details">
         <ActionBtn
-          icon={<Eye size={14} />}
+          icon={<Maximize2 size={14} />}
+          className="dark:bg-dark-surface"
           onClick={() => navigate(`/booking/${booking.id}`)}
         />
       </TooltipWrapper>
 
       {/* Checklist */}
       <TooltipWrapper content="Checklist">
-        <ActionBtn icon={<CheckSquare size={14} />} onClick={handleChecklist} />
+        <ActionBtn
+          icon={<CheckSquare size={14} />}
+          className="dark:bg-dark-surface"
+          onClick={handleChecklist}
+        />
       </TooltipWrapper>
 
       <CheckListModal

@@ -21,6 +21,7 @@ import MainContentLayout from "@/components/MainContentLayout";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import CalendarView from "./CalendarView";
 import { useAuth } from "@/contexts/AuthContext";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function StaffSchedule() {
   const [page, setPage] = useState(1);
@@ -44,12 +45,12 @@ export default function StaffSchedule() {
     dateTo: dateRange?.to
       ? dayjs(dateRange.to).format("YYYY-MM-DD")
       : undefined,
-
     sortBy: sorting[0]?.id ?? "createdAt",
     orderBy: sorting[0]?.desc ? "desc" : "asc",
   });
 
   const columns = getColumns();
+
   return (
     <div className="w-full h-[calc(100vh-32px)] font-inter">
       <DynamicBreadcrumbs pathTitles={{ viewSchedule: "Work Schedule" }} />
@@ -69,77 +70,101 @@ export default function StaffSchedule() {
               </TabsTrigger>
             </TabsList>
           </div>
+
+          {/* Table View */}
           <TabsContent value="list">
-            <Card className=" w-full h-full grid min-h-[600px]">
-              <CardContent>
-                <DataTable<WorkSchedule, unknown>
-                  data={apiData?.data ?? []}
-                  columns={columns as ColumnDef<WorkSchedule, unknown>[]}
-                  isLoading={isLoading}
-                  isFetching={isFetching}
-                  pageIndex={(apiData?.page ?? 1) - 1}
-                  pageSize={apiData?.pageSize ?? 10}
-                  totalPage={apiData?.totalPages ?? 1}
-                  manualPagination
-                  onPageChange={(newPage) => setPage(newPage + 1)}
-                  onPageSizeChange={setPageSize}
-                  manualSorting
-                  sorting={sorting}
-                  onSortingChange={setSorting}
-                  headerActions={
-                    <div
-                      className={clsx(
-                        "grid justify-end items-end gap-2 w-full grid-cols-1",
-                        dateRange?.from
-                          ? "md:grid-cols-[auto_auto_auto]"
-                          : "md:grid-cols-[auto_auto]",
-                      )}
-                    >
-                      {dateRange?.from && (
-                        <Button
-                          variant="ghost"
-                          onClick={() => setDateRange(undefined)}
-                          className="text-muted-foreground hover:text-foreground text-[12px] justify-self-end"
-                        >
-                          <X size={10} />
-                          Reset filter
-                        </Button>
-                      )}
-                      <Popover>
-                        <PopoverTrigger asChild>
-                          <Button
-                            variant="secondary"
-                            className=" justify-self-end w-full lg:w-auto"
-                          >
-                            <CalendarRange className="w-4 h-4 mr-2" />
-                            {dateRange?.from
-                              ? dateRange.to
-                                ? dayjs(dateRange.from).isSame(
-                                    dateRange.to,
-                                    "day",
-                                  )
-                                  ? dayjs(dateRange.from).format("DD MMM")
-                                  : `${dayjs(dateRange.from).format("DD MMM")} - ${dayjs(dateRange.to).format("DD MMM")}`
-                                : dayjs(dateRange.from).format("DD MMM")
-                              : "Filter by date"}
-                          </Button>
-                        </PopoverTrigger>
-                        <PopoverContent
-                          className="w-auto overflow-hidden p-0"
-                          align="start"
-                        >
-                          <Calendar04
-                            dateRange={dateRange}
-                            setDateRange={setDateRange}
-                          />
-                        </PopoverContent>
-                      </Popover>
+            {isLoading ? (
+              <Card className="w-full h-full grid min-h-[600px] p-4">
+                <div className="space-y-4">
+                  {[...Array(pageSize)].map((_, i) => (
+                    <div key={i} className="flex gap-4 items-center w-full">
+                      <Skeleton className="h-6 w-12 rounded" />
+                      <Skeleton className="h-6 w-24 rounded" />
+                      <Skeleton className="h-6 w-16 rounded" />
+                      <Skeleton className="h-6 w-20 rounded" />
+                      <Skeleton className="h-6 w-32 rounded" />
                     </div>
-                  }
-                />
-              </CardContent>
-            </Card>
+                  ))}
+                </div>
+              </Card>
+            ) : (
+              <Card className=" w-full h-full grid min-h-[600px]">
+                <CardContent>
+                  <DataTable<WorkSchedule, unknown>
+                    data={apiData?.data ?? []}
+                    columns={columns as ColumnDef<WorkSchedule, unknown>[]}
+                    isLoading={isLoading}
+                    isFetching={isFetching}
+                    pageIndex={(apiData?.page ?? 1) - 1}
+                    pageSize={apiData?.pageSize ?? 10}
+                    totalPage={apiData?.totalPages ?? 1}
+                    manualPagination
+                    onPageChange={(newPage) => setPage(newPage + 1)}
+                    onPageSizeChange={setPageSize}
+                    manualSorting
+                    sorting={sorting}
+                    onSortingChange={setSorting}
+                    headerActions={
+                      <div
+                        className={clsx(
+                          "grid lg:justify-end items-end gap-2 w-full grid-cols-1",
+                          dateRange?.from
+                            ? "md:grid-cols-[auto_auto]"
+                            : "md:grid-cols-[auto]",
+                        )}
+                      >
+                        {dateRange?.from && (
+                          <Button
+                            variant="ghost"
+                            onClick={() => setDateRange(undefined)}
+                            className="text-muted-foreground hover:text-foreground text-[12px] justify-self-end"
+                          >
+                            <X size={10} />
+                            Reset filter
+                          </Button>
+                        )}
+                        <Popover>
+                          <PopoverTrigger asChild>
+                            <Button
+                              variant="secondary"
+                              className=" justify-self-end w-full lg:w-auto"
+                            >
+                              <CalendarRange className="w-4 h-4 mr-2" />
+                              {dateRange?.from
+                                ? dateRange.to
+                                  ? dayjs(dateRange.from).isSame(
+                                      dateRange.to,
+                                      "day",
+                                    )
+                                    ? dayjs(dateRange.from).format("DD MMM")
+                                    : `${dayjs(dateRange.from).format(
+                                        "DD MMM",
+                                      )} - ${dayjs(dateRange.to).format(
+                                        "DD MMM",
+                                      )}`
+                                  : dayjs(dateRange.from).format("DD MMM")
+                                : "Filter by date"}
+                            </Button>
+                          </PopoverTrigger>
+                          <PopoverContent
+                            className="w-auto overflow-hidden p-0"
+                            align="start"
+                          >
+                            <Calendar04
+                              dateRange={dateRange}
+                              setDateRange={setDateRange}
+                            />
+                          </PopoverContent>
+                        </Popover>
+                      </div>
+                    }
+                  />
+                </CardContent>
+              </Card>
+            )}
           </TabsContent>
+
+          {/* Calendar View */}
           <TabsContent value="calendar">
             <CalendarView employeeId={auth.user?.id || ""} />
           </TabsContent>

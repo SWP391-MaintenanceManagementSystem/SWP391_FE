@@ -4,10 +4,10 @@ import {
   type ChartConfig,
   ChartContainer,
   ChartTooltip,
-  ChartTooltipContent,
   ChartLegend,
   ChartLegendContent,
 } from "@/components/ui/chart";
+import { toCapitalize } from "@/utils";
 
 export const description = "A donut chart with text";
 type ChartPieDonutTextProps = {
@@ -17,6 +17,7 @@ type ChartPieDonutTextProps = {
   nameKey?: string;
   dataKey?: string;
   title: string;
+  isLegendVisible?: boolean;
 };
 
 export function ChartPieDonutText({
@@ -26,6 +27,7 @@ export function ChartPieDonutText({
   dataKey = "value",
   total,
   title,
+  isLegendVisible = true,
 }: ChartPieDonutTextProps) {
   return (
     <ChartContainer
@@ -35,8 +37,25 @@ export function ChartPieDonutText({
       <PieChart>
         <ChartTooltip
           cursor={false}
-          content={<ChartTooltipContent hideLabel />}
+          content={({ payload }) => {
+            if (!payload?.length) return null;
+            const { name, value, payload: item } = payload[0];
+            const color = item.fill || payload[0].color;
+
+            return (
+              <div className="flex items-center gap-2 rounded-md bg-background px-2 py-1 shadow-sm text-sm ">
+                <span
+                  className="inline-block h-3 w-3"
+                  style={{ backgroundColor: color }}
+                />
+                <span className="text-xs">
+                  {toCapitalize(name as string)} {value}
+                </span>
+              </div>
+            );
+          }}
         />
+
         <Pie
           data={chartData}
           dataKey={dataKey}
@@ -74,10 +93,12 @@ export function ChartPieDonutText({
             }}
           />
         </Pie>
-        <ChartLegend
-          content={<ChartLegendContent nameKey={nameKey} />}
-          className="-translate-y-1 flex-wrap gap-2 *:h-1/8 *:justify-center"
-        />
+        {isLegendVisible && (
+          <ChartLegend
+            content={<ChartLegendContent nameKey={nameKey} />}
+            className="-translate-y-1 flex-wrap gap-2 *:h-1/8 *:justify-center"
+          />
+        )}
       </PieChart>
     </ChartContainer>
   );

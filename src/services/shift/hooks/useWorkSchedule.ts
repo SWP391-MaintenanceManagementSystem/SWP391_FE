@@ -99,8 +99,7 @@ export const useWorkSchedule = (item?: WorkSchedule) => {
   }) => {
     delScheduleMutation.mutate(
       {
-        id: item?.account.id || "",
-        date: item?.date || "",
+        id: item?.id || "",
         currentPage,
         currentPageSize,
       },

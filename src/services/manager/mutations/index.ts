@@ -53,6 +53,10 @@ export const useUpdateCustomerInfo = () => {
         queryClient.invalidateQueries({
           queryKey: queryKeys.statusStat("CUSTOMER"),
         }),
+
+        queryClient.invalidateQueries({
+          queryKey: ["overview"],
+        }),
       ]);
       toast.success("Profile updated successfully");
     },
@@ -86,6 +90,9 @@ export const useDeleteCustomer = () => {
         }),
         queryClient.invalidateQueries({
           queryKey: queryKeys.statusStat("CUSTOMER"),
+        }),
+        queryClient.invalidateQueries({
+          queryKey: ["overview"],
         }),
       ]);
       toast.success("Customer deleted successfully");
@@ -193,6 +200,9 @@ export const useDeletePartItem = () => {
         queryClient.invalidateQueries({
           queryKey: queryKeys.partStat(),
         }),
+        queryClient.invalidateQueries({
+          queryKey: ["inventoryStatus"],
+        }),
       ]);
       toast.success("Deleted part item successfully");
     },
@@ -245,15 +255,16 @@ export const useDeleteEmployee = () => {
         }),
 
         queryClient.invalidateQueries({
+          queryKey: ["overview"],
+        }),
+
+        queryClient.invalidateQueries({
           queryKey: queryShiftKeys.workSchedulesList({
             page: variables.currentPage,
             pageSize: variables.currentPageSize,
           }),
         }),
       ]);
-    },
-    onError: () => {
-      toast.error("Failed to delete employee");
     },
   });
 };
@@ -306,16 +317,16 @@ export const useUpdateEmployeeInfo = () => {
         }),
 
         queryClient.invalidateQueries({
+          queryKey: ["overview"],
+        }),
+
+        queryClient.invalidateQueries({
           queryKey: queryShiftKeys.workSchedulesList({
             page: variables.currentPage,
             pageSize: variables.currentPageSize,
           }),
         }),
       ]);
-    },
-
-    onError: () => {
-      toast.error("Failed to update employee information");
     },
   });
 };
@@ -360,6 +371,9 @@ export const useAddEmployee = () => {
         }),
 
         queryClient.invalidateQueries({
+          queryKey: ["overview"],
+        }),
+        queryClient.invalidateQueries({
           queryKey: queryKeys.statusStat(variables.role),
         }),
 
@@ -399,6 +413,9 @@ export const useAddPartItem = () => {
         queryClient.invalidateQueries({
           queryKey: queryKeys.partStat(),
         }),
+        queryClient.invalidateQueries({
+          queryKey: ["inventoryStatus"],
+        }),
       ]);
       toast.success("Part item information created successfully");
     },
@@ -430,6 +447,9 @@ export const useEditPartItem = () => {
         }),
         queryClient.invalidateQueries({
           queryKey: queryKeys.partStat(),
+        }),
+        queryClient.invalidateQueries({
+          queryKey: ["inventoryStatus"],
         }),
       ]);
       toast.success("Part item information updated successfully");

@@ -28,7 +28,7 @@ export const CreateBookingSchema = z
         },
         {
           message: "Date & time must be in the future",
-        }
+        },
       ),
   })
   .superRefine((data, ctx) => {
@@ -93,3 +93,52 @@ export const EditBookingSchema = CreateBookingSchema.partial()
   });
 
 export type EditBookingFormValues = z.infer<typeof EditBookingSchema>;
+
+export const BookingCheckinsSchema = z.object({
+  bookingId: z.string().min(1, "Booking ID is required"),
+  odometer: z
+    .number()
+    .refine((val) => Number.isInteger(val), {
+      message: "Odometer must be an integer",
+    })
+    .refine((val) => val >= 0, {
+      message: "Odometer cannot be negative",
+    })
+    .optional(),
+  note: z.string().optional(),
+  description: z.array(z.string()).optional(),
+  images: z
+    .array(
+      z.union([
+        z.instanceof(File),
+        z
+          .string()
+          .url()
+          .or(z.string().min(1).max(6, "Maximum 6 images allowed")),
+      ]),
+      { error: "Images must be valid files or URLs" },
+    )
+    .optional(),
+
+  date: z
+    .string({ error: "Checkin date & time is required" })
+    .refine((val) => dayjs(val, "YYYY-MM-DDTHH:mm", true).isValid(), {
+      message: "Invalid date & time format",
+    })
+    .transform((val) => {
+      const vnDate = dayjs(val).tz("Asia/Ho_Chi_Minh");
+      return vnDate.format();
+    })
+    .refine(
+      (dateStr) => {
+        const selectedDate = dayjs(dateStr).startOf("day");
+        const today = dayjs().startOf("day");
+        return selectedDate.isAfter(today) || selectedDate.isSame(today);
+      },
+      {
+        message: "Date & time must be in the future",
+      },
+    ),
+});
+
+export type BookingCheckinsFormValues = z.infer<typeof BookingCheckinsSchema>;

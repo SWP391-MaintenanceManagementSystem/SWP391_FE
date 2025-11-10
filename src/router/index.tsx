@@ -27,6 +27,12 @@ import AddNewSchedulePage from "@/pages/shifts/admin/schedules/AddNewSchedule";
 import BookingPage from "@/pages/booking";
 import BookingDetailPage from "@/pages/booking/components/BookingDetailPage";
 import ViewSchedule from "@/pages/shifts/employee/ViewSchedule";
+import VehicleDetailPage from "@/pages/vehicle/components/manager/vehicleManagement/VehicleDetailPage";
+import HistoryBookingCus from "@/pages/vehicle/components/customer/HistoryBooking";
+import CheckinPage from "@/pages/booking/components/staff/CheckinPage";
+import ChatPage from "@/pages/chat";
+import HelpAndSupportPage from "@/pages/support/components/HelpAndSupport";
+import NotificationSystem from "@/pages/notification";
 
 const RouterComponent = () => {
   const router = createBrowserRouter([
@@ -47,6 +53,11 @@ const RouterComponent = () => {
     },
     { path: "/forgot-password", element: <ForgotPasswordPage /> },
     { path: "/auth/success", element: <AuthSuccess /> },
+    {
+      path: "/payment-success",
+      element: <PaymentSuccessPage />,
+      hydrateFallbackElement: <CircularIndeterminate />,
+    },
     { path: "auth/failed", element: <AuthFailed /> },
     { path: "/auth/verify", element: <VerifySuccess /> },
     { path: "/unauthorized", element: <Unauthorized /> },
@@ -75,17 +86,19 @@ const RouterComponent = () => {
                   element: <Dashboard />,
                   hydrateFallbackElement: <CircularIndeterminate />,
                 },
+
+                {
+                  path: "/notification",
+                  element: <NotificationSystem />,
+                  hydrateFallbackElement: <CircularIndeterminate />,
+                },
+
                 {
                   path: "/vehicles",
                   element: <Vehicle />,
                   hydrateFallbackElement: <CircularIndeterminate />,
                 },
 
-                {
-                  path: "/vehicles/:id",
-                  element: <ViewDetailInfo />,
-                  hydrateFallbackElement: <CircularIndeterminate />,
-                },
                 {
                   path: "/inventory",
                   element: <InventoryManagement />,
@@ -100,6 +113,11 @@ const RouterComponent = () => {
                   element: <BookingDetailPage />,
                 },
                 {
+                  path: "/chat",
+                  element: <ChatPage />,
+                },
+                { path: "/support", element: <HelpAndSupportPage /> },
+                {
                   element: (
                     <RequireAuth
                       allowedRoles={[AccountRole.ADMIN, AccountRole.CUSTOMER]}
@@ -112,6 +130,7 @@ const RouterComponent = () => {
                     },
                   ],
                 },
+
                 {
                   element: <RequireAuth allowedRoles={[AccountRole.ADMIN]} />,
                   children: [
@@ -137,13 +156,34 @@ const RouterComponent = () => {
                     },
                   ],
                 },
+                {
+                  element: (
+                    <RequireAuth allowedRoles={[AccountRole.CUSTOMER]} />
+                  ),
+                  children: [
+                    {
+                      path: "/vehicles/history/:vehicleId",
+                      element: <HistoryBookingCus />,
+                      hydrateFallbackElement: <CircularIndeterminate />,
+                    },
+                  ],
+                },
 
                 {
-                  element: <RequireAuth allowedRoles={[AccountRole.STAFF]} />,
+                  element: (
+                    <RequireAuth
+                      allowedRoles={[AccountRole.STAFF, AccountRole.TECHNICIAN]}
+                    />
+                  ),
                   children: [
                     {
                       path: "/viewSchedule",
                       element: <ViewSchedule />,
+                      hydrateFallbackElement: <CircularIndeterminate />,
+                    },
+                    {
+                      path: "/booking/:bookingId/checkin",
+                      element: <CheckinPage />,
                       hydrateFallbackElement: <CircularIndeterminate />,
                     },
                   ],
@@ -162,20 +202,28 @@ const RouterComponent = () => {
                     },
                   ],
                 },
-
+                {
+                  element: (
+                    <RequireAuth
+                      allowedRoles={[AccountRole.STAFF, AccountRole.ADMIN]}
+                    />
+                  ),
+                  children: [
+                    {
+                      path: "/vehicles/:customerId",
+                      element: <ViewDetailInfo />,
+                      hydrateFallbackElement: <CircularIndeterminate />,
+                    },
+                    {
+                      path: "/vehicles/:customerId/:vehicleId",
+                      element: <VehicleDetailPage />,
+                      hydrateFallbackElement: <CircularIndeterminate />,
+                    },
+                  ],
+                },
                 {
                   path: "/profile",
                   element: <ProfilePage />,
-                  hydrateFallbackElement: <CircularIndeterminate />,
-                },
-              ],
-            },
-            {
-              element: <RequireAuth allowedRoles={[AccountRole.CUSTOMER]} />,
-              children: [
-                {
-                  path: "/payment-success",
-                  element: <PaymentSuccessPage />,
                   hydrateFallbackElement: <CircularIndeterminate />,
                 },
               ],

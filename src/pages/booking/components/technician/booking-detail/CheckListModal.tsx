@@ -16,10 +16,13 @@ import {
 } from "@/components/ui/accordion";
 import { CheckCircle, Circle } from "lucide-react";
 import { toast } from "sonner";
-import { useCompleteTechnicianBookingMutation } from "@/services/booking/mutations";
+import {
+  useCompleteTechnicianBookingMutation,
+  useStartTechnicianBookingMutation,
+} from "@/services/booking/mutations";
 import type { CustomerBookingDetails } from "@/types/models/booking-with-detail";
 import BookingTag from "@/components/tag/BookingTag";
-import type { BookingStatus } from "@/types/enums/bookingStatus";
+import { BookingStatus } from "@/types/enums/bookingStatus";
 import { Textarea } from "@/components/ui/textarea";
 
 interface CheckListModalProps {
@@ -41,9 +44,19 @@ export default function CheckListModal({
   onOpenChange,
   bookingData,
 }: CheckListModalProps) {
+  console.log("🚀 ~ CheckListModal ~ bookingData:", bookingData);
   const [tasks, setTasks] = useState<TaskItem[]>([]);
   const [note, setNote] = useState("");
   const [isDone, setIsDone] = useState(false);
+  const isCheckInStatus = bookingData?.status === BookingStatus.CHECKED_IN;
+  const canCheck = bookingData?.status === BookingStatus.IN_PROGRESS && !isDone;
+
+  const { mutate: startBooking, isPending: startPending } =
+    useStartTechnicianBookingMutation();
+
+  const handleStart = () => {
+    startBooking(bookingData?.id ?? "");
+  };
 
   const handleOnSuccess = () => {
     setTasks((prev) =>
@@ -54,6 +67,7 @@ export default function CheckListModal({
       }))
     );
     setIsDone(true);
+    localStorage.removeItem(`booking-progress-${bookingData?.id}`);
   };
 
   const { mutate: completeBooking, isPending } =
@@ -61,6 +75,14 @@ export default function CheckListModal({
 
   useEffect(() => {
     if (!bookingData) return;
+    const saved = localStorage.getItem(`booking-progress-${bookingData.id}`);
+    if (saved) {
+      const parsed = JSON.parse(saved) as { tasks: TaskItem[]; note: string };
+      setTasks(parsed.tasks);
+      setNote(parsed.note);
+      setIsDone(parsed.tasks.every((t) => t.done));
+      return;
+    }
 
     const newTasks: TaskItem[] = [];
 
@@ -94,7 +116,7 @@ export default function CheckListModal({
   }, [bookingData]);
 
   const handleToggle = (id: string, parentId?: string) => {
-    if (isDone) return;
+    if (!canCheck) return;
 
     setTasks((prev) =>
       prev.map((t) => {
@@ -130,7 +152,16 @@ export default function CheckListModal({
   const progress = tasks.length > 0 ? (completed / tasks.length) * 100 : 0;
 
   const handleUpdate = () => {
-    toast.info("Saved successfully");
+    const data = {
+      tasks,
+      note,
+      bookingId: bookingData?.id,
+    };
+    localStorage.setItem(
+      `booking-progress-${bookingData?.id}`,
+      JSON.stringify(data)
+    );
+    toast.success("Saved successfully");
   };
 
   const handleDone = () => {
@@ -169,6 +200,7 @@ export default function CheckListModal({
           <Progress
             value={progress}
             className="h-2 bg-gray-200 dark:bg-gray-700 [&>div]:bg-green-600"
+            color="oklch(62.7% 0.194 149.214)"
           />
           <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
             {completed} / {tasks.length} tasks completed
@@ -185,7 +217,7 @@ export default function CheckListModal({
             <Textarea
               value={note}
               onChange={(e) => !isDone && setNote(e.target.value)}
-              disabled={isDone}
+              disabled={isDone || !canCheck}
               className={`w-full bg-gray-100 text-gray-800 text-sm p-2 rounded-md border ${
                 isDone
                   ? "opacity-50 cursor-not-allowed"
@@ -214,9 +246,11 @@ export default function CheckListModal({
                     }`}
                   >
                     <div
-                      onClick={() => handleToggle(task.id)}
+                      onClick={() => canCheck && handleToggle(task.id)}
                       className={`flex items-center gap-2 ${
-                        isDone ? "cursor-not-allowed" : "cursor-pointer"
+                        canCheck
+                          ? "cursor-pointer"
+                          : "cursor-not-allowed opacity-60"
                       }`}
                     >
                       {task.done ? (
@@ -237,8 +271,8 @@ export default function CheckListModal({
 
                     {task.type === "package" && (
                       <AccordionTrigger
-                        className="ml-auto w-auto p-0 h-[20px] [&>svg]:h-4 [&>svg]:w-4 
-                           [&>svg]:text-gray-500 hover:[&>svg]:text-gray-900 
+                        className="ml-auto w-auto p-0 h-[20px] [&>svg]:h-4 [&>svg]:w-4
+                           [&>svg]:text-gray-500 hover:[&>svg]:text-gray-900
                            dark:[&>svg]:text-gray-400 dark:hover:[&>svg]:text-white"
                       />
                     )}
@@ -251,10 +285,14 @@ export default function CheckListModal({
                         {task.services?.map((srv) => (
                           <li
                             key={srv.id}
-                            onClick={() => handleToggle(srv.id, task.id)}
-                            className={`flex items-center gap-2 cursor-pointer ${
-                              srv.done ? "line-through text-gray-400" : ""
-                            }`}
+                            onClick={() =>
+                              canCheck && handleToggle(srv.id, task.id)
+                            }
+                            className={`flex items-center gap-2 ${
+                              canCheck
+                                ? "cursor-pointer"
+                                : "cursor-not-allowed opacity-60"
+                            } ${srv.done ? "line-through text-gray-400" : ""}`}
                           >
                             {srv.done ? (
                               <CheckCircle className="text-green-600 dark:text-green-500 h-4 w-4" />
@@ -274,23 +312,40 @@ export default function CheckListModal({
 
           {/* Buttons */}
           <div className="mt-6 flex justify-end space-x-3 pb-3">
-            <Button
-              onClick={handleUpdate}
-              variant="outline"
-              disabled={isDone}
-              className="border-purple-500 text-purple-600 hover:bg-purple-50
-                dark:border-purple-300 dark:text-purple-200 dark:hover:bg-purple-700/30"
-            >
-              Save
-            </Button>
+            {isCheckInStatus ? (
+              <Button
+                onClick={handleStart}
+                disabled={startPending}
+                className="bg-purple-primary hover:bg-purple-500 dark:bg-purple-light dark:hover:bg-purple-950 dark:text-amber-primary text-white"
+              >
+                Start
+              </Button>
+            ) : (
+              <>
+                <Button
+                  onClick={handleUpdate}
+                  variant="outline"
+                  disabled={isDone || !canCheck}
+                  className="border-purple-500 text-purple-600 hover:bg-purple-50
+          dark:border-purple-300 dark:text-purple-200 dark:hover:bg-purple-700/30"
+                >
+                  Save
+                </Button>
 
-            <Button
-              onClick={handleDone}
-              disabled={isDone || completed !== tasks.length || isPending}
-              className="bg-purple-primary hover:bg-purple-500 dark:bg-purple-light dark:hover:bg-purple-950 dark:text-amber-primary text-white"
-            >
-              {isPending ? "Completing..." : "Done"}
-            </Button>
+                <Button
+                  onClick={handleDone}
+                  disabled={
+                    isDone ||
+                    completed !== tasks.length ||
+                    isPending ||
+                    !canCheck
+                  }
+                  className="bg-purple-primary hover:bg-purple-500 dark:bg-purple-light dark:hover:bg-purple-950 dark:text-amber-primary text-white"
+                >
+                  {isPending ? "Completing..." : "Done"}
+                </Button>
+              </>
+            )}
           </div>
         </div>
       </DialogContent>

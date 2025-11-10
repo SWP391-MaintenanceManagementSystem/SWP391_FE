@@ -4,6 +4,7 @@ import { Suspense } from "react";
 import CircularIndeterminate from "@/components/CircularIndeterminate";
 import { AccountRole } from "@/types/enums/role";
 import StaffSchedule from "./components/StaffSchedule";
+import TechnicianSchedule from "./components/TechnicianSchedule";
 
 export default function ViewSchedule() {
   const { auth } = useAuth();
@@ -12,8 +13,8 @@ export default function ViewSchedule() {
     switch (role) {
       case AccountRole.STAFF:
         return <StaffSchedule />;
-      case AccountRole.ADMIN:
-        return "Link Technicians Schedule Page";
+      case AccountRole.TECHNICIAN:
+        return <TechnicianSchedule />;
       default:
         return (
           <div className="font-inter">

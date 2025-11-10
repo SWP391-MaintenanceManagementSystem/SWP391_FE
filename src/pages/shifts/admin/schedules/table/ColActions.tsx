@@ -52,7 +52,7 @@ export default function ColActions({
             icon={<Pencil size={12} />}
             onClick={() => {
               if (dayjs(schedule.date).isBefore(new Date())) {
-                toast.warning("Cannot edit past schedules");
+                toast.warning("Cannot EDIT past schedules");
                 return;
               }
               setOpenEditDialog(true);
@@ -65,7 +65,13 @@ export default function ColActions({
       <TooltipWrapper content="Delete">
         <ActionBtn
           icon={<Trash size={12} />}
-          onClick={() => setOpenDeleteDialog(true)}
+          onClick={() => {
+            if (dayjs(schedule.date).isBefore(new Date())) {
+              toast.warning("Cannot DELETE past schedules");
+              return;
+            }
+            setOpenDeleteDialog(true);
+          }}
         />
       </TooltipWrapper>
 
