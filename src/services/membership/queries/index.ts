@@ -1,6 +1,5 @@
 import { queryKeys } from "./keys";
 import { useQuery } from "@tanstack/react-query";
-import { toast } from "sonner";
 import { getAllMemberships, getMySubscription } from "../apis/membership.api";
 
 export const useGetAllMemberships = () => {
