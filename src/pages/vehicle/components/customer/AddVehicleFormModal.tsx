@@ -27,6 +27,7 @@ import {
 } from "@/services/vehicle/apis/vehicle.api";
 import type { VehicleBrand, VehicleModel } from "@/types/models/vehicle";
 import type { useForm } from "react-hook-form";
+import { Input } from "@/components/ui/input";
 
 type AddVehicleFormModalProps = {
   onClose: () => void;
@@ -52,8 +53,9 @@ export default function AddVehicleFormModal({
     fetchBrands();
   }, []);
 
+  const brandId = form.watch("brandId");
+
   useEffect(() => {
-    const brandId = form.watch("brandId");
     if (brandId) {
       const fetchModels = async () => {
         const response = await getVehicleModelsByBrand(brandId);
@@ -63,11 +65,11 @@ export default function AddVehicleFormModal({
     } else {
       setModels([]);
     }
-  }, [form.watch("brandId")]);
+  }, [brandId]);
 
   const handleAddVehicle = (values: AddVehicleFormData) => {
     onSubmit(values);
-    onClose();
+    // onClose();
   };
 
   return (
@@ -89,7 +91,7 @@ export default function AddVehicleFormModal({
                 <FormItem>
                   <FormLabel>VIN</FormLabel>
                   <FormControl>
-                    <input
+                    <Input
                       type="text"
                       {...field}
                       className="w-full border rounded-md px-3 py-2"
@@ -108,7 +110,7 @@ export default function AddVehicleFormModal({
                 <FormItem>
                   <FormLabel>License Plate</FormLabel>
                   <FormControl>
-                    <input
+                    <Input
                       type="text"
                       {...field}
                       className="w-full border rounded-md px-3 py-2"

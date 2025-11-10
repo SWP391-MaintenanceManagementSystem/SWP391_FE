@@ -6,8 +6,7 @@ import {
 } from "@/pages/vehicle/components/libs/schema";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Axios, AxiosError } from "axios";
-import { toast } from "sonner";
+import { AxiosError } from "axios";
 
 export default function useVehicles() {
   const { data, isLoading, isError } = useGetMyVehicle();
@@ -28,6 +27,19 @@ export default function useVehicles() {
     addVehicleMutation.mutateAsync(formData, {
       onSuccess: () => {
         form.reset();
+      },
+      onError: async (err: unknown) => {
+        if (err instanceof AxiosError) {
+          const errors = await err.response?.data?.errors;
+          if (errors) {
+            Object.entries(errors).forEach(([field, message]) => {
+              form.setError(field as keyof AddVehicleFormData, {
+                type: "server",
+                message: Array.isArray(message) ? message.join(", ") : String(message),
+              });
+            });
+          }
+        }
       },
     });
   };

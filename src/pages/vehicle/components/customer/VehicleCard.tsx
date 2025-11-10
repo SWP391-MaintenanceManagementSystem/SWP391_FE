@@ -69,9 +69,9 @@ export default function VehicleCard({ vehicle }: VehicleCardProps) {
           <img
             src={vehicleImg}
             alt="Vehicle Image"
-            className="w-full h-48 object-cover rounded "
+            className="w-full h-48 object-contain rounded "
           />
-          <CardDescription className="flex flex-col gap-1">
+          <CardDescription className="flex flex-col gap-1 lg:text-md text-xs">
             <span>
               <strong className="text-black dark:text-white">Model:</strong>{" "}
               {vehicle.model}
