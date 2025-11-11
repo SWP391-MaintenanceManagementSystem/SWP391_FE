@@ -21,6 +21,12 @@ export function NotificationTypeFilter({
     options = options.filter(
       (option) => option.value !== NotificationType.SHIFT,
     );
+  } else if (auth.user?.role === "STAFF" || auth.user?.role === "TECHNICIAN") {
+    options = options.filter(
+      (option) =>
+        option.value !== NotificationType.MEMBERSHIP &&
+        option.value !== NotificationType.PAYMENT,
+    );
   }
 
   return (

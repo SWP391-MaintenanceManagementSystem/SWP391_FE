@@ -13,7 +13,7 @@ import {
   useMarkAsRead,
   useMarkAsReadAll,
 } from "@/services/notifications/hooks/useMarkAsRead";
-import { Bell, CheckCheck } from "lucide-react";
+import { Bell, BellOff, CheckCheck } from "lucide-react";
 import { NotificationItem } from "./NotificationItem";
 import { TooltipWrapper } from "@/components/TooltipWrapper";
 import { useState, useMemo, useEffect, useRef } from "react";
@@ -197,8 +197,18 @@ export default function NotificationsPopover() {
 
                   {groupedNotifications.today.length === 0 &&
                     groupedNotifications.yesterday.length === 0 && (
-                      <div className="flex justify-center items-center h-full">
-                        <p className="text-gray-500">No notifications</p>
+                      <div className="text-center py-12">
+                        <BellOff className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+                        <h3 className="text-lg font-medium mb-2">
+                          No Notifications
+                        </h3>
+                        <p className="text-muted-foreground text-sm">
+                          {activeTab === "unread"
+                            ? "You're all caught up! No unread notifications."
+                            : activeTab === "read"
+                              ? "No read notifications found."
+                              : "You don't have any notifications yet."}
+                        </p>
                       </div>
                     )}
 
