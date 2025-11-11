@@ -2,6 +2,7 @@ import {
   useDeletePartItem,
   useEditPartItem,
   useAddPartItem,
+  useRequestRefillPart,
 } from "../mutations";
 import type { Part } from "@/types/models/part";
 import {
@@ -16,12 +17,12 @@ import { toast } from "sonner";
 export const useInventory = (
   currentPage: number,
   currentPageSize: number,
-  part?: Part,
+  part?: Part
 ) => {
   const deletePartMutaion = useDeletePartItem();
   const editPartItemMutation = useEditPartItem();
   const addPartItemMutation = useAddPartItem();
-
+  const requestRefillMutation = useRequestRefillPart();
   const form = useForm<PartItemFormData>({
     resolver: zodResolver(PartItemSchema),
     defaultValues: {
@@ -89,7 +90,7 @@ export const useInventory = (
             }
           }
         },
-      },
+      }
     );
   };
 
@@ -124,9 +125,31 @@ export const useInventory = (
             }
             resolve(false);
           },
-        },
+        }
       );
     });
+  };
+
+  const handleRequestRefill = (id: string, refillAmount: number) => {
+    requestRefillMutation.mutate(
+      { id, refillAmount },
+      {
+        onSuccess: (data) => {
+          toast.success(
+            `Refill request sent successfully for ${data.part.name}`
+          );
+        },
+        onError: (error) => {
+          if (error instanceof AxiosError) {
+            const msg = error.response?.data?.message;
+            if (msg) toast.error(msg);
+            else toast.error("Failed to send refill request");
+          } else {
+            toast.error("Failed to send refill request");
+          }
+        },
+      }
+    );
   };
 
   return {
@@ -134,9 +157,11 @@ export const useInventory = (
     form,
     handleEditPartItem,
     handleAddPartItem,
+    handleRequestRefill,
     isPending:
       addPartItemMutation.isPending ||
       editPartItemMutation.isPending ||
-      deletePartMutaion.isPending,
+      deletePartMutaion.isPending ||
+      requestRefillMutation.isPending,
   };
 };

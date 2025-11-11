@@ -33,3 +33,19 @@ export interface PartStat {
   lowStockItems: number;
   categories: number;
 }
+
+// ===== Technician type =====
+export interface Technician {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+}
+
+// ===== Request refill response type =====
+export interface RefillRequestResponse {
+  part: Part;
+  adminIds: string[];
+  technician: Technician;
+  refillAmount: number;
+}

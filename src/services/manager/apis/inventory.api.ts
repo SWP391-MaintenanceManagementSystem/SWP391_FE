@@ -1,6 +1,11 @@
 import { httpPrivate } from "@/lib/http";
 import type { BaseResponse, PaginationResponse } from "@/types/models/response";
-import type { PartStat, Part, Category } from "@/types/models/part";
+import type {
+  PartStat,
+  Part,
+  Category,
+  RefillRequestResponse,
+} from "@/types/models/part";
 import type { PartItemFormData } from "@/pages/inventory/libs/schema";
 
 export const getPartStat = () => {
@@ -35,4 +40,11 @@ export const updatePartItem = (id: string, data: PartItemFormData) => {
 
 export const addPartItem = (data: PartItemFormData) => {
   return httpPrivate.post<BaseResponse<Part>>(`/parts`, data);
+};
+
+export const requestRefillPart = (id: string, refillAmount: number) => {
+  return httpPrivate.post<BaseResponse<RefillRequestResponse>>(
+    `/parts/${id}/request-refill`,
+    { refillAmount }
+  );
 };

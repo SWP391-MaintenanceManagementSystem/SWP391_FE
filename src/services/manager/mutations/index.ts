@@ -14,11 +14,13 @@ import {
 import {
   addPartItem,
   detletePartItem,
+  requestRefillPart,
   updatePartItem,
 } from "../apis/inventory.api";
 import type { PartItemFormData } from "@/pages/inventory/libs/schema";
 import { type EditEmployeeFormData } from "@/pages/employees/libs/schema";
 import { queryKeys as queryShiftKeys } from "@/services/shift/queries/keys";
+import type { RefillRequestResponse } from "@/types/models/part";
 
 export const useUpdateCustomerInfo = () => {
   const queryClient = useQueryClient();
@@ -33,6 +35,7 @@ export const useUpdateCustomerInfo = () => {
       currentPage: number;
       currentPageSize: number;
     }) => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { email, ...rest } = data;
       const updatedCustomerInfo = await updateCustomerInfo(id, rest);
       return updatedCustomerInfo.data;
@@ -284,6 +287,7 @@ export const useUpdateEmployeeInfo = () => {
       currentPage: number;
       currentPageSize: number;
     }) => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { email, ...rest } = data;
 
       if (role === "STAFF") {
@@ -453,6 +457,30 @@ export const useEditPartItem = () => {
         }),
       ]);
       toast.success("Part item information updated successfully");
+    },
+  });
+};
+
+export const useRequestRefillPart = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({
+      id,
+      refillAmount,
+    }: {
+      id: string;
+      refillAmount: number;
+    }) => {
+      const res = await requestRefillPart(id, refillAmount);
+      return res.data as RefillRequestResponse;
+    },
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["parts"] });
+      await queryClient.invalidateQueries({ queryKey: queryKeys.partStat() });
+    },
+    onError: () => {
+      toast.error("Failed to send refill request");
     },
   });
 };

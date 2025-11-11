@@ -22,7 +22,7 @@ export const getStaffs = (params: {
 }) => {
   return httpPrivate.get<BaseResponse<PaginationResponse<EmployeeTable>>>(
     "/staffs",
-    { params },
+    { params }
   );
 };
 
@@ -40,7 +40,7 @@ export const updateStaff = (id: string, data: EditEmployeeFormData) => {
 
 export const getStatusStatStaff = () => {
   return httpPrivate.get<BaseResponse<StatusStatResponse>>(
-    `/staffs/statistics`,
+    `/staffs/statistics`
   );
 };
 
