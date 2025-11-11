@@ -46,7 +46,7 @@ export const getColumns = () => {
       },
     }),
 
-    //PRICE
+    // PRICE
     columnHelper.accessor("price", {
       id: "price",
       header: (info) => <SortHeader title="Price" info={info} />,
@@ -78,14 +78,14 @@ export const getColumns = () => {
 
         const a = toDays(
           rowA.getValue<number>(columnId),
-          rowA.original.periodType
+          rowA.original.periodType,
         );
         const b = toDays(
           rowB.getValue<number>(columnId),
-          rowB.original.periodType
+          rowB.original.periodType,
         );
 
-        return a - b; // Sắp xếp tăng dần
+        return a - b;
       },
     }),
 
@@ -122,6 +122,7 @@ export const getColumns = () => {
       enableSorting: false,
     }),
 
+    // ACTIONS
     columnHelper.display({
       id: "actions",
       header: "Actions",

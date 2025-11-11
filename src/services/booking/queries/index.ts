@@ -2,7 +2,11 @@ import type { BookingFilters } from "@/types/models/booking";
 import { useQuery } from "@tanstack/react-query";
 import { queryKeys } from "./keys";
 import { toast } from "sonner";
-import { getBookingById, getBookings } from "../apis/booking.api";
+import {
+  getBookingById,
+  getBookingHistory,
+  getBookings,
+} from "../apis/booking.api";
 export const useBookingsQuery = (filter: BookingFilters) => {
   return useQuery({
     queryKey: queryKeys.bookings(filter),
@@ -15,6 +19,7 @@ export const useBookingsQuery = (filter: BookingFilters) => {
         throw error;
       }
     },
+    enabled: !!filter.page && !!filter.pageSize,
   });
 };
 
@@ -30,5 +35,21 @@ export const useBookingDetailQuery = (id: string) => {
         throw error;
       }
     },
+  });
+};
+
+export const useBookingsHistoryQuery = (filter: BookingFilters) => {
+  return useQuery({
+    queryKey: ["booking-history", filter],
+    queryFn: async () => {
+      try {
+        const res = await getBookingHistory(filter);
+        return res;
+      } catch (error) {
+        toast.error("Failed to get booking history");
+        throw error;
+      }
+    },
+    enabled: !!filter.page && !!filter.pageSize,
   });
 };

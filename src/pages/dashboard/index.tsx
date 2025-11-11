@@ -9,10 +9,18 @@ const AdminDashboadComponent = lazy(
 const CustomerDashboadComponent = lazy(
   () => import("./components/CustomerDashboard")
 );
+const StaffDashboardComponent = lazy(
+  () => import("./components/StaffDashboard")
+);
+const TechnicianDashboardComponent = lazy(
+  () => import("./components/TechnicianDashboard")
+);
 
 const roleComponents = {
   admin: AdminDashboadComponent,
   user: CustomerDashboadComponent,
+  staff: StaffDashboardComponent,
+  technician: TechnicianDashboardComponent,
 };
 
 export default function Dashboard() {
@@ -23,6 +31,10 @@ export default function Dashboard() {
         return roleComponents.admin;
       case AccountRole.CUSTOMER:
         return roleComponents.user;
+      case AccountRole.STAFF:
+        return roleComponents.staff;
+      case AccountRole.TECHNICIAN:
+        return roleComponents.technician;
       default:
         return roleComponents.user;
     }

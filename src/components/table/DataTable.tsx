@@ -39,7 +39,6 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import clsx from "clsx";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -209,14 +208,7 @@ export function DataTable<TData, TValue>({
   return (
     <div className="grid gap-4 h-full font-inter grid-rows-[auto_1fr_auto]">
       {/* --- TABLE ACTIONS --- */}
-      <div
-        className={clsx(
-          "grid  gap-2 w-full  grid-cols-1",
-          headerActions
-            ? " xl:grid-cols-[auto_1fr] xl:grid-rows-1"
-            : "lg:grid-cols-[auto_1fr]",
-        )}
-      >
+      <div className="grid lg:grid-cols-[1fr_auto] grid-cols-1 items-center gap-2 w-full">
         {/* Left: search */}
         {isSearch && (
           <div className="relative w-full lg:w-[420px]">
@@ -234,13 +226,7 @@ export function DataTable<TData, TValue>({
         )}
 
         {/* Right: header actions + columns */}
-        <div
-          className={clsx(
-            headerActions
-              ? "grid grid-cols-1  md:grid-cols-[1fr_auto] justify-end items-center gap-2 w-full md:w-auto"
-              : "flex items-end justify-end w-full",
-          )}
-        >
+        <div className="flex flex-col lg:flex-row justify-end items-center gap-2">
           {headerActions}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>

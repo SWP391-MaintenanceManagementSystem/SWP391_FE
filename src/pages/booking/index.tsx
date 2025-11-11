@@ -21,8 +21,6 @@ export default function BookingPage() {
 
       case "STAFF":
         return <StaffBookingPage />;
-
-      case "ADMIN":
       case "CUSTOMER":
       default:
         return (

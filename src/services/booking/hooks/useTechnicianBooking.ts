@@ -1,13 +1,12 @@
-import { defaultBookingFilter, type BookingFilters, type TechnicianBooking } from "@/types/models/booking";
-import type { PaginationResponse } from "@/types/models/response";
+import {
+  defaultBookingFilter,
+  type BookingFilters,
+} from "@/types/models/booking";
 import { useTechnicianBookingsQuery } from "../queries/technician-booking";
-
-
 export default function useTechnicianBooking(
   filter: BookingFilters = defaultBookingFilter
 ) {
-  const { data, isLoading, isFetching } = useTechnicianBookingsQuery(filter);
-  const bookingData = data as PaginationResponse<TechnicianBooking>;
+  const { data, isLoading } = useTechnicianBookingsQuery(filter);
 
-  return { bookingData, isLoading, isFetching };
+  return { bookingData: data, isLoading };
 }

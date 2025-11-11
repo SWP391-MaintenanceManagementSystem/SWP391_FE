@@ -1,83 +1,50 @@
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import { DataTable } from "@/components/table/DataTable";
 import { getColumns } from "./columns";
-import type { TechnicianBooking } from "@/types/models/booking";
-import type { SortingState } from "@tanstack/react-table";
-
-interface TechnicianAssignedBookingTableProps {
-  data: TechnicianBooking[];
-  isLoading?: boolean;
-  isFetching?: boolean;
-  totalPage?: number;
-  pageIndex?: number;
-  pageSize?: number;
-  onPageChange?: (pageIndex: number) => void;
-  onPageSizeChange?: (pageSize: number) => void;
-}
-
-export default function TechnicianAssignedBookingTable({
-  data,
-  isLoading,
-  isFetching,
-  totalPage,
-  pageIndex,
-  pageSize,
-  onPageChange,
-  onPageSizeChange,
-}: TechnicianAssignedBookingTableProps) {
-  const columns = getColumns();
-
+import { type TechnicianBooking } from "@/types/models/booking";
+import type { ColumnDef, SortingState } from "@tanstack/react-table";
+import useTechnicianBooking from "@/services/booking/hooks/useTechnicianBooking";
+import { useDebounce } from "@uidotdev/usehooks";
+export default function TechnicianAssignedBookingTable() {
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+  const [searchValue, setSearchValue] = useState("");
   const [sorting, setSorting] = useState<SortingState>([]);
 
-  const sortedData = useMemo(() => {
-    if (!data || sorting.length === 0) return data;
-    const { id, desc } = sorting[0];
+  const debouncedSearch = useDebounce(searchValue, 300);
+  
 
-    return [...data].sort((a, b) => {
-      const valA = (a as any)[id];
-      const valB = (b as any)[id];
-
-
-      if (valA == null) return 1;
-      if (valB == null) return -1;
-
-      if (typeof valA === "string" && typeof valB === "string") {
-        return desc
-          ? valB.localeCompare(valA)
-          : valA.localeCompare(valB);
-      }
-
-      if (valA instanceof Date || valB instanceof Date) {
-        const tA = new Date(valA).getTime();
-        const tB = new Date(valB).getTime();
-        return desc ? tB - tA : tA - tB;
-      }
-      if (typeof valA === "number" && typeof valB === "number") {
-        return desc ? valB - valA : valA - valB;
-      }
-
-      return 0;
-    });
-  }, [data, sorting]);
+  const { bookingData, isLoading } = useTechnicianBooking({
+    page,
+    pageSize,
+    search: debouncedSearch,
+    sortBy: sorting[0]?.id ?? "createdAt",
+    orderBy: sorting[0]?.desc ? "desc" : "asc",
+  });
+  
+  const bookings = bookingData?.data ?? [];
+  const columns = getColumns();
 
   return (
-    <DataTable
-      columns={columns}
-      data={sortedData ?? []}
-      isLoading={isLoading}
-      isFetching={isFetching}
-      pageIndex={pageIndex}
-      pageSize={pageSize}
-      totalPage={totalPage}
-      onPageChange={onPageChange}
-      onPageSizeChange={onPageSizeChange}
-      manualPagination
-      manualSorting
-      sorting={sorting}
-      onSortingChange={setSorting}
-      isSearch
-      searchValue={["id", "customerId", "vehicleId"]}
-      searchPlaceholder="booking ID, customer, vehicle"
-    />
+    <div className="w-full h-[calc(100vh-32px)] ">
+      <DataTable<TechnicianBooking, unknown>
+        columns={columns as ColumnDef<TechnicianBooking, unknown>[]}
+        data={bookings ?? []}
+        pageIndex={page - 1}
+        pageSize={pageSize}
+        totalPage={bookingData?.totalPages ?? 1}
+        isLoading={isLoading}
+        onPageChange={(newPage) => setPage(newPage + 1)}
+        onPageSizeChange={setPageSize}
+        onSearchChange={setSearchValue}
+        searchPlaceholder="Customer, License plate ..."
+        sorting={sorting}
+        onSortingChange={setSorting}
+        manualPagination
+        manualSorting
+        manualSearch
+        isSearch
+      />
+    </div>
   );
 }

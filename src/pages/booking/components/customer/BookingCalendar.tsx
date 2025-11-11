@@ -13,15 +13,54 @@ import useBooking from "@/services/booking/hooks/useBooking";
 import { CustomEvent, type CalendarEvent } from "./CustomEvent";
 import { Spinner } from "@/components/ui/shadcn-io/spinner";
 import { useNavigate } from "react-router-dom";
+import { BookingStatus } from "@/types/enums/bookingStatus";
+import { encodeBase64 } from "@/utils/base64";
 
 const localizer = dayjsLocalizer(dayjs);
 
-const BookingCalendar = () => {
+type Props = {
+  initialVehicleId?: string;
+};
+
+const ONGOING_STATUSES: BookingStatus[] = [
+  BookingStatus.PENDING,
+  BookingStatus.ASSIGNED,
+  BookingStatus.COMPLETED,
+  BookingStatus.IN_PROGRESS,
+];
+
+const BookingCalendar = ({ initialVehicleId }: Props) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [view, setView] = useState<View>(Views.WEEK);
   const [date, setDate] = useState(new Date());
   const [filter, setFilter] = useState(defaultBookingFilter);
+  const [initialBookingData, setInitialBookingData] = useState<{
+    vehicleId?: string;
+    bookingDate?: string;
+  }>({});
   const navigate = useNavigate();
+
+  // Auto-open modal if vehicleId is provided from navigation
+  useEffect(() => {
+    if (initialVehicleId) {
+      setInitialBookingData({ vehicleId: initialVehicleId });
+      setIsModalOpen(true);
+    }
+  }, [initialVehicleId]);
+
+  // Handle calendar slot selection
+  const handleSelectSlot = (slotInfo: { start: Date; end: Date }) => {
+    const selectedDate = dayjs(slotInfo.start).format("YYYY-MM-DDTHH:mm");
+    setInitialBookingData({ bookingDate: selectedDate });
+    setIsModalOpen(true);
+  };
+
+  // Handle creating booking from button
+  const handleCreateBooking = () => {
+    setInitialBookingData({});
+    setIsModalOpen(true);
+  };
+
   useEffect(() => {
     let fromDate: Date;
     let toDate: Date;
@@ -55,7 +94,7 @@ const BookingCalendar = () => {
   const events = useMemo(
     () =>
       bookingData?.data
-        ?.filter((b) => b.status !== "CANCELLED")
+        ?.filter((b) => ONGOING_STATUSES.includes(b.status))
         .map((b) => {
           return {
             id: b.id,
@@ -75,7 +114,6 @@ const BookingCalendar = () => {
       </div>
     );
   }
-
   const eventStyleGetter = (event: CalendarEvent) => {
     let backgroundColor;
 
@@ -88,6 +126,15 @@ const BookingCalendar = () => {
         break;
       case "ASSIGNED":
         backgroundColor = "#3b82f6";
+        break;
+      case "CHECKED_IN":
+        backgroundColor = "#2563eb";
+        break;
+      case "IN_PROGRESS":
+        backgroundColor = "#0ea5e9";
+        break;
+      case "CHECKED_OUT":
+        backgroundColor = "#14b8a6";
         break;
       case "PENDING":
       default:
@@ -103,7 +150,8 @@ const BookingCalendar = () => {
   };
 
   const handleDetailClick = (event: CalendarEvent) => {
-    navigate(`/booking/${event.title}`);
+    const encodedId = encodeBase64(event.title);
+    navigate(`/booking/${encodedId}`);
   };
 
   return (
@@ -115,7 +163,7 @@ const BookingCalendar = () => {
             Bookings Calendar
           </CardTitle>
           <Button
-            onClick={() => setIsModalOpen(true)}
+            onClick={handleCreateBooking}
             className="flex items-center gap-2 bg-purple-primary hover:bg-purple-600 text-white dark:text-black"
           >
             <Plus className="h-4 w-4" />
@@ -140,9 +188,9 @@ const BookingCalendar = () => {
               date={date}
               onNavigate={setDate}
               views={[Views.DAY, Views.WEEK, Views.MONTH]}
-              onSelectSlot={() => setIsModalOpen(true)}
+              onSelectSlot={handleSelectSlot}
               onSelectEvent={handleDetailClick}
-              onShowMore={(events, date) => {
+              onShowMore={(_events, date) => {
                 setDate(date);
                 setView(Views.DAY);
               }}
@@ -158,6 +206,7 @@ const BookingCalendar = () => {
         <BookingModal
           open={isModalOpen}
           onClose={() => setIsModalOpen(false)}
+          initialData={initialBookingData}
         />
       </div>
     </div>

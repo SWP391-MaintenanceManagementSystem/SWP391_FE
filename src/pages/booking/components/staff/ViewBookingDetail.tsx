@@ -2,7 +2,7 @@ import { b64DecodeUnicode } from "@/utils/base64";
 import DynamicBreadcrumbs from "@/components/DynamicBreadcrumb";
 import MainContentLayout from "@/components/MainContentLayout";
 import { useBookingDetail } from "@/services/booking/hooks/useBookingDetail";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import VehicleInfoCard from "../customer/booking-detail/VehicleInfoCard";
@@ -11,7 +11,6 @@ import BookingTag from "@/components/tag/BookingTag";
 import dayjs from "dayjs";
 import CustomerInfoCard from "../customer/booking-detail/CustomerInfoCard";
 import TechnicianCard from "../customer/booking-detail/TechnicianCard";
-import { Spinner } from "@/components/ui/shadcn-io/spinner";
 import { useState } from "react";
 import { BookingServicesDialog } from "../customer/booking-detail/BookingServicesDialog";
 import { CancelBookingDialog } from "../customer/booking-detail/CancelBookingDialog";
@@ -19,20 +18,28 @@ import useCancelBooking from "@/services/booking/hooks/useCancelBooking";
 import type { BookingStatus } from "@/types/enums/bookingStatus";
 import AssignmentDialog from "./AssignmentDialog";
 import { useAssignBooking } from "@/services/booking/hooks/useAssignBooking";
+import UnAssignmentDialog from "./UnAssignmentDialog";
+import useUnAssign from "@/services/booking/hooks/useUnAssign";
+import { toast } from "sonner";
+import Loading from "@/components/Loading";
 
 export default function ViewBookingDetail() {
+  const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const bookingId = b64DecodeUnicode(id ?? "");
   const { data, isLoading } = useBookingDetail(bookingId ?? "");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
   const [openAssignmentDialog, setOpenAssignmentDialog] = useState(false);
+  const [openUnassignmentDialog, setOpenUnassignmentDialog] = useState(false);
   const { onCancel } = useCancelBooking();
   const { form, onSubmit } = useAssignBooking({
     onSuccess: () => {
       setOpenAssignmentDialog(false);
     },
   });
+
+  const { onUnAssign, isPending: isUnAssignPending } = useUnAssign();
 
   if (!bookingId) {
     return <div className="text-red-500 p-6">Booking ID is missing</div>;
@@ -41,7 +48,7 @@ export default function ViewBookingDetail() {
   if (isLoading)
     return (
       <div className="text-gray-500 p-6 flex justify-center items-center h-full">
-        <Spinner />
+        <Loading />
       </div>
     );
 
@@ -71,7 +78,7 @@ export default function ViewBookingDetail() {
           [id ?? ""]: "Detailed Information",
         }}
       />
-      <MainContentLayout className="p-6 max-h-[calc(100vh-60px)] overflow-y-auto">
+      <MainContentLayout>
         <Card className="mb-6 bg-purple-50 border-purple-200 dark:bg-purple-800 dark:border-purple-800 shadow-md">
           <CardHeader className="flex flex-row items-center justify-between p-4">
             <div>
@@ -98,21 +105,36 @@ export default function ViewBookingDetail() {
                 variant="default"
                 className="bg-purple-600 hover:bg-purple-700 text-white
             dark:bg-purple-500 dark:hover:bg-purple-600"
+                onClick={() => {
+                  if (data?.status === "PENDING") {
+                    toast.warning(
+                      "Vehicle check-in is not allowed for pending bookings. Please assign a technician first.",
+                    );
+                  } else {
+                    navigate(`/booking/${id}/checkin`, {
+                      state: {
+                        bookingId: id,
+                      },
+                    });
+                  }
+                }}
               >
-                Edit
+                Vehicle Check-In
               </Button>
 
-              <Button
-                onClick={() => setIsCancelModalOpen(true)}
-                variant="destructive"
-                className="hover:bg-red-600
+              {(data?.status === "PENDING" || data?.status === "ASSIGNED") && (
+                <Button
+                  onClick={() => setIsCancelModalOpen(true)}
+                  variant="destructive"
+                  className="hover:bg-red-600
             dark:hover:bg-red-700"
-              >
-                Cancel
-              </Button>
+                >
+                  Cancel
+                </Button>
+              )}
             </div>
           </CardHeader>
-          <CardContent className="p-4 space-y-4 md:space-y-0">
+          <CardContent className=" space-y-4 md:space-y-0">
             <div className="flex flex-col md:flex-row justify-between text-gray-700 dark:text-gray-50 md:space-y-0 space-y-4">
               <p>
                 <strong>Status:</strong>{" "}
@@ -161,6 +183,7 @@ export default function ViewBookingDetail() {
               data?.status === "COMPLETED" ||
               data?.status === "IN_PROGRESS"
             }
+            onUnAssign={() => setOpenUnassignmentDialog(true)}
           />
         </div>
       </MainContentLayout>
@@ -172,6 +195,13 @@ export default function ViewBookingDetail() {
           await onSubmit({ ...values, bookingId });
         }}
         item={data!}
+      />
+      <UnAssignmentDialog
+        open={openUnassignmentDialog}
+        onOpenChange={(open) => setOpenUnassignmentDialog(open)}
+        item={data!}
+        onConfirm={onUnAssign}
+        isPending={isUnAssignPending}
       />
     </div>
   );

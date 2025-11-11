@@ -14,6 +14,7 @@ import {
   type AddWorkScheduleFormData,
   type EditWorkScheduleFormData,
 } from "@/pages/shifts/libs/schema";
+import type { EmployeeTable } from "@/pages/employees/libs/table-types";
 
 export const useWorkSchedule = (item?: WorkSchedule) => {
   const delScheduleMutation = useDeleteWorkSchedule();
@@ -41,41 +42,52 @@ export const useWorkSchedule = (item?: WorkSchedule) => {
     },
   });
 
-  const handleAddSchedule = async (data: AddWorkScheduleFormData) => {
-    return new Promise<boolean>((resolve) => {
-      addScheduleMutation.mutateAsync(
-        {
-          data,
-          currentPage: 1,
-          currentPageSize: 10,
-        },
-        {
-          onSuccess: () => {
-            toast.success("Schedule added successfully");
-            resolve(true);
-          },
-          onError: (error) => {
-            if (error instanceof AxiosError) {
-              const apiErrors = error.response?.data?.errors;
-              const msg = error.response?.data.message;
-              if (apiErrors && typeof apiErrors === "object") {
-                Object.entries(apiErrors).forEach(([field, msg]) => {
-                  addForm.setError(field as keyof AddWorkScheduleFormData, {
-                    type: "server",
-                    message: msg as string,
-                  });
-                });
-              } else if (msg) {
-                toast.error(msg);
-              } else {
-                toast.error("Something went wrong. Please try again.");
-              }
+  const handleAddSchedule = async (
+    data: AddWorkScheduleFormData,
+    employeeList: EmployeeTable[],
+  ) => {
+    try {
+      await addScheduleMutation.mutateAsync({
+        data,
+      });
+      addForm.reset();
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        const apiErrors = error.response?.data?.errors ?? {};
+        const msg = error.response?.data?.message;
+
+        if (Object.keys(apiErrors).length > 0) {
+          const messages: string[] = [];
+
+          Object.entries(apiErrors).forEach(([field, fieldErrors]) => {
+            const employee = employeeList.find((e) => e.id === field);
+            const displayField = employee ? `${employee.email} ` : field;
+
+            if (typeof fieldErrors === "object" && fieldErrors !== null) {
+              Object.entries(fieldErrors).forEach(([subField, message]) => {
+                messages.push(`${displayField} - ${subField}: ${message}`);
+              });
+            } else if (typeof fieldErrors === "string") {
+              addForm.setError(field as keyof AddWorkScheduleFormData, {
+                type: "server",
+                message: fieldErrors,
+              });
             }
-            resolve(false);
-          },
-        },
-      );
-    });
+          });
+
+          if (messages.length > 0) {
+            addForm.setError("root.serverError", {
+              type: "server",
+              message: messages.join("\n"),
+            });
+          }
+        } else if (msg) {
+          toast.error(msg);
+        } else {
+          toast.error("Something went wrong. Please try again.");
+        }
+      }
+    }
   };
 
   const handleDeleteSchedule = ({
@@ -87,8 +99,7 @@ export const useWorkSchedule = (item?: WorkSchedule) => {
   }) => {
     delScheduleMutation.mutate(
       {
-        id: item?.account.id || "",
-        date: item?.date || "",
+        id: item?.id || "",
         currentPage,
         currentPageSize,
       },
@@ -150,5 +161,8 @@ export const useWorkSchedule = (item?: WorkSchedule) => {
     handleAddSchedule,
     editForm,
     addForm,
+    isEditingPending: updateScheduleMutation.isPending,
+    isAddingPending: addScheduleMutation.isPending,
+    isAddSuccess: addScheduleMutation.isSuccess,
   };
 };

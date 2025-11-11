@@ -1,16 +1,31 @@
-import DynamicBreadcrumbs from "@/components/DynamicBreadcrumb";
-import MainContentLayout from "@/components/MainContentLayout";
-import StatisticsSection from "./components/StatisticsSection";
-import ItemsListSection from "./components/ItemsListSection";
+import { useAuth } from "@/contexts/AuthContext";
+import TechnicianInventoryManagement from "./TechnicianInventoryManagement";
+import Unauthorized from "../unauthorized";
+import AdminInventoryManagement from "./AdminInventoryManagement";
+import { Suspense } from "react";
+import CircularIndeterminate from "@/components/CircularIndeterminate";
+import { AccountRole } from "@/types/enums/role";
 
 export default function InventoryManagement() {
+  const { auth } = useAuth();
+  const role = auth.user?.role;
+  const renderPageByRole = () => {
+    switch (role) {
+      case AccountRole.TECHNICIAN:
+        return <TechnicianInventoryManagement />;
+      case AccountRole.ADMIN:
+        return <AdminInventoryManagement />;
+      default:
+        return (
+          <div className="font-inter">
+            <Unauthorized />
+          </div>
+        );
+    }
+  };
   return (
-    <div className="w-full h-[calc(100vh-32px)] font-inter">
-      <DynamicBreadcrumbs pathTitles={{ inventory: "Inventory Management" }} />
-      <MainContentLayout className="flex flex-col md:gap-8 gap-6 pt-4 overflow-y-auto">
-        <StatisticsSection />
-        <ItemsListSection />
-      </MainContentLayout>
-    </div>
+    <Suspense fallback={<CircularIndeterminate />}>
+      {renderPageByRole()}
+    </Suspense>
   );
 }

@@ -6,8 +6,10 @@ import type { PaginationResponse } from "@/types/models/response";
 import { getTechnicianBookings } from "../apis/technician-booking.api";
 
 export const useTechnicianBookingsQuery = (filter: BookingFilters) => {
+  const queryKey = queryKeys.technicianBookings(filter);
+
   return useQuery<PaginationResponse<TechnicianBooking>>({
-    queryKey: queryKeys.technicianBookings(filter),
+    queryKey,
     queryFn: async () => {
       try {
         const res = await getTechnicianBookings(filter);
@@ -17,5 +19,6 @@ export const useTechnicianBookingsQuery = (filter: BookingFilters) => {
         throw error;
       }
     },
+    enabled: !!filter.page && !!filter.page,
   });
 };

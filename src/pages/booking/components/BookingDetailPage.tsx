@@ -8,7 +8,6 @@ import ViewBookingDetail from "./staff/ViewBookingDetail";
 export default function BookingDetailPage() {
   const { auth } = useAuth();
   const role = auth?.user?.role;
-  console.log(role);
   const renderPageByRole = () => {
     switch (role) {
       case "TECHNICIAN":

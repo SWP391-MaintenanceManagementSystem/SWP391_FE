@@ -7,4 +7,10 @@ export const queryKeys = {
     ["technician-bookings", filter] as const,
   staffBookings: (filter: BookingFilters) =>
     ["staff-bookings", filter] as const,
+  bookingAssignmentList: (id: string) =>
+    ["booking-assignment-list", id] as const,
+  bookingsHistory: (filter: BookingFilters) =>
+    ["bookingsHistory", filter] as const,
+  bookingCustomer: (filter: BookingFilters) =>
+    ["customer-bookings", filter] as const,
 };

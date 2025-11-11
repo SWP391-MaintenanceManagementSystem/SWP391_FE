@@ -8,20 +8,23 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Filter } from "lucide-react";
 
-interface FilterHeaderProps<TData> {
-  column: Column<TData, unknown>;
+interface FilterHeaderProps<TData, TValue = unknown> {
+  column: Column<TData, TValue>;
   title: string;
   onFilterChange?: (value: string) => void;
   selectedValue?: string;
 }
 
-export default function FilterHeader<TData>({
+export default function FilterHeader<TData, TValue>({
   column,
   title,
   onFilterChange,
   selectedValue,
-}: FilterHeaderProps<TData>) {
-  const { filterOptions, labelOptions } = column.columnDef.meta ?? {};
+}: FilterHeaderProps<TData, TValue>) {
+  const filterOptions =
+    (column.columnDef.meta?.filterOptions as string[]) ?? [];
+  const labelOptions =
+    (column.columnDef.meta?.labelOptions as Record<string, string>) ?? {};
 
   return (
     <DropdownMenu>
@@ -32,17 +35,19 @@ export default function FilterHeader<TData>({
         </div>
       </DropdownMenuTrigger>
 
-      <DropdownMenuContent align="end">
+      <DropdownMenuContent>
         <DropdownMenuRadioGroup
           value={selectedValue}
           onValueChange={onFilterChange}
+          className="max-h-[320px]"
         >
           <DropdownMenuRadioItem key="all" value="">
             All
           </DropdownMenuRadioItem>
-          {filterOptions?.map((option: string) => (
+
+          {filterOptions.map((option) => (
             <DropdownMenuRadioItem key={option} value={option}>
-              {labelOptions?.[option] ?? option}
+              {labelOptions[option] ?? option}
             </DropdownMenuRadioItem>
           ))}
         </DropdownMenuRadioGroup>

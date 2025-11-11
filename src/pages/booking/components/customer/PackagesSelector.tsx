@@ -1,15 +1,19 @@
-import { type UseFormReturn } from "react-hook-form";
+import { type FieldValues, type UseFormReturn } from "react-hook-form";
 import MultiSelector from "../MultiSelector";
-import { type CreateBookingFormValues } from "../../lib/schema";
 import { PackageDetailDialog } from "./PackageDetailDialog";
 import type { Package } from "@/types/models/package";
 import { useState } from "react";
 import useSearchPackage from "@/services/package/hooks/useSearchPackages";
-export default function PackagesSelector({
+
+interface PackageSelectorProps<T extends FieldValues> {
+  form: UseFormReturn<T>;
+  initialPackages?: Array<{ id: string; name: string }>;
+}
+
+export default function PackagesSelector<T extends FieldValues>({
   form,
-}: {
-  form: UseFormReturn<CreateBookingFormValues>;
-}) {
+  initialPackages,
+}: PackageSelectorProps<T>) {
   const [selectedItem, setSelectedItem] = useState<Package | null>(null);
   const [detailOpen, setDetailOpen] = useState(false);
 
@@ -25,7 +29,7 @@ export default function PackagesSelector({
 
   return (
     <>
-      <MultiSelector<Package>
+      <MultiSelector<Package, T>
         form={form}
         fieldName="packageIds"
         label="Packages"
@@ -33,6 +37,7 @@ export default function PackagesSelector({
         placeholder="Type to search packages... (or select services above)"
         hint="Optional - select services OR packages"
         onOpenDetailModal={handleOpenDetail}
+        initialItems={initialPackages}
       />
       <PackageDetailDialog
         isOpen={detailOpen}
