@@ -1,4 +1,4 @@
-import { type UseFormReturn } from "react-hook-form";
+import { type FieldValues, type Path, type UseFormReturn } from "react-hook-form";
 import {
   Select,
   SelectContent,
@@ -8,30 +8,35 @@ import {
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
-import { type CreateBookingFormValues } from "../../lib/schema";
 import type { ServiceCenter } from "@/types/models/center";
 
-interface ServiceCenterSelectorProps {
-  form: UseFormReturn<CreateBookingFormValues>;
+interface ServiceCenterSelectorProps<T extends FieldValues> {
+  form: UseFormReturn<T>;
   centers: ServiceCenter[];
+  disabled?: boolean;
 }
 
-export default function ServiceCenterSelector({
+export default function ServiceCenterSelector<T extends FieldValues>({
   form,
   centers,
-}: ServiceCenterSelectorProps) {
+  disabled = false,
+}: ServiceCenterSelectorProps<T>) {
+  const centerIdError = form.formState.errors?.centerId;
+  const centerIdValue = form.watch("centerId" as Path<T>);
+
   return (
     <div className="space-y-2 w-full">
       <Label className="text-sm font-medium flex items-center gap-2">
         Service Center
       </Label>
       <Select
-        value={form.watch("centerId")}
-        onValueChange={(value) => form.setValue("centerId", value)}
+        value={centerIdValue as string}
+        onValueChange={(value) => form.setValue("centerId" as Path<T>, value as T[Path<T>])}
+        disabled={disabled}
       >
         <SelectTrigger
           className={cn(
-            form.formState.errors.centerId && "border-red-500",
+            centerIdError && "border-red-500",
             "w-full"
           )}
         >
@@ -45,9 +50,9 @@ export default function ServiceCenterSelector({
           ))}
         </SelectContent>
       </Select>
-      {form.formState.errors.centerId && (
+      {centerIdError && (
         <p className="text-xs text-destructive">
-          {form.formState.errors.centerId.message}
+          {String(centerIdError.message || "")}
         </p>
       )}
     </div>

@@ -1,16 +1,19 @@
 import { useState } from "react";
-import { type UseFormReturn } from "react-hook-form";
+import { type FieldValues, type UseFormReturn } from "react-hook-form";
 import MultiSelector from "../MultiSelector";
-import { type CreateBookingFormValues } from "../../lib/schema";
 import useSearchServices from "@/services/service/hooks/useSearchServices";
 import { ServiceDetailDialog } from "./ServiceDetailDialog";
 import type { Service } from "@/types/models/service";
 
-export default function ServicesSelector({
+interface ServiceSelectorProps<T extends FieldValues> {
+  form: UseFormReturn<T>;
+  initialServices?: Array<{ id: string; name: string }>;
+}
+
+export default function ServicesSelector<T extends FieldValues>({
   form,
-}: {
-  form: UseFormReturn<CreateBookingFormValues>;
-}) {
+  initialServices,
+}: ServiceSelectorProps<T>) {
   const [selectedItem, setSelectedItem] = useState<Service | null>(null);
   const [detailOpen, setDetailOpen] = useState(false);
 
@@ -26,13 +29,14 @@ export default function ServicesSelector({
 
   return (
     <>
-      <MultiSelector<Service>
+      <MultiSelector<Service, T>
         form={form}
         fieldName="serviceIds"
         label="Services"
         placeholder="Type to search services..."
         useSearchHook={useSearchServices}
         onOpenDetailModal={handleOpenDetail}
+        initialItems={initialServices}
       />
 
       <ServiceDetailDialog

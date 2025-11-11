@@ -30,4 +30,7 @@ export const queryKeys = {
   }) => ["workSchedulesList", params] as const,
 
   workScheduleById: (id: string) => ["workScheduleById", id] as const,
+
+  workScheduleByEmployeeId: (employeeId: string) =>
+    ["workScheduleByEmployeeId", employeeId] as const,
 };

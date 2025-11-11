@@ -9,11 +9,10 @@ type PurchaseConfirmDialogProps = {
     name: string;
     price: number;
     duration: number;
-    periodType?: string; 
+    periodType?: string;
     description?: string;
   };
 };
-
 
 function formatDuration(duration: number, periodType?: string) {
   const type = (periodType ?? "").toUpperCase();
@@ -62,7 +61,6 @@ export default function PurchaseConfirmDialog({
             transition={{ duration: 0.25, ease: "easeOut" }}
           >
             <div className="bg-white rounded-2xl shadow-xl max-w-md w-full p-6 relative border border-gray-100 font-inter">
-              
               <button
                 onClick={onClose}
                 className="absolute top-3 right-3 text-gray-400 hover:text-gray-600 transition"
@@ -84,9 +82,8 @@ export default function PurchaseConfirmDialog({
 
               {/* Content */}
               <p className="text-gray-600 text-center mb-5 leading-relaxed">
-                Are you sure you want to buy the{" "}
-                <strong>{plan.name}</strong> plan for{" "}
-                <strong>${plan.price.toFixed(2)}</strong>{" "}
+                Are you sure you want to buy the <strong>{plan.name}</strong>{" "}
+                plan for <strong>${plan.price.toFixed(2)}</strong>{" "}
                 {formatDuration(plan.duration, plan.periodType)}?
               </p>
 

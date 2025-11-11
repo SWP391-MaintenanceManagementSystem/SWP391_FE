@@ -21,6 +21,7 @@ interface AddDialogProps<TFormValues extends FieldValues> {
   styleFormLayout?: string;
   styleLayoutFooter?: string;
   title: string;
+  isPending?: boolean;
 }
 
 export function AddDialog<TFormValues extends FieldValues>({
@@ -32,6 +33,7 @@ export function AddDialog<TFormValues extends FieldValues>({
   styleFormLayout,
   styleLayoutFooter,
   title,
+  isPending,
 }: AddDialogProps<TFormValues>) {
   const onSubmit = async (values: TFormValues) => {
     const isValid = await form.trigger();
@@ -72,9 +74,9 @@ export function AddDialog<TFormValues extends FieldValues>({
               <Button
                 type="submit"
                 className="!outline-none bg-purple-primary"
-                disabled={!form.formState.isDirty}
+                disabled={!form.formState.isDirty || isPending}
               >
-                Save
+                {isPending ? "Saving..." : "Save"}
               </Button>
             </AlertDialogFooter>
           </form>

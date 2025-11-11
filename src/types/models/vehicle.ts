@@ -17,6 +17,7 @@ export type Vehicle = {
   lastService: string | null;
   createdAt: string;
   updatedAt: string;
+  productionYear: number;
 };
 
 export type VehicleBrand = {

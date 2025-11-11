@@ -48,32 +48,38 @@ export default function MembershipOptions() {
   };
 
   return (
-    <div className="w-full relative">
-      {/* Scrollable container */}
-      <div className="flex gap-4 overflow-x-auto scrollbar-hide snap-x snap-mandatory px-3 py-5">
+    <div className="w-full relative px-6 py-8">
+      <div
+        className="
+          grid 
+          grid-cols-1 
+          md:grid-cols-2 
+          xl:grid-cols-3 
+          gap-8 
+          place-items-center 
+          max-w-6xl 
+          mx-auto
+        "
+      >
         {data?.map((m) => (
-          <div
+          <MembershipCard
             key={m.id}
-            className="min-w-[280px] snap-start shrink-0"
-          >
-            <MembershipCard
-              description={m.description ?? ""}
-              title={m.name}
-              price={m.price}
-              duration={m.duration}
-              periodType={m.periodType}
-              onClick={() =>
-                handleBuyClick({
-                  name: m.name,
-                  price: m.price,
-                  duration: m.duration,
-                  periodType: m.periodType,
-                  description: m.description ?? "",
-                  id: m.id,
-                })
-              }
-            />
-          </div>
+            description={m.description ?? ""}
+            title={m.name}
+            price={m.price}
+            duration={m.duration}
+            periodType={m.periodType}
+            onClick={() =>
+              handleBuyClick({
+                name: m.name,
+                price: m.price,
+                duration: m.duration,
+                periodType: m.periodType,
+                description: m.description ?? "",
+                id: m.id,
+              })
+            }
+          />
         ))}
       </div>
 

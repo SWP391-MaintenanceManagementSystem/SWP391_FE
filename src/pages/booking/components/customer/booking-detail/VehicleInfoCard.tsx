@@ -24,8 +24,8 @@ export default function VehicleInfoCard({
   productionYear,
 }: VehicleInfoCardProps) {
   return (
-    <Card className="w-full hover:shadow-lg dark:hover:shadow-gray-700 transition-shadow duration-300 border border-gray-200 dark:border-[#262626] rounded-lg overflow-hidden">
-      <CardHeader className="flex flex-row items-center gap-2 p-4 bg-gradient-to-r from-purple-50 to-gray-50 dark:from-purple-800 dark:to-purple-500">
+    <Card className="w-full p-0 hover:shadow-lg dark:hover:shadow-gray-700 transition-shadow duration-300 border border-gray-200 dark:border-[#262626] rounded-lg overflow-hidden">
+      <CardHeader className="flex rounded-t-lg flex-row items-center gap-2 p-4 bg-gradient-to-r from-purple-50 to-gray-50 dark:from-purple-800 dark:to-purple-500">
         <CarFront className="w-6 h-6 text-purple-500 dark:text-purple-100" />
         <CardTitle className="text-lg font-semibold text-gray-900 dark:text-white">
           {licensePlate || "N/A"}

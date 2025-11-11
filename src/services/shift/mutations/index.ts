@@ -125,14 +125,12 @@ export const useDeleteWorkSchedule = () => {
   return useMutation({
     mutationFn: async ({
       id,
-      date,
     }: {
       id: string;
-      date: string;
       currentPage: number;
       currentPageSize: number;
     }) => {
-      const del = await deleteWorkSchedule(id, date);
+      const del = await deleteWorkSchedule(id);
       return del.data;
     },
     onSuccess: async (_data, variables) => {
@@ -181,25 +179,12 @@ export const useUpdateSchedule = () => {
 export const useAddSchedule = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async ({
-      data,
-    }: {
-      data: AddWorkScheduleFormData;
-      currentPage: number;
-      currentPageSize: number;
-    }) => {
+    mutationFn: async ({ data }: { data: AddWorkScheduleFormData }) => {
       const add = await addSchedule(data);
       return add.data;
     },
-    onSuccess: async (_data, variables) => {
-      await Promise.all([
-        queryClient.invalidateQueries({
-          queryKey: queryKeys.workSchedulesList({
-            page: variables.currentPage,
-            pageSize: variables.currentPageSize,
-          }),
-        }),
-      ]);
+    onSuccess: async () => {
+      queryClient.invalidateQueries({ queryKey: ["workSchedulesList"] });
       toast.success("Schedule added successfully");
     },
   });

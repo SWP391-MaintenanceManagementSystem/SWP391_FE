@@ -1,10 +1,26 @@
-import type { CreateBookingFormValues } from "@/pages/booking/lib/schema";
+import type {
+  CreateBookingFormValues,
+  EditBookingFormValues,
+} from "@/pages/booking/lib/schema";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { cancelBookingById, createBooking } from "../apis/booking.api";
+import {
+  cancelBookingById,
+  createBooking,
+  customerUpdateBooking,
+  submitBookingFeedback,
+} from "../apis/booking.api";
 import { toast } from "sonner";
 import { AxiosError } from "axios";
 import type { BookingAssignmentFormValues } from "@/pages/booking/lib/schema";
-import { createBookingAssignment } from "../apis/booking-assignment.api";
+import {
+  createBookingAssignment,
+  unBookingAssignment,
+} from "../apis/booking-assignment.api";
+import {
+  completeTechnicianBooking,
+  startTechnicianBooking,
+} from "../apis/technician-booking.api";
+import type { BookingFeedbackPayload } from "@/types/models/booking";
 
 export const useCreateBookingMutation = () => {
   const queryClient = useQueryClient();
@@ -17,10 +33,49 @@ export const useCreateBookingMutation = () => {
       queryClient.invalidateQueries({
         queryKey: ["bookings"],
       });
-      toast.success("Booking created successfully");
     },
     onError: () => {
       toast.error("Failed to create booking");
+    },
+  });
+};
+
+export const useUpdateBookingMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ data }: { data: EditBookingFormValues }) => {
+      const { id, bookingDate, note, packageIds, serviceIds, vehicleId } = data;
+      const updatedBooking = await customerUpdateBooking({
+        id,
+        bookingDate,
+        note,
+        packageIds: packageIds || [],
+        serviceIds: serviceIds || [],
+        vehicleId,
+      });
+      return updatedBooking.data;
+    },
+    onSuccess: async (_data, variables) => {
+      const bookingId = variables.data.id;
+      await Promise.all([
+        queryClient.invalidateQueries({
+          queryKey: ["bookings"],
+        }),
+        queryClient.invalidateQueries({
+          queryKey: ["booking", bookingId],
+        }),
+        queryClient.invalidateQueries({
+          queryKey: ["staff-bookings"],
+        }),
+      ]);
+      toast.success("Booking updated successfully");
+    },
+    onError: (error) => {
+      let msg = "Failed to update booking";
+      if (error instanceof AxiosError) {
+        msg = error.response?.data?.message || msg;
+      }
+      toast.error(msg);
     },
   });
 };
@@ -49,7 +104,7 @@ export const useCancelBookingMutation = () => {
     onError: (error) => {
       let msg = "Failed to cancel booking";
       if (error instanceof AxiosError) {
-        msg = error.message || msg;
+        msg = error.response?.data?.message || msg;
       }
       toast.error(msg);
     },
@@ -68,8 +123,127 @@ export const useCreateBookingAssignmentMutation = () => {
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: ["booking", bookingId] }),
         queryClient.invalidateQueries({ queryKey: ["staff-bookings"] }),
+        queryClient.invalidateQueries({
+          queryKey: ["booking-assignment-list"],
+        }),
       ]);
       toast.success("Assigned technician successfully");
     },
+  });
+};
+
+export const useUnBookingAssignmentMutation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({
+      id,
+    }: {
+      id: string;
+      employeeEmail: string;
+      bookingId: string;
+    }) => {
+      const res = await unBookingAssignment(id);
+      return res?.data;
+    },
+    onSuccess: async (_data, variables) => {
+      await Promise.all([
+        queryClient.invalidateQueries({
+          queryKey: ["booking", variables.bookingId],
+        }),
+        queryClient.invalidateQueries({
+          queryKey: ["booking-assignment-list"],
+        }),
+      ]);
+
+      toast.success(
+        `Unassigned technician with email ${variables.employeeEmail} successfully`
+      );
+    },
+    onError: () => {
+      toast.error("Failed to unassign technician");
+    },
+  });
+};
+
+export const useCompleteTechnicianBookingMutation = (
+  handleOnSuccess: () => void
+) => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({
+      bookingId,
+      detailIds,
+    }: {
+      bookingId: string;
+      detailIds: string[];
+    }) => {
+      const res = await completeTechnicianBooking(bookingId, detailIds);
+      return res;
+    },
+    onSuccess: async (_data, variables) => {
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ["technician-bookings"] }),
+        queryClient.invalidateQueries({
+          queryKey: ["booking", variables.bookingId],
+        }),
+      ]);
+      handleOnSuccess();
+      toast.success("Booking marked as completed");
+    },
+    onError: (error) => {
+      let msg = "Failed to mark booking as completed";
+      if (error instanceof AxiosError) {
+        msg = error.response?.data?.message || msg;
+      }
+      toast.error(msg);
+    },
+  });
+};
+
+export const useStartTechnicianBookingMutation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (bookingId: string) => {
+      const res = await startTechnicianBooking(bookingId);
+      return res;
+    },
+    onSuccess: async (_data, variables) => {
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ["technician-bookings"] }),
+        queryClient.invalidateQueries({
+          queryKey: ["booking", variables],
+        }),
+      ]);
+      toast.success("Starting task successfully");
+    },
+    onError: (error) => {
+      let msg = "Failed to start task";
+      if (error instanceof AxiosError) {
+        msg = error.response?.data?.message || msg;
+      }
+      toast.error(msg);
+    },
+  });
+};
+
+export const useSubmitBookingFeedbackMutation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (payload: BookingFeedbackPayload) => {
+      const res = await submitBookingFeedback(payload);
+      return res.data;
+    },
+    onSuccess: async (_data, variables) => {
+      const bookingId = variables.bookingId;
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ["bookings"] }),
+        queryClient.invalidateQueries({ queryKey: ["booking", bookingId] }),
+      ]);
+    },
+    onError: () => {},
   });
 };

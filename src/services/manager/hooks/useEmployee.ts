@@ -44,12 +44,26 @@ export const useEmployee = (
   });
 
   const handleDeleteEmployee = (id: string) => {
-    deleteEmployeeMutation.mutate({
-      id,
-      role,
-      currentPage,
-      currentPageSize,
-    });
+    deleteEmployeeMutation.mutate(
+      {
+        id,
+        role,
+        currentPage,
+        currentPageSize,
+      },
+      {
+        onError: (error) => {
+          if (error instanceof AxiosError) {
+            const msg = error.response?.data.message;
+            if (msg) {
+              toast.error(msg);
+            } else {
+              toast.error("Something went wrong. Please try again.");
+            }
+          }
+        },
+      },
+    );
   };
 
   const handleUpdateEmployeeInfo = (id: string, data: EditEmployeeFormData) => {
@@ -74,7 +88,15 @@ export const useEmployee = (
                 });
               });
             } else if (msg) {
-              toast.error(msg);
+              if (msg.includes("center")) {
+                form.setError("workCenter.centerId", {
+                  type: "server",
+                  message: msg,
+                });
+                toast.error(msg);
+              } else {
+                toast.error(msg);
+              }
             } else {
               toast.error("Something went wrong. Please try again.");
             }
@@ -124,5 +146,9 @@ export const useEmployee = (
     handleDeleteEmployee,
     handleUpdateEmployeeInfo,
     handleAddEmployee,
+    isPending:
+      addEmployeeMutation.isPending ||
+      updateEmployeeInfoMutation.isPending ||
+      deleteEmployeeMutation.isPending,
   };
 };

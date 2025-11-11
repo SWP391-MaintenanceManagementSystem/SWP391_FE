@@ -1,4 +1,5 @@
 import type { BookingStatus } from "../enums/bookingStatus";
+import type { CustomerBookingDetails } from "./booking-with-detail";
 
 export type Booking = {
   id: string;
@@ -8,15 +9,21 @@ export type Booking = {
   shiftId: string;
   totalCost: number;
   bookingDate: Date;
-  status: string;
+  status: BookingStatus;
   note?: string;
   createdAt: Date;
   updatedAt: Date;
+  center?: {
+    id: string;
+    name: string;
+  };
 };
 
 export type BookingFilters = {
   search?: string;
   centerId?: string;
+  vehicleId?: string;
+  customerId?: string;
   status?: BookingStatus | "";
   isPremium?: boolean;
   fromDate?: Date | string;
@@ -26,6 +33,7 @@ export type BookingFilters = {
   pageSize?: number;
   sortBy?: string;
   orderBy?: "asc" | "desc";
+  isActive?: boolean;
 };
 
 export const defaultBookingFilter: BookingFilters = {
@@ -87,3 +95,15 @@ export type TechnicianBooking = {
   createdAt: Date;
   updatedAt: Date;
 };
+
+export type CustomerBookingHistory = Omit<
+  CustomerBookingDetails,
+  "bookingDetails"
+>;
+
+export type BookingFeedbackPayload = {
+  bookingId: string;
+  feedback: string;
+  rating: number;
+  note?: string;
+}

@@ -49,8 +49,6 @@ export const useWorkSchedule = (item?: WorkSchedule) => {
     try {
       await addScheduleMutation.mutateAsync({
         data,
-        currentPage: 1,
-        currentPageSize: 10,
       });
       addForm.reset();
     } catch (error) {
@@ -101,8 +99,7 @@ export const useWorkSchedule = (item?: WorkSchedule) => {
   }) => {
     delScheduleMutation.mutate(
       {
-        id: item?.account.id || "",
-        date: item?.date || "",
+        id: item?.id || "",
         currentPage,
         currentPageSize,
       },

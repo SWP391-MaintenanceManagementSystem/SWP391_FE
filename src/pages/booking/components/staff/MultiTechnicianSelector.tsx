@@ -3,7 +3,7 @@ import { type UseFormReturn } from "react-hook-form";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { X } from "lucide-react";
+import { TriangleAlert, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { BookingAssignmentFormValues } from "../../lib/schema";
 
@@ -79,7 +79,7 @@ export default function MultiTechnicianSelector<
   );
 
   return (
-    <div className="space-y-2">
+    <div className="space-y-2 ">
       <label
         className={cn(
           "text-sm font-medium flex items-center gap-2",
@@ -93,7 +93,7 @@ export default function MultiTechnicianSelector<
           <span className="text-xs text-muted-foreground">({hint})</span>
         )}
       </label>
-      <div className="relative">
+      <div className="relative ">
         <div
           className={cn(
             "flex flex-wrap items-center gap-2 px-3 py-2 border rounded-md",
@@ -167,9 +167,23 @@ export default function MultiTechnicianSelector<
       </div>
 
       {form.formState.errors.employeeIds && (
-        <p className="text-xs text-destructive">
-          {form.formState.errors.employeeIds.message}
-        </p>
+        <div className="mt-3 rounded-md bg-red-50 p-3 border border-red-200">
+          <p className="text-sm font-semibold text-red-600 mb-1 flex items-center gap-2 text-center">
+            <TriangleAlert size={16} />
+            Please review the following issues:
+          </p>
+          <div className="space-y-2">
+            {form.formState.errors.employeeIds.message
+              ?.split("\n")
+              .map((msg, i) => {
+                return (
+                  <div key={i} className="text-sm text-red-700">
+                    <span className="font-medium">{msg}</span>
+                  </div>
+                );
+              })}
+          </div>
+        </div>
       )}
     </div>
   );

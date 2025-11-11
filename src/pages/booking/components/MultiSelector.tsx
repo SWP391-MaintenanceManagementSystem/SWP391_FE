@@ -1,14 +1,19 @@
 import { useMemo, useState, useEffect } from "react";
-import { type UseFormReturn } from "react-hook-form";
+import { type FieldValues, type Path, type UseFormReturn } from "react-hook-form";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Eye, X } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { type CreateBookingFormValues } from "../lib/schema";
 
-interface MultiSelectorProps<T> {
-  form: UseFormReturn<CreateBookingFormValues>;
+interface ItemWithId {
+  id: string;
+  name: string;
+  [key: string]: unknown;
+}
+
+interface MultiSelectorProps<T extends ItemWithId, TFieldValues extends FieldValues> {
+  form: UseFormReturn<TFieldValues>;
   fieldName: "serviceIds" | "packageIds";
   label: string;
   placeholder: string;
@@ -20,9 +25,10 @@ interface MultiSelectorProps<T> {
     isLoading: boolean;
   };
   onOpenDetailModal?: (item: T) => void;
+  initialItems?: Array<{ id: string; name: string; [key: string]: unknown }>;
 }
 
-export default function MultiSelector<T>({
+export default function MultiSelector<T extends ItemWithId, TFieldValues extends FieldValues>({
   form,
   fieldName,
   label,
@@ -30,36 +36,37 @@ export default function MultiSelector<T>({
   hint,
   useSearchHook,
   onOpenDetailModal,
-}: MultiSelectorProps<T>) {
+  initialItems = [],
+}: MultiSelectorProps<T, TFieldValues>) {
   const { setKeyword, data: items = [], isLoading } = useSearchHook();
   const [inputValue, setInputValue] = useState("");
-  const [cacheItems, setCacheItems] = useState<T[]>([]);
-  const currentIds = form.watch(fieldName) as string[];
+  const [cacheItems, setCacheItems] = useState<T[]>(initialItems as T[]);
+  const currentIds = (form.watch(fieldName as Path<TFieldValues>) || []) as string[];
 
   useEffect(() => {
     if (items.length > 0) {
       setCacheItems((prev) => {
-        const map = new Map(prev.map((i: any) => [i.id, i]));
-        items.forEach((i: any) => map.set(i.id, i));
+        const map = new Map(prev.map((i) => [i.id, i]));
+        items.forEach((i) => map.set(i.id, i));
         return Array.from(map.values());
       });
     }
   }, [items]);
 
   const addItem = (id: string) => {
-    const current = form.getValues(fieldName) || [];
+    const current = (form.getValues(fieldName as Path<TFieldValues>) || []) as string[];
     if (!current.includes(id)) {
-      form.setValue(fieldName, [...current, id]);
+      form.setValue(fieldName as Path<TFieldValues>, [...current, id] as TFieldValues[Path<TFieldValues>]);
     }
     setKeyword("");
     setInputValue("");
   };
 
   const removeItem = (id: string) => {
-    const current = form.getValues(fieldName) || [];
+    const current = (form.getValues(fieldName as Path<TFieldValues>) || []) as string[];
     form.setValue(
-      fieldName,
-      current.filter((v) => v !== id)
+      fieldName as Path<TFieldValues>,
+      current.filter((v: string) => v !== id) as TFieldValues[Path<TFieldValues>]
     );
   };
 
@@ -67,7 +74,7 @@ export default function MultiSelector<T>({
 
   const idToName = useMemo(
     () =>
-      cacheItems.reduce<Record<string, string>>((acc: any, item: any) => {
+      cacheItems.reduce<Record<string, string>>((acc, item) => {
         acc[item.id] = item.name;
         return acc;
       }, {}),
@@ -128,8 +135,8 @@ export default function MultiSelector<T>({
               <div className="p-3 text-sm">Loading...</div>
             ) : items.length > 0 ? (
               items
-                .filter((item: any) => !currentIds.includes(item.id))
-                .map((item: any) => (
+                .filter((item) => !currentIds.includes(item.id))
+                .map((item) => (
                   <div
                     key={item.id}
                     className="hover:bg-accent hover:text-accent-foreground transition-colors flex items-center justify-between"
@@ -171,7 +178,7 @@ export default function MultiSelector<T>({
       </div>
 
       {hasSelectionError && (
-        <p className="text-xs text-destructive">{hasSelectionError}</p>
+        <p className="text-xs text-destructive">{String(hasSelectionError || "")}</p>
       )}
     </div>
   );

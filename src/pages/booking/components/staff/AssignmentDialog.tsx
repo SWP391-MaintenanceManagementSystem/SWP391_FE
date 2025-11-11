@@ -37,6 +37,7 @@ export default function AssignmentDialog({
   const { keyword, setKeyword, data, isLoading } = useTechnicianSearch({
     centerId: item.serviceCenter.id,
     assignedIds: item.technicians.map((technician) => technician.id),
+    shiftId: item.shift.id,
   });
   useEffect(() => {
     if (open && !initialized) {
@@ -86,9 +87,7 @@ export default function AssignmentDialog({
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
-            className={clsx(
-              "grid grid-cols-1 gap-4 max-h-[460px] overflow-y-auto",
-            )}
+            className={clsx("grid grid-cols-1 gap-4 ")}
           >
             <MultiTechnicianSelector
               form={form}
@@ -117,11 +116,11 @@ export default function AssignmentDialog({
                 className="bg-purple-primary"
                 disabled={
                   selectedIds.length === 0 ||
-                  form.formState.isSubmitting ||
+                  form.formState.isDirty ||
                   isPending
                 }
               >
-                Assign Technician
+                {isPending ? "Assigning..." : "Assign Technician"}
               </Button>
             </DialogFooter>
           </form>

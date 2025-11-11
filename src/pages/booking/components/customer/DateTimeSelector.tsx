@@ -1,36 +1,40 @@
-import { useController, type Control } from "react-hook-form";
+import {
+  useController,
+  type Control,
+  type FieldValues,
+  type Path,
+} from "react-hook-form";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
-import type { CreateBookingFormValues } from "../../lib/schema";
 import dayjs from "dayjs";
 import { Calendar } from "lucide-react";
 import { useRef } from "react";
 
-interface DateTimeSelectorProps {
-  control: Control<CreateBookingFormValues>;
+interface DateTimeSelectorProps<T extends FieldValues> {
+  control: Control<T>;
 }
 
-export default function DateTimeSelector({ control }: DateTimeSelectorProps) {
+export default function DateTimeSelector<T extends FieldValues>({
+  control,
+}: DateTimeSelectorProps<T>) {
   const {
     field,
     fieldState: { error },
   } = useController({
-    name: "bookingDate",
+    name: "bookingDate" as Path<T>,
     control,
   });
 
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const inputValue = field.value
-    ? dayjs(field.value).format("YYYY-MM-DDTHH:mm")
-    : "";
-
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    // Convert to UTC
-    field.onChange(value ? new Date(value) : undefined);
+    field.onChange(value || undefined);
   };
+  const inputValue = field.value
+    ? dayjs(field.value).format("YYYY-MM-DDTHH:mm")
+    : undefined;
 
   const handleContainerClick = () => {
     if (inputRef.current) {

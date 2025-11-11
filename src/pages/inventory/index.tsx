@@ -9,7 +9,6 @@ import { AccountRole } from "@/types/enums/role";
 export default function InventoryManagement() {
   const { auth } = useAuth();
   const role = auth.user?.role;
-  console.log("🚀 ~ InventoryManagement ~ role:", role)
   const renderPageByRole = () => {
     switch (role) {
       case AccountRole.TECHNICIAN:
