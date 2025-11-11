@@ -28,15 +28,16 @@ export function CustomerBookingStatusChart({
 }: CustomerBookingStatusChartProps) {
   const [open, setOpen] = React.useState(false);
 
-  if (!data?.bookingStatusSummary || data.bookingStatusSummary.length === 0) {
-    return (
-      <Card className="flex items-center justify-center h-80">
-        <p className="text-gray-500 dark:text-gray-400 text-sm">
-          No booking status data available.
-        </p>
-      </Card>
-    );
-  }
+  if (!data || !data.bookingStatusSummary || data.bookingStatusSummary.length === 0) {
+  return (
+    <Card className="flex items-center justify-center h-80">
+      <p className="text-gray-500 dark:text-gray-400 text-sm">
+        No booking status data available.
+      </p>
+    </Card>
+  );
+}
+
 
   const chartData = data.bookingStatusSummary.map((item) => ({
     status: item.status,

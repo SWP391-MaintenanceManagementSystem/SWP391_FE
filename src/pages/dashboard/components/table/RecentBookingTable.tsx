@@ -42,13 +42,14 @@ export default function RecentBookingTable() {
   const columns = getColumns();
 
   return (
-    <Card className="w-full h-[calc(100vh-32px)] shadow-sm">
+    <Card className="w-full h-full shadow-sm">
       <CardHeader className="pb-3">
         <CardTitle className="text-lg font-semibold">
           Recent Bookings
         </CardTitle>
       </CardHeader>
-      <CardContent>
+
+      <CardContent className="h-full">
         <DataTable<Booking, unknown>
           columns={columns as ColumnDef<Booking, unknown>[]}
           data={bookings}
