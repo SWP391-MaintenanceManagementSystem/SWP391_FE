@@ -1,4 +1,3 @@
-// src/types/models/subscription.ts
 import type { SubscriptionStatus } from "../enums/subscriptionStatus"
 import type { Membership } from "./membership"
 

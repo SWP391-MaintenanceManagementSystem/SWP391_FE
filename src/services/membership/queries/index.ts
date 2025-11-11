@@ -1,6 +1,11 @@
 import { queryKeys } from "./keys";
 import { useQuery } from "@tanstack/react-query";
-import { getAllMemberships, getMySubscription } from "../apis/membership.api";
+import { toast } from "sonner";
+import {
+  getAllMemberships,
+  getMySubscription,
+  getMySubscriptions,
+} from "../apis/membership.api";
 
 export const useGetAllMemberships = () => {
   return useQuery({
@@ -9,8 +14,8 @@ export const useGetAllMemberships = () => {
       try {
         const response = await getAllMemberships();
         return response.data.data;
-      } catch (error) {
-        console.log("Failed to fetch all memberships");
+      } catch {
+        toast.error("Failed to fetch my memberships");
         return [];
       }
     },
@@ -24,9 +29,25 @@ export const useGetMySubscription = () => {
       try {
         const response = await getMySubscription();
         return response.data.data;
-      } catch (error) {
-        console.log("Failed to fetch my subscription");
+      } catch {
+        toast.error("Failed to fetch subscription");
         return null;
+      }
+    },
+  });
+};
+
+export const useGetMySubscriptions = () => {
+  return useQuery({
+    queryKey: queryKeys.subscriptions,
+    queryFn: async () => {
+      try {
+        const response = await getMySubscriptions();
+        toast.success("Fetched all subscriptions successfully");
+        return response.data.data;
+      } catch {
+        toast.error("Failed to fetch all subscriptions");
+        return [];
       }
     },
   });
