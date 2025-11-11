@@ -28,7 +28,7 @@ export function CustomerBookingStatusChart({
 }: CustomerBookingStatusChartProps) {
   const [open, setOpen] = React.useState(false);
 
-  if (!data?.bookingStatusSummary || data.bookingStatusSummary.length === 0) {
+  if (data?.bookingTotal === 0 || !data?.bookingStatusSummary) {
     return (
       <Card className="flex items-center justify-center h-80">
         <p className="text-gray-500 dark:text-gray-400 text-sm">
@@ -38,7 +38,7 @@ export function CustomerBookingStatusChart({
     );
   }
 
-  const chartData = data.bookingStatusSummary.map((item) => ({
+  const chartData = data?.bookingStatusSummary.map((item) => ({
     status: item.status,
     count: item.count,
     fill: statusColors[item.status as keyof typeof statusColors],
@@ -50,7 +50,7 @@ export function CustomerBookingStatusChart({
     FINISHED: { label: "Finished", color: statusColors.FINISHED },
   };
 
-  const total = data.bookingStatusSummary.reduce((sum, s) => sum + s.count, 0);
+  const total = data?.bookingStatusSummary.reduce((sum, s) => sum + s.count, 0);
 
   return (
     <>

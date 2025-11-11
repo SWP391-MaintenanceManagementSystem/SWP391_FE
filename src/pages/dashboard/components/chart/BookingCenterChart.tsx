@@ -35,7 +35,11 @@ export function CustomerBookingsByCenterChart({
 }: CustomerBookingsByCenterChartProps) {
   const [open, setOpen] = React.useState(false);
 
-  if (!data?.bookingsByCenter || data.bookingsByCenter.length === 0) {
+  if (
+    !data?.bookingsByCenter ||
+    data.bookingsByCenter.length === 0 ||
+    data.bookingTotal === 0
+  ) {
     return (
       <Card className="flex items-center justify-center h-80">
         <p className="text-gray-500 dark:text-gray-400 text-sm">
