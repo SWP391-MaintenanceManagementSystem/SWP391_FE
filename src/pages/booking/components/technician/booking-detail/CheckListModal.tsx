@@ -44,6 +44,7 @@ export default function CheckListModal({
   onOpenChange,
   bookingData,
 }: CheckListModalProps) {
+  console.log("🚀 ~ CheckListModal ~ bookingData:", bookingData);
   const [tasks, setTasks] = useState<TaskItem[]>([]);
   const [note, setNote] = useState("");
   const [isDone, setIsDone] = useState(false);
@@ -63,7 +64,7 @@ export default function CheckListModal({
         ...t,
         done: true,
         services: t.services?.map((s) => ({ ...s, done: true })) || t.services,
-      })),
+      }))
     );
     setIsDone(true);
     localStorage.removeItem(`booking-progress-${bookingData?.id}`);
@@ -115,13 +116,13 @@ export default function CheckListModal({
   }, [bookingData]);
 
   const handleToggle = (id: string, parentId?: string) => {
-    if (!canCheck) return; 
+    if (!canCheck) return;
 
     setTasks((prev) =>
       prev.map((t) => {
         if (parentId && t.id === parentId && t.services) {
           const updatedServices = t.services.map((srv) =>
-            srv.id === id ? { ...srv, done: !srv.done } : srv,
+            srv.id === id ? { ...srv, done: !srv.done } : srv
           );
           const allDone = updatedServices.every((srv) => srv.done);
           return { ...t, services: updatedServices, done: allDone };
@@ -143,7 +144,7 @@ export default function CheckListModal({
         }
 
         return t;
-      }),
+      })
     );
   };
 
@@ -333,7 +334,12 @@ export default function CheckListModal({
 
                 <Button
                   onClick={handleDone}
-                  disabled={isDone || completed !== tasks.length || isPending || !canCheck}
+                  disabled={
+                    isDone ||
+                    completed !== tasks.length ||
+                    isPending ||
+                    !canCheck
+                  }
                   className="bg-purple-primary hover:bg-purple-500 dark:bg-purple-light dark:hover:bg-purple-950 dark:text-amber-primary text-white"
                 >
                   {isPending ? "Completing..." : "Done"}

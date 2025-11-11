@@ -38,7 +38,7 @@ export const getColumns = () => {
 
     // Customer
     columnHelper.accessor("customer", {
-      id: "customerName",
+      id: "fullName",
       header: (info) => <SortHeader title="Customer" info={info} />,
       size: 180,
       cell: (info) => {
@@ -89,11 +89,7 @@ export const getColumns = () => {
     columnHelper.accessor((row) => row.serviceCenter?.name ?? "", {
       id: "center",
       header: (info) => <SortHeader title="Service Center" info={info} />,
-      cell: (info) => (
-        <Badge variant="outline">
-          {info.getValue() || "—"}
-        </Badge>
-      ),
+      cell: (info) => <Badge variant="outline">{info.getValue() || "—"}</Badge>,
       enableSorting: true,
       sortingFn: "alphanumeric",
       size: 180,
@@ -102,43 +98,26 @@ export const getColumns = () => {
 
     // Status (filter dropdown)
     columnHelper.accessor("status", {
-  id: "status",
-  header: ({ column }) => (
-    <FilterHeader
-      column={column}
-      title="Status"
-      selectedValue={column.getFilterValue() as string}
-      onFilterChange={(v) => column.setFilterValue(v || undefined)}
-    />
-  ),
-  meta: {
-    filterOptions: ["ASSIGNED", "COMPLETED", "CANCELLED", "CHECKED_OUT"],
-    labelOptions: {
-      ASSIGNED: "Assigned",
-      COMPLETED: "Completed",
-      CANCELLED: "Cancelled",
-      CHECKED_OUT: "Checked Out",
-    },
-  },
-  cell: (info) => <BookingTag status={info.getValue()} />,
-  size: 120
-}),
-
-
-    // Assigner
-    columnHelper.accessor("assigner", {
-      id: "fullName",
-      header: (info) => <SortHeader title="Assigner" info={info} />,
-      cell: (info) => {
-        const a = info.getValue();
-        return (
-          <span className="text-gray-700 dark:text-gray-300">
-            {a ? `${a.firstName} ${a.lastName}` : "—"}
-          </span>
-        );
+      id: "status",
+      header: ({ column }) => (
+        <FilterHeader
+          column={column}
+          title="Status"
+          selectedValue={column.getFilterValue() as string}
+          onFilterChange={(v) => column.setFilterValue(v || undefined)}
+        />
+      ),
+      meta: {
+        filterOptions: ["ASSIGNED", "COMPLETED", "CANCELLED", "CHECKED_OUT"],
+        labelOptions: {
+          ASSIGNED: "Assigned",
+          COMPLETED: "Completed",
+          CANCELLED: "Cancelled",
+          CHECKED_OUT: "Checked Out",
+        },
       },
-      size: 160,
-      meta: { title: "Assigner" },
+      cell: (info) => <BookingTag status={info.getValue()} />,
+      size: 120,
     }),
 
     // Actions

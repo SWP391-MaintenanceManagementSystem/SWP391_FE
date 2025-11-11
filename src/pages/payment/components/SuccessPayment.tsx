@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { CheckCircle2, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -33,8 +32,6 @@ export default function SuccessPayment() {
   const { data, isLoading, isError } = isFree
     ? freeTransactionQuery
     : paidTransactionQuery;
-
-  const [showBackButton, setShowBackButton] = useState(false);
 
   if (isLoading)
     return (
@@ -125,11 +122,10 @@ export default function SuccessPayment() {
           </div>
 
           {transaction.referenceType === ReferenceType.BOOKING && (
-            <FeedbackSection onSubmit={() => setShowBackButton(true)} />
+            <FeedbackSection bookingId={transaction.referenceId} />
           )}
 
-          {(transaction.referenceType !== ReferenceType.BOOKING ||
-            showBackButton) && (
+          {transaction.referenceType !== ReferenceType.BOOKING && (
             <Button variant="outline" className="w-full mt-4" asChild>
               <Link
                 to="/dashboard"

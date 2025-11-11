@@ -5,6 +5,7 @@ import type {
 } from "@/pages/booking/lib/schema";
 import type {
   Booking,
+  BookingFeedbackPayload,
   BookingFilters,
   CustomerBookingHistory,
 } from "@/types/models/booking";
@@ -64,5 +65,12 @@ export const getBookingHistory = async (params: BookingFilters) => {
   const response = await httpPrivate.get<
     BaseResponse<PaginationResponse<CustomerBookingHistory>>
   >("/bookings/history", { params });
+  return response.data;
+};
+
+export const submitBookingFeedback = async (payload: BookingFeedbackPayload) => {
+  const response = await axiosPrivate.post<
+    BaseResponse<{ data: Booking }>
+  >("/bookings/feedback", payload);
   return response.data;
 };

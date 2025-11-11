@@ -7,6 +7,7 @@ import {
   ChartLegend,
   ChartLegendContent,
 } from "@/components/ui/chart";
+import { toCapitalize } from "@/utils";
 
 export const description = "A donut chart with text";
 type ChartPieDonutTextProps = {
@@ -42,13 +43,13 @@ export function ChartPieDonutText({
             const color = item.fill || payload[0].color;
 
             return (
-              <div className="flex items-center gap-2 rounded-md bg-background px-2 py-1 shadow-sm text-sm">
+              <div className="flex items-center gap-2 rounded-md bg-background px-2 py-1 shadow-sm text-sm ">
                 <span
                   className="inline-block h-3 w-3"
                   style={{ backgroundColor: color }}
                 />
                 <span className="text-xs">
-                  {name} {value}
+                  {toCapitalize(name as string)} {value}
                 </span>
               </div>
             );

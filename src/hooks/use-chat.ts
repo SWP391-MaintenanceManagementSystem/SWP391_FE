@@ -19,13 +19,13 @@ export function useChat(userId: string, role: "CUSTOMER" | "STAFF") {
     socket.on("connect", () => {
       setConnected(true);
       console.log("[Socket] Connected:", socket.id);
-      socket.emit("register", userId);
+      socket.emit("register");
     });
 
     socket.on("disconnect", () => {
       setConnected(false);
       console.log("[Socket] Disconnected");
-      toast.error("Disconnected from chat service");
+      // toast.error("Disconnected from chat service");
     });
 
     socket.on("connect_error", (err) => {
@@ -102,7 +102,14 @@ export function useChat(userId: string, role: "CUSTOMER" | "STAFF") {
     });
 
     return () => {
-      socket.removeAllListeners();
+      socket.off("connect");
+      socket.off("disconnect");
+      socket.off("connect_error");
+      socket.off("message");
+      socket.off("message_sent");
+      socket.off("ticket_claimed");
+      socket.off("ticket_updated");
+      socket.off("ticket_closed");
       socket.disconnect();
     };
   }, [userId]);

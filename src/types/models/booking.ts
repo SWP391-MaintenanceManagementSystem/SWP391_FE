@@ -13,6 +13,10 @@ export type Booking = {
   note?: string;
   createdAt: Date;
   updatedAt: Date;
+  center?: {
+    id: string;
+    name: string;
+  };
 };
 
 export type BookingFilters = {
@@ -29,6 +33,7 @@ export type BookingFilters = {
   pageSize?: number;
   sortBy?: string;
   orderBy?: "asc" | "desc";
+  isActive?: boolean;
 };
 
 export const defaultBookingFilter: BookingFilters = {
@@ -95,3 +100,10 @@ export type CustomerBookingHistory = Omit<
   CustomerBookingDetails,
   "bookingDetails"
 >;
+
+export type BookingFeedbackPayload = {
+  bookingId: string;
+  feedback: string;
+  rating: number;
+  note?: string;
+}
