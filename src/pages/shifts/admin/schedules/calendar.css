@@ -1,11 +1,9 @@
-/* calendar.css */
-
-.rbc-month-view .rbc-day-bg:hover {
+.schedule-calendar-plus .rbc-month-view .rbc-date-cell:hover {
     background-color: rgba(139, 92, 246, 0.15);
     cursor: pointer;
 }
 
-.rbc-month-view .rbc-day-bg:hover::after {
+.schedule-calendar-plus .rbc-month-view .rbc-date-cell:hover::after {
     content: "+";
     position: absolute;
     top: 50%;
@@ -15,14 +13,19 @@
     font-weight: bold;
     color: #8b5cf6;
     pointer-events: none;
+    z-index: 10;
+}
+.schedule-calendar-plus .rbc-date-cell {
+    position: relative;
+    min-height: 105px;
 }
 
-.rbc-month-view .rbc-day-bg {
+.schedule-calendar-plus .rbc-month-view .rbc-day-bg {
     position: relative;
     transition: background-color 0.2s;
 }
 
-.rbc-toolbar-label {
+.schedule-calendar-plus .rbc-toolbar-label {
     font-size: 30px;
     font-weight: 700;
     text-transform: capitalize;
