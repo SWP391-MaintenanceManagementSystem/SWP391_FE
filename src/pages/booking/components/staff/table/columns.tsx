@@ -1,5 +1,4 @@
 import { createColumnHelper } from "@tanstack/react-table";
-import { Checkbox } from "@/components/ui/checkbox";
 import SortHeader from "@/components/table/SortHeader";
 import FilterHeader from "@/components/table/FilterHeader";
 import { Badge } from "@/components/ui/badge";
@@ -21,29 +20,15 @@ export const getColumns = (
   const columnHelper = createColumnHelper<BookingTable>();
 
   return [
-    // SELECT checkbox
     columnHelper.display({
-      id: "select",
-      header: ({ table }) => (
-        <Checkbox
-          checked={
-            table.getIsAllPageRowsSelected() ||
-            (table.getIsSomePageRowsSelected() && "indeterminate")
-          }
-          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-          aria-label="Select all"
-          className="!outline-none"
-        />
-      ),
-      size: 10,
-      cell: ({ row }) => (
-        <Checkbox
-          checked={row.getIsSelected()}
-          onCheckedChange={(value) => row.toggleSelected(!!value)}
-          aria-label="Select row"
-          className="!outline-none"
-        />
-      ),
+      id: "number",
+      header: "#",
+      size: 50,
+      cell: ({ row, table }) =>
+        row.index +
+        1 +
+        table.getState().pagination.pageIndex *
+          table.getState().pagination.pageSize,
       enableSorting: false,
       enableHiding: false,
     }),

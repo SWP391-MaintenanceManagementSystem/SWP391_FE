@@ -6,16 +6,65 @@ import {
   IdCardLanyard,
   MessageCircleMore,
   User2,
-  Users
+  Users,
 } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import { Skeleton } from "@/components/ui/skeleton";
-import type {
-  StaffDashboardData,
-} from "@/types/models/dashboard";
+import type { StaffDashboardData } from "@/types/models/dashboard";
+import { TooltipWrapper } from "@/components/TooltipWrapper";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import type { ServiceCenter } from "@/types/models/center";
+import { useState } from "react";
+import { useGetServiceCenterList } from "@/services/manager/queries";
+
+type DetailCenterListDialogProps = {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  items: ServiceCenter[];
+};
+
+const DetailsCenterListDialog = ({
+  open,
+  onOpenChange,
+  items,
+}: DetailCenterListDialogProps) => (
+  <Dialog open={open} onOpenChange={onOpenChange}>
+    <DialogContent className="max-w-md ">
+      <DialogHeader>
+        <DialogTitle>Service Center List</DialogTitle>
+      </DialogHeader>
+      <ul className="mt-2 space-y-2 max-h-[500px] overflow-y-auto">
+        {items?.length > 0 ? (
+          items.map((item, index) => (
+            <li
+              key={index}
+              className="flex flex-col justify-between text-sm border-b pb-1 border-gray-200 dark:border-gray-700"
+            >
+              <span className="font-medium text-gray-800 dark:text-gray-200">
+                {item.name ?? item.name ?? "Unnamed"}
+              </span>
+              <span className="font-medium text-gray-400">{item.address}</span>
+            </li>
+          ))
+        ) : (
+          <p className="text-sm text-gray-500 dark:text-gray-400">
+            No data available.
+          </p>
+        )}
+      </ul>
+    </DialogContent>
+  </Dialog>
+);
 
 export function OverviewAdmin() {
   const { data, isLoading } = useGetAdminOverview();
+  const [openCenterList, setOpenCenterList] = useState(false);
+  const { data: serviceCenters } = useGetServiceCenterList();
 
   if (isLoading) {
     return (
@@ -59,10 +108,21 @@ export function OverviewAdmin() {
           numberValue={data?.totalEmployees ?? "N/A"}
         />
       </NavLink>
-      <TotalCard
-        title="Total Service Center"
-        icon={Hotel}
-        numberValue={data?.totalServiceCenters ?? "N/A"}
+      <TooltipWrapper content="View Service Center List">
+        <div className="cursor-pointer">
+          <TotalCard
+            title="Total Service Center"
+            icon={Hotel}
+            numberValue={data?.totalServiceCenters ?? "N/A"}
+            onClick={() => setOpenCenterList(!openCenterList)}
+          />
+        </div>
+      </TooltipWrapper>
+
+      <DetailsCenterListDialog
+        open={openCenterList}
+        onOpenChange={() => setOpenCenterList(false)}
+        items={serviceCenters ?? []}
       />
     </div>
   );
@@ -104,4 +164,3 @@ export function OverviewStaff({
     </div>
   );
 }
-
