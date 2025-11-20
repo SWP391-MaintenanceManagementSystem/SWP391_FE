@@ -76,11 +76,13 @@ SWP391_FE/
 ├── src/
 │   ├── components/   # Reusable UI components
 │   ├── pages/        # Top-level page components
-│   ├── lib/          # Utilities, Axios instance
+│   ├── lib/          # Library configuarations
 │   ├── hooks/        # Custom React hooks
 │   ├── contexts/     # React context providers (e.g., Auth)
 │   ├── services/     # API services, queries, and mutations
 │   ├── router/       # Routing configuration
+│   ├── utils/        # Utilities
+│   ├── types/        # Data types and enums
 │   ├── App.tsx
 │   └── main.tsx
 ├── .env.example
