@@ -55,7 +55,9 @@ cp .env.example .env
 
 ```
 # The base URL for the backend API
-VITE_API_BASE_URL=http://localhost:8080
+VITE_API_URL=
+# The public key for Stripe
+VITE_STRIPE_PUBLIC_KEY=
 ```
 
 ### Run the Application
