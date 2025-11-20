@@ -104,7 +104,7 @@ const BookingCalendar = ({ initialVehicleId }: Props) => {
             end: dayjs(b.bookingDate).add(30, "minute").toDate(),
           };
         }) ?? [],
-    [bookingData]
+    [bookingData],
   );
 
   if (isLoading) {
@@ -155,9 +155,9 @@ const BookingCalendar = ({ initialVehicleId }: Props) => {
   };
 
   return (
-    <div className="h-[95%] font-inter">
+    <div className="h-full font-inter">
       <Card className="h-full flex flex-col">
-        <CardHeader className="flex items-center justify-between p-4 pb-2">
+        <CardHeader className="flex items-center justify-between pb-2">
           <CardTitle className="flex items-center gap-2">
             <CalendarIcon className="h-5 w-5" />
             Bookings Calendar
@@ -170,7 +170,7 @@ const BookingCalendar = ({ initialVehicleId }: Props) => {
             Booking
           </Button>
         </CardHeader>
-        <CardContent className="flex-1 p-0 overflow-hidden">
+        <CardContent className="flex-1 overflow-hidden">
           <div className="h-full">
             <Calendar
               localizer={localizer}
