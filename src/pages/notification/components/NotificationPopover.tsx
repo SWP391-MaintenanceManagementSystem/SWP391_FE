@@ -153,17 +153,19 @@ export default function NotificationsPopover() {
         {/* Header */}
         <div className="flex justify-between items-center p-2">
           <h2 className="font-semibold text-xl">Your Notifications</h2>
-          {unreadCount > 0 && (
-            <Button
-              size="sm"
-              className="border-0 shadow-none"
-              variant="outline"
-              onClick={onMarkAsReadAll}
-            >
-              <CheckCheck />
-              Mark all read
-            </Button>
-          )}
+          {(groupedNotifications.today.length > 0 ||
+            groupedNotifications.yesterday.length > 0) &&
+            unreadCount > 0 && (
+              <Button
+                size="sm"
+                className="border-0 shadow-none"
+                variant="outline"
+                onClick={onMarkAsReadAll}
+              >
+                <CheckCheck />
+                Mark all read
+              </Button>
+            )}
         </div>
 
         {/* Tabs */}
@@ -204,10 +206,10 @@ export default function NotificationsPopover() {
                         </h3>
                         <p className="text-muted-foreground text-sm">
                           {activeTab === "unread"
-                            ? "You're all caught up! No unread notifications."
+                            ? "No unread notifications from the last 48 hours."
                             : activeTab === "read"
-                              ? "No read notifications found."
-                              : "You don't have any notifications yet."}
+                              ? "No read notifications from the last 48 hours."
+                              : "You don't have any notifications from the last 48 hours."}
                         </p>
                       </div>
                     )}
