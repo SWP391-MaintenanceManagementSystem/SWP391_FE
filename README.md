@@ -1,6 +1,6 @@
-# 🚗 Auto Maintenance Management System - Frontend
+# 🚗 EV Service Center Maintenance Management System - Frontend
 
-This is the frontend for the Auto Maintenance Management System, a web application designed to streamline vehicle maintenance operations. It provides a user-friendly interface for customers, technicians, and administrators to manage bookings, services, and vehicle information.
+This is the frontend for the EV Service Center Maintenance Management System, a web application designed to streamline vehicle maintenance operations. It provides a user-friendly interface for customers, technicians, and administrators to manage bookings, services, and vehicle information.
 
 ## 📝 Features
 
