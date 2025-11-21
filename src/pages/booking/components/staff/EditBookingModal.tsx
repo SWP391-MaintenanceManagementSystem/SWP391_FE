@@ -6,18 +6,16 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import VehicleSelector from "../VehicleSelector";
-import ServiceCenterSelector from "../ServiceCenterSelector";
-import DateTimeSelector from "../DateTimeSelector";
-import ServicesSelector from "../ServicesSelector";
-import NoteField from "../NoteField";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import useVehicles from "@/services/vehicle/hooks/useVehicles";
-import useCenters from "@/services/center/hooks/useCenters";
-import PackagesSelector from "../PackagesSelector";
 import { useEditBookingForm } from "@/services/booking/hooks/useEditBookingForm";
 import type { CustomerBookingDetails } from "@/types/models/booking-with-detail";
 import { Loader2 } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import dayjs from "dayjs";
+import ServicesSelector from "../customer/ServicesSelector";
+import PackagesSelector from "../customer/PackagesSelector";
+import { Textarea } from "@/components/ui/textarea";
 
 export default function EditBookingModal({
   open,
@@ -28,8 +26,6 @@ export default function EditBookingModal({
   onClose: () => void;
   booking: CustomerBookingDetails;
 }) {
-  const { data: vehicles = [] } = useVehicles();
-  const { data: centers = [] } = useCenters();
   const { form, onSubmit, isPending } = useEditBookingForm(booking);
 
   const handleClose = () => {
@@ -40,7 +36,7 @@ export default function EditBookingModal({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     await form.handleSubmit(async (data) => {
-      await onSubmit(data, "CUSTOMER");
+      await onSubmit(data, "STAFF");
       handleClose();
     })();
   };
@@ -60,9 +56,17 @@ export default function EditBookingModal({
             onSubmit={handleSubmit}
             className="flex flex-col gap-y-3"
           >
-            <VehicleSelector form={form} vehicles={vehicles} disabled />
-            <ServiceCenterSelector form={form} centers={centers} disabled />
-            <DateTimeSelector control={form.control} />
+            <Label htmlFor="vehicle">Customer Vehicle</Label>
+            <Input id="vehicle" readOnly value={booking.vehicle.licensePlate} />
+            <Label htmlFor="center">Service Center</Label>
+            <Input id="center" readOnly value={booking.serviceCenter.name} />
+            <Label htmlFor="date">Date and Time</Label>
+            <Input
+              id="date"
+              readOnly
+              value={dayjs(booking.bookingDate).format("DD MMM YYYY - HH:mm")}
+            />
+
             <ServicesSelector
               form={form}
               initialServices={booking.bookingDetails.services}
@@ -71,7 +75,8 @@ export default function EditBookingModal({
               form={form}
               initialPackages={booking.bookingDetails.packages}
             />
-            <NoteField form={form} />
+            <Label htmlFor="note">CustomerNote</Label>
+            <Textarea id="note" readOnly value={booking.note} />
           </form>
         </ScrollArea>
         <DialogFooter className="sticky px-5 py-3 border-t">
@@ -87,7 +92,7 @@ export default function EditBookingModal({
           <Button
             type="submit"
             form="edit-booking-form"
-            disabled={isPending || !form.formState.isDirty}
+            disabled={isPending}
             className="md:w-1/2 py-2 text-sm w-full"
           >
             {isPending ? (

@@ -21,6 +21,7 @@ import {
   startTechnicianBooking,
 } from "../apis/technician-booking.api";
 import type { BookingFeedbackPayload } from "@/types/models/booking";
+import { staffUpdateBooking } from "../apis/staff-booking.api";
 
 export const useCreateBookingMutation = () => {
   const queryClient = useQueryClient();
@@ -40,20 +41,31 @@ export const useCreateBookingMutation = () => {
   });
 };
 
-export const useUpdateBookingMutation = () => {
+export const useUpdateBookingMutation = (role: "STAFF" | "CUSTOMER") => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async ({ data }: { data: EditBookingFormValues }) => {
-      const { id, bookingDate, note, packageIds, serviceIds, vehicleId } = data;
-      const updatedBooking = await customerUpdateBooking({
-        id,
-        bookingDate,
-        note,
-        packageIds: packageIds || [],
-        serviceIds: serviceIds || [],
-        vehicleId,
-      });
-      return updatedBooking.data;
+      if (role === "CUSTOMER") {
+        const { id, bookingDate, note, packageIds, serviceIds, vehicleId } =
+          data;
+        const updatedBooking = await customerUpdateBooking({
+          id,
+          bookingDate,
+          note,
+          packageIds: packageIds || [],
+          serviceIds: serviceIds || [],
+          vehicleId,
+        });
+        return updatedBooking.data;
+      } else if (role === "STAFF") {
+        const { id, packageIds, serviceIds } = data;
+        const updatedBooking = await staffUpdateBooking({
+          id,
+          packageIds: packageIds || [],
+          serviceIds: serviceIds || [],
+        });
+        return updatedBooking.data;
+      }
     },
     onSuccess: async (_data, variables) => {
       const bookingId = variables.data.id;
@@ -68,7 +80,6 @@ export const useUpdateBookingMutation = () => {
           queryKey: ["staff-bookings"],
         }),
       ]);
-      toast.success("Booking updated successfully");
     },
     onError: (error) => {
       let msg = "Failed to update booking";
@@ -157,7 +168,7 @@ export const useUnBookingAssignmentMutation = () => {
       ]);
 
       toast.success(
-        `Unassigned technician with email ${variables.employeeEmail} successfully`
+        `Unassigned technician with email ${variables.employeeEmail} successfully`,
       );
     },
     onError: () => {
@@ -167,7 +178,7 @@ export const useUnBookingAssignmentMutation = () => {
 };
 
 export const useCompleteTechnicianBookingMutation = (
-  handleOnSuccess: () => void
+  handleOnSuccess: () => void,
 ) => {
   const queryClient = useQueryClient();
 

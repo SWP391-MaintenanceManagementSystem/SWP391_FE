@@ -14,7 +14,8 @@ import type { CustomerBookingDetails } from "@/types/models/booking-with-detail"
 
 export const useEditBookingForm = (booking: CustomerBookingDetails) => {
   const queryClient = useQueryClient();
-  const updateBookingMutation = useUpdateBookingMutation();
+  const cusUpdateBookingMutation = useUpdateBookingMutation("CUSTOMER");
+  const staffUpdateBookingMutation = useUpdateBookingMutation("STAFF");
 
   const serviceIds = booking.bookingDetails.services.map((s) => s.id);
   const packageIds = booking.bookingDetails.packages.map((p) => p.id);
@@ -46,40 +47,76 @@ export const useEditBookingForm = (booking: CustomerBookingDetails) => {
     };
     form.reset(newDefaults);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [booking.id, booking.bookingDate, booking.note, serviceIds.length, packageIds.length]);
+  }, [
+    booking.id,
+    booking.bookingDate,
+    booking.note,
+    serviceIds.length,
+    packageIds.length,
+  ]);
 
-  const onSubmit = async (data: EditBookingFormValues) => {
-    return updateBookingMutation.mutateAsync(
-      {
-        data,
-      },
-      {
-        onSuccess: () => {
-          queryClient.invalidateQueries({
-            queryKey: ["bookings"],
-          });
-          queryClient.invalidateQueries({
-            queryKey: ["booking", booking.id],
-          });
-          toast.success("Booking updated successfully");
+  const onSubmit = async (
+    data: EditBookingFormValues,
+    role: "STAFF" | "CUSTOMER",
+  ) => {
+    if (role === "CUSTOMER") {
+      await cusUpdateBookingMutation.mutateAsync(
+        {
+          data,
         },
-        onError: (error) => {
-          let msg = "Failed to update booking";
-          if (error instanceof AxiosError) {
-            msg = error.response?.data?.message || msg;
-            if (msg.includes("shift")) {
-              form.setError("bookingDate", {
-                type: "manual",
-                message: msg,
-              });
-              return;
+        {
+          onSuccess: () => {
+            queryClient.invalidateQueries({
+              queryKey: ["bookings"],
+            });
+            queryClient.invalidateQueries({
+              queryKey: ["booking", booking.id],
+            });
+            toast.success("Booking updated successfully");
+          },
+          onError: (error) => {
+            let msg = "Failed to update booking";
+            if (error instanceof AxiosError) {
+              msg = error.response?.data?.message || msg;
+              if (msg.includes("shift")) {
+                form.setError("bookingDate", {
+                  type: "manual",
+                  message: msg,
+                });
+                return;
+              }
             }
-          }
-          toast.error(msg);
-          console.error(error);
+            toast.error(msg);
+            console.error(error);
+          },
         },
-      }
-    );
+      );
+    } else {
+      await staffUpdateBookingMutation.mutateAsync(
+        {
+          data,
+        },
+        {
+          onSuccess: () => {
+            queryClient.invalidateQueries({
+              queryKey: ["bookings"],
+            });
+            queryClient.invalidateQueries({
+              queryKey: ["booking", booking.id],
+            });
+            toast.success("Booking updated successfully");
+          },
+          onError: (error) => {
+            let msg = "Failed to update booking";
+            if (error instanceof AxiosError) {
+              msg = error.response?.data?.message || msg;
+            }
+            toast.error(msg);
+            console.error(error);
+          },
+        },
+      );
+    }
   };
 
   const reset = () => form.reset();
@@ -88,6 +125,8 @@ export const useEditBookingForm = (booking: CustomerBookingDetails) => {
     form,
     onSubmit,
     reset,
-    isPending: updateBookingMutation.isPending,
+    isPending:
+      cusUpdateBookingMutation.isPending ||
+      staffUpdateBookingMutation.isPending,
   };
 };
