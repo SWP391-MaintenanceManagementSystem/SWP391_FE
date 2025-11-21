@@ -41,7 +41,10 @@ export default function ServiceCenterSelector<T extends FieldValues>({
         disabled={disabled}
       >
         <SelectTrigger
-          className={cn(centerIdError && "border-red-500", "w-full")}
+          className={cn(
+            centerIdError && "border-red-500",
+            "w-full max-w-[460px]",
+          )}
         >
           <SelectValue placeholder="Select service center" />
         </SelectTrigger>
@@ -53,7 +56,9 @@ export default function ServiceCenterSelector<T extends FieldValues>({
               className="py-2 px-3 flex flex-col items-start leading-tight"
             >
               <span className="text-sm font-medium">{center.name}</span>
-              <span className="text-xs text-gray-500">{center.address}</span>
+              <span className="text-xs text-gray-500 truncate ">
+                {center.address}
+              </span>
             </SelectItem>
           ))}
         </SelectContent>
