@@ -9,13 +9,22 @@ import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useEditBookingForm } from "@/services/booking/hooks/useEditBookingForm";
 import type { CustomerBookingDetails } from "@/types/models/booking-with-detail";
-import { Loader2 } from "lucide-react";
+import { ChevronDown, Loader2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import dayjs from "dayjs";
 import ServicesSelector from "../customer/ServicesSelector";
 import PackagesSelector from "../customer/PackagesSelector";
 import { Textarea } from "@/components/ui/textarea";
+import { DropdownMenu } from "@radix-ui/react-dropdown-menu";
+import {
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import BookingTag from "@/components/tag/BookingTag";
+import { BookingStatus } from "@/types/enums/bookingStatus";
+import { Controller } from "react-hook-form";
 
 export default function EditBookingModal({
   open,
@@ -60,12 +69,54 @@ export default function EditBookingModal({
             <Input id="vehicle" readOnly value={booking.vehicle.licensePlate} />
             <Label htmlFor="center">Service Center</Label>
             <Input id="center" readOnly value={booking.serviceCenter.name} />
-            <Label htmlFor="date">Date and Time</Label>
-            <Input
-              id="date"
-              readOnly
-              value={dayjs(booking.bookingDate).format("DD MMM YYYY - HH:mm")}
-            />
+            <div className="flex gap-4">
+              {/* Date */}
+              <div className="flex-1">
+                <Label htmlFor="date" className="mb-2">
+                  Date and Time
+                </Label>
+                <Input
+                  id="date"
+                  readOnly
+                  value={dayjs(booking.bookingDate).format(
+                    "DD MMM YYYY - HH:mm",
+                  )}
+                />
+              </div>
+
+              {/* Status dropdown */}
+              {booking.status === BookingStatus.CANCELLED && (
+                <div className="flex-1">
+                  <Label htmlFor="status" className="mb-2">
+                    Status
+                  </Label>
+                  <Controller
+                    name="status"
+                    control={form.control}
+                    defaultValue={BookingStatus.CANCELLED}
+                    render={({ field }) => (
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="outline" className="w-full">
+                            <BookingTag status={field.value as BookingStatus} />
+                            <ChevronDown className="ml-2 h-4 w-4" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent>
+                          <DropdownMenuItem
+                            onClick={() =>
+                              field.onChange(BookingStatus.PENDING)
+                            }
+                          >
+                            <BookingTag status={BookingStatus.PENDING} />
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    )}
+                  />
+                </div>
+              )}
+            </div>
 
             <ServicesSelector
               form={form}

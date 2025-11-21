@@ -2,6 +2,7 @@ import dayjs from "dayjs";
 import { z } from "zod";
 import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
+import { BookingStatus } from "@/types/enums/bookingStatus";
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
@@ -65,6 +66,7 @@ export type BookingAssignmentFormValues = z.infer<
 export const EditBookingSchema = CreateBookingSchema.partial()
   .extend({
     id: z.string().min(1, "Booking ID is required"),
+    status: z.string().optional(),
   })
   .superRefine((data, ctx) => {
     const hasService = data.serviceIds && data.serviceIds.length > 0;
@@ -88,6 +90,9 @@ export const EditBookingSchema = CreateBookingSchema.partial()
       data.bookingDate = dayjs(data.bookingDate)
         .tz("Asia/Ho_Chi_Minh")
         .format();
+    }
+    if (data.status === BookingStatus.CANCELLED) {
+      data.status = BookingStatus.PENDING;
     }
     return data;
   });

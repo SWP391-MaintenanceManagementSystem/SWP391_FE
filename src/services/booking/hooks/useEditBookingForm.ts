@@ -28,6 +28,7 @@ export const useEditBookingForm = (booking: CustomerBookingDetails) => {
     packageIds: packageIds.length > 0 ? packageIds : undefined,
     bookingDate: dayjs(booking.bookingDate).format("YYYY-MM-DDTHH:mm"),
     note: booking.note || "",
+    status: booking.status,
   };
 
   const form = useForm<EditBookingFormValues>({
@@ -44,6 +45,7 @@ export const useEditBookingForm = (booking: CustomerBookingDetails) => {
       packageIds: packageIds.length > 0 ? packageIds : undefined,
       bookingDate: dayjs(booking.bookingDate).format("YYYY-MM-DDTHH:mm"),
       note: booking.note || "",
+      status: booking.status,
     };
     form.reset(newDefaults);
     // eslint-disable-next-line react-hooks/exhaustive-deps

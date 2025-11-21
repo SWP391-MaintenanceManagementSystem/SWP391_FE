@@ -58,11 +58,12 @@ export const useUpdateBookingMutation = (role: "STAFF" | "CUSTOMER") => {
         });
         return updatedBooking.data;
       } else if (role === "STAFF") {
-        const { id, packageIds, serviceIds } = data;
+        const { id, packageIds, serviceIds, status } = data;
         const updatedBooking = await staffUpdateBooking({
           id,
           packageIds: packageIds || [],
           serviceIds: serviceIds || [],
+          status,
         });
         return updatedBooking.data;
       }

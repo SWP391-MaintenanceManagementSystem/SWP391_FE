@@ -126,7 +126,8 @@ export default function ViewBookingDetail() {
 
               {(data?.status === "PENDING" ||
                 data?.status === "ASSIGNED" ||
-                data?.status === "CHECKED_IN") && (
+                data?.status === "CHECKED_IN" ||
+                data?.status === "CANCELLED") && (
                 <Button
                   onClick={() => setIsEditModalOpen(true)}
                   variant="default"
