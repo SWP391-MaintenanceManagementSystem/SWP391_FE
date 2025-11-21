@@ -53,7 +53,7 @@ type ServiceInfo = {
   status: BookingDetailStatus;
 };
 
-type PackageInfo = {
+export type PackageInfo = {
   id: string;
   bookingDetailId: string;
   name: string;
