@@ -1,5 +1,9 @@
 import { useMemo, useState, useEffect } from "react";
-import { type FieldValues, type Path, type UseFormReturn } from "react-hook-form";
+import {
+  type FieldValues,
+  type Path,
+  type UseFormReturn,
+} from "react-hook-form";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -12,7 +16,10 @@ interface ItemWithId {
   [key: string]: unknown;
 }
 
-interface MultiSelectorProps<T extends ItemWithId, TFieldValues extends FieldValues> {
+interface MultiSelectorProps<
+  T extends ItemWithId,
+  TFieldValues extends FieldValues,
+> {
   form: UseFormReturn<TFieldValues>;
   fieldName: "serviceIds" | "packageIds";
   label: string;
@@ -28,7 +35,10 @@ interface MultiSelectorProps<T extends ItemWithId, TFieldValues extends FieldVal
   initialItems?: Array<{ id: string; name: string; [key: string]: unknown }>;
 }
 
-export default function MultiSelector<T extends ItemWithId, TFieldValues extends FieldValues>({
+export default function MultiSelector<
+  T extends ItemWithId,
+  TFieldValues extends FieldValues,
+>({
   form,
   fieldName,
   label,
@@ -41,7 +51,8 @@ export default function MultiSelector<T extends ItemWithId, TFieldValues extends
   const { setKeyword, data: items = [], isLoading } = useSearchHook();
   const [inputValue, setInputValue] = useState("");
   const [cacheItems, setCacheItems] = useState<T[]>(initialItems as T[]);
-  const currentIds = (form.watch(fieldName as Path<TFieldValues>) || []) as string[];
+  const currentIds = (form.watch(fieldName as Path<TFieldValues>) ||
+    []) as string[];
 
   useEffect(() => {
     if (items.length > 0) {
@@ -54,19 +65,26 @@ export default function MultiSelector<T extends ItemWithId, TFieldValues extends
   }, [items]);
 
   const addItem = (id: string) => {
-    const current = (form.getValues(fieldName as Path<TFieldValues>) || []) as string[];
+    const current = (form.getValues(fieldName as Path<TFieldValues>) ||
+      []) as string[];
     if (!current.includes(id)) {
-      form.setValue(fieldName as Path<TFieldValues>, [...current, id] as TFieldValues[Path<TFieldValues>]);
+      form.setValue(
+        fieldName as Path<TFieldValues>,
+        [...current, id] as TFieldValues[Path<TFieldValues>],
+      );
     }
     setKeyword("");
     setInputValue("");
   };
 
   const removeItem = (id: string) => {
-    const current = (form.getValues(fieldName as Path<TFieldValues>) || []) as string[];
+    const current = (form.getValues(fieldName as Path<TFieldValues>) ||
+      []) as string[];
     form.setValue(
       fieldName as Path<TFieldValues>,
-      current.filter((v: string) => v !== id) as TFieldValues[Path<TFieldValues>]
+      current.filter(
+        (v: string) => v !== id,
+      ) as TFieldValues[Path<TFieldValues>],
     );
   };
 
@@ -78,7 +96,7 @@ export default function MultiSelector<T extends ItemWithId, TFieldValues extends
         acc[item.id] = item.name;
         return acc;
       }, {}),
-    [cacheItems]
+    [cacheItems],
   );
 
   return (
@@ -94,7 +112,7 @@ export default function MultiSelector<T extends ItemWithId, TFieldValues extends
         <div
           className={cn(
             "flex flex-wrap items-center gap-2 px-3 py-2 border rounded-md",
-            hasSelectionError && "border-red-500"
+            hasSelectionError && "border-red-500",
           )}
         >
           {currentIds.map((id) => (
@@ -118,7 +136,7 @@ export default function MultiSelector<T extends ItemWithId, TFieldValues extends
           <Input
             className={cn(
               "flex-1 bg-transparent border-none !ring-0 focus-visible:ring-0",
-              hasSelectionError && "text-destructive"
+              hasSelectionError && "text-destructive",
             )}
             placeholder={currentIds.length === 0 ? placeholder : "Add more..."}
             value={inputValue}
@@ -178,7 +196,9 @@ export default function MultiSelector<T extends ItemWithId, TFieldValues extends
       </div>
 
       {hasSelectionError && (
-        <p className="text-xs text-destructive">{String(hasSelectionError || "")}</p>
+        <p className="text-xs text-destructive">
+          {String(hasSelectionError || "")}
+        </p>
       )}
     </div>
   );

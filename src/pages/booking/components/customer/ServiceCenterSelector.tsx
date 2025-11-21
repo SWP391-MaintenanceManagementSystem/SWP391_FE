@@ -1,4 +1,8 @@
-import { type FieldValues, type Path, type UseFormReturn } from "react-hook-form";
+import {
+  type FieldValues,
+  type Path,
+  type UseFormReturn,
+} from "react-hook-form";
 import {
   Select,
   SelectContent,
@@ -31,21 +35,25 @@ export default function ServiceCenterSelector<T extends FieldValues>({
       </Label>
       <Select
         value={centerIdValue as string}
-        onValueChange={(value) => form.setValue("centerId" as Path<T>, value as T[Path<T>])}
+        onValueChange={(value) =>
+          form.setValue("centerId" as Path<T>, value as T[Path<T>])
+        }
         disabled={disabled}
       >
         <SelectTrigger
-          className={cn(
-            centerIdError && "border-red-500",
-            "w-full"
-          )}
+          className={cn(centerIdError && "border-red-500", "w-full")}
         >
           <SelectValue placeholder="Select service center" />
         </SelectTrigger>
         <SelectContent>
           {centers.map((center) => (
-            <SelectItem key={center.id} value={center.id}>
-              {center.name}
+            <SelectItem
+              key={center.id}
+              value={center.id}
+              className="py-2 px-3 flex flex-col items-start leading-tight"
+            >
+              <span className="text-sm font-medium">{center.name}</span>
+              <span className="text-xs text-gray-500">{center.address}</span>
             </SelectItem>
           ))}
         </SelectContent>

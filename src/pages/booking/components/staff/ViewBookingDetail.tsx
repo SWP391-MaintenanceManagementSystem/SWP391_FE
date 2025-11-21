@@ -22,6 +22,7 @@ import UnAssignmentDialog from "./UnAssignmentDialog";
 import useUnAssign from "@/services/booking/hooks/useUnAssign";
 import { toast } from "sonner";
 import Loading from "@/components/Loading";
+import EditBookingModal from "./EditBookingModal";
 
 export default function ViewBookingDetail() {
   const navigate = useNavigate();
@@ -29,6 +30,7 @@ export default function ViewBookingDetail() {
   const bookingId = b64DecodeUnicode(id ?? "");
   const { data, isLoading } = useBookingDetail(bookingId ?? "");
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
   const [openAssignmentDialog, setOpenAssignmentDialog] = useState(false);
   const [openUnassignmentDialog, setOpenUnassignmentDialog] = useState(false);
@@ -122,6 +124,20 @@ export default function ViewBookingDetail() {
                 Vehicle Check-In
               </Button>
 
+              {(data?.status === "PENDING" ||
+                data?.status === "ASSIGNED" ||
+                data?.status === "CHECKED_IN" ||
+                data?.status === "CANCELLED") && (
+                <Button
+                  onClick={() => setIsEditModalOpen(true)}
+                  variant="default"
+                  className="bg-purple-600 hover:bg-purple-700 text-white
+            dark:bg-purple-500 dark:hover:bg-purple-600"
+                >
+                  Edit
+                </Button>
+              )}
+
               {(data?.status === "PENDING" || data?.status === "ASSIGNED") && (
                 <Button
                   onClick={() => setIsCancelModalOpen(true)}
@@ -202,6 +218,11 @@ export default function ViewBookingDetail() {
         item={data!}
         onConfirm={onUnAssign}
         isPending={isUnAssignPending}
+      />
+      <EditBookingModal
+        open={isEditModalOpen}
+        onClose={() => setIsEditModalOpen(!isEditModalOpen)}
+        booking={data!}
       />
     </div>
   );

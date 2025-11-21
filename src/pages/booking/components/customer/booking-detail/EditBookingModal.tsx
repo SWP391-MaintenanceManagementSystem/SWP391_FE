@@ -40,7 +40,7 @@ export default function EditBookingModal({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     await form.handleSubmit(async (data) => {
-      await onSubmit(data);
+      await onSubmit(data, "CUSTOMER");
       handleClose();
     })();
   };
@@ -63,11 +63,11 @@ export default function EditBookingModal({
             <VehicleSelector form={form} vehicles={vehicles} disabled />
             <ServiceCenterSelector form={form} centers={centers} disabled />
             <DateTimeSelector control={form.control} />
-            <ServicesSelector 
-              form={form} 
+            <ServicesSelector
+              form={form}
               initialServices={booking.bookingDetails.services}
             />
-            <PackagesSelector 
+            <PackagesSelector
               form={form}
               initialPackages={booking.bookingDetails.packages}
             />
@@ -87,7 +87,7 @@ export default function EditBookingModal({
           <Button
             type="submit"
             form="edit-booking-form"
-            disabled={isPending}
+            disabled={isPending || !form.formState.isDirty}
             className="md:w-1/2 py-2 text-sm w-full"
           >
             {isPending ? (

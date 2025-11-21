@@ -20,10 +20,6 @@ import { BookingStatus } from "@/types/enums/bookingStatus";
 import { b64DecodeUnicode } from "@/utils/base64";
 import { usePayment } from "@/services/payment/hooks/usePayment";
 
-const CAN_CANCEL: BookingStatus[] = [
-  BookingStatus.PENDING,
-  BookingStatus.ASSIGNED,
-];
 export default function BookingDetail() {
   const { id } = useParams<{ id: string }>();
 
@@ -114,7 +110,9 @@ export default function BookingDetail() {
                 <Button
                   onClick={() => setIsEditModalOpen(true)}
                   variant="default"
-                  disabled={!(data?.status && CAN_CANCEL.includes(data.status))}
+                  disabled={
+                    !(data?.status && data.status === BookingStatus.PENDING)
+                  }
                   className="bg-purple-600 hover:bg-purple-700 text-white
             dark:bg-purple-500 dark:hover:bg-purple-600"
                 >
@@ -124,7 +122,13 @@ export default function BookingDetail() {
                 <Button
                   onClick={() => setIsCancelModalOpen(true)}
                   variant="destructive"
-                  disabled={!(data?.status && CAN_CANCEL.includes(data.status))}
+                  disabled={
+                    !(
+                      data?.status &&
+                      (data.status === BookingStatus.PENDING ||
+                        data?.status === BookingStatus.ASSIGNED)
+                    )
+                  }
                   className="hover:bg-red-600
             dark:hover:bg-red-700"
                 >
