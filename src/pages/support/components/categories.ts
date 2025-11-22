@@ -1,4 +1,4 @@
-import { User, Car, Wrench, CalendarCheck2, CreditCard } from "lucide-react";
+import { User, Car, CalendarCheck2 } from "lucide-react";
 export const categories = [
   {
     icon: User,
@@ -27,27 +27,12 @@ export const categories = [
     ],
   },
   {
-    icon: Wrench,
-    title: "Maintenance & Service Records",
-    description: "ack repairs, maintenance history, and upcoming schedules",
-    topQuestions: ["Can I view past maintenance history?"],
-  },
-  {
     icon: CalendarCheck2,
     title: "Appointments & Bookings",
     description: "Book, manage, and cancel service appointments",
     topQuestions: [
       { question: "How do I book a service appointment?", link: "/booking" },
       { question: "How can I check my appointment status?", link: "/booking" },
-    ],
-  },
-  {
-    icon: CreditCard,
-    title: "Payments & Invoices",
-    description: "Handle billing, payments, and transaction history",
-    topQuestions: [
-      "How can I view my payment history?",
-      "How to download my invoice or receipt?",
     ],
   },
 ];
