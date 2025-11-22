@@ -225,6 +225,7 @@ export const useStartTechnicianBookingMutation = () => {
     onSuccess: async (_data, variables) => {
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: ["technician-bookings"] }),
+        queryClient.invalidateQueries({ queryKey: ["technicianDashboard"] }),
         queryClient.invalidateQueries({
           queryKey: ["booking", variables],
         }),
@@ -254,6 +255,7 @@ export const useSubmitBookingFeedbackMutation = () => {
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: ["bookings"] }),
         queryClient.invalidateQueries({ queryKey: ["booking", bookingId] }),
+        queryClient.invalidateQueries({ queryKey: ["technicianDashboard"] }),
       ]);
     },
     onError: () => {},

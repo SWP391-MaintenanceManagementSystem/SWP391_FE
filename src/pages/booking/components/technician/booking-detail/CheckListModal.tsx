@@ -44,7 +44,6 @@ export default function CheckListModal({
   onOpenChange,
   bookingData,
 }: CheckListModalProps) {
-  console.log("🚀 ~ CheckListModal ~ bookingData:", bookingData);
   const [tasks, setTasks] = useState<TaskItem[]>([]);
   const [note, setNote] = useState("");
   const [isDone, setIsDone] = useState(false);
