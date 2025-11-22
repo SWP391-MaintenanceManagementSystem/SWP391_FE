@@ -34,7 +34,7 @@ export default function ViewBookingDetail() {
   const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
   const [openAssignmentDialog, setOpenAssignmentDialog] = useState(false);
   const [openUnassignmentDialog, setOpenUnassignmentDialog] = useState(false);
-  const { onCancel } = useCancelBooking();
+  const { onCancel, isPending: isCancelPending } = useCancelBooking();
   const { form, onSubmit } = useAssignBooking({
     onSuccess: () => {
       setOpenAssignmentDialog(false);
@@ -47,7 +47,7 @@ export default function ViewBookingDetail() {
     return <div className="text-red-500 p-6">Booking ID is missing</div>;
   }
 
-  if (isLoading)
+  if (isLoading || isCancelPending || isUnAssignPending)
     return (
       <div className="text-gray-500 p-6 flex justify-center items-center h-full">
         <Loading />
@@ -110,7 +110,7 @@ export default function ViewBookingDetail() {
                 onClick={() => {
                   if (data?.status === "PENDING") {
                     toast.warning(
-                      "Vehicle check-in is not allowed for pending bookings. Please assign a technician first.",
+                      "Vehicle check-in is not allowed for pending bookings. Please assign a technician first."
                     );
                   } else {
                     navigate(`/booking/${id}/checkin`, {

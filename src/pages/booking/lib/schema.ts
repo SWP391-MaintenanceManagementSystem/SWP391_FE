@@ -92,7 +92,7 @@ export const EditBookingSchema = CreateBookingSchema.partial()
         .format();
     }
     if (data.status === BookingStatus.CANCELLED) {
-      data.status = BookingStatus.PENDING;
+      data.status = BookingStatus.ASSIGNED;
     }
     return data;
   });

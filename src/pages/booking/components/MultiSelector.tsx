@@ -18,7 +18,7 @@ interface ItemWithId {
 
 interface MultiSelectorProps<
   T extends ItemWithId,
-  TFieldValues extends FieldValues,
+  TFieldValues extends FieldValues
 > {
   form: UseFormReturn<TFieldValues>;
   fieldName: "serviceIds" | "packageIds";
@@ -33,11 +33,12 @@ interface MultiSelectorProps<
   };
   onOpenDetailModal?: (item: T) => void;
   initialItems?: Array<{ id: string; name: string; [key: string]: unknown }>;
+  disabled?: boolean;
 }
 
 export default function MultiSelector<
   T extends ItemWithId,
-  TFieldValues extends FieldValues,
+  TFieldValues extends FieldValues
 >({
   form,
   fieldName,
@@ -46,6 +47,7 @@ export default function MultiSelector<
   hint,
   useSearchHook,
   onOpenDetailModal,
+  disabled = false,
   initialItems = [],
 }: MultiSelectorProps<T, TFieldValues>) {
   const { setKeyword, data: items = [], isLoading } = useSearchHook();
@@ -70,7 +72,7 @@ export default function MultiSelector<
     if (!current.includes(id)) {
       form.setValue(
         fieldName as Path<TFieldValues>,
-        [...current, id] as TFieldValues[Path<TFieldValues>],
+        [...current, id] as TFieldValues[Path<TFieldValues>]
       );
     }
     setKeyword("");
@@ -83,8 +85,8 @@ export default function MultiSelector<
     form.setValue(
       fieldName as Path<TFieldValues>,
       current.filter(
-        (v: string) => v !== id,
-      ) as TFieldValues[Path<TFieldValues>],
+        (v: string) => v !== id
+      ) as TFieldValues[Path<TFieldValues>]
     );
   };
 
@@ -96,7 +98,7 @@ export default function MultiSelector<
         acc[item.id] = item.name;
         return acc;
       }, {}),
-    [cacheItems],
+    [cacheItems]
   );
 
   return (
@@ -112,7 +114,7 @@ export default function MultiSelector<
         <div
           className={cn(
             "flex flex-wrap items-center gap-2 px-3 py-2 border rounded-md",
-            hasSelectionError && "border-red-500",
+            hasSelectionError && "border-red-500"
           )}
         >
           {currentIds.map((id) => (
@@ -136,7 +138,7 @@ export default function MultiSelector<
           <Input
             className={cn(
               "flex-1 bg-transparent border-none !ring-0 focus-visible:ring-0",
-              hasSelectionError && "text-destructive",
+              hasSelectionError && "text-destructive"
             )}
             placeholder={currentIds.length === 0 ? placeholder : "Add more..."}
             value={inputValue}
@@ -144,6 +146,7 @@ export default function MultiSelector<
               setInputValue(e.target.value);
               setKeyword(e.target.value);
             }}
+            disabled={disabled}
           />
         </div>
 

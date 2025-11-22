@@ -8,11 +8,13 @@ import type { Service } from "@/types/models/service";
 interface ServiceSelectorProps<T extends FieldValues> {
   form: UseFormReturn<T>;
   initialServices?: Array<{ id: string; name: string }>;
+  disabled?: boolean;
 }
 
 export default function ServicesSelector<T extends FieldValues>({
   form,
   initialServices,
+  disabled,
 }: ServiceSelectorProps<T>) {
   const [selectedItem, setSelectedItem] = useState<Service | null>(null);
   const [detailOpen, setDetailOpen] = useState(false);
@@ -37,6 +39,7 @@ export default function ServicesSelector<T extends FieldValues>({
         useSearchHook={useSearchServices}
         onOpenDetailModal={handleOpenDetail}
         initialItems={initialServices}
+        disabled={disabled}
       />
 
       <ServiceDetailDialog

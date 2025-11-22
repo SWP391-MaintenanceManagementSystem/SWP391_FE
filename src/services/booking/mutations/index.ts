@@ -169,7 +169,7 @@ export const useUnBookingAssignmentMutation = () => {
       ]);
 
       toast.success(
-        `Unassigned technician with email ${variables.employeeEmail} successfully`,
+        `Unassigned technician with email ${variables.employeeEmail} successfully`
       );
     },
     onError: () => {
@@ -179,7 +179,7 @@ export const useUnBookingAssignmentMutation = () => {
 };
 
 export const useCompleteTechnicianBookingMutation = (
-  handleOnSuccess: () => void,
+  handleOnSuccess: () => void
 ) => {
   const queryClient = useQueryClient();
 

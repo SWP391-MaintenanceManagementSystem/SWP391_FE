@@ -8,11 +8,13 @@ import useSearchPackage from "@/services/package/hooks/useSearchPackages";
 interface PackageSelectorProps<T extends FieldValues> {
   form: UseFormReturn<T>;
   initialPackages?: Array<{ id: string; name: string }>;
+  disabled?: boolean;
 }
 
 export default function PackagesSelector<T extends FieldValues>({
   form,
   initialPackages,
+  disabled = false,
 }: PackageSelectorProps<T>) {
   const [selectedItem, setSelectedItem] = useState<Package | null>(null);
   const [detailOpen, setDetailOpen] = useState(false);
@@ -38,6 +40,7 @@ export default function PackagesSelector<T extends FieldValues>({
         hint="Optional - select services OR packages"
         onOpenDetailModal={handleOpenDetail}
         initialItems={initialPackages}
+        disabled={disabled}
       />
       <PackageDetailDialog
         isOpen={detailOpen}

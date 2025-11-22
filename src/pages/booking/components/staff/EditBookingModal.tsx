@@ -16,15 +16,15 @@ import dayjs from "dayjs";
 import ServicesSelector from "../customer/ServicesSelector";
 import PackagesSelector from "../customer/PackagesSelector";
 import { Textarea } from "@/components/ui/textarea";
-import { DropdownMenu } from "@radix-ui/react-dropdown-menu";
+import BookingTag from "@/components/tag/BookingTag";
+import { Controller } from "react-hook-form";
 import {
+  DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import BookingTag from "@/components/tag/BookingTag";
 import { BookingStatus } from "@/types/enums/bookingStatus";
-import { Controller } from "react-hook-form";
 
 export default function EditBookingModal({
   open,
@@ -44,10 +44,8 @@ export default function EditBookingModal({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    await form.handleSubmit(async (data) => {
-      await onSubmit(data, "STAFF");
-      handleClose();
-    })();
+    await onSubmit(form.getValues(), "STAFF");
+    handleClose();
   };
 
   return (
@@ -79,7 +77,7 @@ export default function EditBookingModal({
                   id="date"
                   readOnly
                   value={dayjs(booking.bookingDate).format(
-                    "DD MMM YYYY - HH:mm",
+                    "DD MMM YYYY - HH:mm"
                   )}
                 />
               </div>
@@ -93,7 +91,7 @@ export default function EditBookingModal({
                   <Controller
                     name="status"
                     control={form.control}
-                    defaultValue={BookingStatus.CANCELLED}
+                    defaultValue={booking.status}
                     render={({ field }) => (
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
@@ -105,10 +103,10 @@ export default function EditBookingModal({
                         <DropdownMenuContent>
                           <DropdownMenuItem
                             onClick={() =>
-                              field.onChange(BookingStatus.PENDING)
+                              field.onChange(BookingStatus.ASSIGNED)
                             }
                           >
-                            <BookingTag status={BookingStatus.PENDING} />
+                            <BookingTag status={BookingStatus.ASSIGNED} />
                           </DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>
@@ -121,10 +119,12 @@ export default function EditBookingModal({
             <ServicesSelector
               form={form}
               initialServices={booking.bookingDetails.services}
+              disabled={booking.status === BookingStatus.CANCELLED}
             />
             <PackagesSelector
               form={form}
               initialPackages={booking.bookingDetails.packages}
+              disabled={booking.status === BookingStatus.CANCELLED}
             />
             <Label htmlFor="note">CustomerNote</Label>
             <Textarea id="note" readOnly value={booking.note} />
@@ -141,9 +141,9 @@ export default function EditBookingModal({
             Cancel
           </Button>
           <Button
-            type="submit"
             form="edit-booking-form"
             disabled={isPending}
+            onClick={handleSubmit}
             className="md:w-1/2 py-2 text-sm w-full"
           >
             {isPending ? (
