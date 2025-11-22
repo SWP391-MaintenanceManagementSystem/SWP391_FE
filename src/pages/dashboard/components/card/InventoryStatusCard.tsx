@@ -103,7 +103,11 @@ export function InventoryStatusCard() {
             </div>
             Low Stock Items
           </div>
-          <LowStockProgressBar data={data?.lowStockItems ?? []} />
+          {(data?.lowStockItems?.length ?? 0) > 0 ? (
+            <LowStockProgressBar data={data?.lowStockItems ?? []} />
+          ) : (
+            <p className="text-muted-foreground text-sm">No low stock items</p>
+          )}
         </div>
       </CardContent>
     </Card>
