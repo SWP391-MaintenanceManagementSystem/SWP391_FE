@@ -103,14 +103,12 @@ export default function ItemsListSection() {
         open={openAddModal}
         onOpenChange={(open) => {
           setOpenAddModal(open);
-          if (!open) {
-            form.reset();
-          }
         }}
         onConfirm={async (data) => {
           const success = await handleAddPartItem(data);
           if (success) {
             setOpenAddModal(false);
+            form.reset();
           }
         }}
         form={form}

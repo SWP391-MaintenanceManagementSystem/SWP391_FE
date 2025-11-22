@@ -98,6 +98,7 @@ export default function ScheduleCalendar({
           setIsModalOpen(open);
           if (!open) {
             setSelectedDate(null);
+            form.reset();
           }
         }}
         onConfirm={(data) => {
