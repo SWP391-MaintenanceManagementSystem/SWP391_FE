@@ -198,6 +198,12 @@ export const useCompleteTechnicianBookingMutation = (
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: ["technician-bookings"] }),
         queryClient.invalidateQueries({
+          queryKey: ["technicianCurrentBooking"],
+        }),
+        queryClient.invalidateQueries({
+          queryKey: ["technicianCurrentBooking"],
+        }),
+        queryClient.invalidateQueries({
           queryKey: ["booking", variables.bookingId],
         }),
       ]);
