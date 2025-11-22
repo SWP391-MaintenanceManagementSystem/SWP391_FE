@@ -1,3 +1,4 @@
+import type { ReactElement } from "react";
 import * as React from "react";
 import {
   Card,
@@ -81,7 +82,7 @@ export function TrendingPurchaseCard() {
   const renderCardSection = (
     type: DialogType,
     dataItems: ServiceData[],
-    chartComponent: JSX.Element,
+    chartComponent: ReactElement,
     badgeLabel: string,
     topText?: string,
   ) => {

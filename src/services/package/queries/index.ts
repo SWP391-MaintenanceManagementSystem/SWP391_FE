@@ -1,7 +1,6 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { queryKeys } from "./keys";
 import { searchPackages } from "../apis/package.api";
-import { toast } from "sonner";
 
 export const useSearchPackagesQuery = (name: string) => {
   const queryClient = useQueryClient();
