@@ -1,0 +1,317 @@
+import { useState, useMemo, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
+  Form,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+  FormControl,
+} from "@/components/ui/form";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { useForm } from "react-hook-form";
+import type { EditWorkScheduleFormData } from "../../libs/schema";
+import type { Shift, WorkSchedule } from "@/types/models/shift";
+import EmployeeSelector from "./EmployeeSelector";
+import { useGetEmployeesQuery } from "@/services/shift/queries";
+import clsx from "clsx";
+import { Calendar } from "@/components/ui/calendar";
+import { Input } from "@/components/ui/input";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { CalendarIcon } from "lucide-react";
+import dayjs from "dayjs";
+
+interface EditScheduleProps {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  onConfirm: (data: EditWorkScheduleFormData) => void;
+  item: WorkSchedule | null;
+  shiftList: Shift[];
+  form: ReturnType<typeof useForm<EditWorkScheduleFormData>>;
+  isPending: boolean;
+}
+
+export function EditScheduleDialog({
+  open,
+  onOpenChange,
+  onConfirm,
+  item,
+  shiftList,
+  form,
+  isPending,
+}: EditScheduleProps) {
+  const { watch } = form;
+  const { data: employeesList } = useGetEmployeesQuery();
+
+  const selectedEmployeeId = watch("employeeId");
+  const selectedEmployee = useMemo(
+    () => employeesList?.find((e) => e.id === selectedEmployeeId),
+    [employeesList, selectedEmployeeId],
+  );
+
+  const filteredShifts = useMemo(() => {
+    const centerId = selectedEmployee?.workCenter?.id;
+    if (!centerId) return [];
+    return shiftList.filter(
+      (shift) =>
+        shift.serviceCenter?.id === centerId && shift.status === "ACTIVE",
+    );
+  }, [selectedEmployee, shiftList]);
+
+  useEffect(() => {
+    if (!selectedEmployee) return;
+    const currentShiftId = form.getValues("shiftId");
+    const isValidShift = filteredShifts.some((s) => s.id === currentShiftId);
+    if (!isValidShift) form.setValue("shiftId", "");
+  }, [selectedEmployee, filteredShifts, form]);
+
+  // Date field states
+  const [openDate, setOpenDate] = useState(false);
+  const [date, setDate] = useState<Date | undefined>(
+    item?.date ? new Date(item.date) : undefined,
+  );
+  const [month, setMonth] = useState<Date | undefined>(
+    item?.date ? new Date(item.date) : undefined,
+  );
+  const [value, setValue] = useState(
+    item?.date ? dayjs(item.date).format("YYYY-MM-DD") : "",
+  );
+
+  // Reset form when modal opens & data ready
+  useEffect(() => {
+    if (!open || !item || !employeesList || !shiftList) return;
+
+    const defaultDate = item.date ? new Date(item.date) : undefined;
+    setDate(defaultDate);
+    setMonth(defaultDate);
+    setValue(item.date ? dayjs(item.date).format("YYYY-MM-DD") : "");
+
+    form.reset({
+      ...item,
+      employeeId: item.account?.id || "",
+      shiftId: item.shift?.id || "",
+      date: item.date || "",
+    });
+  }, [open, item, employeesList, shiftList, form]);
+
+  const isValidDate = (d: Date) => d instanceof Date && !isNaN(d.getTime());
+  const formatDate = (d?: Date) => (d ? dayjs(d).format("YYYY-MM-DD") : "");
+
+  const onSubmit = async (values: EditWorkScheduleFormData) => {
+    const isValid = await form.trigger();
+    if (!isValid) return;
+    onConfirm(values);
+  };
+
+  const handleCancel = () => {
+    onOpenChange(false);
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent
+        className="sm:max-w-[500px] font-inter"
+        onOpenAutoFocus={(e) => e.preventDefault()}
+        onCloseAutoFocus={(e) => e.preventDefault()}
+      >
+        <DialogHeader>
+          <DialogTitle>Edit Schedule</DialogTitle>
+          <DialogDescription>
+            Update the schedule details below.
+          </DialogDescription>
+        </DialogHeader>
+
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className={clsx(
+              "grid grid-cols-1 gap-4 max-h-[360px] overflow-y-auto",
+            )}
+          >
+            {/* Employee Selector */}
+            <EmployeeSelector
+              form={form}
+              employees={
+                employeesList?.filter((emp) => emp.status === "VERIFIED") || []
+              }
+            />
+
+            {/* Shift Field */}
+            <FormField
+              control={form.control}
+              name="shiftId"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Shift *</FormLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    value={field.value}
+                    disabled={!selectedEmployee}
+                    aria-invalid={!!form.formState.errors.shiftId}
+                  >
+                    <FormControl>
+                      <SelectTrigger
+                        className={`w-full border ${
+                          form.formState.errors.shiftId
+                            ? "border-destructive focus:ring-destructive"
+                            : "border-input focus:ring-primary"
+                        }`}
+                      >
+                        <SelectValue placeholder="Select shift" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {!selectedEmployee ? (
+                        <SelectItem value="none" disabled>
+                          Please select an employee first
+                        </SelectItem>
+                      ) : (
+                        <>
+                          {filteredShifts.map((shift) => (
+                            <SelectItem key={shift.id} value={shift.id}>
+                              {shift.name}
+                            </SelectItem>
+                          ))}
+
+                          {item?.shift &&
+                            !filteredShifts.some(
+                              (s) => s.id === item.shift.id,
+                            ) && (
+                              <SelectItem value={item.shift.id} disabled>
+                                <span className="text-destructive">
+                                  {item.shift.name}{" "}
+                                  {item.shift.serviceCenter?.id !==
+                                  selectedEmployee.workCenter?.id
+                                    ? "(Different center with employee)"
+                                    : item.shift.status === "INACTIVE"
+                                      ? "(Invalid)"
+                                      : ""}
+                                </span>
+                              </SelectItem>
+                            )}
+
+                          {filteredShifts.length === 0 && !item?.shift && (
+                            <SelectItem value="none" disabled>
+                              No shifts available in this center. Please create
+                              a new one.
+                            </SelectItem>
+                          )}
+                        </>
+                      )}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {/* Date Field */}
+            <FormField
+              control={form.control}
+              name="date"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Select Date *</FormLabel>
+                  <FormControl>
+                    <div className="relative flex gap-2">
+                      <Input
+                        id="date"
+                        value={value}
+                        placeholder="dd-mm-yyyy"
+                        aria-invalid={!!form.formState.errors.date}
+                        onChange={(e) => {
+                          const inputDate = new Date(e.target.value);
+                          setValue(e.target.value);
+                          if (isValidDate(inputDate)) {
+                            setDate(inputDate);
+                            setMonth(inputDate);
+                            field.onChange(formatDate(inputDate));
+                          }
+                        }}
+                      />
+                      <Popover open={openDate} onOpenChange={setOpenDate}>
+                        <PopoverTrigger asChild>
+                          <Button
+                            id="date-picker"
+                            variant="ghost"
+                            className={`absolute top-1/2 right-2 size-6 -translate-y-1/2 ${
+                              form.formState.errors.date
+                                ? "border-destructive focus:ring-destructive"
+                                : "border-input focus:ring-primary"
+                            }`}
+                          >
+                            <CalendarIcon className="size-3.5" />
+                            <span className="sr-only">Select date</span>
+                          </Button>
+                        </PopoverTrigger>
+                        <PopoverContent
+                          className="w-auto overflow-hidden p-0"
+                          align="end"
+                          alignOffset={-8}
+                          sideOffset={10}
+                        >
+                          <Calendar
+                            mode="single"
+                            selected={date}
+                            captionLayout="dropdown"
+                            month={month}
+                            onMonthChange={setMonth}
+                            onSelect={(selectedDate) => {
+                              if (!selectedDate) return;
+                              const localDate = new Date(
+                                selectedDate.getFullYear(),
+                                selectedDate.getMonth(),
+                                selectedDate.getDate(),
+                              );
+                              setDate(localDate);
+                              setValue(formatDate(localDate));
+                              field.onChange(formatDate(localDate));
+                              setOpenDate(false);
+                            }}
+                          />
+                        </PopoverContent>
+                      </Popover>
+                    </div>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {/* Footer */}
+            <DialogFooter>
+              <Button type="button" variant="outline" onClick={handleCancel}>
+                Cancel
+              </Button>
+              <Button
+                type="submit"
+                className="bg-purple-primary"
+                disabled={!form.formState.isDirty || isPending}
+              >
+                Update
+              </Button>
+            </DialogFooter>
+          </form>
+        </Form>
+      </DialogContent>
+    </Dialog>
+  );
+}

@@ -8,6 +8,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
+import { InfoIcon } from "lucide-react";
 
 interface ViewDetailDialogProps {
   open: boolean;
@@ -34,9 +35,9 @@ export function InputDisableWithLabel({
     <div className={cn("flex flex-col w-full gap-2", styleFormat)}>
       <Label htmlFor={id}>{label}</Label>
       {typeof value === "string" ? (
-        <Input className="w-full" id={id} disabled value={value} />
+        <Input className="w-full" id={id} readOnly value={value} />
       ) : (
-        <div className="rounded-lg w-full border px-3 py-2 text-sm bg-muted">
+        <div className="rounded-md w-full border px-3 py-2 text-sm text-gray-400">
           {value}
         </div>
       )}
@@ -54,8 +55,13 @@ export const InfoSection = ({
   styleFormLayout?: string;
 }) => {
   return (
-    <div className="flex flex-col gap-2">
-      <h2 className="text-[16px] font-medium">{title || ""}</h2>
+    <div className="flex flex-col gap-3">
+      {title && (
+        <h2 className="text-[16px] font-medium flex text-center items-center gap-1">
+          <InfoIcon size={18} />
+          {title}
+        </h2>
+      )}
       <div className={cn("grid grid-cols-1 gap-4", styleFormLayout)}>
         {children}
       </div>
@@ -74,7 +80,12 @@ export function ViewDetailDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <form>
         <DialogContent
-          className={cn("sm:max-w-[425px]  font-inter", styleContent)}
+          className={cn(
+            "sm:max-w-[425px] font-inter overflow-y-auto",
+            styleContent,
+          )}
+          onOpenAutoFocus={(e) => e.preventDefault()}
+          onCloseAutoFocus={(e) => e.preventDefault()}
         >
           <DialogHeader className="mb-3">
             <DialogTitle className="text-center text-xl">{title}</DialogTitle>

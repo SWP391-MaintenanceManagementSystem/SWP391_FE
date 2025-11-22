@@ -1,41 +1,29 @@
 import { createColumnHelper } from "@tanstack/react-table";
 import { type EmployeeTable } from "../../libs/table-types";
-import { Checkbox } from "@/components/ui/checkbox";
 import SortHeader from "@/components/table/SortHeader";
 import FilterHeader from "@/components/table/FilterHeader";
 import AccountStatusTag from "@/components/tag/AccountStatusTag";
 import ColActions from "../../components/ColActions";
+import type { ServiceCenter } from "@/types/models/center";
+import { Badge } from "@/components/ui/badge";
 
 export const getColumns = (
   handleFilterChange: (field: string, value: string) => void,
-  currentFilters: { status: string },
+  currentFilters: { status: string; centerId: string },
+  centerList: ServiceCenter[],
 ) => {
   const columnHelper = createColumnHelper<EmployeeTable>();
 
   return [
-    // SELECT checkbox
     columnHelper.display({
-      id: "select",
-      header: ({ table }) => (
-        <Checkbox
-          checked={
-            table.getIsAllPageRowsSelected() ||
-            (table.getIsSomePageRowsSelected() && "indeterminate")
-          }
-          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-          aria-label="Select all"
-          className="!outline-none"
-        />
-      ),
-      size: 10,
-      cell: ({ row }) => (
-        <Checkbox
-          checked={row.getIsSelected()}
-          onCheckedChange={(value) => row.toggleSelected(!!value)}
-          aria-label="Select row"
-          className="!outline-none"
-        />
-      ),
+      id: "number",
+      header: "#",
+      size: 50,
+      cell: ({ row, table }) =>
+        row.index +
+        1 +
+        table.getState().pagination.pageIndex *
+          table.getState().pagination.pageSize,
       enableSorting: false,
       enableHiding: false,
     }),
@@ -81,6 +69,27 @@ export const getColumns = (
       cell: (info) => info.getValue(),
       meta: {
         title: "Phone",
+      },
+    }),
+
+    // Work center
+    columnHelper.accessor("workCenter.name", {
+      id: "name",
+      header: (info) => (
+        <FilterHeader
+          column={info.column}
+          title="Work Center"
+          selectedValue={currentFilters.centerId}
+          onFilterChange={(value) => handleFilterChange("centerId", value)}
+        />
+      ),
+      size: 50,
+      cell: (info) => <Badge variant="outline">{info.getValue()}</Badge>,
+      meta: {
+        title: "Work Center",
+        filterVariant: "filterWorkCenter",
+        filterOptions: centerList.map((c) => c.id),
+        labelOptions: Object.fromEntries(centerList.map((c) => [c.id, c.name])),
       },
     }),
 

@@ -21,6 +21,7 @@ interface EditDialogProps<TFormValues extends FieldValues> {
   styleFormLayout?: string;
   styleLayoutFooter?: string;
   title: string;
+  isPending?: boolean;
 }
 
 export function EditDialog<TFormValues extends FieldValues>({
@@ -32,19 +33,17 @@ export function EditDialog<TFormValues extends FieldValues>({
   styleFormLayout,
   styleLayoutFooter,
   title,
+  isPending,
 }: EditDialogProps<TFormValues>) {
   const onSubmit = async (values: TFormValues) => {
     const isValid = await form.trigger();
-
     if (!isValid) return;
-
     onConfirm(values);
-    onOpenChange(false);
   };
 
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
-      <AlertDialogContent className="font-inter md:min-h-40 md:max-w-[600px] space-y-6 min-w-[300px] overflow-y-auto">
+      <AlertDialogContent className="font-inter md:min-h-40 md:max-w-[720px] min-w-[300px]  max-h-[540px] overflow-y-auto ">
         <AlertDialogHeader>
           <AlertDialogTitle>Edit {title} Infomations</AlertDialogTitle>
           <AlertDialogDescription>
@@ -56,7 +55,7 @@ export function EditDialog<TFormValues extends FieldValues>({
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
-            className={cn("grid grid-cols-1 gap-6", styleFormLayout)}
+            className={cn("grid grid-cols-1 gap-4", styleFormLayout)}
           >
             {children}
             <AlertDialogFooter
@@ -75,9 +74,9 @@ export function EditDialog<TFormValues extends FieldValues>({
               <Button
                 type="submit"
                 className="!outline-none bg-purple-primary"
-                disabled={!form.formState.isDirty}
+                disabled={!form.formState.isDirty || isPending}
               >
-                Save Changes
+                {isPending ? "Saving..." : "Save Changes"}
               </Button>
             </AlertDialogFooter>
           </form>

@@ -10,28 +10,36 @@ import TechnicianBlack from "@/assets/technician-black.png";
 import TechnicianWhite from "@/assets/technician-white.png";
 import { useMemo } from "react";
 import { useGetAccountList } from "@/services/manager/queries";
+import { Card } from "@/components/ui/card";
+import { useGetServiceCenterList } from "@/services/manager/queries";
+import { Skeleton } from "@/components/ui/skeleton";
+import { useDebounce } from "@uidotdev/usehooks";
 
 export default function TechniciansManagementPage() {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [searchValue, setSearchValue] = useState("");
   const [sorting, setSorting] = useState<SortingState>([]);
-  const [filters, setFilters] = useState({ status: "" });
+  const [filters, setFilters] = useState({ status: "", centerId: "" });
+  const debouncedSearch = useDebounce(searchValue, 300);
   const { data, isLoading, isFetching } = useGetAccountList({
     page,
     pageSize,
-    email: searchValue || undefined,
+    email: debouncedSearch || undefined,
     status: filters.status || undefined,
+    centerId: filters.centerId || undefined,
     sortBy: sorting[0]?.id ?? "createdAt",
     orderBy: sorting[0]?.desc ? "desc" : "asc",
     type: "TECHNICIAN",
   });
 
+  const { data: centerListData } = useGetServiceCenterList();
+  const centerList = centerListData ?? [];
+
   const technicians = useMemo(() => {
     const accounts = data?.data ?? [];
     return accounts
       .filter((acc) => acc.role === "TECHNICIAN")
-      .filter((acc) => (filters.status ? acc.status === filters.status : true))
       .map((acc) => ({
         id: acc.id,
         email: acc.email,
@@ -41,8 +49,10 @@ export default function TechniciansManagementPage() {
         profile: acc.profile
           ? { firstName: acc.profile.firstName, lastName: acc.profile.lastName }
           : undefined,
+        workCenter:
+          "workCenter" in acc && acc.workCenter ? acc.workCenter : undefined,
       }));
-  }, [data, filters]);
+  }, [data]);
 
   const handleStatusChange = (field: string, value: string) => {
     setFilters((prevFilters) => ({
@@ -51,7 +61,7 @@ export default function TechniciansManagementPage() {
     }));
   };
 
-  const columns = getColumns(handleStatusChange, filters);
+  const columns = getColumns(handleStatusChange, filters, centerList);
 
   return (
     <div className="w-full h-[calc(100vh-32px)] font-inter">
@@ -63,7 +73,7 @@ export default function TechniciansManagementPage() {
         }}
       />
 
-      <MainContentLayout className="grid grid-cols-1 lg:grid-cols-[auto_1fr] gap-8">
+      <MainContentLayout className="grid grid-cols-1 lg:grid-cols-[auto_1fr] gap-8 pt-4">
         <TotalBox
           title="Technicians"
           iconDark={TechnicianBlack}
@@ -73,30 +83,38 @@ export default function TechniciansManagementPage() {
           pageSize={pageSize}
         />
 
-        <div className=" w-full h-full flex flex-col bg-slate-100 rounded-3xl px-6 py-8 shadow-sm min-h-[600px]">
+        <Card className=" w-full h-full flex flex-col  px-6 py-8 min-h-[600px]">
           <h3 className="text-2xl font-semibold mb-4 text-gray-text-header">
             Technicians List
           </h3>
-          <DataTable<EmployeeTable, unknown>
-            columns={columns as ColumnDef<EmployeeTable, unknown>[]}
-            data={technicians}
-            pageIndex={(data?.page ?? 1) - 1}
-            pageSize={data?.pageSize ?? 10}
-            totalPage={data?.totalPages ?? 1}
-            isLoading={isLoading}
-            isFetching={isFetching}
-            onPageChange={(newPage) => setPage(newPage + 1)}
-            onPageSizeChange={setPageSize}
-            onSearchChange={setSearchValue}
-            searchPlaceholder="email"
-            sorting={sorting}
-            onSortingChange={setSorting}
-            manualPagination
-            manualSorting
-            manualSearch
-            isSearch
-          />
-        </div>
+          {isLoading ? (
+            <div className="flex flex-col gap-2">
+              {Array.from({ length: 8 }).map((_, i) => (
+                <Skeleton key={i} className="h-10 w-full rounded-md" />
+              ))}
+            </div>
+          ) : (
+            <DataTable<EmployeeTable, unknown>
+              columns={columns as ColumnDef<EmployeeTable, unknown>[]}
+              data={technicians}
+              pageIndex={(data?.page ?? 1) - 1}
+              pageSize={data?.pageSize ?? 10}
+              totalPage={data?.totalPages ?? 1}
+              isLoading={isLoading}
+              isFetching={isFetching}
+              onPageChange={(newPage) => setPage(newPage + 1)}
+              onPageSizeChange={setPageSize}
+              onSearchChange={setSearchValue}
+              searchPlaceholder="email"
+              sorting={sorting}
+              onSortingChange={setSorting}
+              manualPagination
+              manualSorting
+              manualSearch
+              isSearch
+            />
+          )}
+        </Card>
       </MainContentLayout>
     </div>
   );

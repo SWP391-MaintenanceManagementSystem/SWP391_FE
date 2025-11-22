@@ -9,7 +9,7 @@ import { useEmployee } from "@/services/manager/hooks/useEmployee";
 import { ViewDetailDialog } from "@/components/dialog/ViewDetailDialog";
 import ViewDetailEmployeeInfo from "@/pages/employees/components/ViewDetail";
 import { toast } from "sonner";
-import EditEmployeeInfoForm from "./EditEmployeeInfoForm";
+import { AddEditEmployeeDialog } from "./AddEditEmployeeDialog";
 
 interface ColActionsProps {
   row: Row<EmployeeTable>;
@@ -25,12 +25,13 @@ export default function ColActions({
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [openEditDialog, setOpenEditDialog] = useState(false);
   const [openViewDetailDialog, setOpenViewDetailDialog] = useState(false);
-  const { handleDeleteEmployee, form, handleUpdateEmployeeInfo } = useEmployee(
-    row.original,
-    row.original.role as "STAFF" | "TECHNICIAN",
-    currentPage,
-    currentPageSize,
-  );
+  const { handleDeleteEmployee, form, handleUpdateEmployeeInfo, isPending } =
+    useEmployee(
+      row.original,
+      row.original.role as "STAFF" | "TECHNICIAN",
+      currentPage,
+      currentPageSize,
+    );
 
   return (
     <div className="flex gap-1">
@@ -71,11 +72,7 @@ export default function ColActions({
         open={openDeleteDialog}
         onOpenChange={(open) => setOpenDeleteDialog(open)}
         onConfirm={() => {
-          if (row.original.role === "TECHNICIAN") {
-            handleDeleteEmployee(row.original.id);
-          } else if (row.original.role === "STAFF") {
-            handleDeleteEmployee(row.original.id);
-          }
+          handleDeleteEmployee(row.original.id);
           setOpenDeleteDialog(false);
         }}
         isDisabled={row.original.status === "DISABLED"}
@@ -87,19 +84,20 @@ export default function ColActions({
         children={<ViewDetailEmployeeInfo employee={row.original} />}
         styleContent="md:max-w-[560px]"
       />
-
-      <EditEmployeeInfoForm
+      <AddEditEmployeeDialog
         open={openEditDialog}
-        onOpenChange={(open) => setOpenEditDialog(open)}
-        form={form}
-        title={row.original.role === "STAFF" ? "Staff" : "Technician"}
-        onConfirm={() => {
-          if (row.original.role === "STAFF") {
-            handleUpdateEmployeeInfo(row.original.id);
-          } else if (row.original.role === "TECHNICIAN") {
-            handleUpdateEmployeeInfo(row.original.id);
+        onOpenChange={(open) => {
+          setOpenEditDialog(open);
+          if (!open) {
+            form.reset();
           }
         }}
+        form={form}
+        item={row.original}
+        onConfirm={async (data) => {
+          handleUpdateEmployeeInfo(row.original.id, data);
+        }}
+        isPending={isPending}
       />
     </div>
   );

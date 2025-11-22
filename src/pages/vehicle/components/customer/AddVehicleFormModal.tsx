@@ -27,12 +27,13 @@ import {
 } from "@/services/vehicle/apis/vehicle.api";
 import type { VehicleBrand, VehicleModel } from "@/types/models/vehicle";
 import type { useForm } from "react-hook-form";
+import { Input } from "@/components/ui/input";
 
 type AddVehicleFormModalProps = {
   onClose: () => void;
   open: boolean;
   form: ReturnType<typeof useForm<AddVehicleFormData>>;
-  onSubmit: (data: AddVehicleFormData) => void;
+  onSubmit: (data: AddVehicleFormData) => Promise<void>;
 };
 
 export default function AddVehicleFormModal({
@@ -52,8 +53,9 @@ export default function AddVehicleFormModal({
     fetchBrands();
   }, []);
 
+  const brandId = form.watch("brandId");
+
   useEffect(() => {
-    const brandId = form.watch("brandId");
     if (brandId) {
       const fetchModels = async () => {
         const response = await getVehicleModelsByBrand(brandId);
@@ -63,11 +65,15 @@ export default function AddVehicleFormModal({
     } else {
       setModels([]);
     }
-  }, [form.watch("brandId")]);
+  }, [brandId]);
 
-  const handleAddVehicle = (values: AddVehicleFormData) => {
-    onSubmit(values);
-    onClose();
+  const handleAddVehicle = async (values: AddVehicleFormData) => {
+    try {
+      await onSubmit(values);
+      onClose();
+    } catch (error) {
+      console.error("Failed to add vehicle:", error);
+    }
   };
 
   return (
@@ -80,7 +86,7 @@ export default function AddVehicleFormModal({
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(handleAddVehicle)}
-            className="flex flex-col gap-4"
+            className="flex flex-col gap-4 font-inter"
           >
             <FormField
               control={form.control}
@@ -89,7 +95,7 @@ export default function AddVehicleFormModal({
                 <FormItem>
                   <FormLabel>VIN</FormLabel>
                   <FormControl>
-                    <input
+                    <Input
                       type="text"
                       {...field}
                       className="w-full border rounded-md px-3 py-2"
@@ -108,7 +114,7 @@ export default function AddVehicleFormModal({
                 <FormItem>
                   <FormLabel>License Plate</FormLabel>
                   <FormControl>
-                    <input
+                    <Input
                       type="text"
                       {...field}
                       className="w-full border rounded-md px-3 py-2"

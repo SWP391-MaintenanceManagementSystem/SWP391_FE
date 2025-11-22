@@ -14,12 +14,14 @@ interface DeleteDialogProps {
   onOpenChange: (open: boolean) => void;
   onConfirm: () => void;
   isDisabled?: boolean;
+  isPending?: boolean;
 }
 export function DeleteDialog({
   open,
   onOpenChange,
   onConfirm,
   isDisabled,
+  isPending,
 }: DeleteDialogProps) {
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
@@ -27,8 +29,8 @@ export function DeleteDialog({
         <AlertDialogHeader>
           <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
           <AlertDialogDescription>
-            This action cannot be undone. This will permanently delete your your
-            data.
+            This action will mark the item as deleted. You can no longer use it
+            once updated.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
@@ -49,9 +51,9 @@ export function DeleteDialog({
                 onConfirm();
                 onOpenChange(false);
               }}
-              disabled={isDisabled}
+              disabled={isDisabled || isPending}
             >
-              Delete
+              {isPending ? "Deleting..." : "Delete"}
             </Button>
           </AlertDialogAction>
         </AlertDialogFooter>

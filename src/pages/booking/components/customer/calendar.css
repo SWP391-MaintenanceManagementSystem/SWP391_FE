@@ -1,0 +1,68 @@
+/* Pure black dark mode for react-big-calendar */
+/* .dark .rbc-calendar {
+  background-color: #0a0a0a; 
+  color: #e5e5e5; 
+} */
+
+.dark .rbc-toolbar button {
+  color: #d4d4d4;
+  background-color: #171717;
+  border: none;
+}
+
+.dark .rbc-toolbar button:hover,
+.dark .rbc-toolbar button:focus {
+  background-color: #262626;
+  color: #ffffff;
+}
+
+.dark .rbc-off-range-bg {
+  background: #111;
+}
+
+.dark .rbc-today {
+  background-color: rgba(147, 51, 234, 0.15); /* soft purple highlight */
+}
+
+/* .dark .rbc-event {
+  background-color: #9333ea; 
+  color: #fff;
+  border: none;
+} */
+
+/*.dark .rbc-slot-selection {
+  background-color: rgba(147, 51, 234, 0.3); 
+} */
+
+.dark .rbc-time-slot,
+.dark .rbc-header {
+  border-color: #262626; /* subtle grid lines */
+}
+
+.dark .rbc-month-view {
+  border-color: #262626;
+}
+
+.dark .rbc-time-view {
+  border-color: #262626;
+}
+
+.dark .rbc-agenda-view table,
+.dark .rbc-agenda-view td,
+.dark .rbc-agenda-view th {
+  border-color: #262626;
+  color: #e5e5e5;
+}
+
+.dark .rbc-appointment {
+  background-color: #9333ea;
+  color: #fff;
+}
+
+.rbc-timeslot-group {
+  min-height: 75px;
+}
+
+.rbc-event-label {
+  font-size: 10px;
+}
