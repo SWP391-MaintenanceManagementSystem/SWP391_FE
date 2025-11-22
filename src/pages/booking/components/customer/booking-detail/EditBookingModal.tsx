@@ -87,7 +87,7 @@ export default function EditBookingModal({
           <Button
             type="submit"
             form="edit-booking-form"
-            disabled={isPending || !form.formState.isDirty}
+            disabled={isPending}
             className="md:w-1/2 py-2 text-sm w-full"
           >
             {isPending ? (
