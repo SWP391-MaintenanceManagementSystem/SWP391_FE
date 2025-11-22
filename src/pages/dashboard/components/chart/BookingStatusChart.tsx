@@ -18,9 +18,9 @@ interface CustomerBookingStatusChartProps {
 }
 
 const statusColors = {
-  PENDING: "#F59E0B", // amber
-  IN_PROGRESS: "#3B82F6", // blue
-  FINISHED: "#8B5CF6", // violet
+  PENDING: "#fcd34d", 
+  IN_PROGRESS: "#5eead4", 
+  FINISHED: "#86efac", 
 };
 
 export function CustomerBookingStatusChart({
