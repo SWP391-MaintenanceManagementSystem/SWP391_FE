@@ -14,7 +14,6 @@ export const useSearchPackagesQuery = (name: string) => {
       } catch (error) {
         console.error("Error fetching packages:", error);
         queryClient.invalidateQueries({ queryKey: queryKeys.search(name) });
-        toast.error("No packages valid found");
         return [];
       }
     },

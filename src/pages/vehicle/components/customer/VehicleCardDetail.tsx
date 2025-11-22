@@ -8,25 +8,20 @@ interface VehicleCardDetailProps {
   vehicle: Vehicle;
 }
 
-
 export default function VehicleCardDetail({ vehicle }: VehicleCardDetailProps) {
-    const {auth} = useAuth();
+  const { auth } = useAuth();
   return (
     <Card className="w-full h-full flex flex-col gap-3 p-4">
       {/* License Plate */}
       <CardHeader className="">
         <CardTitle className="text-2xl font-bold">
-           {vehicle.licensePlate || "—"}
+          {vehicle.licensePlate || "—"}
         </CardTitle>
       </CardHeader>
 
       {/* Vehicle Image */}
       <CardContent className="flex flex-col gap-3">
-        <img
-          src={vehicleImg}
-          alt="Vehicle"
-          className="w-full h-52 "
-        />
+        <img src={vehicleImg} alt="Vehicle" className="w-full h-52 " />
 
         {/* Vehicle Info */}
         <div className="flex flex-col gap-2 text-sm text-gray-700 dark:text-gray-300">
@@ -34,7 +29,7 @@ export default function VehicleCardDetail({ vehicle }: VehicleCardDetailProps) {
             Information
           </h3>
           <p>
-             <strong>Email:</strong> {auth.user?.email || "—"}
+            <strong>Email:</strong> {auth.user?.email || "—"}
           </p>
           <p>
             <strong>Brand:</strong> {vehicle.brand || "—"}

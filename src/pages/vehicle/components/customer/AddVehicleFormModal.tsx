@@ -33,7 +33,7 @@ type AddVehicleFormModalProps = {
   onClose: () => void;
   open: boolean;
   form: ReturnType<typeof useForm<AddVehicleFormData>>;
-  onSubmit: (data: AddVehicleFormData) => void;
+  onSubmit: (data: AddVehicleFormData) => Promise<void>;
 };
 
 export default function AddVehicleFormModal({
@@ -67,9 +67,13 @@ export default function AddVehicleFormModal({
     }
   }, [brandId]);
 
-  const handleAddVehicle = (values: AddVehicleFormData) => {
-    onSubmit(values);
-    // onClose();
+  const handleAddVehicle = async (values: AddVehicleFormData) => {
+    try {
+      await onSubmit(values);
+      onClose();
+    } catch (error) {
+      console.error("Failed to add vehicle:", error);
+    }
   };
 
   return (

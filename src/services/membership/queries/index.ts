@@ -43,10 +43,8 @@ export const useGetMySubscriptions = () => {
     queryFn: async () => {
       try {
         const response = await getMySubscriptions();
-        toast.success("Fetched all subscriptions successfully");
         return response.data.data;
       } catch {
-        toast.error("Failed to fetch all subscriptions");
         return [];
       }
     },

@@ -24,23 +24,29 @@ export default function useVehicles() {
   });
 
   const onSubmit = (formData: AddVehicleFormData) => {
-    addVehicleMutation.mutateAsync(formData, {
-      onSuccess: () => {
-        form.reset();
-      },
-      onError: async (err: unknown) => {
-        if (err instanceof AxiosError) {
-          const errors = await err.response?.data?.errors;
-          if (errors) {
-            Object.entries(errors).forEach(([field, message]) => {
-              form.setError(field as keyof AddVehicleFormData, {
-                type: "server",
-                message: Array.isArray(message) ? message.join(", ") : String(message),
+    return new Promise<void>((resolve, reject) => {
+      addVehicleMutation.mutate(formData, {
+        onSuccess: () => {
+          form.reset();
+          resolve();
+        },
+        onError: (err: unknown) => {
+          if (err instanceof AxiosError) {
+            const errors = err.response?.data?.errors;
+            if (errors) {
+              Object.entries(errors).forEach(([field, message]) => {
+                form.setError(field as keyof AddVehicleFormData, {
+                  type: "server",
+                  message: Array.isArray(message)
+                    ? message.join(", ")
+                    : String(message),
+                });
               });
-            });
+            }
           }
-        }
-      },
+          reject(err);
+        },
+      });
     });
   };
 
@@ -48,5 +54,13 @@ export default function useVehicles() {
     deleteVehicleMutation.mutate(vehicleId);
   };
 
-  return { data, isLoading, isError, onSubmit, form, onDeleteVehicle };
+  return {
+    data,
+    isLoading,
+    isError,
+    onSubmit,
+    form,
+    onDeleteVehicle,
+    addVehicleMutation,
+  };
 }

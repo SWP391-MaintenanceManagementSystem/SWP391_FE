@@ -1,7 +1,6 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { queryKeys } from "./keys";
 import { searchServices } from "@/services/service/apis/service.api";
-import { toast } from "sonner";
 
 export const useSearchServicesQuery = (name: string) => {
   const queryClient = useQueryClient();
@@ -14,7 +13,6 @@ export const useSearchServicesQuery = (name: string) => {
       } catch (error) {
         console.error("Error fetching services:", error);
         queryClient.invalidateQueries({ queryKey: queryKeys.search(name) });
-        toast.error("Error fetching services");
         return [];
       }
     },
