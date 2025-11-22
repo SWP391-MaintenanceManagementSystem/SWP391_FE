@@ -1,7 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
-import { toast } from "sonner";
 import { queryKeys } from "./key";
-import { getTechnicianCurrentBooking, getTechnicianDashboardData } from "../apis/technician.api";
+import {
+  getTechnicianCurrentBooking,
+  getTechnicianDashboardData,
+} from "../apis/technician.api";
 
 export const useGetTechnicianDashboardData = () => {
   return useQuery({
@@ -11,7 +13,6 @@ export const useGetTechnicianDashboardData = () => {
         const response = await getTechnicianDashboardData();
         return response.data.data;
       } catch {
-        toast.error("Failed to fetch technician dashboard data");
         return null;
       }
     },
@@ -28,7 +29,7 @@ export const useGetTechnicianCurrentBooking = () => {
         const response = await getTechnicianCurrentBooking();
         return response.data.data;
       } catch {
-        toast.error("Failed to fetch technician current booking");
+        //
         return null;
       }
     },
