@@ -3,6 +3,7 @@ import { addVehicle, deleteVehicle } from "../apis/vehicle.api";
 import type { AddVehicleFormData } from "@/pages/vehicle/components/libs/schema";
 import { queryKeys } from "../queries/keys";
 import { toast } from "sonner";
+import { AxiosError } from "axios";
 
 export const useAddVehicleMutation = () => {
   const queryClient = useQueryClient();
@@ -28,6 +29,12 @@ export const useDeleteVehicleMutation = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.myVehicles });
       toast.success("Vehicle deleted successfully");
+    },
+    onError: (error: unknown) => {
+      if (error instanceof AxiosError) {
+        const msg = error.response?.data?.message || "Failed to delete vehicle";
+        toast.error(msg);
+      }
     },
   });
 };
