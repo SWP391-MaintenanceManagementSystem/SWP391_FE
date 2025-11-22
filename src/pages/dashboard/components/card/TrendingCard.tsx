@@ -21,6 +21,9 @@ import { TrendingMembershipDonutChart } from "../chart/TrendingMembership";
 import { useGetTrendingPurchase } from "@/services/dashboard/queries/admin";
 import type { ServiceData } from "@/types/models/dashboard";
 import { TooltipWrapper } from "@/components/TooltipWrapper";
+import { ChartPieIcon } from "lucide-react";
+
+type DialogType = "services" | "packages" | "memberships";
 
 type DetailDialogProps = {
   open: boolean;
@@ -29,12 +32,12 @@ type DetailDialogProps = {
   items: ServiceData[];
 };
 
-const DetailsDialog = ({
+const DetailsDialog: React.FC<DetailDialogProps> = ({
   open,
   onOpenChange,
   title,
   items,
-}: DetailDialogProps) => (
+}) => (
   <Dialog open={open} onOpenChange={onOpenChange}>
     <DialogContent className="max-w-md">
       <DialogHeader>
@@ -44,14 +47,14 @@ const DetailsDialog = ({
         </DialogDescription>
       </DialogHeader>
       <ul className="mt-2 space-y-2">
-        {items?.length > 0 ? (
+        {items?.length ? (
           items.map((item, index) => (
             <li
               key={index}
               className="flex justify-between text-sm border-b pb-1 border-gray-200 dark:border-gray-700"
             >
               <span className="font-medium text-gray-800 dark:text-gray-200">
-                {item.name ?? item.name ?? "Unnamed"}
+                {item.name ?? "Unnamed"}
               </span>
               <span className="text-gray-500 dark:text-gray-400">
                 {item.value ?? ""}
@@ -72,11 +75,47 @@ export function TrendingPurchaseCard() {
   const { data, isLoading } = useGetTrendingPurchase();
   const [dialog, setDialog] = React.useState<{
     open: boolean;
-    type: "services" | "packages" | "memberships" | null;
+    type: DialogType | null;
   }>({ open: false, type: null });
 
-  const handleOpen = (type: "services" | "packages" | "memberships") =>
-    setDialog({ open: true, type });
+  const renderCardSection = (
+    type: DialogType,
+    dataItems: ServiceData[],
+    chartComponent: JSX.Element,
+    badgeLabel: string,
+    topText?: string,
+  ) => {
+    const allZero = dataItems.every((item) => item.value === 0);
+
+    return (
+      <div className="flex flex-col gap-1 items-center text-center">
+        {!allZero ? (
+          chartComponent
+        ) : (
+          <div className="mt-10 flex flex-col items-center text-center">
+            <ChartPieIcon height={60} width={60} />
+            <p className="text-sm text-gray-500 dark:text-gray-400 mt-6 py-4 text-center">
+              No data available for analysis
+            </p>
+          </div>
+        )}
+
+        <TooltipWrapper content="View List">
+          <Badge
+            variant="outline"
+            className="text-xs font-medium cursor-pointer"
+            onClick={() => setDialog({ open: true, type })}
+          >
+            {badgeLabel}
+          </Badge>
+        </TooltipWrapper>
+
+        {!allZero && topText && (
+          <p className="text-xs text-gray-500 dark:text-gray-400">{topText}</p>
+        )}
+      </div>
+    );
+  };
 
   if (isLoading) {
     return (
@@ -140,69 +179,52 @@ export function TrendingPurchaseCard() {
         </CardHeader>
 
         <CardContent className="grid xl:grid-cols-3 gap-8">
-          {/* Services */}
-          <div className="flex flex-col gap-1 items-center">
-            <TrendingServicesDonutChart data={data?.services ?? []} />
-            <TooltipWrapper content="View List">
-              <Badge
-                variant="outline"
-                className="text-xs font-medium cursor-pointer"
-                onClick={() => handleOpen("services")}
-              >
-                Services
-              </Badge>
-            </TooltipWrapper>
-            <p className="text-xs text-gray-500 dark:text-gray-400">
-              Top{" "}
-              {data?.mostPopularService && data.mostPopularService.length > 1
-                ? "services:"
-                : "service:"}{" "}
-              <span className="font-medium text-gray-800 dark:text-gray-200">
-                {data?.mostPopularService?.join(", ")}
-              </span>
-            </p>
-          </div>
-
-          {/* Packages */}
-          <div className="flex flex-col gap-1 items-center text-center border-l border-r border-gray-200 dark:border-gray-700 px-4">
-            <TrendingPackagesDonutChart data={data?.packages ?? []} />
-            <TooltipWrapper content="View List">
-              <Badge
-                variant="outline"
-                className="text-xs font-medium cursor-pointer"
-                onClick={() => handleOpen("packages")}
-              >
-                Maintenance Packages
-              </Badge>
-            </TooltipWrapper>
-
-            <p className="text-xs text-gray-500 dark:text-gray-400">
-              Most chosen:{" "}
-              <span className="font-medium text-gray-800 dark:text-gray-200">
-                {data?.mostPopularPackage.join(", ")}
-              </span>
-            </p>
-          </div>
-
-          {/* Membership */}
-          <div className="flex flex-col items-center gap-1">
-            <TrendingMembershipDonutChart data={data?.memberships ?? []} />
-            <TooltipWrapper content="View List">
-              <Badge
-                variant="outline"
-                className="text-xs font-medium cursor-pointer"
-                onClick={() => handleOpen("memberships")}
-              >
-                Membership Plans
-              </Badge>
-            </TooltipWrapper>
-            <p className="text-xs text-gray-500 dark:text-gray-400">
-              Top tier:{" "}
-              <span className="font-medium text-gray-800 dark:text-gray-200">
-                {data?.mostPopularMembership.join(", ")}
-              </span>
-            </p>
-          </div>
+          {[
+            {
+              type: "services" as DialogType,
+              dataItems: data?.services ?? [],
+              chart: <TrendingServicesDonutChart data={data?.services ?? []} />,
+              label: "Services",
+              topText: `Top ${
+                (data?.mostPopularService?.length ?? 0) > 1
+                  ? "services:"
+                  : "service:"
+              } ${data?.mostPopularService?.join(", ") ?? ""}`,
+            },
+            {
+              type: "packages" as DialogType,
+              dataItems: data?.packages ?? [],
+              chart: <TrendingPackagesDonutChart data={data?.packages ?? []} />,
+              label: "Maintenance Packages",
+              topText: `Most chosen: ${data?.mostPopularPackage?.join(", ") ?? ""}`,
+            },
+            {
+              type: "memberships" as DialogType,
+              dataItems: data?.memberships ?? [],
+              chart: (
+                <TrendingMembershipDonutChart data={data?.memberships ?? []} />
+              ),
+              label: "Membership Plans",
+              topText: `Top tier: ${data?.mostPopularMembership?.join(", ") ?? ""}`,
+            },
+          ].map((item, index) => (
+            <div
+              key={item.type}
+              className={`flex flex-col gap-1 items-center text-center ${
+                index === 1
+                  ? "border-l border-r border-gray-200 dark:border-gray-700 px-4"
+                  : ""
+              }`}
+            >
+              {renderCardSection(
+                item.type,
+                item.dataItems,
+                item.chart,
+                item.label,
+                item.topText,
+              )}
+            </div>
+          ))}
         </CardContent>
       </Card>
 

@@ -260,8 +260,16 @@ export function AddScheduleDialog({
                     <SelectContent>
                       {filteredShifts.length > 0 ? (
                         filteredShifts.map((shift) => (
-                          <SelectItem key={shift.id} value={shift.id}>
+                          <SelectItem
+                            key={shift.id}
+                            value={shift.id}
+                            className="font-inter"
+                          >
                             {shift.name}
+                            <p className="text-xs text-gray-400">
+                              {shift.startTime.slice(0, 5)} -{" "}
+                              {shift.endTime.slice(0, 5)}
+                            </p>
                           </SelectItem>
                         ))
                       ) : (

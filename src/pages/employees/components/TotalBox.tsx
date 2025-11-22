@@ -129,12 +129,14 @@ export default function TotalBox({
         open={openAddForm}
         onOpenChange={(open) => {
           setOpenAddForm(open);
-          if (!open) form.reset();
         }}
         form={form}
         onConfirm={async (data) => {
           const result = await handleAddEmployee(data);
-          if (result) setOpenAddForm(false);
+          if (result) {
+            setOpenAddForm(false);
+            form.reset();
+          }
         }}
         isPending={isPending}
       />

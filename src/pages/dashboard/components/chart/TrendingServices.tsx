@@ -23,7 +23,6 @@ interface TrendingServicesDonutChartProps {
 export function TrendingServicesDonutChart({
   data,
 }: TrendingServicesDonutChartProps) {
-  if (!data || data.length === 0) return null;
   const sortedData = [...data].sort((a, b) => b.value - a.value);
 
   const topData =
