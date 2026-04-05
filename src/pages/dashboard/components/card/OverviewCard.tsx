@@ -21,6 +21,7 @@ import {
 import type { ServiceCenter } from "@/types/models/center";
 import { useState } from "react";
 import { useGetServiceCenterList } from "@/services/manager/queries";
+import { useTranslation } from "react-i18next";
 
 type DetailCenterListDialogProps = {
   open: boolean;
@@ -32,36 +33,40 @@ const DetailsCenterListDialog = ({
   open,
   onOpenChange,
   items,
-}: DetailCenterListDialogProps) => (
-  <Dialog open={open} onOpenChange={onOpenChange}>
-    <DialogContent className="max-w-md ">
-      <DialogHeader>
-        <DialogTitle>Service Center List</DialogTitle>
-      </DialogHeader>
-      <ul className="mt-2 space-y-2 max-h-[500px] overflow-y-auto">
-        {items?.length > 0 ? (
-          items.map((item, index) => (
-            <li
-              key={index}
-              className="flex flex-col justify-between text-sm border-b pb-1 border-gray-200 dark:border-gray-700"
-            >
-              <span className="font-medium text-gray-800 dark:text-gray-200">
-                {item.name ?? item.name ?? "Unnamed"}
-              </span>
-              <span className="font-medium text-gray-400">{item.address}</span>
-            </li>
-          ))
-        ) : (
-          <p className="text-sm text-gray-500 dark:text-gray-400">
-            No data available.
-          </p>
-        )}
-      </ul>
-    </DialogContent>
-  </Dialog>
-);
+}: DetailCenterListDialogProps) => {
+  const { t } = useTranslation();
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="max-w-md ">
+        <DialogHeader>
+          <DialogTitle>{t("dashboard.admin.service_center_list")}</DialogTitle>
+        </DialogHeader>
+        <ul className="mt-2 space-y-2 max-h-[500px] overflow-y-auto">
+          {items?.length > 0 ? (
+            items.map((item, index) => (
+              <li
+                key={index}
+                className="flex flex-col justify-between text-sm border-b pb-1 border-gray-200 dark:border-gray-700"
+              >
+                <span className="font-medium text-gray-800 dark:text-gray-200">
+                  {item.name ?? item.name ?? t("dashboard.common.unnamed")}
+                </span>
+                <span className="font-medium text-gray-400">{item.address}</span>
+              </li>
+            ))
+          ) : (
+            <p className="text-sm text-gray-500 dark:text-gray-400">
+              {t("dashboard.common.no_data")}
+            </p>
+          )}
+        </ul>
+      </DialogContent>
+    </Dialog>
+  );
+};
 
 export function OverviewAdmin() {
+  const { t } = useTranslation();
   const { data, isLoading } = useGetAdminOverview();
   const [openCenterList, setOpenCenterList] = useState(false);
   const { data: serviceCenters } = useGetServiceCenterList();
@@ -85,7 +90,7 @@ export function OverviewAdmin() {
   return (
     <div className="grid lg:grid-cols-4 grid-cols-2 gap-3 md:gap-4 font-inter h-auto">
       <TotalCard
-        title="Total Revenue"
+        title={t("dashboard.admin.total_revenue")}
         icon={HandCoinsIcon}
         numberValue={
           data?.totalRevenue?.toLocaleString("en-US", {
@@ -96,22 +101,22 @@ export function OverviewAdmin() {
       />
       <NavLink to="/vehicles">
         <TotalCard
-          title="Verified Customers"
+          title={t("dashboard.admin.verified_customers")}
           icon={User2}
           numberValue={data?.totalCustomers ?? "N/A"}
         />
       </NavLink>
       <NavLink to="/employees/staffs">
         <TotalCard
-          title="Verified Employees"
+          title={t("dashboard.admin.verified_employees")}
           icon={IdCardLanyard}
           numberValue={data?.totalEmployees ?? "N/A"}
         />
       </NavLink>
-      <TooltipWrapper content="View Service Center List">
+      <TooltipWrapper content={t("dashboard.admin.view_service_center_list")}>
         <div className="cursor-pointer">
           <TotalCard
-            title="Total Service Center"
+            title={t("dashboard.admin.total_service_center")}
             icon={Hotel}
             numberValue={data?.totalServiceCenters ?? "N/A"}
             onClick={() => setOpenCenterList(!openCenterList)}
@@ -135,6 +140,7 @@ export function OverviewStaff({
   data: StaffDashboardData;
   isLoading: boolean;
 }) {
+  const { t } = useTranslation();
   return (
     <div className="grid grid-cols-2 gap-3">
       {isLoading ? (
@@ -150,12 +156,12 @@ export function OverviewStaff({
       ) : (
         <>
           <TotalCard
-            title="Total Customers"
+            title={t("dashboard.staff.total_customers")}
             icon={Users}
             numberValue={data?.totalCustomers ?? "N/A"}
           />
           <TotalCard
-            title="New Tickets"
+            title={t("dashboard.staff.new_tickets")}
             icon={MessageCircleMore}
             numberValue={data?.newTickets ?? "N/A"}
           />

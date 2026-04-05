@@ -2,8 +2,10 @@ import StatisticsCard from "./StatisticsCard";
 import { Package, DollarSign, AlertTriangle, TrendingUp } from "lucide-react";
 import { useGetPartStat } from "@/services/manager/queries";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useTranslation } from "react-i18next";
 
 export default function StatisticsSection() {
+  const { t } = useTranslation();
   const { data, isLoading } = useGetPartStat();
   return (
     <div className="grid lg:grid-cols-4 grid-cols-2 gap-3 md:gap-4 font-inter h-auto">
@@ -23,28 +25,28 @@ export default function StatisticsSection() {
         <>
           <StatisticsCard
             icon={Package}
-            title="Total Items"
+            title={t("dashboard.admin.inventory.total_items")}
             numberTotal={data?.totalQuantity || 0}
-            description={`Across ${data?.totalItems} products`}
+            description={t("dashboard.admin.inventory.across_products", { count: data?.totalItems || 0 })}
           />
           <StatisticsCard
             icon={DollarSign}
-            title="Total Value"
+            title={t("dashboard.admin.inventory.total_value")}
             numberValue={data?.totalValue || 0}
-            description="Current inventory value"
+            description={t("dashboard.admin.inventory.current_value")}
           />
           <StatisticsCard
             icon={AlertTriangle}
-            title="Low Stock Items"
+            title={t("dashboard.admin.inventory.low_stock_items")}
             numberTotal={data?.lowStockItems || 0}
-            description="Need restocking"
+            description={t("dashboard.admin.inventory.need_restocking")}
             textStyle="text-red-600"
           />
           <StatisticsCard
             icon={TrendingUp}
-            title="Categories"
+            title={t("dashboard.admin.inventory.categories")}
             numberTotal={data?.categories || 0}
-            description="Product categories"
+            description={t("dashboard.admin.inventory.product_categories")}
           />
         </>
       )}

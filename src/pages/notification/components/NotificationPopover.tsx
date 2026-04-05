@@ -22,8 +22,10 @@ import { usePersistentNotificationSocket } from "@/services/notifications/hooks/
 import { useAuth } from "@/contexts/AuthContext";
 import { Spinner } from "@/components/ui/shadcn-io/spinner";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 export default function NotificationsPopover() {
+  const { t } = useTranslation();
   const { auth } = useAuth();
   const navigate = useNavigate();
 
@@ -113,7 +115,7 @@ export default function NotificationsPopover() {
     return (
       <div className="mb-3">
         <h3 className="font-semibold text-gray-600 dark:text-gray-400 mb-2">
-          {title}
+          {t(`notifications.sections.${title.toLowerCase()}`)}
         </h3>
         <div className="space-y-2">
           {list.map((notification) => (
@@ -131,7 +133,7 @@ export default function NotificationsPopover() {
 
   return (
     <Popover>
-      <TooltipWrapper content="View Notifications">
+      <TooltipWrapper content={t("notifications.view_tooltip")}>
         <PopoverTrigger asChild className="absolute right-8 hidden md:flex">
           <div className="cursor-pointer">
             <Bell />
@@ -152,7 +154,7 @@ export default function NotificationsPopover() {
       >
         {/* Header */}
         <div className="flex justify-between items-center p-2">
-          <h2 className="font-semibold text-xl">Your Notifications</h2>
+          <h2 className="font-semibold text-xl">{t("notifications.header")}</h2>
           {(groupedNotifications.today.length > 0 ||
             groupedNotifications.yesterday.length > 0) &&
             unreadCount > 0 && (
@@ -163,7 +165,7 @@ export default function NotificationsPopover() {
                 onClick={onMarkAsReadAll}
               >
                 <CheckCheck />
-                Mark all read
+                {t("notifications.mark_all_read")}
               </Button>
             )}
         </div>
@@ -175,9 +177,9 @@ export default function NotificationsPopover() {
           className="flex flex-col h-full"
         >
           <TabsList className="grid w-full grid-cols-3 max-w-md mb-4">
-            <TabsTrigger value="all">All ({totalCount})</TabsTrigger>
-            <TabsTrigger value="unread">Unread ({unreadCount})</TabsTrigger>
-            <TabsTrigger value="read">Read ({readCount})</TabsTrigger>
+            <TabsTrigger value="all">{t("notifications.tabs.all")} ({totalCount})</TabsTrigger>
+            <TabsTrigger value="unread">{t("notifications.tabs.unread")} ({unreadCount})</TabsTrigger>
+            <TabsTrigger value="read">{t("notifications.tabs.read")} ({readCount})</TabsTrigger>
           </TabsList>
 
           <div className="flex-1 overflow-y-auto max-h-[50vh] min-h-[40vh] space-y-4">
@@ -202,14 +204,14 @@ export default function NotificationsPopover() {
                       <div className="text-center py-12">
                         <BellOff className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
                         <h3 className="text-lg font-medium mb-2">
-                          No Notifications
+                          {t("notifications.empty.title")}
                         </h3>
                         <p className="text-muted-foreground text-sm">
                           {activeTab === "unread"
-                            ? "No unread notifications from the last 48 hours."
+                            ? t("notifications.empty.unread_desc")
                             : activeTab === "read"
-                              ? "No read notifications from the last 48 hours."
-                              : "You don't have any notifications from the last 48 hours."}
+                              ? t("notifications.empty.read_desc")
+                              : t("notifications.empty.all_desc")}
                         </p>
                       </div>
                     )}
@@ -230,14 +232,14 @@ export default function NotificationsPopover() {
           {/* Footer */}
           <div className="flex py-4 justify-between items-center border-t">
             <p className="text-sm font-semibold text-gray-500">
-              Manage Notifications
+              {t("notifications.footer.manage")}
             </p>
             <Button
               variant="secondary"
               className="hover:bg-purple-primary hover:text-white"
               onClick={() => navigate("/notification")}
             >
-              View all notifications
+              {t("notifications.footer.view_all")}
             </Button>
           </div>
         </Tabs>

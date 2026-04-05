@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import type { AccountWithProfile } from "@/types/models/account";
 import { AccountRole } from "@/types/enums/role";
 import type { ChangeProfileFormData } from "./libs/schema";
+import { useTranslation } from "react-i18next";
 
 type ProfileFormProps = {
   user: AccountWithProfile | undefined;
@@ -24,6 +25,7 @@ export default function ProfileForm({
   form,
   onSubmit,
 }: ProfileFormProps) {
+  const { t } = useTranslation();
   const isCustomer = user?.role === AccountRole.CUSTOMER;
 
   return (
@@ -36,9 +38,9 @@ export default function ProfileForm({
               name="firstName"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>First Name</FormLabel>
+                  <FormLabel>{t("profile.labels.first_name")}</FormLabel>
                   <FormControl>
-                    <Input {...field} placeholder="First Name" />
+                    <Input {...field} placeholder={t("profile.placeholders.first_name")} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -49,9 +51,9 @@ export default function ProfileForm({
               name="lastName"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Last Name</FormLabel>
+                  <FormLabel>{t("profile.labels.last_name")}</FormLabel>
                   <FormControl>
-                    <Input {...field} placeholder="Last Name" />
+                    <Input {...field} placeholder={t("profile.placeholders.last_name")} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -64,7 +66,7 @@ export default function ProfileForm({
               name="email"
               render={() => (
                 <FormItem>
-                  <FormLabel>Email</FormLabel>
+                  <FormLabel>{t("profile.labels.email")}</FormLabel>
                   <FormControl>
                     <Input
                       value={user?.email || ""}
@@ -81,9 +83,9 @@ export default function ProfileForm({
               name="phone"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Phone</FormLabel>
+                  <FormLabel>{t("profile.labels.phone")}</FormLabel>
                   <FormControl>
-                    <Input {...field} placeholder="Phone" />
+                    <Input {...field} placeholder={t("profile.placeholders.phone")} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -96,9 +98,9 @@ export default function ProfileForm({
               name="address"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Address</FormLabel>
+                  <FormLabel>{t("profile.labels.address")}</FormLabel>
                   <FormControl>
-                    <Input {...field} placeholder="Address" />
+                    <Input {...field} placeholder={t("profile.placeholders.address")} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -112,7 +114,7 @@ export default function ProfileForm({
               className="!bg-purple-primary !text-white dark:!text-black cursor-pointer"
               disabled={!form.formState.isDirty}
             >
-              Save Changes
+              {t("profile.actions.save_changes")}
             </Button>
           </div>
         </div>

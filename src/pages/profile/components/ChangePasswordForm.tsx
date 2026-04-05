@@ -13,6 +13,7 @@ import { Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
 import type { ChangePasswordFormData } from "./profile/libs/schema";
+import { useTranslation } from "react-i18next";
 
 type ChangePasswordFormProps = {
   form: ReturnType<typeof useForm<ChangePasswordFormData>>;
@@ -23,6 +24,7 @@ export default function ChangePasswordForm({
   form,
   onSubmit,
 }: ChangePasswordFormProps) {
+  const { t } = useTranslation();
   const [showPassword, setShowPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmNewPassword, setShowConfirmNewPassword] = useState(false);
@@ -36,12 +38,12 @@ export default function ChangePasswordForm({
             name="oldPassword"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="font-inter">Old Password</FormLabel>
+                <FormLabel className="font-inter">{t("profile.labels.old_password")}</FormLabel>
                 <FormControl>
                   <div className="relative min-w-[200px]">
                     <Input
                       type={showPassword ? "text" : "password"}
-                      placeholder="Enter your old password"
+                      placeholder={t("profile.placeholders.old_password")}
                       {...field}
                       aria-invalid={!!form.formState.errors.oldPassword}
                     />
@@ -62,12 +64,12 @@ export default function ChangePasswordForm({
             name="newPassword"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="font-inter">New Password</FormLabel>
+                <FormLabel className="font-inter">{t("profile.labels.new_password")}</FormLabel>
                 <FormControl>
                   <div className="relative min-w-[200px]">
                     <Input
                       type={showNewPassword ? "text" : "password"}
-                      placeholder="Enter your new password"
+                      placeholder={t("profile.placeholders.new_password")}
                       {...field}
                       aria-invalid={!!form.formState.errors.newPassword}
                     />
@@ -93,13 +95,13 @@ export default function ChangePasswordForm({
             render={({ field }) => (
               <FormItem>
                 <FormLabel className="font-inter">
-                  ConfirmNew Password
+                  {t("profile.labels.confirm_new_password")}
                 </FormLabel>
                 <FormControl>
                   <div className="relative min-w-[200px]">
                     <Input
                       type={showConfirmNewPassword ? "text" : "password"}
-                      placeholder="Confirm your new password"
+                      placeholder={t("profile.placeholders.confirm_new_password")}
                       {...field}
                       aria-invalid={!!form.formState.errors.confirmNewPassword}
                     />
@@ -127,13 +129,13 @@ export default function ChangePasswordForm({
               className="w-fit !bg-purple-primary !font-inter !text-white dark:!text-black hover:scale-105 transition-transform duration-150"
               disabled={!form.formState.isDirty}
             >
-              Save Changes
+              {t("profile.actions.save_changes")}
             </Button>
             <NavLink
               to="/forgot-password"
               className=" !underline !text-xs !font-inter text-right "
             >
-              Forgot Password?
+              {t("profile.actions.forgot_password")}
             </NavLink>
           </div>
         </div>

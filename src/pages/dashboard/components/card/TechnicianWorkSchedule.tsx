@@ -6,18 +6,20 @@ import { Wrench, Clock, MapPin } from "lucide-react";
 import { useGetWorkScheduleByEmpId } from "@/services/shift/queries";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useTranslation } from "react-i18next";
 
 export default function TechnicianWorkSchedule({
   technicianId,
 }: {
   technicianId: string;
 }) {
+  const { t } = useTranslation();
   const [date, setDate] = useState(new Date());
   const { data, isLoading } = useGetWorkScheduleByEmpId(technicianId);
 
   const events = useMemo(() => {
-    const raw = data ?? [];
-    return raw.map((item) => ({
+    const raw = (data as any) ?? [];
+    return raw.map((item: any) => ({
       date: item.date,
       time: `${item.shift.startTime.slice(0, 5)} - ${item.shift.endTime.slice(0, 5)}`,
       centerName: item.shift.serviceCenter.name,
@@ -25,7 +27,7 @@ export default function TechnicianWorkSchedule({
   }, [data]);
 
   const selectedEvents = events.filter(
-    (e) => e.date === format(date, "yyyy-MM-dd")
+    (e: any) => e.date === format(date, "yyyy-MM-dd")
   );
 
   return (
@@ -50,17 +52,15 @@ export default function TechnicianWorkSchedule({
         <>
           <CardHeader className="flex items-center gap-1.5">
             <Wrench size={20} />
-            <CardTitle>Technician Schedule</CardTitle>
+            <CardTitle>{t("technician.technician_schedule")}</CardTitle>
           </CardHeader>
 
-          {/* ✅ Responsive fix: 1 column on mobile, 2 columns from md+ */}
           <CardContent className="grid grid-cols-1 md:grid-cols-[auto_1fr] gap-6 items-start">
-            {/* Calendar Section */}
             <div className="relative">
               <Calendar
                 mode="single"
                 selected={date}
-                onSelect={setDate}
+                onSelect={setDate as any}
                 required
                 className="
                   rounded-md border
@@ -70,13 +70,13 @@ export default function TechnicianWorkSchedule({
                   [&_[data-selected-single='true']:hover]:bg-blue-500
                 "
                 modifiers={{
-                  oneShift: (day) => {
+                  oneShift: (day: Date) => {
                     const dayStr = format(day, "yyyy-MM-dd");
-                    return events.filter((e) => e.date === dayStr).length === 1;
+                    return events.filter((e: any) => e.date === dayStr).length === 1;
                   },
-                  twoShifts: (day) => {
+                  twoShifts: (day: Date) => {
                     const dayStr = format(day, "yyyy-MM-dd");
-                    return events.filter((e) => e.date === dayStr).length >= 2;
+                    return events.filter((e: any) => e.date === dayStr).length >= 2;
                   },
                 }}
                 modifiersClassNames={{
@@ -89,15 +89,14 @@ export default function TechnicianWorkSchedule({
               />
             </div>
 
-            {/* Shift list */}
             <div className="flex flex-col h-full max-h-[300px] overflow-hidden">
               <h3 className="text-sm font-medium mb-2">
-                Shifts on {format(date, "dd MMM yyyy")}
+                {t("technician.shifts_on", { date: format(date, "dd MMM yyyy") })}
               </h3>
 
               {selectedEvents.length > 0 ? (
                 <div className="flex flex-col gap-2 overflow-y-auto pr-1">
-                  {selectedEvents.map((event, idx) => (
+                  {selectedEvents.map((event: any, idx: number) => (
                     <div
                       key={idx}
                       className="p-3 rounded-xl space-y-1.5 bg-blue-50 dark:bg-blue-900/40 border border-blue-100 dark:border-blue-700 text-sm font-medium"
@@ -115,7 +114,7 @@ export default function TechnicianWorkSchedule({
                 </div>
               ) : (
                 <p className="text-sm text-muted-foreground">
-                  No assigned shifts for this day.
+                  {t("technician.no_shifts")}
                 </p>
               )}
             </div>

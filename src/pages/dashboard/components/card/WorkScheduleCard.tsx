@@ -6,18 +6,20 @@ import { CalendarClock, Clock, MapPin } from "lucide-react";
 import { useGetWorkScheduleByEmpId } from "@/services/shift/queries";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useTranslation } from "react-i18next";
 
 export default function WeeklyWorkSchedule({
   employeeId,
 }: {
   employeeId: string;
 }) {
+  const { t } = useTranslation();
   const [date, setDate] = useState(new Date());
   const { data, isLoading } = useGetWorkScheduleByEmpId(employeeId);
 
   const events = useMemo(() => {
-    const raw = data ?? [];
-    return raw.map((item) => ({
+    const raw = (data as any) ?? [];
+    return raw.map((item: any) => ({
       date: item.date,
       time: `${item.shift.startTime.slice(0, 5)} - ${item.shift.endTime.slice(0, 5)}`,
       centerName: item.shift.serviceCenter.name,
@@ -25,7 +27,7 @@ export default function WeeklyWorkSchedule({
   }, [data]);
 
   const selectedEvents = events.filter(
-    (e) => e.date === format(date, "yyyy-MM-dd"),
+    (e: any) => e.date === format(date, "yyyy-MM-dd"),
   );
 
   return (
@@ -51,7 +53,7 @@ export default function WeeklyWorkSchedule({
         <>
           <CardHeader className="flex items-center gap-1.5">
             <CalendarClock size={20} />
-            <CardTitle>Work Schedule</CardTitle>
+            <CardTitle>{t("staff.work_schedule")}</CardTitle>
           </CardHeader>
 
           <CardContent className="grid grid-cols-[auto_1fr] xl:grid-cols-1 gap-6 items-start">
@@ -59,7 +61,7 @@ export default function WeeklyWorkSchedule({
               <Calendar
                 mode="single"
                 selected={date}
-                onSelect={setDate}
+                onSelect={setDate as any}
                 required
                 className="
                   rounded-md border
@@ -70,13 +72,13 @@ export default function WeeklyWorkSchedule({
                   [&_[data-selected-single='true']:hover]:text-white
                 "
                 modifiers={{
-                  oneShift: (day) => {
+                  oneShift: (day: Date) => {
                     const dayStr = format(day, "yyyy-MM-dd");
-                    return events.filter((e) => e.date === dayStr).length === 1;
+                    return events.filter((e: any) => e.date === dayStr).length === 1;
                   },
-                  twoShifts: (day) => {
+                  twoShifts: (day: Date) => {
                     const dayStr = format(day, "yyyy-MM-dd");
-                    return events.filter((e) => e.date === dayStr).length >= 2;
+                    return events.filter((e: any) => e.date === dayStr).length >= 2;
                   },
                 }}
                 modifiersClassNames={{
@@ -91,12 +93,12 @@ export default function WeeklyWorkSchedule({
 
             <div>
               <h3 className="text-sm font-medium mb-2">
-                Events on {format(date, "dd MMM yyyy")}
+                {t("staff.events_on", { date: format(date, "dd MMM yyyy") })}
               </h3>
 
               {selectedEvents.length > 0 ? (
                 <div className="space-y-2 overflow-y-auto">
-                  {selectedEvents.map((event, idx) => (
+                  {selectedEvents.map((event: any, idx: number) => (
                     <div
                       key={idx}
                       className="p-3 rounded-xl space-y-1.5 bg-purple-50 dark:bg-purple-900/40 border border-purple-100 dark:border-purple-700 text-sm font-medium"
@@ -114,7 +116,7 @@ export default function WeeklyWorkSchedule({
                 </div>
               ) : (
                 <p className="text-sm text-muted-foreground">
-                  No events for this day.
+                  {t("staff.no_events")}
                 </p>
               )}
             </div>

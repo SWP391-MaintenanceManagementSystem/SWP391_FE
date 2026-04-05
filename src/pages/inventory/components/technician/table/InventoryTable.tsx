@@ -5,8 +5,10 @@ import type { Part, Category } from "@/types/models/part";
 import type { ColumnDef, SortingState } from "@tanstack/react-table";
 import { useGetPartList, useGetCategoryList } from "@/services/manager/queries";
 import { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 
 export default function InventoryTable() {
+  const { t } = useTranslation();
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [searchValue, setSearchValue] = useState("");
@@ -46,16 +48,16 @@ export default function InventoryTable() {
   const rawList = data?.data ?? [];
 
   const handleFilterChange = (field: string, value: string) => {
-    setFilters((prev) => ({ ...prev, [field]: value }));
+    setFilters((prev: any) => ({ ...prev, [field]: value }));
   };
 
-  const columns = getColumns(handleFilterChange, filters, categoryList);
+  const columns = getColumns(handleFilterChange, filters, categoryList, t);
 
   return (
     <Card className="h-full flex-1 md:min-h-[500px] min-h-[600px]">
       <CardContent className="font-inter flex flex-col gap-4 h-full">
         <h3 className="font-semibold text-gray-text-header h-fit">
-          Inventory Items
+          {t("dashboard.admin.inventory.items_list")}
         </h3>
         <DataTable<Part, unknown>
           data={rawList}
@@ -65,11 +67,11 @@ export default function InventoryTable() {
           totalPage={data?.totalPages ?? 1}
           isLoading={isLoading}
           isFetching={isFetching}
-          onPageChange={(newPage) => setPage(newPage + 1)}
+          onPageChange={(newPage: number) => setPage(newPage + 1)}
           onPageSizeChange={setPageSize}
           manualPagination
           isSearch={true}
-          searchPlaceholder="Name, Category"
+          searchPlaceholder={t("dashboard.admin.inventory.search_placeholder")}
           onSearchChange={setSearchValue}
           manualSearch
           sorting={sorting}

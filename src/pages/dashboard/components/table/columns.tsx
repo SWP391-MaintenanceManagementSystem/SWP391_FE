@@ -5,9 +5,10 @@ import { Badge } from "@/components/ui/badge";
 import dayjs from "dayjs";
 import BookingTag from "@/components/tag/BookingTag";
 import type { Booking } from "@/types/models/booking";
-import ColActions from "./ColAction"; // <-- kiểm tra tên file/exports ở đây
+import ColActions from "./ColAction";
+import type { TFunction } from "i18next";
 
-export const getColumns = () => {
+export const getColumns = (t: TFunction) => {
   const columnHelper = createColumnHelper<Booking>();
 
   return [
@@ -28,7 +29,7 @@ export const getColumns = () => {
     // Booking ID
     columnHelper.accessor("id", {
       id: "bookingId",
-      header: "Booking ID",
+      header: t("dashboard.bookings.booking_id"),
       size: 150,
       cell: (info) => (
         <span className="font-inter font-medium text-gray-800 dark:text-gray-200">
@@ -36,26 +37,26 @@ export const getColumns = () => {
         </span>
       ),
       enableSorting: false,
-      meta: { title: "Booking ID" },
+      meta: { title: t("dashboard.bookings.booking_id") },
     }),
 
     // Booking Date
     columnHelper.accessor("bookingDate", {
       id: "bookingDate",
-      header: (info) => <SortHeader title="Date" info={info} />,
+      header: (info) => <SortHeader title={t("dashboard.bookings.date")} info={info} />,
       cell: (info) => (
         <Badge variant="outline">
           {dayjs(info.getValue()).format("HH:mm DD/MM/YYYY")}
         </Badge>
       ),
       size: 160,
-      meta: { title: "Booking Date" },
+      meta: { title: t("dashboard.bookings.date") },
     }),
 
     // Service Center
     columnHelper.accessor((row) => row.center?.name ?? "", {
       id: "service",
-      header: (info) => <SortHeader title="Service Center" info={info} />,
+      header: (info) => <SortHeader title={t("dashboard.bookings.service_center")} info={info} />,
       cell: (info) => (
         <span className="font-inter text-gray-700 dark:text-gray-300">
           {info.getValue() || "—"}
@@ -64,7 +65,7 @@ export const getColumns = () => {
       enableSorting: true,
       sortingFn: "alphanumeric",
       size: 200,
-      meta: { title: "Service Center" },
+      meta: { title: t("dashboard.bookings.service_center") },
     }),
 
     // Status
@@ -73,7 +74,7 @@ export const getColumns = () => {
       header: ({ column }) => (
         <FilterHeader
           column={column}
-          title="Status"
+          title={t("dashboard.bookings.status")}
           selectedValue={column.getFilterValue() as string}
           onFilterChange={(v) => column.setFilterValue(v || undefined)}
         />
@@ -81,10 +82,10 @@ export const getColumns = () => {
       meta: {
         filterOptions: ["PENDING", "ASSIGNED", "CHECKED_IN", "COMPLETED"],
         labelOptions: {
-          PENDING: "Pending",
-          ASSIGNED: "Assigned",
-          CHECKED_IN: "Checked In",
-          COMPLETED: "Completed",
+          PENDING: t("dashboard.bookings.status_types.pending"),
+          ASSIGNED: t("dashboard.bookings.status_types.assigned"),
+          CHECKED_IN: t("dashboard.bookings.status_types.checked_in"),
+          COMPLETED: t("dashboard.bookings.status_types.completed"),
         },
       },
       cell: (info) => <BookingTag status={info.getValue()} />,
@@ -94,19 +95,19 @@ export const getColumns = () => {
     // Total Cost
     columnHelper.accessor("totalCost", {
       id: "total",
-      header: (info) => <SortHeader title="Total" info={info} />,
+      header: (info) => <SortHeader title={t("dashboard.bookings.total")} info={info} />,
       cell: (info) => (
         <span className="font-medium text-gray-800 dark:text-gray-200">
           ${info.getValue()?.toFixed(2) ?? "0.00"}
         </span>
       ),
       size: 100,
-      meta: { title: "Total" },
+      meta: { title: t("dashboard.bookings.total") },
     }),
 
     columnHelper.display({
       id: "actions",
-      header: "Actions",
+      header: t("dashboard.bookings.actions"),
       size: 80,
       cell: ({ row, table }) => (
         <ColActions

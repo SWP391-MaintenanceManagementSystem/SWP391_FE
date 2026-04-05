@@ -8,15 +8,20 @@ import { useGetStaffDashboardData } from "@/services/dashboard/queries/staff";
 import type { StaffDashboardData } from "@/types/models/dashboard";
 import { OverviewStaff } from "./card/OverviewCard";
 
+import { useTranslation } from "react-i18next";
+
 export default function StaffDashboard() {
+  const { t } = useTranslation();
   const { auth } = useAuth();
   const { data, isLoading } = useGetStaffDashboardData();
+
+  const userName = `${auth?.user?.profile?.firstName ?? ""} ${auth?.user?.profile?.lastName ?? ""}`.trim();
 
   return (
     <div className="w-full h-[calc(100vh-32px)] font-inter">
       <DynamicBreadcrumbs
         pathTitles={{
-          dashboard: `👋 Welcome back, ${auth?.user?.profile?.firstName} ${auth?.user?.profile?.lastName}`,
+          dashboard: `👋 ${t("dashboard.welcome_back", { name: userName })}`,
         }}
       />
       <MainContentLayout className="grid grid-cols-1 xl:grid-cols-[1fr_auto] gap-4 overflow-y-auto">

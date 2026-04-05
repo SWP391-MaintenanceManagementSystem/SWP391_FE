@@ -14,12 +14,14 @@ import { useState } from "react"
 import { Eye, EyeOff } from "lucide-react"
 import { CgGoogle } from "react-icons/cg";
 import { Link } from "react-router-dom"
+import { useTranslation } from "react-i18next";
 type LoginFormProps = {
     form: ReturnType<typeof useForm<LoginFormData>>;
     onSubmit: (data: LoginFormData) => void;
 }
 
 export const LoginForm = ({ form, onSubmit }: LoginFormProps) => {
+    const { t } = useTranslation();
     const [showPassword, setShowPassword] = useState<boolean>(false)
     const togglePasswordVisibility = () => {
         setShowPassword(!showPassword)
@@ -34,9 +36,9 @@ export const LoginForm = ({ form, onSubmit }: LoginFormProps) => {
                         name="email"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Email</FormLabel>
+                                <FormLabel>{t("auth.login.email_label")}</FormLabel>
                                 <FormControl>
-                                    <Input placeholder="Enter your email" {...field} className="h-10 py-2" />
+                                    <Input placeholder={t("auth.login.email_placeholder")} {...field} className="h-10 py-2" />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -47,11 +49,11 @@ export const LoginForm = ({ form, onSubmit }: LoginFormProps) => {
                         name="password"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Password</FormLabel>
+                                <FormLabel>{t("auth.login.password_label")}</FormLabel>
                                 <FormControl>
                                     <div className="relative">
                                         <Input
-                                            placeholder="Enter your password"
+                                            placeholder={t("auth.login.password_placeholder")}
                                             {...field}
                                             type={showPassword ? "text" : "password"}
                                             className="h-10 py-2"
@@ -75,11 +77,11 @@ export const LoginForm = ({ form, onSubmit }: LoginFormProps) => {
                     />
                     <div className="flex justify-end">
                         <Link to="/forgot-password" className="!text-sm !text-gray-400 !underline">
-                            Forgot Password
+                            {t("auth.login.forgot_password")}
                         </Link>
                     </div>
                     <div className="flex flex-col gap-y-3">
-                        <Button type="submit" className="w-full h-11 mt-2" disabled={form.formState.isSubmitting}>Sign In</Button>
+                        <Button type="submit" className="w-full h-11 mt-2" disabled={form.formState.isSubmitting}>{t("auth.login.sign_in")}</Button>
                         <Button
                             type="button"
                             variant="outline"
@@ -90,7 +92,7 @@ export const LoginForm = ({ form, onSubmit }: LoginFormProps) => {
                         >
                             <span className="flex items-center justify-center leading-none text-l gap-x-2">
                                 <CgGoogle />
-                                Continue with Google
+                                {t("auth.login.google_login")}
                             </span>
 
 

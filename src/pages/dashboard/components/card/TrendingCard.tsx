@@ -23,6 +23,7 @@ import { useGetTrendingPurchase } from "@/services/dashboard/queries/admin";
 import type { ServiceData } from "@/types/models/dashboard";
 import { TooltipWrapper } from "@/components/TooltipWrapper";
 import { ChartPieIcon } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 type DialogType = "services" | "packages" | "memberships";
 
@@ -38,41 +39,47 @@ const DetailsDialog: React.FC<DetailDialogProps> = ({
   onOpenChange,
   title,
   items,
-}) => (
-  <Dialog open={open} onOpenChange={onOpenChange}>
-    <DialogContent className="max-w-md">
-      <DialogHeader>
-        <DialogTitle>{title}</DialogTitle>
-        <DialogDescription>
-          Showing all top {title.toLowerCase()} customers preferred.
-        </DialogDescription>
-      </DialogHeader>
-      <ul className="mt-2 space-y-2">
-        {items?.length ? (
-          items.map((item, index) => (
-            <li
-              key={index}
-              className="flex justify-between text-sm border-b pb-1 border-gray-200 dark:border-gray-700"
-            >
-              <span className="font-medium text-gray-800 dark:text-gray-200">
-                {item.name ?? "Unnamed"}
-              </span>
-              <span className="text-gray-500 dark:text-gray-400">
-                {item.value ?? ""}
-              </span>
-            </li>
-          ))
-        ) : (
-          <p className="text-sm text-gray-500 dark:text-gray-400">
-            No data available.
-          </p>
-        )}
-      </ul>
-    </DialogContent>
-  </Dialog>
-);
+}) => {
+  const { t } = useTranslation();
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="max-w-md">
+        <DialogHeader>
+          <DialogTitle>{title}</DialogTitle>
+          <DialogDescription>
+            {t("dashboard.admin.trending.showing_top", {
+              type: title.toLowerCase(),
+            })}
+          </DialogDescription>
+        </DialogHeader>
+        <ul className="mt-2 space-y-2">
+          {items?.length ? (
+            items.map((item, index) => (
+              <li
+                key={index}
+                className="flex justify-between text-sm border-b pb-1 border-gray-200 dark:border-gray-700"
+              >
+                <span className="font-medium text-gray-800 dark:text-gray-200">
+                  {item.name ?? t("dashboard.common.unnamed")}
+                </span>
+                <span className="text-gray-500 dark:text-gray-400">
+                  {item.value ?? ""}
+                </span>
+              </li>
+            ))
+          ) : (
+            <p className="text-sm text-gray-500 dark:text-gray-400">
+              {t("dashboard.common.no_data")}
+            </p>
+          )}
+        </ul>
+      </DialogContent>
+    </Dialog>
+  );
+};
 
 export function TrendingPurchaseCard() {
+  const { t } = useTranslation();
   const { data, isLoading } = useGetTrendingPurchase();
   const [dialog, setDialog] = React.useState<{
     open: boolean;
@@ -96,12 +103,12 @@ export function TrendingPurchaseCard() {
           <div className="mt-10 flex flex-col items-center text-center">
             <ChartPieIcon height={60} width={60} />
             <p className="text-sm text-gray-500 dark:text-gray-400 mt-6 py-4 text-center">
-              No data available for analysis
+              {t("dashboard.admin.trending.no_data_analysis")}
             </p>
           </div>
         )}
 
-        <TooltipWrapper content="View List">
+        <TooltipWrapper content={t("dashboard.admin.trending.view_list")}>
           <Badge
             variant="outline"
             className="text-xs font-medium cursor-pointer"
@@ -161,21 +168,20 @@ export function TrendingPurchaseCard() {
 
   const currentTitle =
     dialog.type === "services"
-      ? "Services List"
+      ? t("dashboard.admin.trending.services_list")
       : dialog.type === "packages"
-        ? "Packages List"
+        ? t("dashboard.admin.trending.packages_list")
         : dialog.type === "memberships"
-          ? "Memberships List"
+          ? t("dashboard.admin.trending.memberships_list")
           : "";
 
   return (
     <>
       <Card>
         <CardHeader>
-          <CardTitle>Customer Purchase Trends</CardTitle>
+          <CardTitle>{t("dashboard.admin.trending.title")}</CardTitle>
           <CardDescription>
-            Understand customer behavior through top-purchased services and
-            packages.
+            {t("dashboard.admin.trending.desc")}
           </CardDescription>
         </CardHeader>
 
@@ -185,19 +191,19 @@ export function TrendingPurchaseCard() {
               type: "services" as DialogType,
               dataItems: data?.services ?? [],
               chart: <TrendingServicesDonutChart data={data?.services ?? []} />,
-              label: "Services",
-              topText: `Top ${
+              label: t("dashboard.admin.trending.services"),
+              topText: `${
                 (data?.mostPopularService?.length ?? 0) > 1
-                  ? "services:"
-                  : "service:"
+                  ? t("dashboard.admin.trending.top_services")
+                  : t("dashboard.admin.trending.top_service")
               } ${data?.mostPopularService?.join(", ") ?? ""}`,
             },
             {
               type: "packages" as DialogType,
               dataItems: data?.packages ?? [],
               chart: <TrendingPackagesDonutChart data={data?.packages ?? []} />,
-              label: "Maintenance Packages",
-              topText: `Most chosen: ${data?.mostPopularPackage?.join(", ") ?? ""}`,
+              label: t("dashboard.admin.trending.packages"),
+              topText: `${t("dashboard.admin.trending.most_chosen")} ${data?.mostPopularPackage?.join(", ") ?? ""}`,
             },
             {
               type: "memberships" as DialogType,
@@ -205,8 +211,8 @@ export function TrendingPurchaseCard() {
               chart: (
                 <TrendingMembershipDonutChart data={data?.memberships ?? []} />
               ),
-              label: "Membership Plans",
-              topText: `Top tier: ${data?.mostPopularMembership?.join(", ") ?? ""}`,
+              label: t("dashboard.admin.trending.memberships"),
+              topText: `${t("dashboard.admin.trending.top_tier")} ${data?.mostPopularMembership?.join(", ") ?? ""}`,
             },
           ].map((item, index) => (
             <div

@@ -7,8 +7,10 @@ import { CheckCircle2Icon, X } from "lucide-react"
 
 
 
-export default function VerificationAlert({ }) {
+import { useTranslation } from "react-i18next";
 
+export default function VerificationAlert({ }) {
+    const { t } = useTranslation();
     const { handleResend } = useLogin()
     const { setIsNotVerified } = useAuth()
 
@@ -16,10 +18,10 @@ export default function VerificationAlert({ }) {
         <Alert className="max-w-sm relative">
             <CheckCircle2Icon />
             <X className="absolute top-2 right-2 cursor-pointer" onClick={() => setIsNotVerified(false)} />
-            <AlertTitle>Your account is not verified.</AlertTitle>
+            <AlertTitle>{t("auth.verification.title")}</AlertTitle>
             <AlertDescription>
-                Check your email inbox or spam folder. If not received, resend the email.
-                <Button variant="outline" className="text-white hover:text-gray-400" onClick={handleResend}>Resend</Button>
+                {t("auth.verification.desc")}
+                <Button variant="outline" className="text-white hover:text-gray-400" onClick={handleResend}>{t("auth.verification.resend_button")}</Button>
             </AlertDescription>
         </Alert >
     )

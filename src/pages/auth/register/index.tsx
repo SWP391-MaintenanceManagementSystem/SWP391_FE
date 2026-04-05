@@ -7,14 +7,17 @@ import loginImg from "@/assets/login-img.png";
 import { Link, Navigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 
+import { useTranslation } from "react-i18next";
+
 export default function RegisterPage() {
+  const { t } = useTranslation();
   const { form, onSubmit } = useRegister();
   const { height, width = 0 } = useWindowSize();
   const [isMobile, setIsMobile] = useState(false);
   const { auth } = useAuth();
 
   if (auth.isAuthenticated) {
-    return <Navigate to={"/dasboard"} replace />;
+    return <Navigate to={"/dashboard"} replace />;
   }
 
   useEffect(() => {
@@ -35,12 +38,12 @@ export default function RegisterPage() {
       <div className="min-h-fit flex items-center justify-center lg:mx-24 mx-4 overflow-hidden mt-20 shadow-lg lg:shadow-none gap-x-14">
         <div className="w-screen space-y-8 p-6 flex flex-col flex-1 justify-center">
           <div className="text-center lg:text-left">
-            <h3 className="text-3xl font-bold">Welcome Guest !</h3>
-            <p>If you already have an account</p>
+            <h3 className="text-3xl font-bold">{t("auth.register.welcome")}</h3>
+            <p>{t("auth.register.desc")}</p>
             <p>
-              You can{" "}
+              {t("auth.register.login_link_text", "You can ")}{" "}
               <Link to={"/login"} className="!text-purple-primary">
-                Login here
+                {t("auth.register.login_link")}
               </Link>
             </p>
           </div>

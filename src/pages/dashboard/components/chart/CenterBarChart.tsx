@@ -8,12 +8,14 @@ import {
   CardDescription,
 } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useTranslation } from "react-i18next";
 
 export default function CenterBarChar() {
+  const { t } = useTranslation();
   const { data, isLoading } = useGetServiceCenterStat();
   const chartData =
     data?.filter(
-      (item) => Number(item.bookings) > 0 || Number(item.revenue) > 0,
+      (item: any) => Number(item.bookings) > 0 || Number(item.revenue) > 0,
     ) ?? [];
 
   if (isLoading) {
@@ -36,8 +38,8 @@ export default function CenterBarChar() {
 
   return (
     <ChartBarFlexible
-      title="Top Service Center Performance"
-      description="Booking volume and revenue across service centers"
+      title={t("dashboard.admin.charts.center_performance")}
+      description={t("dashboard.admin.charts.center_desc")}
       data={chartData}
       dataKeys={["bookings", "revenue"]}
       labelKey="centerName"
@@ -45,11 +47,11 @@ export default function CenterBarChar() {
       showYAxis
       config={{
         bookings: {
-          label: "Bookings",
+          label: t("dashboard.admin.charts.bookings"),
           color: "#c4b5fd",
         },
         revenue: {
-          label: "Revenue",
+          label: t("dashboard.admin.charts.revenue"),
           color: "#8b5cf6",
         },
       }}

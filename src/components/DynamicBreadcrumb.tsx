@@ -21,11 +21,14 @@ function formatPath(path: string) {
     .replace(/\b\w/g, (c) => c.toUpperCase());
 }
 
+import { useTranslation } from "react-i18next";
+
 export default function DynamicBreadcrumbs({
   pathTitles,
   hasPage = true,
   ignorePaths = [],
 }: Props) {
+  const { t } = useTranslation();
   const location = useLocation();
   const paths = location.pathname
     .split("/")
@@ -48,7 +51,7 @@ export default function DynamicBreadcrumbs({
               <BreadcrumbItem>
                 {isLast || !hasPage ? (
                   <BreadcrumbPage className="font-medium ml-4 text-xs lg:text-2xl md:text-sm font-inter">
-                    {title}
+                    {t(title)}
                   </BreadcrumbPage>
                 ) : (
                   <BreadcrumbLink asChild>
@@ -56,7 +59,7 @@ export default function DynamicBreadcrumbs({
                       to={href}
                       className="font-medium text-xs ml-4 lg:text-2xl md:text-sm font-inter"
                     >
-                      {title}
+                      {t(title)}
                     </Link>
                   </BreadcrumbLink>
                 )}
