@@ -134,8 +134,8 @@ export default function NotificationsPopover() {
   return (
     <Popover>
       <TooltipWrapper content={t("notifications.view_tooltip")}>
-        <PopoverTrigger asChild className="absolute right-8 hidden md:flex">
-          <div className="cursor-pointer">
+        <PopoverTrigger asChild className="cursor-pointer">
+          <div className="relative">
             <Bell />
             {unreadCount > 0 && (
               <Badge className="absolute -top-1 -right-1 w-4 h-4 p-0 rounded-full bg-red-500 text-white flex items-center justify-center text-xs">

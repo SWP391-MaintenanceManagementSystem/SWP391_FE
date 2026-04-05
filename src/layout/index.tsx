@@ -17,7 +17,7 @@ export default function MainLayout() {
           className="md:hidden fixed top-3 right-5 h-8 w-8 z-50"
         />
         <main className="mt-4 w-full mx-auto relative px-4">
-          <div className="flex justify-end items-center gap-4 mb-4">
+          <div className="flex justify-end items-center gap-4 mb-4 pr-12 md:pr-0">
             <LanguageSwitcher />
             {!isNotificationPage && <NotificationsPopover />}
           </div>
