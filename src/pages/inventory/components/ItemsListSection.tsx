@@ -12,7 +12,10 @@ import { AddEditGoodsDialog } from "./AddEditGoodsDialog";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useDebounce } from "@uidotdev/usehooks";
 
+import { useTranslation } from "react-i18next";
+
 export default function ItemsListSection() {
+  const { t } = useTranslation();
   const [openAddModal, setOpenAddModal] = useState(false);
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
@@ -43,7 +46,7 @@ export default function ItemsListSection() {
     setFilters((prev) => ({ ...prev, [field]: value }));
   };
 
-  const columns = getColumns(hanldeFilterChange, filters, categoryList);
+  const columns = getColumns(hanldeFilterChange, filters, categoryList, t);
 
   const { handleAddPartItem, form, isPending } = useInventory(page, pageSize);
 
@@ -63,7 +66,7 @@ export default function ItemsListSection() {
           ) : (
             <>
               <h3 className="font-semibold text-gray-text-header h-fit">
-                Inventory Items
+                {t("dashboard.admin.inventory.items_list")}
               </h3>
               <DataTable<Part, unknown>
                 data={rawList}
@@ -77,7 +80,7 @@ export default function ItemsListSection() {
                 onPageSizeChange={setPageSize}
                 manualPagination
                 isSearch={true}
-                searchPlaceholder="Name, Category"
+                searchPlaceholder={t("dashboard.admin.inventory.search_placeholder")}
                 onSearchChange={setSearchValue}
                 manualSearch
                 sorting={sorting}
@@ -90,7 +93,7 @@ export default function ItemsListSection() {
                     variant="outline"
                     autoFocus={false}
                   >
-                    Add New Item
+                    {t("dashboard.admin.inventory.add_new")}
                     <Plus className="h-4 w-4" />
                   </Button>
                 }
@@ -104,6 +107,7 @@ export default function ItemsListSection() {
         onOpenChange={(open) => {
           setOpenAddModal(open);
         }}
+
         onConfirm={async (data) => {
           const success = await handleAddPartItem(data);
           if (success) {

@@ -13,6 +13,7 @@ import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import type { RegisterFormData } from '../lib/schema';
 import { CgGoogle } from 'react-icons/cg';
+import { useTranslation } from "react-i18next";
 
 type RegisterFormProps = {
     onSubmit: (data: RegisterFormData) => Promise<void>;
@@ -20,6 +21,7 @@ type RegisterFormProps = {
 }
 
 const RegisterForm: React.FC<RegisterFormProps> = ({ onSubmit, form }) => {
+    const { t } = useTranslation();
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
@@ -33,9 +35,9 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSubmit, form }) => {
                             name="firstName"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>First Name<span className='text-gray-400'>*</span></FormLabel>
+                                    <FormLabel>{t("auth.register.first_name")}<span className='text-gray-400'>*</span></FormLabel>
                                     <FormControl>
-                                        <Input placeholder="Enter your first name" {...field} required />
+                                        <Input placeholder={t("auth.register.first_name_placeholder")} {...field} required />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -47,9 +49,9 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSubmit, form }) => {
                             name="lastName"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Last Name<span className='text-gray-400'>*</span></FormLabel>
+                                    <FormLabel>{t("auth.register.last_name")}<span className='text-gray-400'>*</span></FormLabel>
                                     <FormControl>
-                                        <Input placeholder="Enter your last name" {...field} required />
+                                        <Input placeholder={t("auth.register.last_name_placeholder")} {...field} required />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -61,9 +63,9 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSubmit, form }) => {
                         name="email"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Email<span className='text-gray-400'>*</span></FormLabel>
+                                <FormLabel>{t("auth.register.email")}<span className='text-gray-400'>*</span></FormLabel>
                                 <FormControl>
-                                    <Input type="email" placeholder="Enter your email" {...field} className='h-10 py-2' required />
+                                    <Input type="email" placeholder={t("auth.register.email_placeholder")} {...field} className='h-10 py-2' required />
                                 </FormControl>
                                 <FormMessage />
 
@@ -76,9 +78,9 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSubmit, form }) => {
                         name="phone"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Phone</FormLabel>
+                                <FormLabel>{t("auth.register.phone")}</FormLabel>
                                 <FormControl>
-                                    <Input type="tel" placeholder="Enter your phone number" {...field} className='h-10 py-2' />
+                                    <Input type="tel" placeholder={t("auth.register.phone_placeholder")} {...field} className='h-10 py-2' />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -90,9 +92,9 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSubmit, form }) => {
                         name="address"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Address</FormLabel>
+                                <FormLabel>{t("auth.register.address")}</FormLabel>
                                 <FormControl>
-                                    <Input placeholder="Enter your address" {...field} className='h-10 py-2' />
+                                    <Input placeholder={t("auth.register.address_placeholder")} {...field} className='h-10 py-2' />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -105,13 +107,13 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSubmit, form }) => {
                             name="password"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Password<span className='text-gray-400'>*</span></FormLabel>
+                                    <FormLabel>{t("auth.register.password")}<span className='text-gray-400'>*</span></FormLabel>
                                     <FormControl>
                                         <div className="relative">
                                             <Input
                                                 {...field}
                                                 type={showPassword ? "text" : "password"}
-                                                placeholder="Enter your password"
+                                                placeholder={t("auth.register.password_placeholder")}
                                                 className="h-10 py-2 pr-10"
                                                 aria-invalid={!!form.formState.errors.password}
                                                 required
@@ -134,13 +136,13 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSubmit, form }) => {
                             name="confirmPassword"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Confirm Password <span className='text-gray-400'><span className='text-gray-400'>*</span></span></FormLabel>
+                                    <FormLabel>{t("auth.register.confirm_password")} <span className='text-gray-400'><span className='text-gray-400'>*</span></span></FormLabel>
                                     <FormControl>
                                         <div className="relative">
                                             <Input
                                                 {...field}
                                                 type={showConfirmPassword ? "text" : "password"}
-                                                placeholder="Confirm your password"
+                                                placeholder={t("auth.register.confirm_password_placeholder")}
                                                 className="h-10 py-2 pr-10"
                                                 aria-invalid={!!form.formState.errors.confirmPassword}
                                                 required
@@ -160,7 +162,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSubmit, form }) => {
                     </div>
                     <div className='flex flex-col gap-y-3'>
                         <Button type="submit" className="w-full h-11" disabled={form.formState.isSubmitting}>
-                            Register
+                            {t("auth.register.register_button")}
                         </Button>
                         <Button
                             type="button"
@@ -172,7 +174,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSubmit, form }) => {
                         >
                             <span className="flex items-center justify-center leading-none text-l gap-x-2">
                                 <CgGoogle />
-                                Continue with Google
+                                {t("auth.login.google_login")}
                             </span>
                         </Button>
                     </div>

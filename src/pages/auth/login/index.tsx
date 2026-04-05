@@ -8,8 +8,10 @@ import { useWindowSize } from "@uidotdev/usehooks";
 import useLogin from "@/services/auth/hooks/useLogin"
 import VerificationAlert from "../components/VerificationAlert"
 import Loading from "@/components/Loading"
+import { useTranslation } from "react-i18next";
 
 const LoginPage = () => {
+    const { t } = useTranslation();
     const { auth, isNotVerified } = useAuth()
     const { form, onSubmit } = useLogin()
     const { height, width = 0 } = useWindowSize()
@@ -24,8 +26,6 @@ const LoginPage = () => {
             setIsMobile(false)
         }
     }, [width, height])
-
-
 
     if (auth.isAuthenticated) {
         return <Navigate to={"/dashboard"} replace />
@@ -44,10 +44,10 @@ const LoginPage = () => {
                 <div className="w-screen space-y-8 p-6 flex flex-col flex-1 justify-center">
                     <div className="text-center lg:text-left">
                         <h3 className="text-3xl font-bold">
-                            Welcome Back !
+                            {t("auth.login.welcome")}
                         </h3>
-                        <p>If you don't have an account register</p>
-                        <p>You can <Link to={"/register"} className="!text-purple-primary">Register here</Link></p>
+                        <p>{t("auth.login.desc")}</p>
+                        <p>{t("auth.login.register_link_text", "You can ")}<Link to={"/register"} className="!text-purple-primary">{t("auth.login.register_link")}</Link></p>
                     </div>
                     <LoginForm form={form} onSubmit={onSubmit} />
                 </div>

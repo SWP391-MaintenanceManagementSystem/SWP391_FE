@@ -9,8 +9,10 @@ import InfoBox from "./InfoBox";
 import DetailSettingBox from "./DetailedSettingBox";
 import { useGetProfile } from "@/services/profile/queries";
 import Loading from "@/components/Loading";
+import { useTranslation } from "react-i18next";
 
 export default function Profile() {
+  const { t } = useTranslation();
   const { handleLogout } = useAuth();
   const { data: profile, isLoading } = useGetProfile();
   const { height, width = 0 } = useWindowSize();
@@ -31,7 +33,7 @@ export default function Profile() {
 
   return (
     <div className=" w-full h-[calc(100vh-32px)]">
-      <DynamicBreadcrumbs />
+      <DynamicBreadcrumbs pathTitles={{ profile: t("sidebar.titles.profile") }} />
       <MainContentLayout className="grid grid-cols-1 lg:grid-cols-[auto_1fr] gap-8">
         {isMobile ? (
           <GeneralInfoBox user={profile} handleLogout={handleLogout} />

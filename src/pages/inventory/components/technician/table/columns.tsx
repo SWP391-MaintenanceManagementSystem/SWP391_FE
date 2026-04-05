@@ -7,10 +7,13 @@ import { Badge } from "@/components/ui/badge";
 import SortHeader from "@/components/table/SortHeader";
 import FilterHeader from "@/components/table/FilterHeader";
 
+import type { TFunction } from "i18next";
+
 export const getColumns = (
   handleFilterChange: (field: string, value: string) => void,
   currentFilter: { status: string; categoryName: string },
   categoryList: Category[],
+  t: TFunction,
 ) => {
   const columnHelper = createColumnHelper<Part>();
 
@@ -29,10 +32,10 @@ export const getColumns = (
     }),
     columnHelper.accessor("name", {
       id: "name",
-      header: (info) => <SortHeader title="Name" info={info} />,
+      header: (info) => <SortHeader title={t("dashboard.admin.inventory.name")} info={info} />,
       cell: (info) => info.getValue(),
       meta: {
-        title: "Part Name",
+        title: t("dashboard.admin.inventory.name"),
       },
     }),
 
@@ -41,21 +44,21 @@ export const getColumns = (
       header: (info) => (
         <FilterHeader
           column={info.column}
-          title="Category"
+          title={t("dashboard.admin.inventory.category")}
           selectedValue={currentFilter.categoryName}
           onFilterChange={(value) => handleFilterChange("categoryName", value)}
         />
       ),
       cell: (info) => <Badge variant="outline">{info.getValue()}</Badge>,
       meta: {
-        title: "Category Name",
+        title: t("dashboard.admin.inventory.category"),
         filterVariant: "filterCategory",
         filterOptions: categoryList.map((c) => c.name),
       },
     }),
 
     columnHelper.accessor("quantity", {
-      header: (info) => <SortHeader title="Quantity" info={info} />,
+      header: (info) => <SortHeader title={t("dashboard.admin.inventory.quantity")} info={info} />,
       cell: ({ row }) => {
         const item = row.original;
 
@@ -71,14 +74,14 @@ export const getColumns = (
           </div>
         );
       },
-      meta: { title: "Quantity" },
+      meta: { title: t("dashboard.admin.inventory.quantity") },
     }),
     columnHelper.accessor("status", {
       id: "status",
       header: (info) => (
         <FilterHeader
           column={info.column}
-          title="Status"
+          title={t("dashboard.admin.inventory.status")}
           selectedValue={currentFilter.status}
           onFilterChange={(value) => handleFilterChange("status", value)}
         />
@@ -86,19 +89,19 @@ export const getColumns = (
       cell: (info) => <StockStatusTag status={info.getValue()} />,
       filterFn: "equals",
       meta: {
-        title: "Status",
+        title: t("dashboard.admin.inventory.status"),
         filterVariant: "filterStatus",
         filterOptions: ["AVAILABLE", "OUT_OF_STOCK", "DISCONTINUED"],
         labelOptions: {
-          AVAILABLE: "In Stock",
-          OUT_OF_STOCK: "Low Stock",
-          DISCONTINUED: "Discontinued",
+          AVAILABLE: t("dashboard.admin.inventory.status_types.available"),
+          OUT_OF_STOCK: t("dashboard.admin.inventory.status_types.low_stock"),
+          DISCONTINUED: t("dashboard.admin.inventory.status_types.discontinued"),
         },
       },
     }),
     columnHelper.accessor("price", {
       id: "price",
-      header: (info) => <SortHeader title="Price" info={info} />,
+      header: (info) => <SortHeader title={t("dashboard.admin.inventory.price")} info={info} />,
       cell: (info) => (
         <p>
           $
@@ -109,7 +112,7 @@ export const getColumns = (
         </p>
       ),
       meta: {
-        title: "Price",
+        title: t("dashboard.admin.inventory.price"),
       },
     }),
     columnHelper.display({

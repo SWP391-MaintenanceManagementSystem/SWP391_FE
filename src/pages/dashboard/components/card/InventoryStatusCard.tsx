@@ -4,8 +4,10 @@ import { OctagonAlert, Package } from "lucide-react";
 import { LowStockProgressBar } from "../chart/LowStockProgressBarList";
 import { InventoryBar } from "../chart/InventoryStatusBar";
 import { useGetInventoryStatus } from "@/services/dashboard/queries/admin";
+import { useTranslation } from "react-i18next";
 
 export function InventoryStatusCard() {
+  const { t } = useTranslation();
   const { data, isLoading } = useGetInventoryStatus();
 
   if (isLoading) {
@@ -59,7 +61,7 @@ export function InventoryStatusCard() {
     <Card className="h-full w-full lg:min-w-[400px] gap-3">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
-          <Package className="w-5 h-5" /> Inventory Status
+          <Package className="w-5 h-5" /> {t("dashboard.admin.inventory.title")}
         </CardTitle>
       </CardHeader>
 
@@ -68,13 +70,13 @@ export function InventoryStatusCard() {
         <div className="grid grid-cols-2 text-sm">
           <div>
             <p className="text-muted-foreground text-lg font-medium">
-              Total Items
+              {t("dashboard.admin.inventory.total_items")}
             </p>
             <p className="font-semibold text-xl pl-1">{data?.totalItems}</p>
           </div>
           <div>
             <p className="text-muted-foreground text-lg font-medium">
-              Total Value
+              {t("dashboard.admin.inventory.total_value")}
             </p>
             <p className="font-semibold text-xl pl-1">
               ${data?.totalValue.toLocaleString()}
@@ -101,12 +103,12 @@ export function InventoryStatusCard() {
             <div className="flex h-8 w-8 items-center justify-center rounded-full bg-destructive/10">
               <OctagonAlert className="h-5 w-5 text-destructive" />
             </div>
-            Low Stock Items
+            {t("dashboard.admin.inventory.low_stock_items")}
           </div>
           {(data?.lowStockItems?.length ?? 0) > 0 ? (
             <LowStockProgressBar data={data?.lowStockItems ?? []} />
           ) : (
-            <p className="text-muted-foreground text-sm">No low stock items</p>
+            <p className="text-muted-foreground text-sm">{t("dashboard.admin.inventory.no_low_stock")}</p>
           )}
         </div>
       </CardContent>

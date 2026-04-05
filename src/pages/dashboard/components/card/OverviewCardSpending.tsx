@@ -2,6 +2,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import type { CustomerDashboardData } from "@/types/models/dashboard";
 import { CircleDollarSign, BarChart3, TrendingUp } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { useTranslation } from "react-i18next";
 
 export default function OverviewCardSpending({
   data,
@@ -10,6 +11,7 @@ export default function OverviewCardSpending({
   data: CustomerDashboardData | undefined;
   isLoading: boolean;
 }) {
+  const { t } = useTranslation();
   if (!data) return null;
 
   const totalSpending = data.totalSpending?.total ?? 0;
@@ -18,28 +20,28 @@ export default function OverviewCardSpending({
 
   const cards = [
     {
-      title: "Total Spending",
+      title: t("dashboard.customer.total_spending"),
       icon: CircleDollarSign,
       iconColor: "text-emerald-500",
       bgColor: "bg-emerald-50 dark:bg-emerald-900/30",
       value: totalSpending,
-      description: "Your total spending this year.",
+      description: t("dashboard.customer.total_spending_desc"),
     },
     {
-      title: "Average Spending",
+      title: t("dashboard.customer.average_spending"),
       icon: BarChart3,
       iconColor: "text-sky-500",
       bgColor: "bg-sky-50 dark:bg-sky-900/30",
       value: averageSpending,
-      description: "Your average spending per transaction.",
+      description: t("dashboard.customer.average_spending_desc"),
     },
     {
-      title: "Peak Spending",
+      title: t("dashboard.customer.peak_spending"),
       icon: TrendingUp,
       iconColor: "text-violet-500",
       bgColor: "bg-violet-50 dark:bg-violet-900/30",
       value: peakSpending,
-      description: "Your highest spending in a single period.",
+      description: t("dashboard.customer.peak_spending_desc"),
     },
   ];
 

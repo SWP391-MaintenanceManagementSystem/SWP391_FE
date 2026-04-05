@@ -3,6 +3,7 @@ import type { CustomerDashboardData } from "@/types/models/dashboard";
 import { Calendar, PlayCircle, Clock, CheckCircle } from "lucide-react";
 import TotalCardCustomer from "./TotalCardCustomer";
 import { TooltipWrapper } from "@/components/TooltipWrapper";
+import { useTranslation } from "react-i18next";
 
 export default function OverviewCardCustomer({
   data,
@@ -11,6 +12,7 @@ export default function OverviewCardCustomer({
   data: CustomerDashboardData | undefined;
   isLoading: boolean;
 }) {
+  const { t } = useTranslation();
   const statusList = data?.bookingStatusSummary ?? [];
 
   const pending = statusList.find((s) => s.status === "PENDING")?.count ?? 0;
@@ -33,30 +35,30 @@ export default function OverviewCardCustomer({
       ) : (
         <>
           <TotalCardCustomer
-            title="Total Bookings"
+            title={t("dashboard.customer.total_bookings")}
             icon={Calendar}
             bgColor="bg-blue-100"
             iconColor="text-blue-600"
             numberValue={data?.bookingTotal ?? 0}
           />
           <TotalCardCustomer
-            title="Pending"
+            title={t("dashboard.customer.pending")}
             icon={Clock}
             bgColor="bg-yellow-100"
             iconColor="text-yellow-600"
             numberValue={pending}
           />
           <TotalCardCustomer
-            title="In Progress"
+            title={t("dashboard.customer.in_progress")}
             icon={PlayCircle}
             bgColor="bg-teal-100"
             iconColor="text-teal-600"
             numberValue={inProgress}
           />
-          <TooltipWrapper content="Includes Completed (unpaid) and Checked Out (paid) bookings">
+          <TooltipWrapper content={t("dashboard.customer.finished_tooltip")}>
             <div>
               <TotalCardCustomer
-                title="Finished"
+                title={t("dashboard.customer.finished")}
                 icon={CheckCircle}
                 bgColor="bg-green-100"
                 iconColor="text-green-600"

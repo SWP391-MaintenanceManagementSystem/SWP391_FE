@@ -11,15 +11,20 @@ import SpendingSummaryBarChart from "./chart/SpendingSummaryBarChart";
 import RecentBookingTable from "./table/RecentBookingTable";
 import MyMembershipCard from "./card/MyMembershipCard";
 
+import { useTranslation } from "react-i18next";
+
 export default function CustomerDashboard() {
+  const { t } = useTranslation();
   const { auth } = useAuth();
   const { data, isLoading } = useGetCustomerDashboardData();
+
+  const userName = `${auth?.user?.profile?.firstName ?? ""} ${auth?.user?.profile?.lastName ?? ""}`.trim();
 
   return (
     <div className="w-full h-[calc(100vh-32px)] font-inter">
       <DynamicBreadcrumbs
         pathTitles={{
-          dashboard: `👋 Welcome back, ${auth?.user?.profile?.firstName} ${auth?.user?.profile?.lastName}`,
+          dashboard: `👋 ${t("dashboard.welcome_back", { name: userName })}`,
         }}
       />
       <MainContentLayout className="flex-1 overflow-y-auto p-6">

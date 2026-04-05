@@ -1,0 +1,256 @@
+{
+  "sidebar": {
+    "role": {
+      "admin": "Quản trị viên",
+      "staff": "Nhân viên",
+      "technician": "Kỹ thuật viên",
+      "customer": "Khách hàng"
+    },
+    "view_profile": "Xem hồ sơ",
+    "titles": {
+      "dashboard": "Bảng điều khiển",
+      "vehicles": "Khách hàng & Xe",
+      "my_vehicles": "Xe của tôi",
+      "employees": "Quản lý nhân viên",
+      "staffs": "Nhân viên",
+      "technicians": "Kỹ thuật viên",
+      "shifts": "Quản lý ca làm việc",
+      "inventory": "Kho hàng",
+      "memberships": "Gói thành viên",
+      "notifications": "Thông báo",
+      "booking": "Đặt dịch vụ",
+      "chat": "Hộp thoại",
+      "support": "Trợ giúp & Hỗ trợ",
+      "schedule": "Lịch làm việc",
+      "booking_management": "Quản lý đặt lịch",
+      "my_assigned_bookings": "Đơn đặt của tôi",
+      "profile": "Hồ sơ"
+    }
+  },
+  "notifications": {
+    "view_tooltip": "Xem thông báo",
+    "header": "Thông báo của bạn",
+    "mark_all_read": "Đánh dấu tất cả là đã đọc",
+    "tabs": {
+      "all": "Tất cả",
+      "unread": "Chưa đọc",
+      "read": "Đã đọc"
+    },
+    "sections": {
+      "today": "Hôm nay",
+      "yesterday": "Hôm qua"
+    },
+    "empty": {
+      "title": "Không có thông báo",
+      "unread_desc": "Không có thông báo chưa đọc nào trong 48 giờ qua.",
+      "read_desc": "Không có thông báo đã đọc nào trong 48 giờ qua.",
+      "all_desc": "Bạn không có bất kỳ thông báo nào trong 48 giờ qua."
+    },
+    "footer": {
+      "manage": "Quản lý thông báo",
+      "view_all": "Xem tất cả thông báo"
+    }
+  },
+  "auth": {
+    "login": {
+      "welcome": "Chào mừng trở lại !",
+      "desc": "Nếu bạn chưa có tài khoản, hãy đăng ký",
+      "register_link": "Đăng ký tại đây",
+      "email_label": "Email",
+      "email_placeholder": "Nhập email của bạn",
+      "password_label": "Mật khẩu",
+      "password_placeholder": "Nhập mật khẩu của bạn",
+      "forgot_password": "Quên mật khẩu",
+      "sign_in": "Đăng nhập",
+      "google_login": "Tiếp tục với Google"
+    },
+    "register": {
+      "welcome": "Chào mừng khách hàng !",
+      "desc": "Nếu bạn đã có tài khoản",
+      "login_link": "Đăng nhập tại đây",
+      "first_name": "Tên",
+      "first_name_placeholder": "Nhập tên của bạn",
+      "last_name": "Họ",
+      "last_name_placeholder": "Nhập họ của bạn",
+      "phone": "Số điện thoại",
+      "phone_placeholder": "Nhập số điện thoại của bạn",
+      "address": "Địa chỉ",
+      "address_placeholder": "Nhập địa chỉ của bạn",
+      "password": "Mật khẩu",
+      "password_placeholder": "Nhập mật khẩu của bạn",
+      "confirm_password": "Xác nhận mật khẩu",
+      "confirm_password_placeholder": "Xác nhận mật khẩu của bạn",
+      "register_button": "Đăng ký"
+    },
+    "verification": {
+      "title": "Tài khoản của bạn chưa được xác minh.",
+      "desc": "Kiểm tra hộp thư đến hoặc thư rác của bạn. Nếu không nhận được, hãy gửi lại email.",
+      "resend_button": "Gửi lại"
+    }
+  },
+  "profile": {
+    "sections": {
+      "information": "Thông tin",
+      "preferences": "Tùy chọn",
+      "details": "Cài đặt chi tiết"
+    },
+    "labels": {
+      "email": "Email",
+      "status": "Trạng thái",
+      "modes": "Chế độ",
+      "no_data": "Không có dữ liệu",
+      "first_name": "Tên",
+      "last_name": "Họ",
+      "phone": "Số điện thoại",
+      "address": "Địa chỉ",
+      "old_password": "Mật khẩu cũ",
+      "new_password": "Mật khẩu mới",
+      "confirm_new_password": "Xác nhận mật khẩu mới"
+    },
+    "placeholders": {
+      "first_name": "Nhập tên của bạn",
+      "last_name": "Nhập họ của bạn",
+      "phone": "Nhập số điện thoại của bạn",
+      "address": "Nhập địa chỉ của bạn",
+      "old_password": "Nhập mật khẩu cũ của bạn",
+      "new_password": "Nhập mật khẩu mới của bạn",
+      "confirm_new_password": "Nhập lại mật khẩu mới để xác nhận"
+    },
+    "actions": {
+      "logout": "Đăng xuất",
+      "save_changes": "Lưu thay đổi",
+      "forgot_password": "Quên mật khẩu?"
+    }
+  },
+  "errors": {
+    "unauthorized": "Bạn không có quyền truy cập vào trang này.",
+    "not_found": {
+      "title": "404",
+      "subtitle": "Trang không tồn tại",
+      "description": "Trang bạn đang tìm kiếm không tồn tại.",
+      "go_home": "Về trang chủ"
+    }
+  },
+  "dashboard": {
+    "welcome_back": "Chào mừng trở lại, {{name}}",
+    "admin": {
+      "total_revenue": "Tổng doanh thu",
+      "verified_customers": "Khách hàng đã xác minh",
+      "verified_employees": "Nhân viên đã xác minh",
+      "total_service_center": "Tổng trung tâm dịch vụ",
+      "view_service_center_list": "Xem danh sách trung tâm dịch vụ",
+      "service_center_list": "Danh sách trung tâm dịch vụ",
+      "trending": {
+        "title": "Xu hướng mua sắm của khách hàng",
+        "desc": "Hiểu hành vi của khách hàng thông qua các dịch vụ và gói bảo trì được mua nhiều nhất.",
+        "services": "Dịch vụ",
+        "packages": "Gói bảo trì",
+        "memberships": "Gói thành viên",
+        "view_list": "Xem danh sách",
+        "services_list": "Danh sách dịch vụ",
+        "packages_list": "Danh sách gói bảo trì",
+        "memberships_list": "Danh sách gói thành viên",
+        "showing_top": "Hiển thị tất cả các {{type}} hàng đầu mà khách hàng ưu tiên.",
+        "no_data_analysis": "Không có dữ liệu để phân tích",
+        "top_service": "Dịch vụ hàng đầu:",
+        "top_services": "Dịch vụ hàng đầu:",
+        "most_chosen": "Được chọn nhiều nhất:",
+        "top_tier": "Bậc cao nhất:"
+      },
+      "inventory": {
+        "title": "Tình trạng kho",
+        "management_title": "Quản lý kho",
+        "total_items": "Tổng số mặt hàng",
+        "total_value": "Tổng giá trị",
+        "low_stock_items": "Mặt hàng sắp hết",
+        "no_low_stock": "Không có mặt hàng nào sắp hết",
+        "categories": "Danh mục",
+        "across_products": "Trên {{count}} sản phẩm",
+        "current_value": "Giá trị kho hiện tại",
+        "need_restocking": "Cần nhập thêm",
+        "product_categories": "Danh mục sản phẩm",
+        "items_list": "Danh sách mặt hàng",
+        "add_new": "Thêm mặt hàng mới",
+        "search_placeholder": "Tên, Danh mục",
+        "name": "Tên phụ tùng",
+        "category": "Danh mục",
+        "quantity": "Số lượng",
+        "price": "Giá",
+        "status": "Trạng thái",
+        "status_types": {
+          "available": "Còn hàng",
+          "low_stock": "Sắp hết hàng",
+          "discontinued": "Ngừng kinh doanh"
+        }
+      },
+      "charts": {
+        "revenue_overview": "Tổng quan doanh thu",
+        "revenue_desc": "Hiển thị tổng doanh thu cho khoảng thời gian đã chọn",
+        "select_period": "Chọn khoảng thời gian",
+        "last_7_days": "7 ngày qua",
+        "last_30_days": "30 ngày qua",
+        "last_3_months": "3 tháng qua",
+        "center_performance": "Hiệu suất trung tâm dịch vụ hàng đầu",
+        "center_desc": "Số lượng đơn đặt chỗ và doanh thu trên các trung tâm dịch vụ",
+        "bookings": "Đặt chỗ",
+        "revenue": "Doanh thu"
+      }
+    },
+    "staff": {
+      "total_customers": "Tổng số khách hàng",
+      "new_tickets": "Phiếu mới",
+      "work_schedule": "Lịch làm việc",
+      "events_on": "Sự kiện ngày {{date}}",
+      "no_events": "Không có sự kiện nào cho ngày này."
+    },
+    "customer": {
+      "total_spending": "Tổng chi tiêu",
+      "total_spending_desc": "Tổng chi tiêu của bạn trong năm nay.",
+      "average_spending": "Chi tiêu trung bình",
+      "average_spending_desc": "Chi tiêu trung bình của bạn trên mỗi giao dịch.",
+      "peak_spending": "Chi tiêu cao nhất",
+      "peak_spending_desc": "Chi tiêu cao nhất của bạn trong một khoảng thời gian.",
+      "active_bookings": "Đơn đặt chỗ hoạt động",
+      "total_bookings": "Tổng số đơn đặt",
+      "pending": "Chờ xử lý",
+      "in_progress": "Đang thực hiện",
+      "finished": "Đã hoàn thành",
+      "finished_tooltip": "Bao gồm các đơn đặt đã hoàn thành (chưa thanh toán) và đã trả xe (đã thanh toán)"
+    },
+    "technician": {
+      "tasks_completed": "Nhiệm vụ đã hoàn thành",
+      "current_task": "Nhiệm vụ hiện tại",
+      "technician_schedule": "Lịch trình kỹ thuật viên",
+      "shifts_on": "Ca làm việc ngày {{date}}",
+      "no_shifts": "Không có ca làm việc nào được phân công cho ngày này."
+    },
+    "bookings": {
+      "recent": "Đặt chỗ gần đây",
+      "booking_id": "Mã đặt chỗ",
+      "date": "Ngày",
+      "service_center": "Trung tâm dịch vụ",
+      "status": "Trạng thái",
+      "total": "Tổng cộng",
+      "actions": "Hành động",
+      "search_placeholder": "Mã đặt chỗ",
+      "status_types": {
+        "pending": "Đang chờ",
+        "assigned": "Đã phân công",
+        "checked_in": "Đã check-in",
+        "completed": "Đã hoàn thành"
+      }
+    },
+    "common": {
+      "no_data": "Không có dữ liệu",
+      "unnamed": "Chưa đặt tên"
+    }
+  },
+  "header": {
+    "welcome": "Chào mừng"
+  },
+  "language_switcher": {
+    "select_language": "Ngôn ngữ",
+    "english": "Tiếng Anh",
+    "vietnamese": "Tiếng Việt"
+  }
+}

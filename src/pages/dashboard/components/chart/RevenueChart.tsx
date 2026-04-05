@@ -22,20 +22,17 @@ import {
 } from "@/components/ui/select";
 import { useGetRevenueByRange } from "@/services/dashboard/queries/admin";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useTranslation } from "react-i18next";
 
 export const description = "Dynamic revenue area chart";
 
-const chartConfig = {
-  revenue: {
-    label: "Revenue",
-    color: "var(--chart-premium)",
-  },
-} satisfies ChartConfig;
-
 export function RevenueChart() {
+  const { t, i18n } = useTranslation();
   const [timeRange, setTimeRange] = React.useState("3m");
 
   const { data, isLoading } = useGetRevenueByRange(timeRange);
+
+  const currentLocale = i18n.language === "vi" ? "vi-VN" : "en-US";
 
   if (isLoading) {
     return (
@@ -55,24 +52,31 @@ export function RevenueChart() {
     );
   }
 
+  const chartConfig = {
+    revenue: {
+      label: t("dashboard.admin.charts.revenue"),
+      color: "var(--chart-premium)",
+    },
+  } satisfies ChartConfig;
+
   return (
     <Card className="pt-0">
       <CardHeader className="flex flex-wrap items-center justify-between gap-4 border-b py-5 sm:flex-row">
         <div className="grid flex-1 gap-1">
-          <CardTitle>Revenue Overview</CardTitle>
+          <CardTitle>{t("dashboard.admin.charts.revenue_overview")}</CardTitle>
           <CardDescription>
-            Showing total revenue for the selected period
+            {t("dashboard.admin.charts.revenue_desc")}
           </CardDescription>
         </div>
 
         <Select value={timeRange} onValueChange={setTimeRange}>
           <SelectTrigger className="w-[160px] rounded-lg">
-            <SelectValue placeholder="Select period" />
+            <SelectValue placeholder={t("dashboard.admin.charts.select_period")} />
           </SelectTrigger>
           <SelectContent className="rounded-xl">
-            <SelectItem value="1w">Last 7 days</SelectItem>
-            <SelectItem value="1m">Last 30 days</SelectItem>
-            <SelectItem value="3m">Last 3 months</SelectItem>
+            <SelectItem value="1w">{t("dashboard.admin.charts.last_7_days")}</SelectItem>
+            <SelectItem value="1m">{t("dashboard.admin.charts.last_30_days")}</SelectItem>
+            <SelectItem value="3m">{t("dashboard.admin.charts.last_3_months")}</SelectItem>
           </SelectContent>
         </Select>
       </CardHeader>
@@ -104,8 +108,8 @@ export function RevenueChart() {
               axisLine={false}
               tickMargin={8}
               minTickGap={32}
-              tickFormatter={(value) =>
-                new Date(value).toLocaleDateString("en-US", {
+              tickFormatter={(value: string) =>
+                new Date(value).toLocaleDateString(currentLocale, {
                   month: "short",
                   day: "numeric",
                 })
@@ -115,15 +119,15 @@ export function RevenueChart() {
               cursor={false}
               content={
                 <ChartTooltipContent
-                  labelFormatter={(value) =>
-                    new Date(value).toLocaleDateString("en-US", {
+                  labelFormatter={(value: string) =>
+                    new Date(value).toLocaleDateString(currentLocale, {
                       month: "short",
                       day: "numeric",
                     })
                   }
                   indicator="dot"
-                  formatter={(value) => [
-                    `Revenue `,
+                  formatter={(value: any) => [
+                    `${t("dashboard.admin.charts.revenue")} `,
                     `$${Number(value).toLocaleString()}`,
                   ]}
                 />

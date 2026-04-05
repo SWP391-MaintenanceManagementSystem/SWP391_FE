@@ -6,8 +6,10 @@ import type { ColumnDef, SortingState } from "@tanstack/react-table";
 import { useDebounce } from "@uidotdev/usehooks";
 import useBooking from "@/services/booking/hooks/useBooking";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { useTranslation } from "react-i18next";
 
 export default function RecentBookingTable() {
+  const { t } = useTranslation();
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [sorting, setSorting] = useState<SortingState>([]);
@@ -39,13 +41,13 @@ export default function RecentBookingTable() {
   });
 
   const bookings = bookingData?.data ?? [];
-  const columns = getColumns();
+  const columns = getColumns(t);
 
   return (
     <Card className="w-full h-full shadow-sm">
       <CardHeader className="pb-3">
         <CardTitle className="text-lg font-semibold">
-          Recent Bookings
+          {t("dashboard.bookings.recent")}
         </CardTitle>
       </CardHeader>
 

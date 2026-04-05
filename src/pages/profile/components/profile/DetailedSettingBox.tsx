@@ -10,7 +10,10 @@ type DetailedSettingBoxProps = {
   user: AccountWithProfile | undefined;
 };
 
+import { useTranslation } from "react-i18next";
+
 const DetailSettingBox = ({ user }: DetailedSettingBoxProps) => {
+  const { t } = useTranslation();
   const { form, handleSubmit } = useChangeProfile(user);
   const { form: passwordForm, handleChangePassword } = useChangePassword();
   const isAdmin = user?.role === AccountRole.ADMIN;
@@ -19,7 +22,7 @@ const DetailSettingBox = ({ user }: DetailedSettingBoxProps) => {
     <Card className=" min-w-[300px]">
       <CardContent className=" font-inter px-[24px] pt-4 pb-5 flex-1 gap-5 flex flex-col min-h-fit">
         <h3 className="!font-inter font-bold text-3xl grid text-gray-text-header items-center">
-          Detailed Settings
+          {t("profile.sections.details")}
         </h3>
         {!isAdmin && (
           <ProfileForm user={user} form={form} onSubmit={handleSubmit} />

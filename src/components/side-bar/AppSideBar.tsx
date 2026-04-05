@@ -34,6 +34,7 @@ import {
   technicianItems,
   staffItems,
 } from "./sidebarItems";
+import { useTranslation } from "react-i18next";
 
 const getMenuItems = (role: AccountRole) => {
   switch (role) {
@@ -52,6 +53,7 @@ const getMenuItems = (role: AccountRole) => {
 
 // ----------------- SIDEBAR COMPONENT -----------------
 export function AppSidebar() {
+  const { t } = useTranslation();
   const { auth } = useAuth();
   const role = auth.user?.role;
   const { resolvedTheme } = useTheme();
@@ -138,7 +140,7 @@ export function AppSidebar() {
                               {effectiveCollapsed ? (
                                 <TooltipWrapper
                                   side="right"
-                                  content={item.title}
+                                  content={t(item.title)}
                                 >
                                   <div className={clsx("mx-auto")}>
                                     <item.icon className="h-5 w-5" />
@@ -147,7 +149,7 @@ export function AppSidebar() {
                               ) : (
                                 <>
                                   <item.icon className="h-5 w-5" />
-                                  <span>{item.title}</span>
+                                  <span>{t(item.title)}</span>
                                   <ChevronRight className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-90" />
                                 </>
                               )}
@@ -172,7 +174,7 @@ export function AppSidebar() {
                                   >
                                     <SidebarMenuButton className="!bg-transparent outline-0 flex">
                                       <child.icon className="h-5 w-5" />
-                                      <span>{child.title}</span>
+                                      <span>{t(child.title)}</span>
                                     </SidebarMenuButton>
                                   </NavLink>
                                 ))}
@@ -197,7 +199,7 @@ export function AppSidebar() {
                       >
                         <SidebarMenuButton className="!bg-transparent outline-0 flex">
                           {effectiveCollapsed ? (
-                            <TooltipWrapper side="right" content={item.title}>
+                            <TooltipWrapper side="right" content={t(item.title)}>
                               <div className="mx-auto">
                                 <item.icon className="h-5 w-5" />
                               </div>
@@ -205,7 +207,7 @@ export function AppSidebar() {
                           ) : (
                             <>
                               <item.icon className="h-5 w-5" />
-                              <span>{item.title}</span>
+                              <span>{t(item.title)}</span>
                             </>
                           )}
                         </SidebarMenuButton>
@@ -235,7 +237,7 @@ export function AppSidebar() {
           {({ isActive }) => (
             <div>
               {effectiveCollapsed ? (
-                <TooltipWrapper content="View Profile" side="right">
+                <TooltipWrapper content={t("sidebar.view_profile")} side="right">
                   <CircleUserRound
                     className={clsx(isActive && "dark:text-amber-primary")}
                   />
@@ -251,7 +253,7 @@ export function AppSidebar() {
                       isActive && "dark:text-amber-primary",
                     )}
                   >
-                    {auth.user?.role === AccountRole.ADMIN && "Admin"}
+                    {auth.user?.role === AccountRole.ADMIN && t("sidebar.role.admin")}
                     {auth.user?.role !== AccountRole.ADMIN &&
                       auth.user?.profile?.firstName +
                         " " +

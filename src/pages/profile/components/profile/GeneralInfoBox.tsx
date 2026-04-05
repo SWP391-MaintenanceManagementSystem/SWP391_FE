@@ -7,12 +7,14 @@ import { NavLink } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ModeToggle } from "@/components/theme/ModeToggle";
 import { Card, CardContent } from "@/components/ui/card";
+import { useTranslation } from "react-i18next";
 type GeneralInfoBoxProps = {
   user: AccountWithProfile | undefined;
   handleLogout: () => Promise<void>;
 };
 
 const GeneralInfoBox = ({ user, handleLogout }: GeneralInfoBoxProps) => {
+  const { t } = useTranslation();
   return (
     <Card>
       <CardContent className="flex flex-col gap-5 justify-center items-center">
@@ -23,14 +25,14 @@ const GeneralInfoBox = ({ user, handleLogout }: GeneralInfoBoxProps) => {
         />
         {user && <Tag text={user.role} />}
         <div className="gap-5 flex flex-col">
-          <InfoSection title="Information">
+          <InfoSection title={t("profile.sections.information")}>
             {user ? (
               <>
                 <p className="font-inter">
-                  <strong>Email:</strong> {user.email}
+                  <strong>{t("profile.labels.email")}:</strong> {user.email}
                 </p>
                 <p className="font-inter flex flex-row gap-2">
-                  <strong>Status:</strong>
+                  <strong>{t("profile.labels.status")}:</strong>
                   <span className="inline-flex">
                     <AccountStatusTag status={user.status} />
                   </span>
@@ -38,14 +40,14 @@ const GeneralInfoBox = ({ user, handleLogout }: GeneralInfoBoxProps) => {
               </>
             ) : (
               <p className="font-inter text-center text-gray-400">
-                No data available
+                {t("profile.labels.no_data")}
               </p>
             )}
           </InfoSection>
           {/* PREFERENCES */}
-          <InfoSection title="Preferences">
+          <InfoSection title={t("profile.sections.preferences")}>
             <div className="flex flex-row gap-4 items-center">
-              <span className="font-inter font-semibold">Modes:</span>
+              <span className="font-inter font-semibold">{t("profile.labels.modes")}:</span>
               <ModeToggle />
             </div>
           </InfoSection>
@@ -56,7 +58,7 @@ const GeneralInfoBox = ({ user, handleLogout }: GeneralInfoBoxProps) => {
             onClick={() => handleLogout()}
           >
             <LogOut className="mr-2 h-4 w-4" />
-            Logout
+            {t("profile.actions.logout")}
           </Button>
         </NavLink>
       </CardContent>

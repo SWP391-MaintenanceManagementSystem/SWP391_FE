@@ -6,17 +6,19 @@ import TechnicianBookingStatisticCard from "./chart/BookingStatisticPieChart";
 import TechnicianWorkSchedule from "./card/TechnicianWorkSchedule";
 import { InventoryStatusCard } from "./card/InventoryStatusCard";
 
+import { useTranslation } from "react-i18next";
+
 export default function TechnicianDashboard() {
+  const { t } = useTranslation();
   const { auth } = useAuth();
 
+  const userName = `${auth?.user?.profile?.firstName ?? ""} ${auth?.user?.profile?.lastName ?? ""}`.trim();
 
   return (
     <div className="w-full min-h-[calc(100vh-32px)] font-inter p-3 space-y-4">
       <DynamicBreadcrumbs
         pathTitles={{
-          dashboard: `👋 Welcome back, ${
-            auth?.user?.profile?.firstName ?? ""
-          } ${auth?.user?.profile?.lastName ?? ""}`,
+          dashboard: `👋 ${t("dashboard.welcome_back", { name: userName })}`,
         }}
       />
 

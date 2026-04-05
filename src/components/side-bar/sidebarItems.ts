@@ -17,52 +17,53 @@ import {
 } from "lucide-react";
 
 export const adminItems: SidebarItem[] = [
-  { title: "Dashboard", url: "/dashboard", icon: Home },
-  { title: "Customers & Vehicles", url: "/vehicles", icon: Car },
+  { title: "sidebar.titles.dashboard", url: "/dashboard", icon: Home },
+  { title: "sidebar.titles.vehicles", url: "/vehicles", icon: Car },
   {
-    title: "Employee Management",
+    title: "sidebar.titles.employees",
     icon: IdCardLanyard,
     children: [
-      { title: "Staffs", url: "/employees/staffs", icon: Users },
+      { title: "sidebar.titles.staffs", url: "/employees/staffs", icon: Users },
       {
-        title: "Technicians",
+        title: "sidebar.titles.technicians",
         url: "/employees/technicians",
         icon: UserRoundCog,
       },
     ],
   },
   {
-    title: "Work Shifts Management",
+    title: "sidebar.titles.shifts",
     icon: CalendarClock,
     url: "/shifts",
   },
-  { title: "Inventory", url: "/inventory", icon: PackageOpen },
-  { title: "Memberships", url: "/membership", icon: UserStar },
-  { title: "Notifications", url: "/notification", icon: Bell },
+  { title: "sidebar.titles.inventory", url: "/inventory", icon: PackageOpen },
+  { title: "sidebar.titles.memberships", url: "/membership", icon: UserStar },
+  { title: "sidebar.titles.notifications", url: "/notification", icon: Bell },
 ];
 
 export const customerItems: SidebarItem[] = [
-  { title: "Dashboard", url: "/dashboard", icon: Home },
-  { title: "My Vehicles", url: "/vehicles", icon: Car },
-  { title: "Memberships", url: "/membership", icon: UserStar },
-  { title: "Service Booking", url: "/booking", icon: NotebookPen },
-  { title: "Chat Box", url: "/chat", icon: MessageCircle },
-  { title: "Notifications", url: "/notification", icon: Bell },
-  { title: "Help & Support", url: "/support", icon: CircleQuestionMark },
+  { title: "sidebar.titles.dashboard", url: "/dashboard", icon: Home },
+  { title: "sidebar.titles.my_vehicles", url: "/vehicles", icon: Car },
+  { title: "sidebar.titles.memberships", url: "/membership", icon: UserStar },
+  { title: "sidebar.titles.booking", url: "/booking", icon: NotebookPen },
+  { title: "sidebar.titles.chat", url: "/chat", icon: MessageCircle },
+  { title: "sidebar.titles.notifications", url: "/notification", icon: Bell },
+  { title: "sidebar.titles.support", url: "/support", icon: CircleQuestionMark },
 ];
 
 export const staffItems: SidebarItem[] = [
-  { title: "Dashboard", url: "/dashboard", icon: Home },
-  { title: "Work Schedule", url: "/viewSchedule", icon: CalendarRange },
-  { title: "Booking Management", url: "/booking", icon: BookOpenCheckIcon },
-  { title: "Customers & Vehicles", url: "/vehicles", icon: Users },
-  { title: "Chat Box", url: "/chat", icon: MessageCircle },
-  { title: "Notifications", url: "/notification", icon: Bell },
+  { title: "sidebar.titles.dashboard", url: "/dashboard", icon: Home },
+  { title: "sidebar.titles.schedule", url: "/viewSchedule", icon: CalendarRange },
+  { title: "sidebar.titles.booking_management", url: "/booking", icon: BookOpenCheckIcon },
+  { title: "sidebar.titles.vehicles", url: "/vehicles", icon: Users },
+  { title: "sidebar.titles.chat", url: "/chat", icon: MessageCircle },
+  { title: "sidebar.titles.notifications", url: "/notification", icon: Bell },
 ];
+
 export const technicianItems: SidebarItem[] = [
-  { title: "Dashboard", url: "/dashboard", icon: Home },
-  { title: "Work Schedule", url: "/viewSchedule", icon: CalendarRange },
-  { title: "My Assigned Bookings", url: "/booking", icon: CalendarClock },
-  { title: "Inventory", url: "/inventory", icon: PackageOpen },
-  { title: "Notifications", url: "/notification", icon: Bell },
+  { title: "sidebar.titles.dashboard", url: "/dashboard", icon: Home },
+  { title: "sidebar.titles.schedule", url: "/viewSchedule", icon: CalendarRange },
+  { title: "sidebar.titles.my_assigned_bookings", url: "/booking", icon: CalendarClock },
+  { title: "sidebar.titles.inventory", url: "/inventory", icon: PackageOpen },
+  { title: "sidebar.titles.notifications", url: "/notification", icon: Bell },
 ];
